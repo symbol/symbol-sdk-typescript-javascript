@@ -66,7 +66,7 @@ describe('AccountKeyLinkTransaction', () => {
         );
 
         expect(accountKeyLinkTransaction.linkAction).to.be.equal(1);
-        expect(accountKeyLinkTransaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(accountKeyLinkTransaction.linkedPublicKey).to.be.equal(account.publicKey);
 
         const signedTransaction = accountKeyLinkTransaction.signWith(account, generationHash);
 
@@ -84,7 +84,7 @@ describe('AccountKeyLinkTransaction', () => {
         );
 
         expect(accountKeyLinkTransaction.linkAction).to.be.equal(0);
-        expect(accountKeyLinkTransaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(accountKeyLinkTransaction.linkedPublicKey).to.be.equal(account.publicKey);
 
         const signedTransaction = accountKeyLinkTransaction.signWith(account, generationHash);
 

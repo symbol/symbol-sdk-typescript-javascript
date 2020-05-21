@@ -52,7 +52,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.ACCOUNT_KEY_LINK:
             const accountLinkTx = transaction as AccountKeyLinkTransaction;
             return {
-                remotePublicKey: accountLinkTx.remotePublicKey,
+                linkedPublicKey: accountLinkTx.linkedPublicKey,
                 linkAction: accountLinkTx.linkAction,
             };
         case TransactionType.ADDRESS_ALIAS:

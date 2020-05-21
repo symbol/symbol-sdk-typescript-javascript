@@ -71,7 +71,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = accountLinkTransaction.toJSON();
 
-        expect(json.transaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
