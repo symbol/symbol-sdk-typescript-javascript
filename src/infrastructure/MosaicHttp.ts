@@ -16,8 +16,6 @@
 
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { AccountIds, MosaicDTO, MosaicIds, MosaicInfoDTO, MosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
-import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -26,6 +24,9 @@ import { NetworkType } from '../model/network/NetworkType';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MosaicRepository } from './MosaicRepository';
+import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
+import { Page } from './Page';
+import { MosaicRoutesApi, MosaicIds, MosaicInfoDTO } from 'symbol-openapi-typescript-node-client';
 
 /**
  * Mosaic http repository.
@@ -85,32 +86,23 @@ export class MosaicHttp extends Http implements MosaicRepository {
     }
 
     /**
-     * Gets an array of mosaics created for a given account address.
-     * @summary Get mosaics created by an account
-     * @param address Account address.
+     * Gets an array of mosaics.
+     * @summary Get mosaics created for given address
+     * @param criteria Mosaic search criteria
+     * @returns {Page<MosaicInfo>}
      */
-    public getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]> {
+    public searchMosaics(criteria: MosaicSearchCriteria): Observable<Page<MosaicInfo>> {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaicsFromAccount(address.plain()), (body) =>
-                    body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)),
-                ),
-            ),
-        );
-    }
-
-    /**
-     * Gets mosaics created for a given array of addresses.
-     * @summary Get mosaics created for given array of addresses
-     * @param addresses Array of addresses
-     */
-    public getMosaicsFromAccounts(addresses: Address[]): Observable<MosaicInfo[]> {
-        const accountIds = new AccountIds();
-        accountIds.addresses = addresses.map((address) => address.plain());
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaicsFromAccounts(accountIds), (body) =>
-                    body.mosaics.map((b) => this.toMosaicInfoFromMosaicDto(b, networkType)),
+                this.call(
+                    this.mosaicRoutesApi.searchMosaics(
+                        criteria.ownerAddress?.plain(),
+                        criteria.pageSize,
+                        criteria.pageNumber,
+                        criteria.offset,
+                        criteria.order,
+                    ),
+                    (body) => super.toPage(body.pagination, body.data, this.toMosaicInfo, networkType),
                 ),
             ),
         );
@@ -132,25 +124,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
             new MosaicFlags(mosaicInfo.mosaic.flags),
             mosaicInfo.mosaic.divisibility,
             UInt64.fromNumericString(mosaicInfo.mosaic.duration),
-        );
-    }
-
-    /**
-     * Maps MosaicDTO to MosaicInfo
-     *
-     * @param mosaicInfo the dto object.
-     * @returns the model object
-     */
-    private toMosaicInfoFromMosaicDto(mosaicInfo: MosaicDTO, networkType: NetworkType): MosaicInfo {
-        return new MosaicInfo(
-            new MosaicId(mosaicInfo.id),
-            UInt64.fromNumericString(mosaicInfo.supply),
-            UInt64.fromNumericString(mosaicInfo.startHeight),
-            PublicAccount.createFromPublicKey(mosaicInfo.ownerPublicKey, networkType),
-            mosaicInfo.revision,
-            new MosaicFlags(mosaicInfo.flags),
-            mosaicInfo.divisibility,
-            UInt64.fromNumericString(mosaicInfo.duration),
         );
     }
 }

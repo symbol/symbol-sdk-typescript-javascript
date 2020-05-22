@@ -15,16 +15,16 @@
  */
 
 import { SearchCriteria } from './SearchCriteria';
-import { Address } from '../model/account/Address';
-import { UInt64 } from '../model/UInt64';
-import { TransactionType } from '../model/transaction/TransactionType';
+import { Address } from '../../model/account/Address';
+import { UInt64 } from '../../model/UInt64';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client/dist/model/transactionGroupSubsetEnum';
 
 /**
  * Defines the params used to search transactions. With this criteria, you can sort and filter
  * transactions queries using rest.
  */
-export class TransactionSearchCriteria extends SearchCriteria {
+export interface TransactionSearchCriteria extends SearchCriteria {
     /**
      * Transaction identifier up to which transactions are returned. (optional)
      */
@@ -55,13 +55,6 @@ export class TransactionSearchCriteria extends SearchCriteria {
      * Filter by block height. (optional, default to null)
      */
     height?: UInt64;
-
-    /**
-     * Entry id at which to start pagination. If the ordering parameter is set to -id, the elements
-     * returned precede the identifier. Otherwise, newer elements with respect to the id are
-     * returned.  (optional)
-     */
-    offset?: string;
 
     /**
      * The group of transaction (optional, default is confirmed)

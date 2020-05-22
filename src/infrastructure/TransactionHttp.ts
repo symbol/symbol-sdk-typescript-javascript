@@ -30,9 +30,8 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionRepository } from './TransactionRepository';
-import { TransactionSearchCriteria } from './TransactionSearchCriteria';
+import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Page } from './Page';
-import { TransactionPage } from 'symbol-openapi-typescript-node-client/dist/model/transactionPage';
 
 /**
  * Transaction http repository.
@@ -212,28 +211,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
                 criteria.pageNumber,
                 criteria.offset,
                 criteria.group,
-                criteria.orderBy,
+                criteria.order,
                 criteria.transactionTypes?.map((type) => type.valueOf()),
                 criteria.embedded,
             ),
-            (body) => this.toPage(body),
-        );
-    }
-
-    /**
-     * This method maps a TransactionPage from rest to the SDK's Page model object.
-     *
-     * @internal
-     * @param {TransactionPage} transactionPage the TransactionPage object from rest.
-     * @returns {Page<Transaction>} a Page<T> model
-     */
-    private toPage(transactionPage: TransactionPage): Page<Transaction> {
-        return new Page<Transaction>(
-            transactionPage.data.map((data) => CreateTransactionFromDTO(data)),
-            transactionPage.pagination?.pageNumber,
-            transactionPage.pagination?.pageSize,
-            transactionPage.pagination?.totalEntries,
-            transactionPage.pagination?.totalPages,
+            (body) => super.toPage(body.pagination, body.data, CreateTransactionFromDTO),
         );
     }
 

@@ -16,27 +16,28 @@
 
 import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
 
-/**
- * Basic option used to search pages of entities.
- * - orderBy: default - 'desc`
- * - pageSize: default - 10
- * - pageNumber: default -1
- */
-export class SearchCriteria {
+export interface SearchCriteria {
     /**
      * Sort responses in ascending or descending order based on the collection property set on the
-     * param ''orderBy''. If the request does not specify ''orderBy'', REST returns the collection
-     * ordered by id.  (optional, default to desc)
+     * param ''order''. If the request does not specify ''order'', REST returns the collection
+     * ordered by id. (optional)
      */
-    orderBy?: Order;
+    order?: Order;
 
     /**
-     * Number of entities to return for each request. (optional, default to 10)
+     * Number of entities to return for each request. (optional)
      */
     pageSize?: number;
 
     /**
-     * Filter by page number. (optional, default to 1)
+     * Filter by page number. (optional)
      */
     pageNumber?: number;
+
+    /**
+     * Entry id at which to start pagination. If the ordering parameter is set to -id, the elements
+     * returned precede the identifier. Otherwise, newer elements with respect to the id are
+     * returned. (optional)
+     */
+    offset?: string;
 }

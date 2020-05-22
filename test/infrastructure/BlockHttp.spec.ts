@@ -24,9 +24,10 @@ import {
     MerkleProofInfoDTO,
     NetworkTypeEnum,
     PositionEnum,
-    TransactionInfoDTO,
+    Pagination,
+    BlockPage,
 } from 'symbol-openapi-typescript-node-client';
-import { instance, mock, reset, when } from 'ts-mockito';
+import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
@@ -99,15 +100,34 @@ describe('BlockHttp', () => {
         assertBlockInfo(blockInfo);
     });
 
-    it('getBlocksByHeightWithLimit', async () => {
-        when(blockRoutesApi.getBlocksByHeightWithLimit('2', 10)).thenReturn(
+    it('searchBlocks', async () => {
+        const pagination = new Pagination();
+        pagination.pageNumber = 1;
+        pagination.pageSize = 1;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
+
+        const body = new BlockPage();
+        body.data = [blockInfoDto];
+        body.pagination = pagination;
+        when(
+            blockRoutesApi.searchBlocks(
+                deepEqual(blockDTO.signerPublicKey),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(
             Promise.resolve({
                 response,
-                body: [blockInfoDto],
+                body,
             }),
         );
-        const blockInfos = await blockRepository.getBlocksByHeightWithLimit(UInt64.fromUint(2), 10).toPromise();
-        assertBlockInfo(blockInfos[0]);
+        const blockInfos = await blockRepository.searchBlocks({ signerPublicKey: blockDTO.signerPublicKey }).toPromise();
+        assertBlockInfo(blockInfos.getData()[0]);
     });
 
     it('getMerkleTransaction', async () => {

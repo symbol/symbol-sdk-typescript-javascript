@@ -28,7 +28,7 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { TransactionSearchCriteria } from '../../src/infrastructure/TransactionSearchCriteria';
+import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
 
 describe('Listener', () => {

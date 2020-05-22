@@ -23,6 +23,8 @@ import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
+import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
+import { Page } from './Page';
 
 /**
  * Blockchain http repository.
@@ -56,14 +58,22 @@ export class BlockHttp extends Http implements BlockRepository {
     }
 
     /**
-     * Gets array of BlockInfo for a block height with limit
-     * @param height - Block height from which will be the first block in the array
-     * @param limit - Number of blocks returned.
+     * Gets an array of bocks.
+     * @param criteria - Block search criteria
      * @returns Observable<BlockInfo[]>
      */
-    public getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]> {
-        return this.call(this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit), (body) =>
-            body.map((blockDTO) => BlockHttp.toBlockInfo(blockDTO)),
+    public searchBlocks(criteria: BlockSearchCriteria): Observable<Page<BlockInfo>> {
+        return this.call(
+            this.blockRoutesApi.searchBlocks(
+                criteria.signerPublicKey,
+                criteria.beneficiaryPublicKey,
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                criteria.order,
+                criteria.orderBy,
+            ),
+            (body) => super.toPage(body.pagination, body.data, BlockHttp.toBlockInfo),
         );
     }
 

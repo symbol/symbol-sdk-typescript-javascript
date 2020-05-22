@@ -113,9 +113,11 @@ describe('BlockService', () => {
         when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(3)))).thenReject(new Error());
         when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
         when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(3)), leaf)).thenReject(new Error());
         when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(4)), leaf)).thenReturn(observableOf(mockMerklePath(true)));
         when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
         when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(3)), leaf)).thenReject(new Error());
         const blockRepository = instance(mockBlockRepository);
         const receiptRepository = instance(mockReceiptRepository);
 

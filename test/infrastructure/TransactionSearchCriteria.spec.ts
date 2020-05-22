@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { Order, TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
-import { TransactionSearchCriteria } from '../../src/infrastructure/TransactionSearchCriteria';
+import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TestingAccount } from '../conf/conf.spec';
 import { UInt64, TransactionType, Address } from '../../src/model/model';
 import { deepEqual } from 'assert';
@@ -26,7 +26,7 @@ describe('TransactionSearchCriteria', () => {
 
     it('should create TransactionSearchCriteria', () => {
         let criteria: TransactionSearchCriteria = {
-            orderBy: Order.Asc,
+            order: Order.Asc,
             pageNumber: 1,
             pageSize: 1,
             address: account.address,
@@ -40,7 +40,7 @@ describe('TransactionSearchCriteria', () => {
             transactionTypes: [TransactionType.ACCOUNT_ADDRESS_RESTRICTION],
         };
 
-        expect(criteria.orderBy?.valueOf()).to.be.equal('asc');
+        expect(criteria.order?.valueOf()).to.be.equal('asc');
         expect(criteria.pageNumber).to.be.equal(1);
         expect(criteria.pageSize).to.be.equal(1);
         expect(criteria.address?.plain()).to.be.equal(account.address.plain());
@@ -55,7 +55,7 @@ describe('TransactionSearchCriteria', () => {
 
         const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
         criteria = {
-            orderBy: Order.Desc,
+            order: Order.Desc,
             pageNumber: 2,
             pageSize: 2,
             address: address,
@@ -69,7 +69,7 @@ describe('TransactionSearchCriteria', () => {
             transactionTypes: [TransactionType.TRANSFER],
         };
 
-        expect(criteria.orderBy?.valueOf()).to.be.equal('desc');
+        expect(criteria.order?.valueOf()).to.be.equal('desc');
         expect(criteria.pageNumber).to.be.equal(2);
         expect(criteria.pageSize).to.be.equal(2);
         expect(criteria.address?.plain()).to.be.equal(address.plain());
@@ -86,7 +86,7 @@ describe('TransactionSearchCriteria', () => {
     it('should create TransactionSearchCriteria - default', () => {
         const criteria: TransactionSearchCriteria = {};
 
-        expect(criteria.orderBy).to.be.undefined;
+        expect(criteria.order).to.be.undefined;
         expect(criteria.address).to.be.undefined;
         expect(criteria.embedded).to.be.undefined;
         expect(criteria.group).to.be.undefined;

@@ -15,20 +15,20 @@
  */
 
 import { expect } from 'chai';
-import { SearchCriteria } from '../../src/infrastructure/SearchCriteria';
+import { SearchCriteria } from '../../src/infrastructure/searchCriteria/SearchCriteria';
 import { Order } from 'symbol-openapi-typescript-node-client';
 
 describe('SearchCriteria', () => {
     it('should create SearchCriteria', () => {
         let criteria: SearchCriteria = {};
 
-        expect(criteria.orderBy).to.be.undefined;
+        expect(criteria.order).to.be.undefined;
         expect(criteria.pageNumber).to.be.undefined;
         expect(criteria.pageSize).to.be.undefined;
 
-        criteria = { orderBy: Order.Asc, pageNumber: 2, pageSize: 2 };
+        criteria = { order: Order.Asc, pageNumber: 2, pageSize: 2 };
 
-        expect(criteria.orderBy?.valueOf()).to.be.equal('asc');
+        expect(criteria.order?.valueOf()).to.be.equal('asc');
         expect(criteria.pageNumber).to.be.equal(2);
         expect(criteria.pageSize).to.be.equal(2);
     });

@@ -158,19 +158,11 @@ describe('MosaicHttp', () => {
         });
     });
 
-    describe('getMosaicsFromAccount', () => {
-        it('should call getMosaicsFromAccount successfully', async () => {
-            const mosaics = await mosaicRepository.getMosaicsFromAccount(account.address).toPromise();
-            expect(mosaics.length).to.be.greaterThan(0);
-            expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
-        });
-    });
-
-    describe('getMosaicsFromAccounts', () => {
-        it('should call getMosaicsFromAccounts successfully', async () => {
-            const mosaics = await mosaicRepository.getMosaicsFromAccounts([account.address]).toPromise();
-            expect(mosaics.length).to.be.greaterThan(0);
-            expect(mosaics.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+    describe('searchMosaics', () => {
+        it('should call searchMosaics successfully', async () => {
+            const mosaics = await mosaicRepository.searchMosaics({ ownerAddress: account.address }).toPromise();
+            expect(mosaics.getData().length).to.be.greaterThan(0);
+            expect(mosaics.getData().find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
         });
     });
 

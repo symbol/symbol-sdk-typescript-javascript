@@ -39,7 +39,6 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
-import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 
 describe('TransactionHttp', () => {
@@ -84,7 +83,7 @@ describe('TransactionHttp', () => {
     it('Test getTransactionStatus method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInconsistentUnlinkData;
+        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionGroupEnum.Failed;
@@ -105,7 +104,7 @@ describe('TransactionHttp', () => {
     it('Test getTransactionsStatuses method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInconsistentUnlinkData;
+        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionGroupEnum.Failed;
@@ -171,9 +170,7 @@ describe('TransactionHttp', () => {
             ),
         ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
 
-        const transactions = await transactionHttp
-            .searchTransactions({ address: account.address } as TransactionSearchCriteria)
-            .toPromise();
+        const transactions = await transactionHttp.searchTransactions({ address: account.address }).toPromise();
 
         expect(transactions.getData().length).to.be.equal(1);
         expect(transactions.getData()[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());

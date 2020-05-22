@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { Mosaic, MosaicRoutesApi, MosaicInfoDTO, MosaicDTO, MosaicsInfoDTO, MosaicIds } from 'symbol-openapi-typescript-node-client';
+import { Mosaic, MosaicRoutesApi, MosaicInfoDTO, MosaicDTO, MosaicIds, MosaicPage } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
@@ -24,7 +24,7 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { AccountIds } from 'symbol-openapi-typescript-node-client';
+import { Pagination } from 'symbol-openapi-typescript-node-client';
 
 describe('MosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -49,9 +49,7 @@ describe('MosaicHttp', () => {
     mosaicDto.supply = '100';
 
     const mosaicInfoDto = new MosaicInfoDTO();
-    const mosaicsInfoDto = new MosaicsInfoDTO();
     mosaicInfoDto.mosaic = mosaicDto;
-    mosaicsInfoDto.mosaics = [mosaicDto];
 
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
@@ -92,18 +90,24 @@ describe('MosaicHttp', () => {
         assertMosaicInfo(mosaicInfos[0]);
     });
 
-    it('getMosaicsFromAccount', async () => {
-        when(mosaicRoutesApi.getMosaicsFromAccount(address.plain())).thenReturn(Promise.resolve({ response, body: mosaicsInfoDto }));
-        const mosaicsInfo = await mosaicRepository.getMosaicsFromAccount(address).toPromise();
-        assertMosaicInfo(mosaicsInfo[0]);
-    });
+    it('searchMosaics', async () => {
+        const pagination = new Pagination();
+        pagination.pageNumber = 1;
+        pagination.pageSize = 1;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
 
-    it('getMosaicsFromAccounts', async () => {
-        const accountIds = new AccountIds();
-        accountIds.addresses = [address.plain()];
-        when(mosaicRoutesApi.getMosaicsFromAccounts(deepEqual(accountIds))).thenReturn(Promise.resolve({ response, body: mosaicsInfoDto }));
-        const mosaicsInfo = await mosaicRepository.getMosaicsFromAccounts([address]).toPromise();
-        assertMosaicInfo(mosaicsInfo[0]);
+        const body = new MosaicPage();
+        body.data = [mosaicInfoDto];
+        body.pagination = pagination;
+
+        console.log(body);
+
+        when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenReturn(
+            Promise.resolve({ response, body }),
+        );
+        const mosaicsInfo = await mosaicRepository.searchMosaics({ ownerAddress: address }).toPromise();
+        assertMosaicInfo(mosaicsInfo.getData()[0]);
     });
 
     it('getMosaic - Error', async () => {
@@ -124,20 +128,12 @@ describe('MosaicHttp', () => {
             .catch((error) => expect(error).not.to.be.undefined);
     });
 
-    it('getMosaicsFromAccount - Error', async () => {
-        when(mosaicRoutesApi.getMosaicsFromAccount(address.plain())).thenThrow(new Error('Mocked Error'));
+    it('searchMosaics - Error', async () => {
+        when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenThrow(
+            new Error('Mocked Error'),
+        );
         await mosaicRepository
-            .getMosaicsFromAccount(address)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
-    });
-
-    it('getMosaicsFromAccounts - Error', async () => {
-        const accountIds = new AccountIds();
-        accountIds.addresses = [address.plain()];
-        when(mosaicRoutesApi.getMosaicsFromAccounts(deepEqual(accountIds))).thenThrow(new Error('Mocked Error'));
-        await mosaicRepository
-            .getMosaicsFromAccounts([address])
+            .searchMosaics({ ownerAddress: address })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });

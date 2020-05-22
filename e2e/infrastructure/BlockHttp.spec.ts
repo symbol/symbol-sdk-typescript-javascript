@@ -25,6 +25,7 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { BlockSearchCriteria } from '../../src/infrastructure/searchCriteria/BlockSearchCriteria';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -93,10 +94,10 @@ describe('BlockHttp', () => {
         });
     });
 
-    describe('getBlocksByHeightWithLimit', () => {
+    describe('searchBlock', () => {
         it('should return block info given height and limit', async () => {
-            const blocksInfo = await blockRepository.getBlocksByHeightWithLimit(chainHeight, 50).toPromise();
-            expect(blocksInfo.length).to.be.greaterThan(0);
+            const blocksInfo = await blockRepository.searchBlocks({} as BlockSearchCriteria).toPromise();
+            expect(blocksInfo.getData().length).to.be.greaterThan(0);
         });
     });
     describe('getMerkleReceipts', () => {

@@ -21,7 +21,7 @@ import { Transaction } from '../model/transaction/Transaction';
 import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
 import { TransactionStatus } from '../model/transaction/TransactionStatus';
 import { Page } from './Page';
-import { TransactionSearchCriteria } from './TransactionSearchCriteria';
+import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 
 /**
  * Transaction interface repository.
