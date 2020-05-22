@@ -32,7 +32,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -40,6 +39,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
 
 export class AccountAddressRestrictionTransaction extends Transaction {
     /**
@@ -56,7 +56,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: AddressRestrictionFlag,
         restrictionAdditions: (Address | NamespaceId)[],
         restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
@@ -94,7 +94,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         version: number,
         deadline: Deadline,
         maxFee: UInt64,
-        public readonly restrictionFlags: AccountRestrictionFlags,
+        public readonly restrictionFlags: AddressRestrictionFlag,
         public readonly restrictionAdditions: (Address | NamespaceId)[],
         public readonly restrictionDeletions: (Address | NamespaceId)[],
         signature?: string,

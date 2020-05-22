@@ -33,7 +33,6 @@ import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../src/model/transaction/AccountAddressRestrictionTransaction';
 import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
@@ -69,6 +68,7 @@ import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
+import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/model';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -429,7 +429,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockOutgoingAddress,
+                AddressRestrictionFlag.BlockOutgoingAddress,
                 [account3.address],
                 [],
                 networkType,
@@ -447,7 +447,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockOutgoingAddress,
+                AddressRestrictionFlag.BlockOutgoingAddress,
                 [],
                 [account3.address],
                 networkType,
@@ -469,7 +469,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockIncomingAddress,
+                AddressRestrictionFlag.BlockIncomingAddress,
                 [account3.address],
                 [],
                 networkType,
@@ -483,7 +483,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockIncomingAddress,
+                AddressRestrictionFlag.BlockIncomingAddress,
                 [],
                 [account3.address],
                 networkType,
@@ -505,7 +505,7 @@ describe('TransactionHttp', () => {
             AccountRestrictionModification.createForMosaic(AccountRestrictionModificationAction.Add, mosaicId);
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockMosaic,
+                MosaicRestrictionFlag.BlockMosaic,
                 [mosaicId],
                 [],
                 networkType,
@@ -524,7 +524,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockMosaic,
+                MosaicRestrictionFlag.BlockMosaic,
                 [],
                 [mosaicId],
                 networkType,
@@ -547,7 +547,7 @@ describe('TransactionHttp', () => {
             AccountRestrictionModification.createForOperation(AccountRestrictionModificationAction.Add, TransactionType.ACCOUNT_KEY_LINK);
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockOutgoingTransactionType,
+                OperationRestrictionFlag.BlockOutgoingTransactionType,
                 [TransactionType.ACCOUNT_KEY_LINK],
                 [],
                 networkType,
@@ -566,7 +566,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionFlags.BlockOutgoingTransactionType,
+                OperationRestrictionFlag.BlockOutgoingTransactionType,
                 [],
                 [TransactionType.ACCOUNT_KEY_LINK],
                 networkType,
