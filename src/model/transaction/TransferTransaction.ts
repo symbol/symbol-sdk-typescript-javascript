@@ -64,6 +64,8 @@ export class TransferTransaction extends Transaction {
      * @param message - The transaction message.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {TransferTransaction}
      */
     public static create(
@@ -73,8 +75,20 @@ export class TransferTransaction extends Transaction {
         message: Message,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): TransferTransaction {
-        return new TransferTransaction(networkType, TransactionVersion.TRANSFER, deadline, maxFee, recipientAddress, mosaics, message);
+        return new TransferTransaction(
+            networkType,
+            TransactionVersion.TRANSFER,
+            deadline,
+            maxFee,
+            recipientAddress,
+            mosaics,
+            message,
+            signature,
+            signer,
+        );
     }
 
     /**
@@ -128,6 +142,7 @@ export class TransferTransaction extends Transaction {
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = TransferTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
@@ -140,6 +155,8 @@ export class TransferTransaction extends Transaction {
                 : EncryptedMessage.createFromPayload(messageHex),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -240,8 +257,8 @@ export class TransferTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new TransferTransactionBuilder(
             new SignatureDto(signatureBuffer),
@@ -297,5 +314,20 @@ export class TransferTransaction extends Transaction {
                 statement.resolveMosaic(mosaic, transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            (this.recipientAddress as Address).equals(address) ||
+            alias.find((name) => (this.recipientAddress as NamespaceId).equals(name)) !== undefined
+        );
     }
 }

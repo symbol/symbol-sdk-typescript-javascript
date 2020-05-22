@@ -18,13 +18,16 @@ import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
-import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
 import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from './AccountOperationRestrictionTransaction';
 import { Deadline } from './Deadline';
 import { TransactionType } from './TransactionType';
+import { PublicAccount } from '../account/PublicAccount';
+import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 
 export class AccountRestrictionTransaction {
     /**
@@ -35,26 +38,20 @@ export class AccountRestrictionTransaction {
      * @param restrictionDeletions - Account restriction deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AccountAddressRestrictionTransaction}
      */
     public static createAddressRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: AddressRestrictionFlag,
         restrictionAdditions: (Address | NamespaceId)[],
         restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AccountAddressRestrictionTransaction {
-        if (
-            ![
-                AccountRestrictionFlags.AllowIncomingAddress,
-                AccountRestrictionFlags.AllowOutgoingAddress,
-                AccountRestrictionFlags.BlockOutgoingAddress,
-                AccountRestrictionFlags.BlockIncomingAddress,
-            ].includes(restrictionFlags)
-        ) {
-            throw new Error('Restriction type is not allowed.');
-        }
         return AccountAddressRestrictionTransaction.create(
             deadline,
             restrictionFlags,
@@ -62,6 +59,8 @@ export class AccountRestrictionTransaction {
             restrictionDeletions,
             networkType,
             maxFee,
+            signature,
+            signer,
         );
     }
 
@@ -73,19 +72,20 @@ export class AccountRestrictionTransaction {
      * @param restrictionDeletions - Account restriction deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AccountMosaicRestrictionTransaction}
      */
     public static createMosaicRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: MosaicRestrictionFlag,
         restrictionAdditions: (MosaicId | NamespaceId)[],
         restrictionDeletions: (MosaicId | NamespaceId)[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AccountMosaicRestrictionTransaction {
-        if (![AccountRestrictionFlags.AllowMosaic, AccountRestrictionFlags.BlockMosaic].includes(restrictionFlags)) {
-            throw new Error('Restriction type is not allowed.');
-        }
         return AccountMosaicRestrictionTransaction.create(
             deadline,
             restrictionFlags,
@@ -93,6 +93,8 @@ export class AccountRestrictionTransaction {
             restrictionDeletions,
             networkType,
             maxFee,
+            signature,
+            signer,
         );
     }
 
@@ -104,26 +106,20 @@ export class AccountRestrictionTransaction {
      * @param restrictionDeletions - Account restriction deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AccountOperationRestrictionTransaction}
      */
     public static createOperationRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: OperationRestrictionFlag,
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AccountOperationRestrictionTransaction {
-        if (
-            ![
-                AccountRestrictionFlags.AllowIncomingTransactionType,
-                AccountRestrictionFlags.AllowOutgoingTransactionType,
-                AccountRestrictionFlags.BlockIncomingTransactionType,
-                AccountRestrictionFlags.BlockOutgoingTransactionType,
-            ].includes(restrictionFlags)
-        ) {
-            throw new Error('Restriction type is not allowed.');
-        }
         return AccountOperationRestrictionTransaction.create(
             deadline,
             restrictionFlags,
@@ -131,6 +127,8 @@ export class AccountRestrictionTransaction {
             restrictionDeletions,
             networkType,
             maxFee,
+            signature,
+            signer,
         );
     }
 }

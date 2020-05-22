@@ -57,7 +57,8 @@ export class SecretLockTransaction extends Transaction {
      * @param recipientAddress - The unresolved recipient address of the funds.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     *
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @return a SecretLockTransaction instance
      */
     public static create(
@@ -69,6 +70,8 @@ export class SecretLockTransaction extends Transaction {
         recipientAddress: Address | NamespaceId,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
@@ -80,6 +83,8 @@ export class SecretLockTransaction extends Transaction {
             hashAlgorithm,
             secret,
             recipientAddress,
+            signature,
+            signer,
         );
     }
 
@@ -144,6 +149,7 @@ export class SecretLockTransaction extends Transaction {
             : SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = SecretLockTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
@@ -156,6 +162,8 @@ export class SecretLockTransaction extends Transaction {
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -196,8 +204,8 @@ export class SecretLockTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new SecretLockTransactionBuilder(
             new SignatureDto(signatureBuffer),
@@ -256,5 +264,20 @@ export class SecretLockTransaction extends Transaction {
                 aggregateTransactionIndex,
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            (this.recipientAddress as Address).equals(address) ||
+            alias.find((name) => (this.recipientAddress as NamespaceId).equals(name)) !== undefined
+        );
     }
 }

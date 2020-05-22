@@ -24,14 +24,14 @@ export class NetworkProperties {
      * @param identifier - Network identifier.
      * @param nodeEqualityStrategy - Node equality strategy. Defines if the identifier for the node must be its public key or host.
      * @param publicKey - Nemesis public key.
-     * @param generationHash - Nemesis generation hash.
+     * @param generationHashSeed - Seed for generate nemesis generation hash.
      * @param epochAdjustment - Nemesis epoch time adjustment.
      */
     constructor(
         public readonly identifier?: string,
         public readonly nodeEqualityStrategy?: NodeIdentityEqualityStrategy,
         public readonly publicKey?: string,
-        public readonly generationHash?: string,
+        public readonly generationHashSeed?: string,
         public readonly epochAdjustment?: string,
     ) {}
 }

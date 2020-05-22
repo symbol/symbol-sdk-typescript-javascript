@@ -127,6 +127,21 @@ describe('AggregateTransactionService', () => {
         return new MultisigAccountGraphInfo(map);
     }
 
+    function givenMultisig2AccountGraphInfoDuplicated(): MultisigAccountGraphInfo {
+        const map = new Map<number, MultisigAccountInfo[]>();
+        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], [])]).set(1, [
+            new MultisigAccountInfo(
+                multisig1.publicAccount,
+                1,
+                1,
+                [account1.publicAccount, account2.publicAccount, account3.publicAccount],
+                [multisig2.publicAccount],
+            ),
+        ]);
+
+        return new MultisigAccountGraphInfo(map);
+    }
+
     function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
         map.set(0, [new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], [])]);
@@ -144,10 +159,11 @@ describe('AggregateTransactionService', () => {
     }
 
     let mockNetworkRepository: NetworkRepository;
+    let mockedAccountRepository: MultisigRepository;
     before(() => {
         mockNetworkRepository = mock<NetworkRepository>();
         const mockRepoFactory = mock<RepositoryFactory>();
-        const mockedAccountRepository: MultisigRepository = mock<MultisigRepository>();
+        mockedAccountRepository = mock<MultisigRepository>();
 
         when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account1.address))).thenReturn(observableOf(givenAccount1Info()));
         when(mockedAccountRepository.getMultisigAccountInfo(deepEqual(account4.address))).thenReturn(observableOf(givenAccount4Info()));
@@ -623,6 +639,14 @@ describe('AggregateTransactionService', () => {
     });
 
     it('should call getMaxCosignatures and returns', async () => {
+        const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
+        expect(max).to.be.equal(4);
+    });
+
+    it('should call getMaxCosignatures and returns distinct count', async () => {
+        when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig2.address))).thenReturn(
+            observableOf(givenMultisig2AccountGraphInfoDuplicated()),
+        );
         const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
         expect(max).to.be.equal(4);
     });

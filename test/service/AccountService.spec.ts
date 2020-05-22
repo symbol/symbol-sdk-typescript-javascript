@@ -36,19 +36,19 @@ import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { AccountKey } from '../../src/model/account/AccountKey';
+import { AccountKeyType } from '../../src/model/account/AccountKeyType';
 
 describe('AccountService', () => {
     let accountService: AccountService;
     let account: Account;
     let account2: Account;
 
-    function mockAccountInfo(withMosaic = false): AccountInfo[] {
+    function mockAccountInfo(withMosaic = false, noNamespace = false): AccountInfo[] {
         const mosaic = new Mosaic(new MosaicId('941299B2B7E1291C'), UInt64.fromUint(1));
-        const mosaics = [
-            NetworkCurrencyLocal.createAbsolute(1),
-            NetworkCurrencyPublic.createAbsolute(1),
-            NetworkHarvestLocal.createAbsolute(1),
-        ];
+        const mosaics = noNamespace
+            ? []
+            : [NetworkCurrencyLocal.createAbsolute(1), NetworkCurrencyPublic.createAbsolute(1), NetworkHarvestLocal.createAbsolute(1)];
         if (withMosaic) {
             mosaics.push(mosaic);
         }
@@ -59,8 +59,8 @@ describe('AccountService', () => {
                 account.publicKey,
                 UInt64.fromUint(100),
                 AccountType.Main,
-                '0',
-                [new ActivityBucket('0', 1, 1, 1)],
+                [new AccountKey(AccountKeyType.Linked, '0')],
+                [new ActivityBucket(UInt64.fromUint(0), UInt64.fromUint(1), 1, UInt64.fromUint(1))],
                 mosaics,
                 UInt64.fromUint(100),
                 UInt64.fromUint(100),
@@ -116,15 +116,16 @@ describe('AccountService', () => {
         return new NamespaceName(id, name);
     }
 
+    let mockAccountRepository: AccountRepository;
     before(() => {
         account = TestingAccount;
         account2 = MultisigAccount;
-        const mockAccountRepository = mock<AccountRepository>();
+        mockAccountRepository = mock<AccountRepository>();
         const mockNamespaceRepository = mock<NamespaceRepository>();
         const mockRepoFactory = mock<RepositoryFactory>();
 
         when(mockAccountRepository.getAccountsInfo(deepEqual([account.address]))).thenReturn(observableOf(mockAccountInfo()));
-        when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true)));
+
         when(mockNamespaceRepository.getNamespacesFromAccounts(deepEqual([account.address]))).thenReturn(observableOf(mockNamespaceInfo()));
         when(mockNamespaceRepository.getNamespacesFromAccounts(deepEqual([account2.address]))).thenReturn(
             observableOf(mockNamespaceInfo()),
@@ -170,6 +171,7 @@ describe('AccountService', () => {
     });
 
     it('should return accountInfo with mosaicId', async () => {
+        when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true)));
         const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
         expect(result[0].resolvedMosaics).to.not.be.undefined;
         expect(result[0].resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
@@ -186,5 +188,13 @@ describe('AccountService', () => {
         expect(result![0].namespaceName).to.be.equal('catapult.currency');
         expect(result![1].namespaceName).to.be.equal('symbol.xym');
         expect(result![2].namespaceName).to.be.equal('catapult.harvest');
+    });
+
+    it('should return empty resolved namespaceInfo', async () => {
+        when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true, true)));
+        const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
+        expect(result).to.not.be.undefined;
+        expect(result.length).to.be.greaterThan(0);
+        expect(result![0].resolvedMosaics?.length).to.be.equal(1);
     });
 });

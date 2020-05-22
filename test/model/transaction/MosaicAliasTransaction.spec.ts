@@ -26,7 +26,7 @@ import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAli
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { deepEqual } from 'assert';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('MosaicAliasTransaction', () => {
@@ -155,5 +155,14 @@ describe('MosaicAliasTransaction', () => {
         expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
         expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
         expect(embedded.type.valueOf()).to.be.equal(TransactionType.MOSAIC_ALIAS.valueOf());
+    });
+
+    it('Notify Account', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const tx = MosaicAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, mosaicId, NetworkType.MIJIN_TEST);
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

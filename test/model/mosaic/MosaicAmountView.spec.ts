@@ -56,4 +56,25 @@ describe('MosaicAmountView', () => {
         expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
         expect(mosaicAmountView.amount.compact()).to.be.equal(100);
     });
+
+    it('should createComplete a Mosaic Amount View get correct amount divisibility 0', () => {
+        const mosaicInfoZero = new MosaicInfo(
+            new MosaicId([3294802500, 2243684972]), // mosaicId
+            new UInt64([3403414400, 2095475]), // supply
+            new UInt64([1, 0]), // height
+            PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+            1, // revision
+            MosaicFlags.create(true, true, true),
+            0,
+            UInt64.fromUint(1000),
+        );
+        const mosaicAmountView = new MosaicAmountView(mosaicInfoZero, UInt64.fromUint(100));
+        expect(mosaicAmountView.relativeAmount()).to.be.equal(100);
+        expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
+    });
+
+    it('should return full name', () => {
+        const mosaicAmountView = new MosaicAmountView(mosaicInfo, UInt64.fromUint(100));
+        expect(mosaicAmountView.fullName()).to.be.equal(new MosaicId([3294802500, 2243684972]).toHex());
+    });
 });

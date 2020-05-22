@@ -39,7 +39,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
-describe('TransactionHttp', () => {
+describe('Unresolved Mapping', () => {
     const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
@@ -225,6 +225,7 @@ describe('TransactionHttp', () => {
                 namespaceIdAddress,
                 UInt64.fromUint(2),
                 networkType,
+                UInt64.fromHex('FFFFFFFFFFFFFFFF'),
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(

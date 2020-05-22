@@ -27,6 +27,7 @@ import { TransactionType } from '../model/transaction/TransactionType';
 import { Address } from '../model/account/Address';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { NetworkRepository } from '../infrastructure/NetworkRepository';
+import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
 
 /**
  * Aggregated Transaction service
@@ -36,7 +37,7 @@ export class AggregateTransactionService {
     private readonly networkRepository: NetworkRepository;
     /**
      * Constructor
-     * @param multisigRepository
+     * @param repositoryFactory
      */
     constructor(repositoryFactory: RepositoryFactory) {
         this.multisigRepository = repositoryFactory.createMultisigRepository();
@@ -90,13 +91,10 @@ export class AggregateTransactionService {
     public getMaxCosignatures(address: Address): Observable<number> {
         return this.multisigRepository.getMultisigAccountGraphInfo(address).pipe(
             map((graph) => {
-                let count = 0;
-                graph.multisigAccounts.forEach((multisigInfo) => {
-                    multisigInfo.map((multisig) => {
-                        count += multisig.cosignatories.length;
-                    });
-                });
-                return count;
+                const cosignatures = ([] as MultisigAccountInfo[])
+                    .concat(...Array.from(graph.multisigAccounts.values()))
+                    .map((info) => info.cosignatories.map((cosig) => cosig.publicKey));
+                return new Set(([] as string[]).concat(...cosignatures)).size;
             }),
         );
     }

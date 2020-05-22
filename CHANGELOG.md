@@ -3,6 +3,45 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.19.1] - 21-May-2020
+
+**Milestone**: Gorilla.1(0.9.5.1)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.19.1 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.19 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.11  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- **[BREAKING CHANGE]** `RemotePublicKey` has been renamed to `LinkedPublicKey` in `AccountKeyLinkTransaction`.
+- **[BREAKING CHANGE]** `AccountRestrictionFlags` has been split into 3 separate flags: `AddressRestrictionFlag`, `MosaicRestrictionFlag` and `OperationRestrictionFlag` for better compile time and runtime validation.
+- **[BREAKING CHANGE]** Added `NamaspaceRepository` interface to `Listener` constructor parameters for resolving alias purpose. `Listener` object can still be instantiated by using `RepositoryFactory.createListener()` with no coding change.
+- Added `signer` and `signature` as optional parameters to the `create` methods in transaction classes. `TransactionMapping.createFromPayload` is now including `signer` and `signature`.
+- Refactored address filter in websocket listener channels which now filters on `recipientAddress`, `targetAccount`, `signerPublicKey` fields in all transaction types. The Listener can filter on `unresolved (alias)` addresses now.
+- Added optional `transactionHash` parameter in websocket listener channel subscribers which can be used for specific transaction monitoring now.
+
+## [0.19.0] - 15-May-2020
+
+**Milestone**: Gorilla.1(0.9.5.1)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.19.0 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.18 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.10  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- **[BREAKING CHANGE]** `Transaction signing` is now using `GenerationHashSeed` from `NodeInfo` or `NetworkProperties`. GenerationHash on Nemesis block (block:1) is `NOT` used for signing purposes.
+- **[BREAKING CHANGE]** Renamed `AccountLinkTransaction` to `AccountKeyLinkTransaction`.
+- **[BREAKING CHANGE]** Renamed `networkGenerationHash` to `networkGenerationHashSeed` in `NodeInfo`.
+- **[BREAKING CHANGE]** replaced `linkedPublickKey` with `supplementalAccountKeys` array in `AccountInfo`.
+- Added new transaction `VrfKeyLinkTransaction`.
+- Added new transaction `VotingKeyLinkTransaction`.
+- Added new transaction `NodeKeyLinkTransaction`.
+- Added new properties `proofGamma`, `proofScalar`, `proofVarificationHash` in `BlockInfo`
+- Added new properties `harvestNetworkPercentage`, `harvestNetworkFeeSinkPublicKey` in `NetworkProperties`.
+- Added new `KeyType`: Unset / Linked / VRF / Voting / Node / All.
+- Added package `shx` for cross-platform building purpose.
+- Fixed `AggregateTransaction.getMaxCosignatures()` to return distinct cosignature set.
+- Fixed a few documentaion issues.
+
 ## [0.18.0] - 20-Apr-2020
 
 **Milestone**: Fushicho.4(RC3 0.9.3.2)
@@ -460,6 +499,8 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
+[0.19.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.0...v0.19.1
+[0.19.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.4...v0.18.0
 [0.17.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.3...v0.17.4
 [0.17.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.2...v0.17.3

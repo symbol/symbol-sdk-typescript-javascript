@@ -24,6 +24,7 @@ export class ChainProperties {
      * @param harvestingMosaicId - Mosaic id used to provide harvesting ability.
      * @param blockGenerationTargetTime - Targeted time between blocks.
      * @param blockTimeSmoothingFactor - A higher value makes the network more biased.
+     * @param blockFinalizationInterval - Number of blocks between successive finalization attempts.
      * @param importanceGrouping - Number of blocks that should be treated as a group for importance purposes.
      * @param importanceActivityPercentage - Percentage of importance resulting from fee generation and beneficiary usage.
      * @param maxRollbackBlocks - Maximum number of blocks that can be rolled back.
@@ -36,7 +37,10 @@ export class ChainProperties {
      * @param totalChainImportance - Total whole importance units available in the network.
      * @param minHarvesterBalance - Minimum number of harvesting mosaic atomic units needed for an account to be eligible for harvesting.
      * @param maxHarvesterBalance - Maximum number of harvesting mosaic atomic units needed for an account to be eligible for harvesting.
+     * @param minVoterBalance - Minimum number of harvesting mosaic atomic units needed for an account to be eligible for voting.
      * @param harvestBeneficiaryPercentage - Percentage of the harvested fee that is collected by the beneficiary account.
+     * @param harvestNetworkPercentage - Percentage of the harvested fee that is collected by network.
+     * @param harvestNetworkFeeSinkPublicKey - The harvest network fee sink public key.
      * @param blockPruneInterval - Number of blocks between cache pruning.
      * @param maxTransactionsPerBlock - Maximum number of transactions per block.
      */
@@ -47,6 +51,7 @@ export class ChainProperties {
         public readonly harvestingMosaicId?: string,
         public readonly blockGenerationTargetTime?: string,
         public readonly blockTimeSmoothingFactor?: string,
+        public readonly blockFinalizationInterval?: string,
         public readonly importanceGrouping?: string,
         public readonly importanceActivityPercentage?: string,
         public readonly maxRollbackBlocks?: string,
@@ -59,7 +64,10 @@ export class ChainProperties {
         public readonly totalChainImportance?: string,
         public readonly minHarvesterBalance?: string,
         public readonly maxHarvesterBalance?: string,
+        public readonly minVoterBalance?: string,
         public readonly harvestBeneficiaryPercentage?: string,
+        public readonly harvestNetworkPercentage?: string,
+        public readonly harvestNetworkFeeSinkPublicKey?: string,
         public readonly blockPruneInterval?: string,
         public readonly maxTransactionsPerBlock?: string,
     ) {}

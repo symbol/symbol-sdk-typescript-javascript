@@ -35,6 +35,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * Announce an namespace metadata transaction to associate a key-value state to an account.
@@ -52,6 +53,8 @@ export class NamespaceMetadataTransaction extends Transaction {
      *                You can calculate value as xor(previous-value, new-value).
      *                If there is no previous value, use directly the new value.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {NamespaceMetadataTransaction}
      */
     public static create(
@@ -63,6 +66,8 @@ export class NamespaceMetadataTransaction extends Transaction {
         value: string,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): NamespaceMetadataTransaction {
         return new NamespaceMetadataTransaction(
             networkType,
@@ -74,6 +79,8 @@ export class NamespaceMetadataTransaction extends Transaction {
             targetNamespaceId,
             valueSizeDelta,
             value,
+            signature,
+            signer,
         );
     }
 
@@ -136,6 +143,7 @@ export class NamespaceMetadataTransaction extends Transaction {
             : NamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = NamespaceMetadataTransaction.create(
             isEmbedded
                 ? Deadline.create()
@@ -147,6 +155,8 @@ export class NamespaceMetadataTransaction extends Transaction {
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -183,8 +193,8 @@ export class NamespaceMetadataTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new NamespaceMetadataTransactionBuilder(
             new SignatureDto(signatureBuffer),
@@ -227,5 +237,15 @@ export class NamespaceMetadataTransaction extends Transaction {
      */
     resolveAliases(): NamespaceMetadataTransaction {
         return this;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address) || Address.createFromPublicKey(this.targetPublicKey, this.networkType).equals(address);
     }
 }

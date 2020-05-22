@@ -24,6 +24,7 @@ import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
+import { AccountKey } from '../../../src/model/account/AccountKey';
 
 describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {
@@ -34,13 +35,13 @@ describe('AccountInfo', () => {
                 importance: new UInt64([405653170, 0]),
                 importanceHeight: new UInt64([6462, 0]),
                 accountType: 0,
-                linkedAccountKey: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+                supplementalAccountKeys: [{ keyType: 1, key: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142' }],
                 activityBucket: [
                     {
                         startHeight: '1000',
-                        totalFeesPaid: 100,
+                        totalFeesPaid: '100',
                         beneficiaryCount: 1,
-                        rawScore: 20,
+                        rawScore: '20',
                     },
                 ],
                 mosaics: [
@@ -60,9 +61,15 @@ describe('AccountInfo', () => {
             accountInfoDTO.account.publicKey,
             accountInfoDTO.account.publicKeyHeight,
             accountInfoDTO.account.accountType,
-            accountInfoDTO.account.linkedAccountKey,
+            accountInfoDTO.account.supplementalAccountKeys.map((key) => new AccountKey(key.keyType.valueOf(), key.key)),
             accountInfoDTO.account.activityBucket.map(
-                (bucket) => new ActivityBucket(bucket.startHeight, bucket.totalFeesPaid, bucket.beneficiaryCount, bucket.rawScore),
+                (bucket) =>
+                    new ActivityBucket(
+                        UInt64.fromNumericString(bucket.startHeight),
+                        UInt64.fromNumericString(bucket.totalFeesPaid),
+                        bucket.beneficiaryCount,
+                        UInt64.fromNumericString(bucket.rawScore),
+                    ),
             ),
             accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(mosaicDTO.id, mosaicDTO.amount)),
             accountInfoDTO.account.importance,

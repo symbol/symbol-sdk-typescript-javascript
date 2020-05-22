@@ -21,7 +21,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 describe('TransactionFilter', () => {
     it('should return correct query param', () => {
         const param = new TransactionFilter({
-            types: [TransactionType.TRANSFER, TransactionType.ACCOUNT_LINK],
+            types: [TransactionType.TRANSFER, TransactionType.ACCOUNT_KEY_LINK],
         });
 
         expect(param.convertCSV(param.types)).to.be.equal('16724,16716');
