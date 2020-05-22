@@ -31,7 +31,7 @@ import { SecretProofTransaction } from '../../../src/model/transaction/SecretPro
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -298,5 +298,39 @@ describe('SecretProofTransaction', () => {
         const secretBytes = secretProofTransaction.getSecretByte();
         expect(secretBytes).not.to.be.undefined;
         expect(Convert.uint8ToHex(secretBytes)).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
+    });
+
+    it('Notify Account', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const tx = SecretProofTransaction.create(
+            Deadline.create(),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.shouldNotifyAccount(account.address, []);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const namespaceId = new NamespaceId('test');
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const canNotify = SecretProofTransaction.create(
+            Deadline.create(),
+            LockHashAlgorithm.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        ).shouldNotifyAccount(account.address, [namespaceId]);
+        expect(canNotify).to.be.true;
     });
 });

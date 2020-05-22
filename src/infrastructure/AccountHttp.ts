@@ -24,7 +24,7 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
-
+import { AccountKey } from '../model/account/AccountKey';
 /**
  * Account http repository.
  *
@@ -81,7 +81,7 @@ export class AccountHttp extends Http implements AccountRepository {
             dto.account.publicKey,
             UInt64.fromNumericString(dto.account.publicKeyHeight),
             dto.account.accountType.valueOf(),
-            dto.account.linkedAccountKey,
+            dto.account.supplementalAccountKeys.map((key) => new AccountKey(key.keyType.valueOf(), key.key)),
             dto.account.activityBuckets.map((bucket) => {
                 return new ActivityBucket(
                     UInt64.fromNumericString(bucket.startHeight),

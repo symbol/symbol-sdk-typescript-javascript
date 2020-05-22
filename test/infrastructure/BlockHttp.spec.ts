@@ -24,6 +24,7 @@ import {
     MerkleProofInfoDTO,
     NetworkTypeEnum,
     PositionEnum,
+    TransactionInfoDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';

@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { Convert as convert } from '../../src/core/format';
+import { Convert as convert, Convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -29,8 +29,7 @@ import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLoca
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { AccountRestrictionFlags } from '../../src/model/restriction/AccountRestrictionType';
-import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -49,6 +48,11 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
+import { Crypto } from '../../src/core/crypto';
+import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
+import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
+import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/model';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -57,8 +61,8 @@ describe('SerializeTransactionToJSON', () => {
         account = TestingAccount;
     });
 
-    it('should create AccountLinkTransaction', () => {
-        const accountLinkTransaction = AccountLinkTransaction.create(
+    it('should create AccountKeyLinkTransaction', () => {
+        const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(),
             account.publicKey,
             LinkAction.Link,
@@ -67,7 +71,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = accountLinkTransaction.toJSON();
 
-        expect(json.transaction.remotePublicKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
@@ -75,7 +79,7 @@ describe('SerializeTransactionToJSON', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingAddress,
+            AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
             NetworkType.MIJIN_TEST,
@@ -84,7 +88,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_ADDRESS_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(json.transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
@@ -92,7 +96,7 @@ describe('SerializeTransactionToJSON', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowMosaic,
+            MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
@@ -101,7 +105,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(json.transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
@@ -109,7 +113,7 @@ describe('SerializeTransactionToJSON', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionFlags.AllowIncomingTransactionType,
+            OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
             NetworkType.MIJIN_TEST,
@@ -118,7 +122,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = operationRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
-        expect(json.transaction.restrictionFlags).to.be.equal(AccountRestrictionFlags.AllowIncomingTransactionType);
+        expect(json.transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
     });
 
@@ -365,5 +369,46 @@ describe('SerializeTransactionToJSON', () => {
         const json = registerNamespaceTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
+    });
+
+    it('should create VrfKeyLinkTransaction', () => {
+        const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const json = vrfKeyLinkTransaction.toJSON();
+
+        expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create NodeKeyLinkTransaction', () => {
+        const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+        const json = nodeKeyLinkTransaction.toJSON();
+
+        expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create VotingKeyLinkTransaction', () => {
+        const votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(),
+            votingKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const json = votingKeyLinkTransaction.toJSON();
+
+        expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 });

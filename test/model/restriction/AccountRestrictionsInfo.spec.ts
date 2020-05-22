@@ -20,7 +20,7 @@ import { AccountRestriction } from '../../../src/model/restriction/AccountRestri
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictions } from '../../../src/model/restriction/AccountRestrictions';
 import { AccountRestrictionsInfo } from '../../../src/model/restriction/AccountRestrictionsInfo';
-import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
+import { AddressRestrictionFlag } from '../../../src/model/model';
 
 describe('AccountRestrictionsInfo', () => {
     it('should createComplete an AccountRestrictionsInfo object', () => {
@@ -30,7 +30,7 @@ describe('AccountRestrictionsInfo', () => {
                 address: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
                 restrictions: [
                     {
-                        restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
+                        restrictionFlags: AddressRestrictionFlag.AllowIncomingAddress,
                         values: [
                             {
                                 modificationAction: AccountRestrictionModificationAction.Add,

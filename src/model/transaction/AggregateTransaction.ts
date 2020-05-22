@@ -45,6 +45,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
+import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -90,6 +92,8 @@ export class AggregateTransaction extends Transaction {
      * @param networkType - The network type.
      * @param cosignatures
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AggregateTransaction}
      */
     public static createComplete(
@@ -98,6 +102,8 @@ export class AggregateTransaction extends Transaction {
         networkType: NetworkType,
         cosignatures: AggregateTransactionCosignature[],
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AggregateTransaction {
         return new AggregateTransaction(
             networkType,
@@ -107,6 +113,8 @@ export class AggregateTransaction extends Transaction {
             maxFee,
             innerTransactions,
             cosignatures,
+            signature,
+            signer,
         );
     }
 
@@ -117,6 +125,8 @@ export class AggregateTransaction extends Transaction {
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
      * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
+     * @param {string} signature - (Optional) Transaction signature
+     * @param {PublicAccount} signer - (Optional) Signer public account
      * @return {AggregateTransaction}
      */
     public static createBonded(
@@ -125,6 +135,8 @@ export class AggregateTransaction extends Transaction {
         networkType: NetworkType,
         cosignatures: AggregateTransactionCosignature[] = [],
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AggregateTransaction {
         return new AggregateTransaction(
             networkType,
@@ -134,6 +146,8 @@ export class AggregateTransaction extends Transaction {
             maxFee,
             innerTransactions,
             cosignatures,
+            signature,
+            signer,
         );
     }
 
@@ -154,6 +168,8 @@ export class AggregateTransaction extends Transaction {
                 : AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const innerTransactions = builder.getTransactions().map((t) => Convert.uint8ToHex(EmbeddedTransactionHelper.serialize(t)));
         const networkType = builder.getNetwork().valueOf();
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signature = payload.substring(16, 144);
         const consignatures = builder.getCosignatures().map((cosig) => {
             return new AggregateTransactionCosignature(
                 Convert.uint8ToHex(cosig.signature.signature),
@@ -170,6 +186,8 @@ export class AggregateTransaction extends Transaction {
                   networkType,
                   consignatures,
                   new UInt64(builder.fee.amount),
+                  signature.match(`^[0]+$`) ? undefined : signature,
+                  signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
               )
             : AggregateTransaction.createBonded(
                   Deadline.createFromDTO(builder.deadline.timestamp),
@@ -179,6 +197,8 @@ export class AggregateTransaction extends Transaction {
                   networkType,
                   consignatures,
                   new UInt64(builder.fee.amount),
+                  signature.match(`^[0]+$`) ? undefined : signature,
+                  signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
               );
     }
 
@@ -310,8 +330,8 @@ export class AggregateTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
         const transactions = this.innerTransactions.map((transaction) => (transaction as Transaction).toEmbeddedTransaction());
         const cosignatures = this.cosignatures.map((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
@@ -420,5 +440,21 @@ export class AggregateTransaction extends Transaction {
         return DtoMapping.assign(this, {
             maxFee: UInt64.fromUint(calculatedSize * feeMultiplier),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            this.cosignatures.find((_) => _.signer.address.equals(address)) !== undefined ||
+            this.innerTransactions.find((innerTransaction: InnerTransaction) => innerTransaction.shouldNotifyAccount(address, alias)) !==
+                undefined
+        );
     }
 }

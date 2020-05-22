@@ -32,7 +32,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
-import { AccountRestrictionFlags } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -40,6 +39,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
 
 export class AccountAddressRestrictionTransaction extends Transaction {
     /**
@@ -50,15 +50,19 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @param restrictionDeletions - Account restriction deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {AccountAddressRestrictionTransaction}
      */
     public static create(
         deadline: Deadline,
-        restrictionFlags: AccountRestrictionFlags,
+        restrictionFlags: AddressRestrictionFlag,
         restrictionAdditions: (Address | NamespaceId)[],
         restrictionDeletions: (Address | NamespaceId)[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): AccountAddressRestrictionTransaction {
         return new AccountAddressRestrictionTransaction(
             networkType,
@@ -68,6 +72,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             restrictionFlags,
             restrictionAdditions,
             restrictionDeletions,
+            signature,
+            signer,
         );
     }
 
@@ -88,7 +94,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         version: number,
         deadline: Deadline,
         maxFee: UInt64,
-        public readonly restrictionFlags: AccountRestrictionFlags,
+        public readonly restrictionFlags: AddressRestrictionFlag,
         public readonly restrictionAdditions: (Address | NamespaceId)[],
         public readonly restrictionDeletions: (Address | NamespaceId)[],
         signature?: string,
@@ -110,6 +116,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             : AccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = AccountAddressRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.create()
@@ -123,6 +130,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             }),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -160,8 +169,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new AccountAddressRestrictionTransactionBuilder(
             new SignatureDto(signatureBuffer),
@@ -218,5 +227,22 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 statement.resolveAddress(deletion, transactionInfo.height.toString(), transactionInfo.index, aggregateTransactionIndex),
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            this.restrictionAdditions.find((_) => _.equals(address)) !== undefined ||
+            this.restrictionDeletions.find((_) => _.equals(address)) !== undefined ||
+            this.restrictionAdditions.find((_: NamespaceId) => alias.find((name) => name.equals(_) !== undefined)) !== undefined ||
+            this.restrictionDeletions.find((_: NamespaceId) => alias.find((name) => name.equals(_) !== undefined)) !== undefined
+        );
     }
 }

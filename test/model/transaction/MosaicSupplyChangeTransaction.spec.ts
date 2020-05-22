@@ -151,4 +151,17 @@ describe('MosaicSupplyChangeTransaction', () => {
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
     });
+
+    it('Notify Account', () => {
+        const tx = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            new MosaicId([2262289484, 3405110546]),
+            MosaicSupplyChangeAction.Increase,
+            UInt64.fromUint(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
+    });
 });

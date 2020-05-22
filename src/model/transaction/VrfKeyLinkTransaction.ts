@@ -15,13 +15,13 @@
  */
 
 import {
-    AccountLinkTransactionBuilder,
     AmountDto,
-    EmbeddedAccountLinkTransactionBuilder,
     EmbeddedTransactionBuilder,
     KeyDto,
     SignatureDto,
     TimestampDto,
+    EmbeddedVrfKeyLinkTransactionBuilder,
+    VrfKeyLinkTransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -34,28 +34,38 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
-/**
- * Announce an AccountLinkTransaction to delegate the account importance to a proxy account.
- * By doing so, you can enable delegated harvesting
- */
-export class AccountLinkTransaction extends Transaction {
+export class VrfKeyLinkTransaction extends Transaction {
     /**
-     * Create a link account transaction object
+     * Create a vrf key link transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param remotePublicKey - The public key of the remote account.
+     * @param linkedPublicKey - The public key of the remote account.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountLinkTransaction}
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
+     * @returns {VrfKeyLinkTransaction}
      */
     public static create(
         deadline: Deadline,
-        remotePublicKey: string,
+        linkedPublicKey: string,
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountLinkTransaction {
-        return new AccountLinkTransaction(networkType, TransactionVersion.ACCOUNT_LINK, deadline, maxFee, remotePublicKey, linkAction);
+        signature?: string,
+        signer?: PublicAccount,
+    ): VrfKeyLinkTransaction {
+        return new VrfKeyLinkTransaction(
+            networkType,
+            TransactionVersion.VRF_KEY_LINK,
+            deadline,
+            maxFee,
+            linkedPublicKey,
+            linkAction,
+            signature,
+            signer,
+        );
     }
 
     /**
@@ -63,7 +73,7 @@ export class AccountLinkTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param remotePublicKey
+     * @param linkedPublicKey
      * @param linkAction
      * @param signature
      * @param signer
@@ -77,7 +87,7 @@ export class AccountLinkTransaction extends Transaction {
         /**
          * The public key of the remote account.
          */
-        public readonly remotePublicKey: string,
+        public readonly linkedPublicKey: string,
         /**
          * The account link action.
          */
@@ -86,7 +96,7 @@ export class AccountLinkTransaction extends Transaction {
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,
     ) {
-        super(TransactionType.ACCOUNT_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.VRF_KEY_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -97,25 +107,28 @@ export class AccountLinkTransaction extends Transaction {
      */
     public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
-            ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
-            : AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+            ? EmbeddedVrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : VrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const transaction = AccountLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getRemotePublicKey().key),
+        const signature = payload.substring(16, 144);
+        const transaction = VrfKeyLinkTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VrfKeyLinkTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a AccountLinkTransaction
+     * @description get the byte size of a VrfKeyLinkTransaction
      * @returns {number}
-     * @memberof AccountLinkTransaction
+     * @memberof VrfKeyLinkTransaction
      */
     public get size(): number {
         const byteSize = super.size;
@@ -132,18 +145,18 @@ export class AccountLinkTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
-        const transactionBuilder = new AccountLinkTransactionBuilder(
+        const transactionBuilder = new VrfKeyLinkTransactionBuilder(
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_LINK.valueOf(),
+            TransactionType.VRF_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
+            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -154,21 +167,31 @@ export class AccountLinkTransaction extends Transaction {
      * @returns {EmbeddedTransactionBuilder}
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
-        return new EmbeddedAccountLinkTransactionBuilder(
+        return new EmbeddedVrfKeyLinkTransactionBuilder(
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.ACCOUNT_LINK.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
+            TransactionType.VRF_KEY_LINK.valueOf(),
+            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }
 
     /**
      * @internal
-     * @returns {AccountLinkTransaction}
+     * @returns {VrfKeyLinkTransaction}
      */
-    resolveAliases(): AccountLinkTransaction {
+    resolveAliases(): VrfKeyLinkTransaction {
         return this;
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address) || Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address);
     }
 }

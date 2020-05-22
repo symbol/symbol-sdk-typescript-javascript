@@ -15,7 +15,7 @@
  */
 
 import { merge, Observable, of } from 'rxjs';
-import { filter, first, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
+import { first, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { IListener } from '../infrastructure/IListener';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { TransactionRepository } from '../infrastructure/TransactionRepository';
@@ -129,7 +129,7 @@ export class TransactionService implements ITransactionService {
         transactionHash: string,
         transactionObservable: Observable<T>,
     ): Observable<T> {
-        const errorObservable = listener.status(address).pipe(filter((t) => t.hash.toUpperCase() === transactionHash.toUpperCase()));
+        const errorObservable = listener.status(address, transactionHash);
         return merge(transactionObservable, errorObservable).pipe(
             first(),
             map((errorOrTransaction) => {
@@ -165,7 +165,7 @@ export class TransactionService implements ITransactionService {
      */
     private checkShouldResolve(transaction: Transaction): boolean {
         switch (transaction.type) {
-            case TransactionType.ACCOUNT_LINK:
+            case TransactionType.ACCOUNT_KEY_LINK:
             case TransactionType.ACCOUNT_METADATA:
             case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
             case TransactionType.ADDRESS_ALIAS:

@@ -18,11 +18,11 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { Address } from '../../../src/model/account/Address';
 import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
-import { AccountRestrictionFlags } from '../../../src/model/restriction/AccountRestrictionType';
+import { AddressRestrictionFlag } from '../../../src/model/model';
 describe('AccountRestriction', () => {
     it('should createComplete an AccountRestriction object', () => {
         const accountRestrictionDTO = {
-            restrictionFlags: AccountRestrictionFlags.AllowIncomingAddress,
+            restrictionFlags: AddressRestrictionFlag.AllowIncomingAddress,
             values: ['906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB'],
         };
 

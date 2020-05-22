@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-import { Observable, Subject } from 'rxjs';
-import { filter, map, share } from 'rxjs/operators';
+import { Observable, of, OperatorFunction, Subject } from 'rxjs';
+import { filter, flatMap, map, share } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
-import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
-import { NamespaceId } from '../model/namespace/NamespaceId';
+import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
-import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
-import { InnerTransaction } from '../model/transaction/InnerTransaction';
-import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
-import { TransferTransaction } from '../model/transaction/TransferTransaction';
-import { UInt64 } from '../model/UInt64';
+import { BlockHttp } from './BlockHttp';
 import { IListener } from './IListener';
+import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
-enum ListenerChannelName {
+export enum ListenerChannelName {
     block = 'block',
     confirmedAdded = 'confirmedAdded',
     unconfirmedAdded = 'unconfirmedAdded',
     unconfirmedRemoved = 'unconfirmedRemoved',
-    aggregateBondedAdded = 'partialAdded',
-    aggregateBondedRemoved = 'partialRemoved',
+    partialAdded = 'partialAdded',
+    partialRemoved = 'partialRemoved',
     cosignature = 'cosignature',
     modifyMultisigAccount = 'modifyMultisigAccount',
     status = 'status',
@@ -82,6 +78,10 @@ export class Listener implements IListener {
          * Listener configuration.
          */
         private config: string,
+        /**
+         * Namespace repository for resolving account alias
+         */
+        private namespaceRepository: NamespaceRepository,
         /**
          * WebSocket injected when using listeners in client.
          */
@@ -139,26 +139,7 @@ export class Listener implements IListener {
         } else if (message.block) {
             this.messageSubject.next({
                 channelName: ListenerChannelName.block,
-                message: new BlockInfo(
-                    message.meta.hash,
-                    message.meta.generationHash,
-                    message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
-                    message.meta.numTransactions,
-                    message.block.signature,
-                    PublicAccount.createFromPublicKey(message.block.signerPublicKey, message.block.network),
-                    message.block.network,
-                    message.block.version,
-                    message.block.type,
-                    UInt64.fromNumericString(message.block.height),
-                    UInt64.fromNumericString(message.block.timestamp),
-                    UInt64.fromNumericString(message.block.difficulty),
-                    message.block.feeMultiplier,
-                    message.block.previousBlockHash,
-                    message.block.blockTransactionsHash,
-                    message.block.blockReceiptsHash,
-                    message.block.stateHash,
-                    message.block.beneficiaryPublicKey,
-                ),
+                message: BlockHttp.toBlockInfo(message),
             });
         } else if (message.code) {
             this.messageSubject.next({
@@ -231,21 +212,7 @@ export class Listener implements IListener {
      * @return an observable stream of Transaction with state confirmed
      */
     public confirmed(address: Address, transactionHash?: string): Observable<Transaction> {
-        this.subscribeTo(`confirmedAdded/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.confirmedAdded),
-            filter((_) => _.message instanceof Transaction),
-            map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)),
-            filter((_) => {
-                if (transactionHash === undefined) {
-                    return true;
-                } else {
-                    const metaHash = _.transactionInfo!.hash;
-                    return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
-                }
-            }),
-        );
+        return this.transactionSubscription(ListenerChannelName.confirmedAdded, address, transactionHash);
     }
 
     /**
@@ -254,33 +221,11 @@ export class Listener implements IListener {
      * it emits a new Transaction in the event stream.
      *
      * @param address address we listen when a transaction is in unconfirmed state
+     * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state unconfirmed
      */
-    public unconfirmedAdded(address: Address): Observable<Transaction> {
-        this.subscribeTo(`unconfirmedAdded/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.unconfirmedAdded),
-            filter((_) => _.message instanceof Transaction),
-            map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)),
-        );
-    }
-
-    /**
-     * Returns an observable stream of Transaction Hashes for specific address.
-     * Each time a transaction with state unconfirmed changes its state,
-     * it emits a new message with the transaction hash in the event stream.
-     *
-     * @param address address we listen when a transaction is removed from unconfirmed state
-     * @return an observable stream of Strings with the transaction hash
-     */
-    public unconfirmedRemoved(address: Address): Observable<string> {
-        this.subscribeTo(`unconfirmedRemoved/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.unconfirmedRemoved),
-            filter((_) => typeof _.message === 'string'),
-            map((_) => _.message as string),
-        );
+    public unconfirmedAdded(address: Address, transactionHash?: string): Observable<Transaction> {
+        return this.transactionSubscription(ListenerChannelName.unconfirmedAdded, address, transactionHash);
     }
 
     /**
@@ -293,21 +238,42 @@ export class Listener implements IListener {
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
     public aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction> {
-        this.subscribeTo(`partialAdded/${address.plain()}`);
+        return this.transactionSubscription(ListenerChannelName.partialAdded, address, transactionHash);
+    }
+
+    /**
+     * Basic subscription for all the transactions status.
+     * @param channel the transaction based channel
+     * @param address the address
+     * @param transactionHash the transaction hash filter.
+     * @return an observable stream of Transactions
+     */
+    private transactionSubscription<T extends Transaction>(
+        channel: ListenerChannelName,
+        address: Address,
+        transactionHash?: string,
+    ): Observable<T> {
+        this.subscribeTo(`${channel}/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.aggregateBondedAdded),
-            filter((_) => _.message instanceof AggregateTransaction),
-            map((_) => _.message as AggregateTransaction),
-            filter((_) => this.transactionFromAddress(_, address)),
-            filter((_) => {
-                if (transactionHash === undefined) {
-                    return true;
-                } else {
-                    const metaHash = _.transactionInfo!.hash;
-                    return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
-                }
-            }),
+            filter((listenerMessage) => listenerMessage.channelName === channel),
+            filter((listenerMessage) => listenerMessage.message instanceof Transaction),
+            map((listenerMessage) => listenerMessage.message as T),
+            filter((transaction) => this.filterHash(transaction, transactionHash)),
+            this.filterByNotifyAccount(address),
         );
+    }
+
+    /**
+     * Returns an observable stream of Transaction Hashes for specific address.
+     * Each time a transaction with state unconfirmed changes its state,
+     * it emits a new message with the transaction hash in the event stream.
+     *
+     * @param address address we listen when a transaction is removed from unconfirmed state
+     * @param transactionHash the transaction hash filter.
+     * @return an observable stream of Strings with the transaction hash
+     */
+    public unconfirmedRemoved(address: Address, transactionHash?: string): Observable<string> {
+        return this.transactionHashSubscription(ListenerChannelName.unconfirmedRemoved, address, transactionHash);
     }
 
     /**
@@ -316,14 +282,31 @@ export class Listener implements IListener {
      * it emits a new message with the transaction hash in the event stream.
      *
      * @param address address we listen when a transaction is confirmed or rejected
+     * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    public aggregateBondedRemoved(address: Address): Observable<string> {
-        this.subscribeTo(`partialRemoved/${address.plain()}`);
+    public aggregateBondedRemoved(address: Address, transactionHash?: string): Observable<string> {
+        return this.transactionHashSubscription(ListenerChannelName.partialRemoved, address, transactionHash);
+    }
+
+    /**
+     * Generic subscription for all the transaction hash based channels.
+     * @param channel the channel
+     * @param address the address
+     * @param transactionHash the transaction hash (optional)
+     * @return an observable stream of Strings with the transaction hash
+     */
+    private transactionHashSubscription(
+        channel: ListenerChannelName,
+        address: Address,
+        transactionHash: string | undefined,
+    ): Observable<string> {
+        this.subscribeTo(`${channel}/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.aggregateBondedRemoved),
+            filter((_) => _.channelName === channel),
             filter((_) => typeof _.message === 'string'),
             map((_) => _.message as string),
+            filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
         );
     }
 
@@ -333,16 +316,65 @@ export class Listener implements IListener {
      * it emits a new message with the transaction status error in the event stream.
      *
      * @param address address we listen to be notified when some error happened
+     * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of {@link TransactionStatusError}
      */
-    public status(address: Address): Observable<TransactionStatusError> {
+    public status(address: Address, transactionHash?: string): Observable<TransactionStatusError> {
         this.subscribeTo(`status/${address.plain()}`);
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.status),
             filter((_) => _.message instanceof TransactionStatusError),
             map((_) => _.message as TransactionStatusError),
+            filter((_) => !transactionHash || _.hash.toUpperCase() == transactionHash.toUpperCase()),
             filter((_) => address.equals(_.address)),
         );
+    }
+
+    /**
+     * Filters the transaction by hash if provided.
+     * @param transaction the transaction
+     * @param transactionHash the hash.
+     */
+    private filterHash(transaction: Transaction, transactionHash: string | undefined): boolean {
+        if (transactionHash === undefined) {
+            return true;
+        } else {
+            const metaHash = transaction.transactionInfo!.hash;
+            return metaHash !== undefined ? metaHash.toUpperCase() === transactionHash.toUpperCase() : false;
+        }
+    }
+
+    /**
+     * It filters a transaction by address using the aliases.
+     *
+     * This method delegates the rest loading as much as possible. It tries to filter by signer first.
+     *
+     * Note: this filter performs one extra rest call and it should be down in the pipeline.
+     *
+     * @param address the address.
+     * @return an observable filter.
+     */
+    private filterByNotifyAccount<T extends Transaction>(address: Address): OperatorFunction<T, T> {
+        return (transactionObservable): Observable<T> => {
+            return transactionObservable.pipe(
+                flatMap((transaction) => {
+                    if (transaction.isSigned(address)) {
+                        return of(transaction);
+                    }
+                    const namespaceIdsObservable = this.namespaceRepository.getAccountsNames([address]).pipe(
+                        map((names) => {
+                            return ([] as NamespaceName[])
+                                .concat(...Array.from(names.map((accountName) => accountName.names)))
+                                .map((name) => name.namespaceId);
+                        }),
+                    );
+                    return namespaceIdsObservable.pipe(
+                        filter((namespaceIds) => transaction.shouldNotifyAccount(address, namespaceIds)),
+                        map(() => transaction),
+                    );
+                }),
+            );
+        };
     }
 
     /**
@@ -373,67 +405,5 @@ export class Listener implements IListener {
             subscribe: channel,
         };
         this.webSocket.send(JSON.stringify(subscriptionMessage));
-    }
-
-    /**
-     * @internal
-     * Filters if a transaction has been initiated or signed by an address
-     * @param transaction - Transaction object
-     * @param address - Address
-     * @returns boolean
-     */
-    private transactionFromAddress(transaction: Transaction, address: Address): boolean {
-        let transactionFromAddress = this.transactionHasSignerOrReceptor(transaction, address);
-
-        if (transaction instanceof AggregateTransaction) {
-            transaction.cosignatures.map((_: AggregateTransactionCosignature) => {
-                if (_.signer.address.equals(address)) {
-                    transactionFromAddress = true;
-                }
-            });
-            transaction.innerTransactions.map((innerTransaction: InnerTransaction) => {
-                if (
-                    this.transactionHasSignerOrReceptor(innerTransaction, address) ||
-                    this.accountAddedToMultiSig(innerTransaction, address)
-                ) {
-                    transactionFromAddress = true;
-                }
-            });
-        }
-        return transactionFromAddress;
-    }
-
-    /**
-     * @internal
-     * @param transaction
-     * @param address
-     * @returns {boolean}
-     */
-    private transactionHasSignerOrReceptor(transaction: Transaction, address: Address | NamespaceId): boolean {
-        if (address instanceof NamespaceId) {
-            return transaction instanceof TransferTransaction && (transaction.recipientAddress as NamespaceId).equals(address);
-        }
-
-        return (
-            transaction.signer!.address.equals(address) ||
-            (transaction instanceof TransferTransaction && (transaction.recipientAddress as Address).equals(address))
-        );
-    }
-
-    /**
-     * @internal
-     * Filters if an account has been added to multi signatories
-     * @param transaction - Transaction object
-     * @param address - Address
-     * @returns boolean
-     */
-    private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
-        if (transaction instanceof MultisigAccountModificationTransaction) {
-            return (
-                transaction.publicKeyAdditions.find((_: PublicAccount) => _.address.equals(address)) !== undefined ||
-                transaction.publicKeyDeletions.find((_: PublicAccount) => _.address.equals(address)) !== undefined
-            );
-        }
-        return false;
     }
 }

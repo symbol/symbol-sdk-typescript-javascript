@@ -55,6 +55,9 @@ describe('BlockService', () => {
                 'previousHash',
                 'fakeHash',
                 'fakeHash',
+                'fakeHash',
+                'fakeHash',
+                'fakeHash',
                 'stateHash',
                 undefined,
             );
@@ -76,6 +79,9 @@ describe('BlockService', () => {
             'previousHash',
             mockBlockHash,
             mockBlockHash,
+            'fakeHash',
+            'fakeHash',
+            'fakeHash',
             'stateHash',
             undefined,
         );

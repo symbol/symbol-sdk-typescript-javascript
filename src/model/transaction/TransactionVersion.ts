@@ -131,7 +131,7 @@ export class TransactionVersion {
      * Link account transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_LINK = 0x01;
+    public static readonly ACCOUNT_KEY_LINK = 0x01;
 
     /**
      * Account metadata transaction version
@@ -150,4 +150,22 @@ export class TransactionVersion {
      * @type {number}
      */
     public static readonly NAMESPACE_METADATA = 0x01;
+
+    /**
+     * Vrf key link transaction version.
+     * @type {number}
+     */
+    public static readonly VRF_KEY_LINK = 0x01;
+
+    /**
+     * Voting key link transaction version.
+     * @type {number}
+     */
+    public static readonly VOTING_KEY_LINK = 0x01;
+
+    /**
+     * Node key link transaction version.
+     * @type {number}
+     */
+    public static readonly NODE_KEY_LINK = 0x01;
 }

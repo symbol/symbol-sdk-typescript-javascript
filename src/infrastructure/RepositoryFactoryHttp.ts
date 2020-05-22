@@ -17,7 +17,6 @@
 import { Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { NetworkType } from '../model/network/NetworkType';
-import { UInt64 } from '../model/UInt64';
 import { AccountHttp } from './AccountHttp';
 import { AccountRepository } from './AccountRepository';
 import { BlockHttp } from './BlockHttp';
@@ -68,9 +67,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
         this.generationHash = generationHash
             ? observableOf(generationHash)
-            : this.createBlockRepository()
-                  .getBlockByHeight(UInt64.fromUint(1))
-                  .pipe(map((b) => b.generationHash))
+            : this.createNodeRepository()
+                  .getNodeInfo()
+                  .pipe(map((b) => b.networkGenerationHashSeed))
                   .pipe(shareReplay(1));
     }
 
@@ -135,6 +134,6 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createListener(): IListener {
-        return new Listener(this.url);
+        return new Listener(this.url, this.createNamespaceRepository());
     }
 }

@@ -23,9 +23,10 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/builders/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { deepEqual } from 'assert';
+import { Address } from '../../../src/model/account/Address';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
@@ -150,5 +151,25 @@ describe('NamespaceMetadataTransaction', () => {
 
         expect(resolved).to.be.instanceOf(NamespaceMetadataTransaction);
         deepEqual(namespaceMetadataTransaction, resolved);
+    });
+
+    it('Notify Account', () => {
+        const tx = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+        let canNotify = tx.shouldNotifyAccount(account.address);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

@@ -31,6 +31,7 @@ import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
+import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client/dist/model/accountKeyDTO';
 
 describe('AccountHttp', () => {
     const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
@@ -52,7 +53,10 @@ describe('AccountHttp', () => {
     accountDTO.importance = '222';
     accountDTO.importanceHeight = '333';
     accountDTO.publicKeyHeight = '444';
-    accountDTO.linkedAccountKey = 'abc';
+    const accountKeyDto = new AccountKeyDTO();
+    accountKeyDto.key = 'abc';
+    accountKeyDto.keyType = 1;
+    accountDTO.supplementalAccountKeys = [accountKeyDto];
     accountDTO.publicKey = 'AAA';
     accountDTO.activityBuckets = [];
     accountDTO.mosaics = [mosaic];
@@ -81,7 +85,10 @@ describe('AccountHttp', () => {
         expect(accountInfo.importanceHeight.toString()).to.be.equals(accountDTO.importanceHeight);
         expect(accountInfo.publicKeyHeight.toString()).to.be.equals(accountDTO.publicKeyHeight);
         expect(accountInfo.publicKey).to.be.equals(accountDTO.publicKey);
-        expect(accountInfo.linkedAccountKey).to.be.equals(accountDTO.linkedAccountKey);
+        expect(accountInfo.supplementalAccountKeys[0].key).to.be.equals(accountDTO.supplementalAccountKeys[0].key);
+        expect(accountInfo.supplementalAccountKeys[0].keyType.valueOf()).to.be.equals(
+            accountDTO.supplementalAccountKeys[0].keyType.valueOf(),
+        );
         expect(accountInfo.mosaics.length).to.be.equals(1);
         expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);
         expect(accountInfo.mosaics[0].amount.toString()).to.be.equals(mosaic.amount);

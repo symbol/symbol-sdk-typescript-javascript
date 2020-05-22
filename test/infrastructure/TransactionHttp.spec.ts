@@ -84,7 +84,7 @@ describe('TransactionHttp', () => {
     it('Test getTransactionStatus method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInvalidAction;
+        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionGroupEnum.Failed;
@@ -98,14 +98,14 @@ describe('TransactionHttp', () => {
 
         expect(transactionStatus.deadline.toString()).to.be.equal('1234');
         expect(transactionStatus.hash).to.be.equal(hash);
-        expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Invalid_Action');
+        expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Inconsistent_Unlink_Data');
         expect(transactionStatus.group).to.be.equal('failed');
     });
 
     it('Test getTransactionsStatuses method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInvalidAction;
+        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionGroupEnum.Failed;
@@ -120,7 +120,7 @@ describe('TransactionHttp', () => {
 
         expect(transactionStatus.deadline.toString()).to.be.equal('1234');
         expect(transactionStatus.hash).to.be.equal(hash);
-        expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Invalid_Action');
+        expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Inconsistent_Unlink_Data');
         expect(transactionStatus.group).to.be.equal('failed');
     });
 

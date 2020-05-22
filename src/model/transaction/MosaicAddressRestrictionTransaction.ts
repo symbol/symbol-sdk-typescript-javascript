@@ -62,6 +62,8 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param networkType - The network type.
      * @param previousRestrictionValue - (Optional) The previous restriction value.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {MosaicAddressRestrictionTransaction}
      */
     public static create(
@@ -73,6 +75,8 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         networkType: NetworkType,
         previousRestrictionValue: UInt64 = UInt64.fromHex('FFFFFFFFFFFFFFFF'),
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): MosaicAddressRestrictionTransaction {
         return new MosaicAddressRestrictionTransaction(
             networkType,
@@ -84,6 +88,8 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             targetAddress,
             previousRestrictionValue,
             newRestrictionValue,
+            signature,
+            signer,
         );
     }
 
@@ -146,6 +152,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             : MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = MosaicAddressRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.create()
@@ -157,6 +164,8 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             networkType,
             new UInt64(builder.getPreviousRestrictionValue()),
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -200,8 +209,8 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new MosaicAddressRestrictionTransactionBuilder(
             new SignatureDto(signatureBuffer),
@@ -260,5 +269,20 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                 aggregateTransactionIndex,
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @param alias address alias (names)
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            (this.targetAddress as Address).equals(address) ||
+            alias.find((name) => (this.targetAddress as NamespaceId).equals(name)) !== undefined
+        );
     }
 }

@@ -37,7 +37,7 @@ export class AggregateTransactionService {
     private readonly networkRepository: NetworkRepository;
     /**
      * Constructor
-     * @param multisigRepository
+     * @param repositoryFactory
      */
     constructor(repositoryFactory: RepositoryFactory) {
         this.multisigRepository = repositoryFactory.createMultisigRepository();

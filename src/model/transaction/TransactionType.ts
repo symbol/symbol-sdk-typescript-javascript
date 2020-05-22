@@ -113,7 +113,7 @@ export enum TransactionType {
      * Link account transaction type
      * @type {number}
      */
-    ACCOUNT_LINK = 0x414c,
+    ACCOUNT_KEY_LINK = 0x414c,
 
     /**
      * Mosaic address restriction type
@@ -144,4 +144,22 @@ export enum TransactionType {
      * @type {number}
      */
     NAMESPACE_METADATA = 0x4344,
+
+    /**
+     * Link vrf key transaction
+     * @type {number}
+     */
+    VRF_KEY_LINK = 0x4243,
+
+    /**
+     * Link voting key transaction
+     * @type {number}
+     */
+    VOTING_KEY_LINK = 0x4143,
+
+    /**
+     * Link node key transaction
+     * @type {number}
+     */
+    NODE_KEY_LINK = 0x424c,
 }

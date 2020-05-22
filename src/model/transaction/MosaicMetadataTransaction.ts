@@ -39,6 +39,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Address } from '../account/Address';
 
 /**
  * Announce an mosaic metadata transaction to associate a key-value state to an account.
@@ -56,6 +57,8 @@ export class MosaicMetadataTransaction extends Transaction {
      *                You can calculate value as xor(previous-value, new-value).
      *                If there is no previous value, use directly the new value.
      * @param maxFee - (Optional) Max fee defined by the sender
+     * @param signature - (Optional) Transaction signature
+     * @param signer - (Optional) Signer public account
      * @returns {MosaicMetadataTransaction}
      */
     public static create(
@@ -67,6 +70,8 @@ export class MosaicMetadataTransaction extends Transaction {
         value: string,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
+        signature?: string,
+        signer?: PublicAccount,
     ): MosaicMetadataTransaction {
         return new MosaicMetadataTransaction(
             networkType,
@@ -78,6 +83,8 @@ export class MosaicMetadataTransaction extends Transaction {
             targetMosaicId,
             valueSizeDelta,
             value,
+            signature,
+            signer,
         );
     }
 
@@ -140,6 +147,7 @@ export class MosaicMetadataTransaction extends Transaction {
             : MosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
+        const signature = payload.substring(16, 144);
         const transaction = MosaicMetadataTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getTargetPublicKey().key),
@@ -149,6 +157,8 @@ export class MosaicMetadataTransaction extends Transaction {
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicMetadataTransactionBuilder).fee.amount),
+            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
@@ -177,8 +187,8 @@ export class MosaicMetadataTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-        const signatureBuffer = new Uint8Array(64);
+        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
+        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
         const transactionBuilder = new MosaicMetadataTransactionBuilder(
             new SignatureDto(signatureBuffer),
@@ -231,5 +241,15 @@ export class MosaicMetadataTransaction extends Transaction {
                 aggregateTransactionIndex,
             ),
         });
+    }
+
+    /**
+     * @internal
+     * Check a given address should be notified in websocket channels
+     * @param address address to be notified
+     * @returns {boolean}
+     */
+    public shouldNotifyAccount(address: Address): boolean {
+        return super.isSigned(address) || Address.createFromPublicKey(this.targetPublicKey, this.networkType).equals(address);
     }
 }
