@@ -133,7 +133,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         return this.networkType;
     }
 
-    createListener(): IListener {
-        return new Listener(this.url, this.createNamespaceRepository());
+    createListener(websocketInjected?: any): IListener {
+        return new Listener(this.url, this.createNamespaceRepository(), websocketInjected);
     }
 }

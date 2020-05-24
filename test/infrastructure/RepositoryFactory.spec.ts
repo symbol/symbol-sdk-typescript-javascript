@@ -22,6 +22,7 @@ import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactor
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeRepository } from '../../src/infrastructure/NodeRepository';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -139,5 +140,28 @@ describe('RepositoryFactory', () => {
                 done();
             });
         });
+    });
+
+    it('Should create listener object using injected ws', () => {
+        const namespaceRepository: NamespaceRepository = mock();
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNamespaceRepository(): NamespaceRepository {
+                return instance(namespaceRepository);
+            }
+        })('http://localhost:3000', NetworkType.MIJIN_TEST, 'testHash');
+
+        class WebSocketMock {
+            constructor(public readonly url: string) {}
+
+            send(payload: string): void {
+                throw new Error(payload);
+            }
+        }
+
+        let listener = repositoryFactory.createListener();
+        expect(listener.url).to.be.equal('http://localhost:3000/ws');
+
+        listener = repositoryFactory.createListener(WebSocketMock);
+        expect(listener.url).to.be.equal('http://localhost:3000/ws');
     });
 });

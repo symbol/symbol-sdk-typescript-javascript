@@ -27,6 +27,10 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
  */
 export interface IListener {
     /**
+     * Websocket url
+     */
+    url: string;
+    /**
      * Open web socket connection.
      * @returns Promise<Void>
      */
