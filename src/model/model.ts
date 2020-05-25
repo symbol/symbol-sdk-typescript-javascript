@@ -37,6 +37,7 @@ export * from './blockchain/StorageInfo';
 export * from './blockchain/BlockInfo';
 export * from './blockchain/MerklePathItem';
 export * from './blockchain/MerkleProofInfo';
+export * from './blockchain/NewBlock';
 
 // Diagnostic
 export * from './node/ServerInfo';
