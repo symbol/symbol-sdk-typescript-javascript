@@ -50,6 +50,7 @@ describe('BlockInfo', () => {
                 numTransactions: 25,
                 numStatements: 1,
                 totalFee: new UInt64([0, 0]),
+                stateHashSubCacheMerkleRoots: ['45FF761839D7219296341925EBA3BF4832BA9B3E29C854B83E6445D5F3E1DAB7'],
             },
         };
 
@@ -57,6 +58,7 @@ describe('BlockInfo', () => {
             blockDTO.meta.hash,
             blockDTO.meta.generationHash,
             blockDTO.meta.totalFee,
+            blockDTO.meta.stateHashSubCacheMerkleRoots,
             blockDTO.meta.numTransactions,
             blockDTO.block.signature,
             PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, blockDTO.block.network),
@@ -100,5 +102,7 @@ describe('BlockInfo', () => {
         expect(blockInfo.proofGamma).to.be.equal(blockDTO.block.proofGamma);
         expect(blockInfo.proofScalar).to.be.equal(blockDTO.block.proofScalar);
         expect(blockInfo.proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);
+        expect(blockInfo.stateHashSubCacheMerkleRoots.length).to.be.equal(1);
+        expect(blockInfo.stateHashSubCacheMerkleRoots[0]).to.be.equal('45FF761839D7219296341925EBA3BF4832BA9B3E29C854B83E6445D5F3E1DAB7');
     });
 });

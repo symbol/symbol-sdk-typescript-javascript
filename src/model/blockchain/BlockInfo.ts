@@ -17,16 +17,16 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
-import { NewBlock } from './NewBlock';
 
 /**
  * The block info structure describes basic information of a block.
  */
-export class BlockInfo extends NewBlock {
+export class BlockInfo {
     /**
      * @param hash
      * @param generationHash
      * @param totalFee
+     * @param stateHashSubCacheMerkleRoots
      * @param numTransactions
      * @param signature
      * @param signer
@@ -60,6 +60,10 @@ export class BlockInfo extends NewBlock {
          * The sum of all transaction fees included in the block.
          */
         public readonly totalFee: UInt64,
+        /**
+         * State hash sub cache merkle roots
+         */
+        public readonly stateHashSubCacheMerkleRoots: string[],
         /**
          * The number of transactions included.
          */
@@ -139,27 +143,5 @@ export class BlockInfo extends NewBlock {
          * The number of statements included.
          */
         public readonly numStatements?: number,
-    ) {
-        super(
-            hash,
-            generationHash,
-            signature,
-            signer,
-            networkType,
-            version,
-            type,
-            height,
-            timestamp,
-            difficulty,
-            feeMultiplier,
-            previousBlockHash,
-            blockTransactionsHash,
-            blockReceiptsHash,
-            stateHash,
-            proofGamma,
-            proofScalar,
-            proofVerificationHash,
-            beneficiaryPublicKey,
-        );
-    }
+    ) {}
 }

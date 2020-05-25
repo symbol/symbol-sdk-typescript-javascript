@@ -104,6 +104,7 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.meta.hash,
             dto.meta.generationHash,
             UInt64.fromNumericString(dto.meta.totalFee),
+            dto.meta.stateHashSubCacheMerkleRoots,
             dto.meta.numTransactions,
             dto.block.signature,
             PublicAccount.createFromPublicKey(dto.block.signerPublicKey, networkType),
