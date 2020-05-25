@@ -143,13 +143,6 @@ describe('RepositoryFactory', () => {
     });
 
     it('Should create listener object using injected ws', () => {
-        const namespaceRepository: NamespaceRepository = mock();
-        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
-            createNamespaceRepository(): NamespaceRepository {
-                return instance(namespaceRepository);
-            }
-        })('http://localhost:3000', NetworkType.MIJIN_TEST, 'testHash');
-
         class WebSocketMock {
             constructor(public readonly url: string) {}
 
@@ -158,10 +151,17 @@ describe('RepositoryFactory', () => {
             }
         }
 
+        const namespaceRepository: NamespaceRepository = mock();
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNamespaceRepository(): NamespaceRepository {
+                return instance(namespaceRepository);
+            }
+        })('http://localhost:3000', NetworkType.MIJIN_TEST, 'testHash', WebSocketMock);
+
         let listener = repositoryFactory.createListener();
         expect(listener.url).to.be.equal('http://localhost:3000/ws');
 
-        listener = repositoryFactory.createListener(WebSocketMock);
+        listener = repositoryFactory.createListener();
         expect(listener.url).to.be.equal('http://localhost:3000/ws');
     });
 });

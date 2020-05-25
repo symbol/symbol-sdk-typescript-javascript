@@ -115,8 +115,7 @@ export interface RepositoryFactory {
     createRestrictionMosaicRepository(): RestrictionMosaicRepository;
 
     /**
-     * @param WebSocket injected when using listeners in client.
      * @returns a newly created {@link IListener}
      */
-    createListener(websocketInjected?: any): IListener;
+    createListener(): IListener;
 }

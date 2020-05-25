@@ -55,14 +55,16 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly url: string;
     private readonly networkType: Observable<NetworkType>;
     private readonly generationHash: Observable<string>;
+    private readonly websocketInjected?: any;
 
     /**
      * Constructor
      * @param url the server url.
      * @param networkType optional network type if you don't want to load it from the server.
      * @param generationHash optional node generation hash if you don't want to load it from the server.
+     * @param WebSocket optional injected when using listeners in client.
      */
-    constructor(url: string, networkType?: NetworkType, generationHash?: string) {
+    constructor(url: string, networkType?: NetworkType, generationHash?: string, websocketInjected?: any) {
         this.url = url;
         this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
         this.generationHash = generationHash
@@ -71,6 +73,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
                   .getNodeInfo()
                   .pipe(map((b) => b.networkGenerationHashSeed))
                   .pipe(shareReplay(1));
+        this.websocketInjected = websocketInjected;
     }
 
     createAccountRepository(): AccountRepository {
@@ -133,7 +136,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         return this.networkType;
     }
 
-    createListener(websocketInjected?: any): IListener {
-        return new Listener(this.url, this.createNamespaceRepository(), websocketInjected);
+    createListener(): IListener {
+        return new Listener(this.url, this.createNamespaceRepository(), this.websocketInjected);
     }
 }
