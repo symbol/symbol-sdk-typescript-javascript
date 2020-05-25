@@ -27,7 +27,7 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
  */
 export interface IListener {
     /**
-     * Websocket url
+     * Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws)
      */
     url: string;
     /**

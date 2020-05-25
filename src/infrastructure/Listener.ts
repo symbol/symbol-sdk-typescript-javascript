@@ -54,7 +54,6 @@ interface ListenerMessage {
  * Listener service
  */
 export class Listener implements IListener {
-    public readonly url: string;
     /**
      * @internal
      * WebSocket connector
@@ -73,14 +72,14 @@ export class Listener implements IListener {
 
     /**
      * Constructor
-     * @param config - Listener configuration
+     * @param url - Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws)
      * @param websocketInjected - (Optional) WebSocket injected when using listeners in client
      */
     constructor(
         /**
-         * Listener configuration.
+         * Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws)
          */
-        private config: string,
+        public readonly url: string,
         /**
          * Namespace repository for resolving account alias
          */
@@ -90,8 +89,7 @@ export class Listener implements IListener {
          */
         private websocketInjected?: any,
     ) {
-        this.config = config.replace(/\/$/, '');
-        this.url = `${this.config}/ws`;
+        this.url = url.replace(/\/$/, '');
         this.messageSubject = new Subject();
     }
 

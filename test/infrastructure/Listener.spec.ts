@@ -42,7 +42,7 @@ describe('Listener', () => {
     });
 
     it('should createComplete a WebSocket instance given url parameter', () => {
-        const listener = new Listener('http://localhost:3000', namespaceRepo);
+        const listener = new Listener('http://localhost:3000/ws', namespaceRepo);
         expect('http://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
