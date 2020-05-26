@@ -18,7 +18,6 @@ import { Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { filter, flatMap, map, share } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
-import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
@@ -194,13 +193,13 @@ export class Listener implements IListener {
      *
      * @return an observable stream of BlockInfo
      */
-    public newBlock(): Observable<BlockInfo> {
+    public newBlock(): Observable<NewBlock> {
         this.subscribeTo('block');
         return this.messageSubject.asObservable().pipe(
             share(),
             filter((_) => _.channelName === ListenerChannelName.block),
-            filter((_) => _.message instanceof BlockInfo),
-            map((_) => _.message as BlockInfo),
+            filter((_) => _.message instanceof NewBlock),
+            map((_) => _.message as NewBlock),
         );
     }
 
