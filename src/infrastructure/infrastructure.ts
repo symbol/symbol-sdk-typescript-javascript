@@ -50,3 +50,4 @@ export * from './TransactionRepository';
 export * from './Page';
 export * from './searchCriteria/TransactionSearchCriteria';
 export * from './searchCriteria/SearchCriteria';
+export * from './RepositoryFactoryConfig';

@@ -16,16 +16,20 @@
 
 import { Observable } from 'rxjs';
 import { Address } from '../model/account/Address';
-import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
+import { NewBlock } from '../model/blockchain/NewBlock';
 
 /**
  * Listener service
  */
 export interface IListener {
+    /**
+     * Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws)
+     */
+    url: string;
     /**
      * Open web socket connection.
      * @returns Promise<Void>
@@ -49,9 +53,9 @@ export interface IListener {
      * Each time a new Block is added into the blockchain,
      * it emits a new BlockInfo in the event stream.
      *
-     * @return an observable stream of BlockInfo
+     * @return an observable stream of NewBlock
      */
-    newBlock(): Observable<BlockInfo>;
+    newBlock(): Observable<NewBlock>;
 
     /**
      * Returns an observable stream of Transaction for a specific address.

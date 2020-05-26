@@ -46,6 +46,7 @@ import { RestrictionMosaicHttp } from './RestrictionMosaicHttp';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionHttp } from './TransactionHttp';
 import { TransactionRepository } from './TransactionRepository';
+import { RepositoryFactoryConfig } from './RepositoryFactoryConfig';
 
 /**
  * Receipt http repository.
@@ -55,22 +56,27 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly url: string;
     private readonly networkType: Observable<NetworkType>;
     private readonly generationHash: Observable<string>;
+    private readonly websocketUrl: string;
+    private readonly websocketInjected?: any;
 
     /**
      * Constructor
      * @param url the server url.
-     * @param networkType optional network type if you don't want to load it from the server.
-     * @param generationHash optional node generation hash if you don't want to load it from the server.
+     * @param configs optional repository factory configs
      */
-    constructor(url: string, networkType?: NetworkType, generationHash?: string) {
+    constructor(url: string, configs?: RepositoryFactoryConfig) {
         this.url = url;
-        this.networkType = networkType ? observableOf(networkType) : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
-        this.generationHash = generationHash
-            ? observableOf(generationHash)
+        this.networkType = configs?.networkType
+            ? observableOf(configs.networkType)
+            : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
+        this.generationHash = configs?.generationHash
+            ? observableOf(configs?.generationHash)
             : this.createNodeRepository()
                   .getNodeInfo()
                   .pipe(map((b) => b.networkGenerationHashSeed))
                   .pipe(shareReplay(1));
+        this.websocketUrl = configs?.websocketUrl ? configs?.websocketUrl : `${url.replace(/\/$/, '')}/ws`;
+        this.websocketInjected = configs?.websocketInjected;
     }
 
     createAccountRepository(): AccountRepository {
@@ -134,6 +140,6 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createListener(): IListener {
-        return new Listener(this.url, this.createNamespaceRepository());
+        return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
     }
 }

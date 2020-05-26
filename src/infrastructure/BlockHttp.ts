@@ -54,7 +54,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<BlockInfo>
      */
     public getBlockByHeight(height: UInt64): Observable<BlockInfo> {
-        return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => BlockHttp.toBlockInfo(body));
+        return this.call(this.blockRoutesApi.getBlockByHeight(height.toString()), (body) => this.toBlockInfo(body));
     }
 
     /**
@@ -73,7 +73,7 @@ export class BlockHttp extends Http implements BlockRepository {
                 criteria.order,
                 criteria.orderBy,
             ),
-            (body) => super.toPage(body.pagination, body.data, BlockHttp.toBlockInfo),
+            (body) => super.toPage(body.pagination, body.data, this.toBlockInfo),
         );
     }
 
@@ -84,12 +84,13 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param {BlockInfoDTO} dto the dto object from rest.
      * @returns {BlockInfo} a BlockInfo model
      */
-    public static toBlockInfo(dto: BlockInfoDTO): BlockInfo {
+    private toBlockInfo(dto: BlockInfoDTO): BlockInfo {
         const networkType = dto.block.network.valueOf();
         return new BlockInfo(
             dto.meta.hash,
             dto.meta.generationHash,
             UInt64.fromNumericString(dto.meta.totalFee),
+            dto.meta.stateHashSubCacheMerkleRoots,
             dto.meta.numTransactions,
             dto.block.signature,
             PublicAccount.createFromPublicKey(dto.block.signerPublicKey, networkType),
