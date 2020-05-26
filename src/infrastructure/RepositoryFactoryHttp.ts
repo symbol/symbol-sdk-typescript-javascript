@@ -76,7 +76,6 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
                   .pipe(map((b) => b.networkGenerationHashSeed))
                   .pipe(shareReplay(1));
         this.websocketUrl = configs?.websocketUrl ? configs?.websocketUrl : `${url.replace(/\/$/, '')}/ws`;
-        console.log('AAAAAAAAA', this.websocketUrl);
         this.websocketInjected = configs?.websocketInjected;
     }
 
