@@ -22,10 +22,14 @@ import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactor
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeRepository } from '../../src/infrastructure/NodeRepository';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
-        const repositoryFactory = new RepositoryFactoryHttp('http://localhost:3000', NetworkType.MIJIN_TEST, 'testHash');
+        const repositoryFactory = new RepositoryFactoryHttp('http://localhost:3000', {
+            networkType: NetworkType.MIJIN_TEST,
+            generationHash: 'testHash',
+        });
 
         expect(repositoryFactory.createBlockRepository()).to.be.not.null;
         expect(repositoryFactory.createNetworkRepository()).to.be.not.null;
@@ -57,7 +61,9 @@ describe('RepositoryFactory', () => {
             createNodeRepository(): NodeRepository {
                 return instance(repositoryMock);
             }
-        })('http://localhost:3000', NetworkType.MIJIN_TEST);
+        })('http://localhost:3000', {
+            networkType: NetworkType.MIJIN_TEST,
+        });
 
         expect(counter).to.be.equals(0);
         repositoryFactory.getGenerationHash().subscribe((gh) => {
@@ -93,7 +99,9 @@ describe('RepositoryFactory', () => {
             createNetworkRepository(): NetworkRepository {
                 return instance(repositoryMock);
             }
-        })('http://localhost:3000', undefined, 'testHash');
+        })('http://localhost:3000', {
+            generationHash: 'testHash',
+        });
 
         expect(counter).to.be.equals(0);
         repositoryFactory.getNetworkType().subscribe((networkType) => {
@@ -127,7 +135,10 @@ describe('RepositoryFactory', () => {
             createNetworkRepository(): NetworkRepository {
                 return instance(repositoryMock);
             }
-        })('http://localhost:3000', expectedNetworkType, 'testHash');
+        })('http://localhost:3000', {
+            networkType: expectedNetworkType,
+            generationHash: 'testHash',
+        });
 
         expect(counter).to.be.equals(0);
         repositoryFactory.getNetworkType().subscribe((networkType) => {
@@ -139,5 +150,43 @@ describe('RepositoryFactory', () => {
                 done();
             });
         });
+    });
+
+    it('Should create listener object using injected ws', () => {
+        class WebSocketMock {
+            constructor(public readonly url: string) {}
+
+            send(payload: string): void {
+                throw new Error(payload);
+            }
+        }
+
+        const namespaceRepository: NamespaceRepository = mock();
+        let repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNamespaceRepository(): NamespaceRepository {
+                return instance(namespaceRepository);
+            }
+        })('http://localhost:3000', {
+            networkType: NetworkType.MIJIN_TEST,
+            generationHash: 'testHash',
+            websocketInjected: WebSocketMock,
+        });
+
+        let listener = repositoryFactory.createListener();
+        expect(listener.url).to.be.equal('http://localhost:3000/ws');
+
+        repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNamespaceRepository(): NamespaceRepository {
+                return instance(namespaceRepository);
+            }
+        })('http://localhost:3000', {
+            networkType: NetworkType.MIJIN_TEST,
+            generationHash: 'testHash',
+            websocketUrl: 'ws://localhost:3000/ws',
+            websocketInjected: WebSocketMock,
+        });
+
+        listener = repositoryFactory.createListener();
+        expect(listener.url).to.be.equal('ws://localhost:3000/ws');
     });
 });

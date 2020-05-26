@@ -23,10 +23,11 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { Account } from '../../src/model/account/Account';
 import { AccountNames } from '../../src/model/account/AccountNames';
 import { Address } from '../../src/model/account/Address';
-import { Deadline, NamespaceId, NamespaceName, PlainMessage, Transaction, TransferTransaction } from '../../src/model/model';
+import { Deadline, NamespaceId, NamespaceName, PlainMessage, Transaction, TransferTransaction, PublicAccount } from '../../src/model/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { UInt64 } from '../../src/model/UInt64';
+import { NewBlock } from '../../src/model/blockchain/NewBlock';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
@@ -42,7 +43,7 @@ describe('Listener', () => {
     });
 
     it('should createComplete a WebSocket instance given url parameter', () => {
-        const listener = new Listener('http://localhost:3000', namespaceRepo);
+        const listener = new Listener('http://localhost:3000/ws', namespaceRepo);
         expect('http://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
@@ -418,6 +419,81 @@ describe('Listener', () => {
 
                 expect(reportedTransactions.length).to.be.equal(0);
             });
+        });
+    });
+
+    describe('newBlock', () => {
+        it('Should forward newblock message', () => {
+            class WebSocketMock {
+                constructor(public readonly url: string) {}
+
+                send(payload: string): void {
+                    expect(payload).to.be.eq(`{"subscribe":"block"}`);
+                }
+            }
+
+            const blockDTO = {
+                block: {
+                    transactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
+                    receiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
+                    stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
+                    difficulty: '1',
+                    proofGamma: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
+                    proofScalar: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
+                    proofVerificationHash: 'AC1A6E1D8DE5B17D2C6B1293F1CAD382',
+                    feeMultiplier: 1,
+                    height: '100',
+                    previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
+                    signature:
+                        '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
+                        'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
+                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    timestamp: '0',
+                    type: 32768,
+                    version: 1,
+                    network: 144,
+                    generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+                    hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
+                },
+                meta: {
+                    generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+                    hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
+                },
+            };
+
+            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+
+            listener.open();
+
+            const reportedStatus: NewBlock[] = [];
+
+            listener.newBlock().subscribe((msg) => {
+                reportedStatus.push(msg);
+            });
+
+            listener.handleMessage(blockDTO, null);
+
+            expect(reportedStatus.length).to.be.equal(1);
+            expect(reportedStatus[0].hash).to.be.equal(blockDTO.meta.hash);
+            expect(reportedStatus[0].generationHash).to.be.equal(blockDTO.meta.generationHash);
+            expect(reportedStatus[0].signature).to.be.equal(blockDTO.block.signature);
+            expect(reportedStatus[0].signer.publicKey).to.be.equal(blockDTO.block.signerPublicKey);
+            expect(reportedStatus[0].networkType).to.be.equal(blockDTO.block.network);
+            expect(reportedStatus[0].version).to.be.equal(blockDTO.block.version);
+            expect(reportedStatus[0].type).to.be.equal(blockDTO.block.type);
+            deepEqual(reportedStatus[0].height.toString(), blockDTO.block.height);
+            deepEqual(reportedStatus[0].timestamp.toString(), blockDTO.block.timestamp);
+            deepEqual(reportedStatus[0].difficulty.toString(), blockDTO.block.difficulty);
+            expect(reportedStatus[0].feeMultiplier).to.be.equal(blockDTO.block.feeMultiplier);
+            expect(reportedStatus[0].previousBlockHash).to.be.equal(blockDTO.block.previousBlockHash);
+            expect(reportedStatus[0].blockTransactionsHash).to.be.equal(blockDTO.block.transactionsHash);
+            expect(reportedStatus[0].blockReceiptsHash).to.be.equal(blockDTO.block.receiptsHash);
+            expect(reportedStatus[0].stateHash).to.be.equal(blockDTO.block.stateHash);
+            expect((reportedStatus[0].beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
+            expect(reportedStatus[0].proofGamma).to.be.equal(blockDTO.block.proofGamma);
+            expect(reportedStatus[0].proofScalar).to.be.equal(blockDTO.block.proofScalar);
+            expect(reportedStatus[0].proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);
         });
     });
 });

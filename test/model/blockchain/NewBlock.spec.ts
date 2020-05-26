@@ -17,11 +17,11 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { BlockInfo } from '../../../src/model/blockchain/BlockInfo';
 import { UInt64 } from '../../../src/model/UInt64';
+import { NewBlock } from '../../../src/model/blockchain/NewBlock';
 
-describe('BlockInfo', () => {
-    it('should createComplete an BlockInfo object', () => {
+describe('NewBlock', () => {
+    it('should createComplete an NewBlock object', () => {
         const blockDTO = {
             block: {
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
@@ -47,19 +47,12 @@ describe('BlockInfo', () => {
             meta: {
                 generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
                 hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
-                numTransactions: 25,
-                numStatements: 1,
-                totalFee: new UInt64([0, 0]),
-                stateHashSubCacheMerkleRoots: ['45FF761839D7219296341925EBA3BF4832BA9B3E29C854B83E6445D5F3E1DAB7'],
             },
         };
 
-        const blockInfo = new BlockInfo(
+        const blockInfo = new NewBlock(
             blockDTO.meta.hash,
             blockDTO.meta.generationHash,
-            blockDTO.meta.totalFee,
-            blockDTO.meta.stateHashSubCacheMerkleRoots,
-            blockDTO.meta.numTransactions,
             blockDTO.block.signature,
             PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, blockDTO.block.network),
             blockDTO.block.network,
@@ -77,13 +70,10 @@ describe('BlockInfo', () => {
             blockDTO.block.proofScalar,
             blockDTO.block.proofVerificationHash,
             PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, blockDTO.block.network),
-            blockDTO.meta.numStatements,
         );
 
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
         expect(blockInfo.generationHash).to.be.equal(blockDTO.meta.generationHash);
-        deepEqual(blockInfo.totalFee, blockDTO.meta.totalFee);
-        expect(blockInfo.numTransactions).to.be.equal(blockDTO.meta.numTransactions);
         expect(blockInfo.signature).to.be.equal(blockDTO.block.signature);
         expect(blockInfo.signer.publicKey).to.be.equal(blockDTO.block.signerPublicKey);
         expect(blockInfo.networkType).to.be.equal(blockDTO.block.network);
@@ -98,11 +88,8 @@ describe('BlockInfo', () => {
         expect(blockInfo.blockReceiptsHash).to.be.equal(blockDTO.block.blockReceiptsHash);
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
         expect((blockInfo.beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
-        expect(blockInfo.numStatements).to.be.equal(blockDTO.meta.numStatements);
         expect(blockInfo.proofGamma).to.be.equal(blockDTO.block.proofGamma);
         expect(blockInfo.proofScalar).to.be.equal(blockDTO.block.proofScalar);
         expect(blockInfo.proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);
-        expect(blockInfo.stateHashSubCacheMerkleRoots.length).to.be.equal(1);
-        expect(blockInfo.stateHashSubCacheMerkleRoots[0]).to.be.equal('45FF761839D7219296341925EBA3BF4832BA9B3E29C854B83E6445D5F3E1DAB7');
     });
 });

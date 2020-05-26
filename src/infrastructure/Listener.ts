@@ -18,17 +18,19 @@ import { Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { filter, flatMap, map, share } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
-import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
-import { BlockHttp } from './BlockHttp';
 import { IListener } from './IListener';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
+import { BlockInfoDTO } from 'symbol-openapi-typescript-node-client/dist/model/blockInfoDTO';
+import { NewBlock } from '../model/blockchain/NewBlock';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { UInt64 } from '../model/UInt64';
 
 export enum ListenerChannelName {
     block = 'block',
@@ -44,14 +46,13 @@ export enum ListenerChannelName {
 
 interface ListenerMessage {
     readonly channelName: ListenerChannelName;
-    readonly message: Transaction | string | BlockInfo | TransactionStatusError | CosignatureSignedTransaction;
+    readonly message: Transaction | string | NewBlock | TransactionStatusError | CosignatureSignedTransaction;
 }
 
 /**
  * Listener service
  */
 export class Listener implements IListener {
-    public readonly url: string;
     /**
      * @internal
      * WebSocket connector
@@ -70,14 +71,15 @@ export class Listener implements IListener {
 
     /**
      * Constructor
-     * @param config - Listener configuration
-     * @param websocketInjected - (Optional) WebSocket injected when using listeners in client
+     * @param url - Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws).
+     * @param namespaceRepository - NamespaceRepository interface for resolving alias.
+     * @param websocketInjected - (Optional) WebSocket injected when using listeners in client.
      */
     constructor(
         /**
-         * Listener configuration.
+         * Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws)
          */
-        private config: string,
+        public readonly url: string,
         /**
          * Namespace repository for resolving account alias
          */
@@ -87,8 +89,7 @@ export class Listener implements IListener {
          */
         private websocketInjected?: any,
     ) {
-        this.config = config.replace(/\/$/, '');
-        this.url = `${this.config}/ws`;
+        this.url = url.replace(/\/$/, '');
         this.messageSubject = new Subject();
     }
 
@@ -139,7 +140,7 @@ export class Listener implements IListener {
         } else if (message.block) {
             this.messageSubject.next({
                 channelName: ListenerChannelName.block,
-                message: BlockHttp.toBlockInfo(message),
+                message: this.toNewBlock(message),
             });
         } else if (message.code) {
             this.messageSubject.next({
@@ -192,13 +193,13 @@ export class Listener implements IListener {
      *
      * @return an observable stream of BlockInfo
      */
-    public newBlock(): Observable<BlockInfo> {
+    public newBlock(): Observable<NewBlock> {
         this.subscribeTo('block');
         return this.messageSubject.asObservable().pipe(
             share(),
             filter((_) => _.channelName === ListenerChannelName.block),
-            filter((_) => _.message instanceof BlockInfo),
-            map((_) => _.message as BlockInfo),
+            filter((_) => _.message instanceof NewBlock),
+            map((_) => _.message as NewBlock),
         );
     }
 
@@ -405,5 +406,37 @@ export class Listener implements IListener {
             subscribe: channel,
         };
         this.webSocket.send(JSON.stringify(subscriptionMessage));
+    }
+
+    /**
+     * This method maps a BlockInfoDTO from rest to the SDK's BlockInfo model object.
+     *
+     * @internal
+     * @param {BlockInfoDTO} dto the dto object from rest.
+     * @returns {NewBlock} a BlockInfo model
+     */
+    private toNewBlock(dto: BlockInfoDTO): NewBlock {
+        const networkType = dto.block.network.valueOf();
+        return new NewBlock(
+            dto.meta.hash,
+            dto.meta.generationHash,
+            dto.block.signature,
+            PublicAccount.createFromPublicKey(dto.block.signerPublicKey, networkType),
+            networkType,
+            dto.block.version,
+            dto.block.type,
+            UInt64.fromNumericString(dto.block.height),
+            UInt64.fromNumericString(dto.block.timestamp),
+            UInt64.fromNumericString(dto.block.difficulty),
+            dto.block.feeMultiplier,
+            dto.block.previousBlockHash,
+            dto.block.transactionsHash,
+            dto.block.receiptsHash,
+            dto.block.stateHash,
+            dto.block.proofGamma,
+            dto.block.proofScalar,
+            dto.block.proofVerificationHash,
+            dto.block.beneficiaryPublicKey ? PublicAccount.createFromPublicKey(dto.block.beneficiaryPublicKey, networkType) : undefined,
+        );
     }
 }
