@@ -48,3 +48,4 @@ export * from './RestrictionAccountRepository';
 export * from './RestrictionMosaicRepository';
 export * from './TransactionRepository';
 export * from './TransactionFilter';
+export * from './RepositoryFactoryConfig';

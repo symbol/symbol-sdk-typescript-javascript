@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.19.2] - 26-May-2020
+
+**Milestone**: Gorilla.1(0.9.5.1)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.19.2 | https://www.npmjs.com/package/symbol-sdk
+Catbuffer | v0.0.19 | https://www.npmjs.com/package/catbuffer-typescript
+Client Library | v0.8.11  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+
+- **[BREAKING CHANGE]** Replaced constructor parameter `config` with `url` in `Listener` class. The constructor is now **only using a complete websocket url (e.g. http://localhost:3000/ws or ws://localhost:3000/ws) but not rest-gateway url anymore (It will NOT append `/ws` suffix to the input url)**.
+- **[BREAKING CHANGE]** `RepositoryFactory`: Optional constructor parameters has been moved into `RepositoryFactoryConfig` interface (optional).
+- **[BREAKING CHANGE]** Added `websocketInjected` (optional) parameter to the `RepositoryFactoryConfig` interface. `RepositoryFactory.createListener()` can now take injected websocket instance to create `Listener` object.
+- **[BREAKING CHANGE]** Added `websocketUrl` (optional) parameter to the `RepositoryFactoryConfig` interface. it allows custom websocket url to be used to create the `Listener` object. By default (not provided), the factory will use rest-gateway url with '/ws' suffix appended (e.g. http://localhost:3000/ws)
+- **[BREAKING CHANGE]** `Listener.newBlock` channel is now returning new object `NewBlock` rather than sharing with `BlockInfo` used by rest-gateway payload.
+- Added `stateHashSubCacheMerkleRoots` to `BlockInfo`.
+
 ## [0.19.1] - 21-May-2020
 
 **Milestone**: Gorilla.1(0.9.5.1)
@@ -499,6 +515,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
+[0.19.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.1...v0.19.2
 [0.19.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.0...v0.19.1
 [0.19.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.17.4...v0.18.0
