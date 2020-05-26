@@ -24,6 +24,11 @@ export class NetworkModelStorage extends VersionedNetworkBasedObjectStorage<Netw
   public static INSTANCE = new NetworkModelStorage()
 
   private constructor() {
-    super('networkCache')
+    super('networkCache', [
+      {
+        description: 'Update networkCache to 0.9.5.1 network',
+        migrate: () => undefined,
+      },
+    ])
   }
 }

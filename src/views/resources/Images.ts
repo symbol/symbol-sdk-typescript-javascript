@@ -345,7 +345,7 @@ export const transactionTypeToIcon = {
   [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]: officialIcons.accountRestriction,
   [TransactionType.ACCOUNT_MOSAIC_RESTRICTION]: officialIcons.mosaicRestriction,
   [TransactionType.ACCOUNT_OPERATION_RESTRICTION]: officialIcons.accountRestrictionAlt,
-  [TransactionType.ACCOUNT_LINK]: officialIcons.publicChain,
+  [TransactionType.ACCOUNT_KEY_LINK]: officialIcons.publicChain,
   [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: officialIcons.mosaicRestriction,
   [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: officialIcons.mosaicRestriction,
   [TransactionType.ACCOUNT_METADATA]: officialIcons.metadata,

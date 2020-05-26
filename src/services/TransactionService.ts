@@ -431,7 +431,7 @@ export class TransactionService extends AbstractService {
     switch (transaction.type) {
       /// region XXX views for transaction types not yet implemented
       case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-      case TransactionType.ACCOUNT_LINK:
+      case TransactionType.ACCOUNT_KEY_LINK:
       case TransactionType.ACCOUNT_METADATA:
       case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
       case TransactionType.ACCOUNT_OPERATION_RESTRICTION:

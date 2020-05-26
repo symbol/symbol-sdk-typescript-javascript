@@ -1,8 +1,8 @@
 {
-  "explorerUrl": "http://explorer-941.symboldev.network",
-  "faucetUrl": "http://faucet-941-01.symboldev.network",
+  "explorerUrl": "http://explorer-951.symboldev.network",
+  "faucetUrl": "http://faucet-951-01.symboldev.network",
   "defaultNetworkType": 152,
-  "defaultNodeUrl": "http://api-01.eu-west-1.0941-v1.symboldev.network:3000",
+  "defaultNodeUrl": "http://api-01.eu-west-1.testnet-0951-v1.symboldev.network:3000",
   "networkConfigurationDefaults": {
     "maxMosaicDivisibility": 6,
     "namespaceGracePeriodDuration": 2592000,
@@ -21,12 +21,12 @@
     "harvestingMosaicId": "519FC24B9223E0B4"
   },
   "nodes": [
-    {"friendlyName": "API EU West 1", "roles": 2, "url":"http://api-01.eu-west-1.0941-v1.symboldev.network:3000"},
-    {"friendlyName": "API AP North-East 2", "roles": 2, "url":"http://api-02.ap-northeast-1.0941-v1.symboldev.network:3000"},
-    {"friendlyName": "API AP North-East 1", "roles": 2, "url":"http://api-01.ap-northeast-1.0941-v1.symboldev.network:3000"},
-    {"friendlyName": "API EU Central 1", "roles": 2, "url":"http://api-01.eu-central-1.0941-v1.symboldev.network:3000"},
-    {"friendlyName": "API EU Central 2", "roles": 2, "url":"http://api-02.eu-central-1.0941-v1.symboldev.network:3000"},
-    {"friendlyName": "API AP South-East 1", "roles": 2, "url":"http://api-01.ap-southeast-1.0941-v1.symboldev.network:3000"},
-    {"friendlyName": "API US West 1", "roles": 2, "url":"http://api-01.us-west-1.0941-v1.symboldev.network:3000"}
+    {"friendlyName": "API EU West 1", "roles": 2, "url":"http://api-01.eu-west-1.testnet-0951-v1.symboldev.network:3000"},
+    {"friendlyName": "API AP North-East 2", "roles": 2, "url":"http://api-02.ap-northeast-1.testnet-0951-v1.symboldev.network:3000"},
+    {"friendlyName": "API AP North-East 1", "roles": 2, "url":"http://api-01.ap-northeast-1.testnet-0951-v1.symboldev.network:3000"},
+    {"friendlyName": "API EU Central 1", "roles": 2, "url":"http://api-01.eu-central-1.testnet-0951-v1.symboldev.network:3000"},
+    {"friendlyName": "API EU Central 2", "roles": 2, "url":"http://api-02.eu-central-1.testnet-0951-v1.symboldev.network:3000"},
+    {"friendlyName": "API AP South-East 1", "roles": 2, "url":"http://api-01.ap-southeast-1.testnet-0951-v1.symboldev.network:3000"},
+    {"friendlyName": "API US West 1", "roles": 2, "url":"http://api-01.us-west-2.testnet-0951-v1.symboldev.network:3000"}
   ]
 }

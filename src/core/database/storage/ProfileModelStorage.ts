@@ -24,6 +24,24 @@ export class ProfileModelStorage extends VersionedObjectStorage<Record<string, P
   public static INSTANCE = new ProfileModelStorage()
 
   private constructor() {
-    super('profiles')
+    super('profiles', [
+      {
+        description: 'Update profiles to 0.9.5.1 network',
+        migrate: (from: any) => {
+          // update all pre-0.9.5.1 profiles
+          const profiles = Object.keys(from)
+
+          const modified: any = from
+          profiles.map((name: string) => {
+            modified[name] = {
+              ...modified[name],
+              generationHash: '4009619EB7A9F824C5D0EE0E164E0F99CCD7906A475D7768FD60B452204BD0A2',
+            }
+          })
+
+          return modified
+        },
+      },
+    ])
   }
 }

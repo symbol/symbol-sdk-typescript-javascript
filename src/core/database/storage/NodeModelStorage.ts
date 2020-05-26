@@ -24,6 +24,11 @@ export class NodeModelStorage extends VersionedObjectStorage<NodeModel[]> {
   public static INSTANCE = new NodeModelStorage()
 
   private constructor() {
-    super('node')
+    super('node', [
+      {
+        description: 'Update node to 0.9.5.1 network',
+        migrate: () => undefined,
+      },
+    ])
   }
 }
