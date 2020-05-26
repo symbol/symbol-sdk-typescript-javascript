@@ -72,8 +72,9 @@ export class Listener implements IListener {
 
     /**
      * Constructor
-     * @param url - Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws)
-     * @param websocketInjected - (Optional) WebSocket injected when using listeners in client
+     * @param url - Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws).
+     * @param namespaceRepository - NamespaceRepository interface for resolving alias.
+     * @param websocketInjected - (Optional) WebSocket injected when using listeners in client.
      */
     constructor(
         /**
