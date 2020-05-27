@@ -4,7 +4,7 @@
       <TableDisplay asset-type="namespace" class="table-section">
         <template v-slot:table-title>
           <h1 class="section-title">
-            {{ $t('Namespace_and_Sub_Namespace') }}
+            {{ $t('namespace_and_sub_namespace') }}
           </h1>
         </template>
       </TableDisplay>
@@ -17,19 +17,19 @@
         {{ $t('define') }}
       </div>
       <div class="asset-description-emphasis">
-        {{ $t('A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name') }}
+        {{ $t('namespace_definition') }}
       </div>
       <div class="asset-description-sub-title">
-        {{ $t('Namespace_description') }}
+        {{ $t('namespace_description') }}
       </div>
       <div class="asset-description-emphasis">
-        {{ $t('The_name_must_appear_as_unique_in_the_network_and_may_have_a_maximum_length_of_64_characters') }}
+        {{ $t('namespace_name_constraint') }}
       </div>
       <div class="asset-description-sub-title">
         {{ $t('scenes_to_be_used') }}
       </div>
       <div class="asset-description-text">
-        {{ $t('Used_to_bind_a_account_address') }}
+        {{ $t('used_to_bind_a_account_address') }}
       </div>
     </template>
   </AssetListPageWrap>

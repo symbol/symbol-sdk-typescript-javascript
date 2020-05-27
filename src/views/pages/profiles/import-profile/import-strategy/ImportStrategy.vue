@@ -25,7 +25,7 @@
           </p>
         </div>
       </div>
-      <div class="bottom-text">{{ $t('More_Access_Tool_is_working') }}...</div>
+      <div class="bottom-text">{{ $t('more_access_tool_is_working') }}...</div>
     </div>
   </div>
 </template>

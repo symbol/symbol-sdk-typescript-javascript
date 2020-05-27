@@ -23,10 +23,10 @@ export default class CreateProfileTs extends Vue {
    */
   public StepBarTitleList = [
     'create_profile',
-    'Generate_Mnemonic',
-    'Backup_Mnemonic_Phrase',
-    'Verify_Mnemonic_phrase',
-    'Finish',
+    'generate_mnemonic',
+    'backup_mnemonic_phrase',
+    'verify_Mnemonic_phrase',
+    'finish',
   ]
 
   /**

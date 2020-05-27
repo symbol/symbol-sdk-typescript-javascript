@@ -23,7 +23,7 @@
 
         <FormRow>
           <template v-slot:label>
-            {{ currentExpirationInfoView.expired ? $t('Expired_for') : $t('Expires_in') }}:
+            {{ currentExpirationInfoView.expired ? $t('expired_for') : $t('expires_in') }}:
           </template>
           <template v-slot:inputs>
             <div class="row-left-message">

@@ -2,14 +2,14 @@
   <div class="account-selection-container" @keyup.enter="submit">
     <div class="left-container">
       <div class="dialog-sub-tips">
-        {{ $t('Address_to_Interact_With') }}
+        {{ $t('address_to_interact_with') }}
       </div>
       <div class="choose-hd-path radius scroll">
         <div class="address-list">
           <div class="table-title">
-            <span class="address-id">{{ $t('ID') }}</span>
-            <span class="address-value">{{ $t('Address') }}</span>
-            <span class="address-balance">{{ $t('Balance') }}</span>
+            <span class="address-id">{{ $t('id') }}</span>
+            <span class="address-value">{{ $t('address') }}</span>
+            <span class="address-balance">{{ $t('balance') }}</span>
           </div>
           <div>
             <div v-for="(a, index) in addressesList" :key="index" @click="onAddAddress(index)">
@@ -36,9 +36,9 @@
       <div class="address-list-container radius scroll">
         <div class="address-list">
           <div class="table-title">
-            <span class="address-id">{{ $t('ID') }}</span>
-            <span class="address-value">{{ $t('Address') }}</span>
-            <span class="address-balance overflow_ellipsis">{{ $t('Balance') }}</span>
+            <span class="address-id">{{ $t('id') }}</span>
+            <span class="address-value">{{ $t('address') }}</span>
+            <span class="address-balance overflow_ellipsis">{{ $t('balance') }}</span>
             <span class="remove-icon" />
           </div>
           <div class="radius">

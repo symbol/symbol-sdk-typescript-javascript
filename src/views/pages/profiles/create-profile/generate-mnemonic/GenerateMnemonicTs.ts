@@ -106,7 +106,7 @@ export default class GenerateMnemonicTs extends Vue {
       // update state
       await this.$store.dispatch('profile/SET_CURRENT_PROFILE', this.currentProfile)
       this.$store.dispatch('temporary/SET_MNEMONIC', seed)
-      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('Generate_entropy_increase_success'))
+      this.$store.dispatch('notification/ADD_SUCCESS', this.$t('generate_entropy_increase_success'))
 
       // redirect
       return this.$router.push({ name: 'profiles.createProfile.showMnemonic' })

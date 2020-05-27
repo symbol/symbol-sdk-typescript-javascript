@@ -14,7 +14,7 @@
           <div class="chosenValue-container">
             <input v-model="chosenValue" class="input-style input-size" type="number" />
             <span v-if="showRelativeTime" class="relative-time">
-              {{ $t('Estimated_period_of_validity') }}&nbsp;{{ relativeTime }}
+              {{ $t('estimated_period_of_validity') }}&nbsp;{{ relativeTime }}
             </span>
           </div>
         </ErrorTooltip>

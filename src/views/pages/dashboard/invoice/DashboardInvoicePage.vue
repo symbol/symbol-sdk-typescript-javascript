@@ -7,7 +7,7 @@
         </div>
         <div class="description-container">
           <div id="address_text" class="address_text top-qr-text">
-            <span class="top-qr-text-title">{{ $t('Recipient') }}:</span>
+            <span class="top-qr-text-title">{{ $t('recipient') }}:</span>
             <span class="gray">{{ recipient }}</span>
           </div>
 
@@ -29,7 +29,7 @@
           </div>
 
           <div class="qr_button">
-            <span class="radius pointer" @click="onDownloadQR">{{ $t('Download') }}</span>
+            <span class="radius pointer" @click="onDownloadQR">{{ $t('download') }}</span>
           </div>
         </div>
       </div>

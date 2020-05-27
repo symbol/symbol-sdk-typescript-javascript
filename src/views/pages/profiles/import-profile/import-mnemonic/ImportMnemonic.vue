@@ -1,7 +1,7 @@
 <template>
   <div class="create-mnemonic-sec" @keyup.enter="submit">
     <p class="set-title">
-      {{ $t('Input_mnemonic') }}
+      {{ $t('input_mnemonic') }}
     </p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
@@ -9,7 +9,7 @@
         <div class="button-container">
           <div class="flex-container mt-3">
             <button type="button" class="button-style back-button" @click="deleteProfileAndBack">
-              {{ $t('Return_password_setting') }}
+              {{ $t('return_password_setting') }}
             </button>
             <button
               type="submit"
@@ -17,14 +17,14 @@
               :disabled="!(wordsArray.length === 12 || wordsArray.length === 24)"
               @click="processVerification"
             >
-              {{ $t('Import_mnemonic') }}
+              {{ $t('import_mnemonic') }}
             </button>
           </div>
         </div>
       </div>
       <div class="create-mnemonic-right">
         <p class="text">
-          {{ $t('Input_mnemonic_tips') }}
+          {{ $t('input_mnemonic_tips') }}
         </p>
       </div>
     </div>

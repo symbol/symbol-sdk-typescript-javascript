@@ -21,7 +21,7 @@ export default class ImportProfileTs extends Vue {
    * List of steps
    * @var {string[]}
    */
-  public StepBarTitleList = ['create_profile', 'Mnemonic_Phrase', 'select_accounts', 'Finish']
+  public StepBarTitleList = ['create_profile', 'mnemonic_phrase', 'select_accounts', 'finish']
 
   /**
    * Hook called when the page is mounted

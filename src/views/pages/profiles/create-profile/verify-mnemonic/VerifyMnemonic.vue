@@ -4,7 +4,7 @@
       {{ $t('skip') }}
     </div>
     <p class="set-title">
-      {{ $t('Verify_mnemonics') }}
+      {{ $t('verify_mnemonics') }}
     </p>
     <div class="check-mnemonic-col">
       <div class="check-mnemonic-left">
@@ -16,10 +16,10 @@
       </div>
       <div class="check-mnemonic-right">
         <p class="text1">
-          {{ $t('Tips') }}
+          {{ $t('tips') }}
         </p>
         <p class="text">
-          {{ $t('The_backup_is_wrong') }}
+          {{ $t('the_backup_is_wrong') }}
         </p>
       </div>
     </div>

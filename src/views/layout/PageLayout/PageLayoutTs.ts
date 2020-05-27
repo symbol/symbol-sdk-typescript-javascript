@@ -118,7 +118,7 @@ export class PageLayoutTs extends Vue {
     if (!this.currentPeer || !this.isConnected) {
       return {
         show: true,
-        message: 'Node_not_available_please_check_your_node_or_network_settings',
+        message: 'node_not_available_please_check_your_node_or_network_settings',
       }
     }
 

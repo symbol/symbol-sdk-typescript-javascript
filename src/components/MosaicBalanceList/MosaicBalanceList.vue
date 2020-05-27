@@ -68,7 +68,7 @@
         </div>
         <div class="complete_container">
           <div class="complete" @click="isEditionMode = false">
-            {{ $t('Close') }}
+            {{ $t('close') }}
           </div>
         </div>
       </div>

@@ -16,14 +16,14 @@
             v-model="chosenValue"
             v-focus
             class="input-size input-style"
-            :placeholder="$t('Input_namespace_name')"
+            :placeholder="$t('input_namespace_name')"
             type="text"
           />
           <input
             v-else
             v-model="chosenValue"
             class="input-size input-style"
-            :placeholder="$t('Input_namespace_name')"
+            :placeholder="$t('input_namespace_name')"
             type="text"
           />
         </ErrorTooltip>

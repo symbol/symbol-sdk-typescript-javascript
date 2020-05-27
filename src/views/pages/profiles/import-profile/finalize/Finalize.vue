@@ -5,19 +5,19 @@
     <div class="finish-col">
       <div class="finish-left">
         <p class="text1">
-          {{ $t('Safe_storage_tips') }}
+          {{ $t('safe_storage_tips') }}
         </p>
         <p class="text">
-          {{ $t('Save_backups') }}
+          {{ $t('save_backups') }}
         </p>
         <p class="text">
-          {{ $t('Don_not_share_mnemonics_with_anyone') }}
+          {{ $t('don_not_share_mnemonics_with_anyone') }}
         </p>
         <p class="text">
           {{ $t('phishing_warning') }}
         </p>
         <p class="text">
-          {{ $t('If_you_need_to_back_up_your_mnemonics_again_you_can') }}
+          {{ $t('if_you_need_to_back_up_your_mnemonics_again_you_can') }}
         </p>
         <div class="jump-btn">
           <button class="button-style validation-button" @click="$router.push({ name: 'dashboard' })">

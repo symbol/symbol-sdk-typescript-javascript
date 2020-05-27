@@ -18,7 +18,7 @@
           </div>
 
           <FormRow>
-            <template v-slot:label> {{ $t('Set_account_name') }}: </template>
+            <template v-slot:label> {{ $t('set_account_name') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -42,7 +42,7 @@
           </FormRow>
 
           <FormRow>
-            <template v-slot:label> {{ $t('Set_network_type') }}: </template>
+            <template v-slot:label> {{ $t('set_network_type') }}: </template>
             <template v-slot:inputs>
               <div class="inputs-container select-container">
                 <select
@@ -109,7 +109,7 @@
           </FormRow>
 
           <FormRow>
-            <template v-slot:label> {{ $t('Password_hint') }}: </template>
+            <template v-slot:label> {{ $t('password_hint') }}: </template>
             <template v-slot:inputs>
               <ValidationProvider
                 v-slot="{ errors }"
@@ -133,7 +133,7 @@
               </button>
               <button type="submit" class="button-style validation-button" @click="handleSubmit(submit)">
                 {{
-                  $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'Restore_Mnemonic' : 'Generating_mnemonic')
+                  $t(nextPage === 'profiles.importProfile.importMnemonic' ? 'restore_mnemonic' : 'generating_mnemonic')
                 }}
               </button>
             </div>

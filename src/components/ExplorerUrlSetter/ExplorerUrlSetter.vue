@@ -6,7 +6,7 @@
         v-slot="{ errors }"
         mode="lazy"
         vid="explorerUrl"
-        :name="$t('Explorer_Url')"
+        :name="$t('explorer_url')"
         :rules="validationRules.url"
         tag="div"
         class="inputs-container select-container"

@@ -7,7 +7,7 @@
         <AddressDisplay :address="transaction.recipientAddress" />
       </span>
       <span v-else>{{ $t(`transaction_descriptor_${transaction.type}`) }}</span>
-      <span v-if="needsCosignature" class="click-to-cosign">({{ $t('Click_to_cosign') }})</span>
+      <span v-if="needsCosignature" class="click-to-cosign">({{ $t('click_to_cosign') }})</span>
     </div>
   </div>
 </template>

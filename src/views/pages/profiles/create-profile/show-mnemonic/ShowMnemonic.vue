@@ -1,7 +1,7 @@
 <template>
   <div class="create-mnemonic-sec" @keyup.enter="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })">
     <p class="set-title">
-      {{ $t('Backup_mnemonic') }}
+      {{ $t('backup_mnemonic_words') }}
     </p>
     <div class="create-mnemonic-col">
       <div class="create-mnemonic-left">
@@ -10,7 +10,7 @@
             <div v-if="!showMnemonic" class="show-mnemonic">
               <img src="@/views/resources/img/invisible.png" />
               <button class="button-style validation-button" @click="showMnemonic = true">
-                {{ $t('Display_mnemonic') }}
+                {{ $t('display_mnemonic') }}
               </button>
             </div>
             <div v-else>
@@ -31,17 +31,17 @@
               class="button-style validation-button"
               @click="$router.push({ name: 'profiles.createProfile.verifyMnemonic' })"
             >
-              {{ $t('Verify_backup_mnemonics') }}
+              {{ $t('verify_backup_mnemonics') }}
             </button>
           </div>
         </div>
       </div>
       <div class="create-mnemonic-right">
         <p class="text1">
-          {{ $t('Tips') }}
+          {{ $t('tips') }}
         </p>
         <p class="text">
-          {{ $t('Don_not_disclose') }}
+          {{ $t('don_not_disclose') }}
         </p>
         <p class="text">
           {{ $t('please_backup_mnemonic_passphrase') }}

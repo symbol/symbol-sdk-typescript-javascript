@@ -97,7 +97,7 @@
               {{ $t('copy_mnemonic') }}
             </Button>
             <Button class="button_arrow" type="success" @click="stepIndex = 5">
-              {{ $t('display_mnemonic_QR_code') }}
+              {{ $t('display_mnemonic_qr_code') }}
             </Button>
             <Button v-focus type="success" @click="stepIndex = 3">
               {{ $t('next') }}
@@ -140,7 +140,7 @@
             </Button>
             <Button class="button_arrow" type="success">
               <a :href="qrCode$" download="qrCode.png">
-                {{ $t('Download') }}
+                {{ $t('download') }}
               </a>
             </Button>
           </div>

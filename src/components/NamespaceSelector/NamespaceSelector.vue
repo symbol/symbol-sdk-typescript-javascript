@@ -12,7 +12,7 @@
         class="inputs-container select-container"
       >
         <ErrorTooltip :errors="errors">
-          <Select v-model="chosenValue" class="select-size select-style" :placeholder="$t('Select_a_namespace')">
+          <Select v-model="chosenValue" class="select-size select-style" :placeholder="$t('select_a_namespace')">
             <Option
               v-for="namespaceModel in namespaces"
               :key="getName(namespaceModel)"

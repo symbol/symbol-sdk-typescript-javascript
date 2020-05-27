@@ -1,6 +1,6 @@
 <template>
   <div class="account-detail-row-3cols">
-    <span class="label">{{ $t('privatekey') }}</span>
+    <span class="label">{{ $t('private_key') }}</span>
     <div v-if="hasPlainPrivateKey" class="value">
       {{ plainInformation }}
       <img

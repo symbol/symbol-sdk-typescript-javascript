@@ -135,8 +135,8 @@ export class PeerSelectorTs extends Vue {
   }
 
   get networkTypeText(): string {
-    if (!this.isConnected) return this.$t('Invalid_node').toString()
-    return !!this.networkType ? NetworkTypeHelper.getNetworkTypeLabel(this.networkType) : this.$t('Loading').toString()
+    if (!this.isConnected) return this.$t('invalid_node').toString()
+    return !!this.networkType ? NetworkTypeHelper.getNetworkTypeLabel(this.networkType) : this.$t('loading').toString()
   }
 
   /// end-region computed properties getter/setter
