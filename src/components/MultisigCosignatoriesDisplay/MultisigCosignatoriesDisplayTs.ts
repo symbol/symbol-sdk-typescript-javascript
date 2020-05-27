@@ -15,102 +15,111 @@
  */
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { mapGetters } from 'vuex'
-import { Address, MultisigAccountInfo, NetworkType, PublicAccount } from 'symbol-sdk'
+import { MultisigAccountInfo, PublicAccount } from 'symbol-sdk'
+
 // child components
-import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
 import FormRow from '@/components/FormRow/FormRow.vue'
 // @ts-ignore
 import AddCosignatoryInput from '@/components/AddCosignatoryInput/AddCosignatoryInput.vue'
 
 // custom types
+type AddOrRemove = 'add' | 'remove'
+
 interface Modification {
   cosignatory: PublicAccount
-  addOrRemove: 'add' | 'remove'
+  addOrRemove: AddOrRemove
 }
+
+type Cosignatories = { publicKey: string; address: string }[]
 
 @Component({
   components: {
-    ValidationProvider,
     FormRow,
     AddCosignatoryInput,
-  },
-  computed: {
-    ...mapGetters({
-      networkType: 'network/networkType',
-    }),
   },
 })
 export class MultisigCosignatoriesDisplayTs extends Vue {
   @Prop({ default: null }) multisig: MultisigAccountInfo
-
   @Prop({ default: false }) modifiable: boolean
-
   @Prop({ default: {} }) cosignatoryModifications: Record<string, Modification>
 
-  private networkType: NetworkType
+  /**
+   * Whether the add cosignatory form input is visible
+   */
+  protected isAddingCosignatory = false
 
-  public isAddingCosignatory: boolean = false
-  public addedActors: { publicKey: string; address: string }[] = []
-  public removedActors: { publicKey: string; address: string }[] = []
+  /**
+   * Cosignatories to add
+   * @type {Cosignatories}
+   */
+  protected get addModifications(): Cosignatories {
+    return this.getFilteredModifications('add')
+  }
 
-  get cosignatories(): { publicKey: string; address: string }[] {
+  /**
+   * Cosignatories to remove
+   * @type {Cosignatories}
+   */
+  protected get removeModifications(): Cosignatories {
+    return this.getFilteredModifications('remove')
+  }
+
+  /**
+   * Internal helper to get filtered cosignatory modifications
+   * @param {AddOrRemove} addOrRemoveFilter
+   * @returns {Cosignatories}
+   */
+  private getFilteredModifications(addOrRemoveFilter: AddOrRemove): Cosignatories {
+    return Object.values(this.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === addOrRemoveFilter)
+      .map(({ cosignatory }) => ({
+        publicKey: cosignatory.publicKey,
+        address: cosignatory.address.pretty(),
+      }))
+  }
+
+  /**
+   * The multisig account cosignatories after modifications
+   * @type {{ publicKey: string; address: string }[]}
+   */
+  protected get cosignatories(): { publicKey: string; address: string }[] {
     if (!this.multisig) return []
 
-    return Object.values(this.multisig.cosignatories)
-      .filter((c) => {
-        return undefined === this.removedActors.find((m) => m.publicKey === c.publicKey)
-      })
-      .map((cosignatory) => ({
-        publicKey: cosignatory.publicKey,
-        address: cosignatory.address.pretty(),
-      }))
+    return this.multisig.cosignatories
+      .filter(({ publicKey }) => !this.cosignatoryModifications[publicKey])
+      .map(({ publicKey, address }) => ({ publicKey, address: address.pretty() }))
   }
 
-  get addModifications(): { publicKey: string; address: string }[] {
-    return Object.values(this.cosignatoryModifications)
-      .filter(({ addOrRemove }) => addOrRemove === 'add')
-      .map(({ cosignatory }) => ({
-        publicKey: cosignatory.publicKey,
-        address: cosignatory.address.pretty(),
-      }))
-  }
+  /**
+   * Hook called when a cosignatory is added
+   * @param {PublicAccount} publicAccount
+   */
+  protected onAddCosignatory(publicAccount: PublicAccount): void {
+    const { publicKey } = publicAccount
+    const isCosignatory = this.cosignatories.find((a) => a.publicKey === publicKey)
 
-  get removeModifications(): { publicKey: string; address: string }[] {
-    return Object.values(this.cosignatoryModifications)
-      .filter(({ addOrRemove }) => addOrRemove === 'remove')
-      .map(({ cosignatory }) => ({
-        publicKey: cosignatory.publicKey,
-        address: cosignatory.address.pretty(),
-      }))
-  }
-
-  public onAddCosignatory(publicAccount: PublicAccount) {
-    const exists = this.cosignatories.find((a) => a.publicKey === publicAccount.publicKey)
-    const existsMod = this.addedActors.find((a) => a.publicKey === publicAccount.publicKey)
-    if (exists !== undefined || existsMod !== undefined) {
+    if (isCosignatory || this.cosignatoryModifications[publicKey]) {
       this.$store.dispatch('notification/ADD_WARNING', 'warning_already_a_cosignatory')
       return
     }
 
     this.$emit('add', publicAccount)
-    this.isAddingCosignatory = false
   }
 
-  public onRemoveCosignatory(publicKey: string) {
-    this.removedActors.push({
-      publicKey,
-      address: Address.createFromPublicKey(publicKey, this.networkType).pretty(),
-    })
+  /**
+   * Hook called when a cosignatory is removed
+   * @param {string} publicKey
+   */
+  protected onRemoveCosignatory(publicKey: string): void {
     this.$emit('remove', publicKey)
   }
 
-  public onRemoveModification(publicKey: string) {
-    this.$emit('undo', publicKey)
-  }
-
-  public onUndoRemoveModification(publicKey: string) {
-    this.$emit('undo', publicKey)
+  /**
+   * Hook called when a cosignatory modification is undone
+   * @param {string} thePublicKey
+   */
+  protected onUndoModification(thePublicKey: string): void {
+    this.$emit('undo', thePublicKey)
   }
 }

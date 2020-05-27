@@ -31,7 +31,13 @@
             <div class="cosignatory-address-container">
               <span>{{ address }}</span>
             </div>
-            <span v-if="modifiable" class="delete-icon" @click="onRemoveCosignatory(publicKey)" />
+            <Icon
+              v-if="modifiable"
+              type="md-trash"
+              size="21"
+              class="icon-button"
+              @click="onRemoveCosignatory(publicKey)"
+            />
             <span v-else>&nbsp;</span>
           </div>
         </template>
@@ -58,7 +64,7 @@
             <div class="cosignatory-address-container">
               <span class="cosignatory-removed">{{ address }}</span>
             </div>
-            <span class="delete-icon" @click="onUndoRemoveModification(publicKey)" />
+            <Icon type="ios-undo" size="21" class="icon-button" @click="onUndoModification(publicKey)" />
           </div>
         </template>
       </FormRow>
@@ -84,7 +90,7 @@
             <div class="cosignatory-address-container">
               <span>{{ address }}</span>
             </div>
-            <span class="delete-icon" @click="onRemoveModification(publicKey)" />
+            <Icon type="md-trash" size="21" class="icon-button" @click="onUndoModification(publicKey)" />
           </div>
         </template>
       </FormRow>
@@ -102,3 +108,17 @@ import { MultisigCosignatoriesDisplayTs } from './MultisigCosignatoriesDisplayTs
 
 export default class MultisigCosignatoriesDisplay extends MultisigCosignatoriesDisplayTs {}
 </script>
+
+<style lang="less" scoped>
+@import '../../views/resources/css/variables.less';
+
+.icon-button {
+  cursor: pointer;
+  color: @blackLight;
+  justify-self: left;
+}
+
+.icon-button:hover {
+  color: @red;
+}
+</style>
