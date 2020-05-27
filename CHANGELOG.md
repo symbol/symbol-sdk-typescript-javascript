@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.10.0][v0.10.0] - 27-May-2020
+
+### Milestone: [catapult-server@v0.9.5.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.5.1)
+
+#### Added
+
+- Upgrade to testnet 0.9.5.1 with SDK v0.19.2 (fixes #385)
+- Improved components styling with scoped less (fixes #307, #273)
+- Removed duplicate cancel actions on modals (fixes #367)
+
+#### Fixed
+
+- Fixed reactivity of locale for custom validation messages (fixes #374)
+- Fixed invalid profile listing in login (fixes #341, #353)
+- Fixed multisig edition form deleting accounts (fixes #384)
+- Fixed wording on multisig form (fixes #366)
+
 ## [v0.9.9][v0.9.9]
 
 ### Milestone: [catapult-server@v0.9.4.1](https://github.com/nemtech/catapult-server/releases/tag/v0.9.4.1)
@@ -195,9 +213,9 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 - Missing harvesting setup (account link & persistent delegation requests)
 - Some missing UI fixes for Symbol rebrand
-- Mosaic definition *multi-signature* feature bug with signer selection (aggregate bonded only)
 
 
+[v0.10.0]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.9...v0.10.0
 [v0.9.9]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1...v0.9.9
 [v0.9.8]: https://github.com/nemfoundation/symbol-desktop-wallet/releases/tag/v0.9.8-beta1
 [v0.9.8-beta1]: https://github.com/nemfoundation/symbol-desktop-wallet/compare/v0.9.7-beta1...v0.9.8-beta1
