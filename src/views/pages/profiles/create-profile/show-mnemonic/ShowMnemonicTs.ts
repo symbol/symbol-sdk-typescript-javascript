@@ -22,6 +22,7 @@ import MnemonicDisplay from '@/components/MnemonicDisplay/MnemonicDisplay.vue'
 import ButtonCopyToClipboard from '@/components/ButtonCopyToClipboard/ButtonCopyToClipboard.vue'
 import { Formatters } from '@/core/utils/Formatters'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
+import { NotificationType } from '@/core/utils/NotificationType'
 
 @Component({
   components: { MnemonicDisplay, ButtonCopyToClipboard },
@@ -54,7 +55,11 @@ export default class ShowMnemonicTs extends Vue {
 
   /// region computed properties getter/setter
   get mnemonicWordsList() {
-    return this.currentMnemonic.plain.split(' ')
+    if (this.currentMnemonic) {
+      return this.currentMnemonic.plain.split(' ')
+    }
+    this.$store.dispatch('notification/ADD_ERROR', NotificationType.NO_MNEMONIC_INFO)
+    this.$router.push({ name: 'profiles.createProfile.info' })
   }
   public get waitingCopyString(): string {
     return Formatters.splitArrayByDelimiter(this.mnemonicWordsList)

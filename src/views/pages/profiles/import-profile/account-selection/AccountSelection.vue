@@ -62,11 +62,11 @@
         </div>
       </div>
       <div class="button-container flex-container">
-        <button class="button-style info-button back-button" @click="$router.back()">
+        <button class="button-style info-button back-button" @click="previous">
           {{ $t('previous') }}
         </button>
         <button class="button-style validation-button" @click="submit">
-          {{ $t('login') }}
+          {{ $t('next') }}
         </button>
       </div>
     </div>

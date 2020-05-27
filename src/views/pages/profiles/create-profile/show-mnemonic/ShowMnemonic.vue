@@ -23,7 +23,11 @@
         </MnemonicDisplay>
         <div class="form-line-container button-container">
           <div class="flex-container mt-3">
-            <button type="button" class="button-style back-button" @click="$router.back()">
+            <button
+              type="button"
+              class="button-style back-button"
+              @click="$router.push({ name: 'profiles.createProfile.info' })"
+            >
               {{ $t('back') }}
             </button>
             <button

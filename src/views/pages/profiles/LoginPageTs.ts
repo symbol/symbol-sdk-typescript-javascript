@@ -104,7 +104,8 @@ export default class LoginPageTs extends Vue {
    * @return {void}
    */
   public created() {
-    this.profiles = this.profileService.getProfiles()
+    // filter out invalid profiles
+    this.profiles = this.profileService.getProfiles().filter((p) => p.accounts.length > 0)
 
     const reducer = (
       accumulator: { networkType: NetworkType; profiles: ProfileModel[] }[],

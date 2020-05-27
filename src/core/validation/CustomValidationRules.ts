@@ -81,7 +81,8 @@ export class CustomValidationRules {
 
     extend('newAccountName', {
       validate(value) {
-        return !new ProfileService().getProfileByName(value)
+        const currentProfile = new ProfileService().getProfileByName(value)
+        return !(currentProfile && currentProfile.accounts.length > 0)
       },
       message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
     })

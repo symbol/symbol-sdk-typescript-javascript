@@ -130,6 +130,15 @@ export default class AccountSelectionTs extends Vue {
     })
   }
 
+  public previous() {
+    // back to previous page
+    if (this.currentProfile) {
+      this.$router.back()
+    }
+    // back to step 1
+    this.$router.push({ name: 'profiles.importProfile.info' })
+  }
+
   /**
    * Finalize the account selection process by adding
    * the selected accounts to storage.

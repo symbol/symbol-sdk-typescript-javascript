@@ -20,6 +20,7 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 // child components
 // @ts-ignore
 import MnemonicVerification from '@/components/MnemonicVerification/MnemonicVerification.vue'
+import { NotificationType } from '@/core/utils/NotificationType'
 
 @Component({
   components: {
@@ -40,7 +41,11 @@ export default class VerifyMnemonicTs extends Vue {
 
   /// region computed properties getter/setter
   get mnemonicWordsList(): string[] {
-    return this.currentMnemonic.plain.split(' ')
+    if (this.currentMnemonic) {
+      return this.currentMnemonic.plain.split(' ')
+    }
+    this.$store.dispatch('notification/ADD_ERROR', NotificationType.NO_MNEMONIC_INFO)
+    this.$router.push({ name: 'profiles.createProfile.info' })
   }
 
   /// end-region computed properties getter/setter

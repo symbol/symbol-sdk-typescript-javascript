@@ -128,7 +128,11 @@
 
           <div class="form-line-container form-row">
             <div class="flex-container mt-3">
-              <button type="button" class="button-style back-button" @click="$router.back(-1)">
+              <button
+                type="button"
+                class="button-style back-button"
+                @click="$router.push({ name: 'profiles.importProfile.importStrategy' })"
+              >
                 {{ $t('back') }}
               </button>
               <button type="submit" class="button-style validation-button" @click="handleSubmit(submit)">
