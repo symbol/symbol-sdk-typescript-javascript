@@ -14,18 +14,15 @@
  *
  */
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import {
-  Account,
-  AggregateTransaction,
-  AggregateTransactionCosignature,
-  CosignatureSignedTransaction,
-} from 'symbol-sdk'
+import { Account, AggregateTransaction, AggregateTransactionCosignature, CosignatureTransaction } from 'symbol-sdk'
 import { mapGetters } from 'vuex'
 
 import { AccountModel, AccountType } from '@/core/database/entities/AccountModel'
-import { TransactionService } from '@/services/TransactionService'
-import { BroadcastResult } from '@/core/transactions/BroadcastResult'
-
+import {
+  AccountTransactionSigner,
+  TransactionAnnouncerService,
+  TransactionSigner,
+} from '@/services/TransactionAnnouncerService'
 // child components
 // @ts-ignore
 import TransactionDetails from '@/components/TransactionDetails/TransactionDetails.vue'
@@ -92,45 +89,13 @@ export class ModalTransactionCosignatureTs extends Vue {
   }
 
   public get needsCosignature(): boolean {
+    //IS THIS CORRECT? Multisig accounts cannot sign?
     const currentPubAccount = AccountModel.getObjects(this.currentAccount).publicAccount
     return !this.transaction.signedByAccount(currentPubAccount)
   }
 
   public get cosignatures(): AggregateTransactionCosignature[] {
     return this.transaction.cosignatures
-  }
-  /// end-region computed properties
-
-  /**
-   * Hook called when child component HardwareConfirmationButton emits
-   * the 'success' event.
-   *
-   * This hook shall *only announce* said \a transactions
-   * which were signed using a hardware device.
-   *
-   * @param {CosignatureSignedTransaction[]} transactions
-   * @return {void}
-   */
-  public async onTransactionsSigned(transactions: CosignatureSignedTransaction[]) {
-    const service = new TransactionService(this.$store)
-
-    // - log about transaction signature success
-    this.$store.dispatch(
-      'diagnostic/ADD_INFO',
-      'Co-signed ' + transactions.length + ' Transaction(s) with Hardware Wallet',
-    )
-
-    // - broadcast signed transactions
-    const results: BroadcastResult[] = await service.announceCosignatureTransactions(transactions)
-
-    // - notify about errors
-    const errors = results.filter((result) => false === result.success)
-    if (errors.length) {
-      return errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
-    }
-
-    this.$emit('success')
-    this.show = false
   }
 
   /**
@@ -144,25 +109,25 @@ export class ModalTransactionCosignatureTs extends Vue {
    * @param {Password} password
    * @return {void}
    */
-  public async onAccountUnlocked({ account }: { account: Account }) {
+  public onAccountUnlocked({ account }: { account: Account }) {
     // - log about unlock success
     this.$store.dispatch('diagnostic/ADD_INFO', 'Account ' + account.address.plain() + ' unlocked successfully.')
+    return this.onSigner(new AccountTransactionSigner(account))
+  }
 
+  public async onSigner(transactionSigner: TransactionSigner) {
     // - sign cosignature transaction
-    const service = new TransactionService(this.$store)
-    const cosignature = service.cosignPartialTransaction(account, this.transaction)
-
-    // - broadcast signed transactions
-    const results: BroadcastResult[] = await service.announceCosignatureTransactions([cosignature])
-
-    // - notify about errors
-    const errors = results.filter((result) => false === result.success)
-    if (errors.length) {
-      return errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
+    const cosignature = CosignatureTransaction.create(this.transaction)
+    const signCosignatureTransaction = await transactionSigner.signCosignatureTransaction(cosignature).toPromise()
+    const res = await new TransactionAnnouncerService(this.$store)
+      .announceAggregateBondedCosignature(signCosignatureTransaction)
+      .toPromise()
+    if (res.success) {
+      this.$emit('success')
+      this.show = false
+    } else {
+      this.$store.dispatch('notification/ADD_ERROR', res.error, { root: true })
     }
-
-    this.$emit('success', account.publicAccount)
-    this.show = false
   }
 
   /**

@@ -13,33 +13,24 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Deadline, NetworkType, TransactionType } from 'symbol-sdk'
+import { Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
-import { FakeTransactionView, getFakeTransaction } from '@MOCKS/Transactions'
+import { ViewUnknownTransaction } from '@/core/transactions/ViewUnknownTransaction'
 
 const store = createStore({})
-const transfer = getFakeTransaction(TransactionType.TRANSFER, {})
+const transfer = TransferTransaction.create(
+  Deadline.create(),
+  new NamespaceId('alias'),
+  [],
+  PlainMessage.create('test-message'),
+  NetworkType.MIJIN_TEST,
+)
 
 describe('transactions/TransactionView', () => {
-  describe('constructor() should', () => {
-    test('initialize empty values map', () => {
-      // prepare + act
-      const view = new FakeTransactionView(store)
-
-      // assert
-      expect(view).toBeDefined()
-      expect(view.values).toBeDefined()
-      expect(view.values.size).toBe(0)
-    })
-  })
-
   describe('use() should', () => {
     test('set transaction property', () => {
       // prepare
-      const view = new FakeTransactionView(store)
-
-      // act
-      view.use(transfer)
+      const view = new ViewUnknownTransaction(store, transfer)
 
       // assert
       expect(view).toBeDefined()
@@ -50,39 +41,12 @@ describe('transactions/TransactionView', () => {
   describe('initialize() should', () => {
     test('set common transaction fields', () => {
       // prepare + act
-      const view = new FakeTransactionView(store)
-      view.use(transfer)
+      const view = new ViewUnknownTransaction(store, transfer)
 
       // assert
       expect(view).toBeDefined()
-      expect(view.values).toBeDefined()
-      expect(view.values.size).toBe(5)
-      expect(view.values.has('signature')).toBe(true)
-      expect(view.values.has('networkType')).toBe(true)
-      expect(view.values.has('type')).toBe(true)
-      expect(view.values.has('deadline')).toBe(true)
-      expect(view.values.has('maxFee')).toBe(true)
-    })
-
-    test('populate common transaction fields correctly', () => {
-      // prepare
-      const deadline = Deadline.create()
-      const transfer2 = getFakeTransaction(TransactionType.TRANSFER, {
-        deadline,
-        networkType: NetworkType.TEST_NET,
-      })
-
-      // act
-      const view = new FakeTransactionView(store)
-      view.use(transfer2)
-
-      // assert
-      expect(view).toBeDefined()
-      expect(view.values).toBeDefined()
-      expect(view.values.size).toBe(5)
-      expect(view.values.get('signature')).toBe(undefined)
-      expect(view.values.get('networkType')).toBe(NetworkType.TEST_NET)
-      expect(view.values.get('deadline').value).toBe(deadline.value)
+      expect(view.detailItems.length).toBe(0)
+      expect(view.headerItems.length).toBe(4)
     })
   })
 })

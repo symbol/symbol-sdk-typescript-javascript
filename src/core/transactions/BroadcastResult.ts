@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { SignedTransaction, CosignatureSignedTransaction } from 'symbol-sdk'
+import { CosignatureSignedTransaction, SignedTransaction, Transaction } from 'symbol-sdk'
 
 export class BroadcastResult {
   /**
@@ -28,7 +28,13 @@ export class BroadcastResult {
      * The transaction that was announced
      * @var {SignedTransaction}
      */
-    public readonly transaction: SignedTransaction | CosignatureSignedTransaction,
+    public readonly signedTransaction: SignedTransaction | CosignatureSignedTransaction,
+
+    /**
+     * The transaction that returned.
+     * @var {SignedTransaction}
+     */
+    public readonly transaction: Transaction | undefined,
     /**
      * Whether broadcasting was successfull
      * @var {boolean}

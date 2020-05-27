@@ -13,64 +13,41 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Deadline, HashLockTransaction, Mosaic, MosaicId, NetworkType, TransactionType, UInt64 } from 'symbol-sdk'
+import {
+  AggregateTransaction,
+  Deadline,
+  LockFundsTransaction,
+  NetworkCurrencyLocal,
+  NetworkType,
+  UInt64,
+} from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
 import { getTestAccount } from '@MOCKS/profiles'
-import { getFakeTransaction } from '@MOCKS/Transactions'
-import { HashLockTransactionFormFieldsType, ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
+import { ViewHashLockTransaction } from '@/core/transactions/ViewHashLockTransaction'
 
 const store = createStore({})
-const aggregate = getFakeTransaction(TransactionType.AGGREGATE_BONDED, {})
-const signedAggregate = getTestAccount('cosigner1').sign(aggregate, '')
 
 describe('transactions/ViewHashLockTransaction', () => {
   describe('use() should', () => {
     test('populate hash lock transaction fields', () => {
-      // prepare
-      const view = new ViewHashLockTransaction(store)
-      const hashLock = getFakeTransaction(TransactionType.HASH_LOCK, {
-        deadline: Deadline.create(),
-        networkType: NetworkType.TEST_NET,
-        mosaic: new Mosaic(new MosaicId('747B276C30626442'), UInt64.fromUint(100)),
-        duration: UInt64.fromUint(1000),
-        parent: signedAggregate,
-      }) as HashLockTransaction
+      const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6'
+      const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, [])
+      const signedTransaction = getTestAccount('cosigner1').sign(aggregateTransaction, generationHash)
+      const hashLock = LockFundsTransaction.create(
+        Deadline.create(),
+        NetworkCurrencyLocal.createRelative(10),
+        UInt64.fromUint(10),
+        signedTransaction,
+        NetworkType.MIJIN_TEST,
+      )
 
       // act
-      view.use(hashLock)
+      const view = new ViewHashLockTransaction(store, hashLock)
 
       // assert
       expect(view).toBeDefined()
       expect(view.transaction).toBeDefined()
-      expect(view.values.has('mosaic')).toBe(true)
-      expect(view.values.has('duration')).toBe(true)
-      expect(view.values.has('signedTransaction')).toBe(true)
-    })
-  })
-
-  describe('parse() should', () => {
-    test('populate hash lock transaction fields', () => {
-      // prepare
-      const symbol = '747B276C30626442'
-      const view = new ViewHashLockTransaction(store)
-      const formItems: HashLockTransactionFormFieldsType = {
-        mosaic: { mosaicHex: symbol, amount: 1 },
-        duration: 100,
-        signedTransaction: signedAggregate,
-        maxFee: 0,
-      }
-
-      // act
-      view.parse(formItems)
-
-      // assert
-      expect(view.values).toBeDefined()
-      expect(view.values.has('mosaic')).toBe(true)
-      expect(view.values.has('duration')).toBe(true)
-      expect(view.values.has('signedTransaction')).toBe(true)
-      expect(view.values.get('mosaic').id.toHex()).toBe(symbol)
-      expect(view.values.get('duration')).toBe(100)
-      expect(view.values.get('signedTransaction').hash).toBe(signedAggregate.hash)
+      expect(view.detailItems.length).toBe(3)
     })
   })
 })

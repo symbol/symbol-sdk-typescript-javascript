@@ -16,53 +16,28 @@
 import { RepositoryFactory, StorageInfo } from 'symbol-sdk'
 import Vue from 'vue'
 // internal dependencies
-import { AwaitLock } from './AwaitLock'
-
-const Lock = AwaitLock.create()
 
 export default {
   namespaced: true,
   state: {
-    initialized: false,
     countBlocks: 0,
     countTransactions: 0,
     countAccounts: 0,
     countNodes: 0,
   },
   getters: {
-    getInitialized: (state) => state.initialized,
     countBlocks: (state) => state.countBlocks,
     countTransactions: (state) => state.countTransactions,
     countAccounts: (state) => state.countAccounts,
     countNodes: (state) => state.countNodes,
   },
   mutations: {
-    setInitialized: (state, initialized) => {
-      state.initialized = initialized
-    },
     countBlocks: (state, cnt) => Vue.set(state, 'countBlocks', cnt),
     countTransactions: (state, cnt) => Vue.set(state, 'countTransactions', cnt),
     countAccounts: (state, cnt) => Vue.set(state, 'countAccounts', cnt),
     countNodes: (state, cnt) => Vue.set(state, 'countNodes', cnt),
   },
   actions: {
-    async initialize({ commit, getters, dispatch }) {
-      const callback = async () => {
-        dispatch('LOAD')
-        // update store
-        commit('setInitialized', true)
-      }
-
-      // aquire async lock until initialized
-      await Lock.initialize(callback, { getters })
-    },
-    async uninitialize({ commit, getters }) {
-      const callback = async () => {
-        commit('setInitialized', false)
-      }
-      await Lock.uninitialize(callback, { getters })
-    },
-
     async LOAD({ commit, rootGetters }) {
       commit('countTransactions', 0)
       commit('countBlocks', 0)

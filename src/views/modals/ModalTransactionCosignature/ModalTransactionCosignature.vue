@@ -2,6 +2,7 @@
   <div class="transaction_modal">
     <Modal
       v-model="show"
+      class-name="modal-transaction-cosignature"
       :title="$t('modal_title_transaction_details')"
       :transfer="false"
       :footer-hide="true"
@@ -42,7 +43,7 @@
           <p>{{ $t('transaction_needs_cosignature_explain') }}</p>
         </div>
 
-        <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onTransactionsSigned" @error="onError" />
+        <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
         <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
       </div>
     </Modal>
@@ -54,5 +55,51 @@ import { ModalTransactionCosignatureTs } from './ModalTransactionCosignatureTs'
 export default class ModalTransactionCosignature extends ModalTransactionCosignatureTs {}
 </script>
 <style lang="less" scoped>
-@import './ModalTransactionCosignature.less';
+@import '../../resources/css/variables.less';
+
+/deep/.modal-transaction-cosignature {
+  min-width: 8.5rem;
+  max-width: 12rem;
+  margin: 0 auto;
+  overflow: hidden;
+  .ivu-modal {
+    width: 12rem !important;
+  }
+
+  .ivu-modal-content {
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: scroll;
+  }
+
+  .explain {
+    padding: 0.2rem;
+    padding-left: 0.4rem;
+    font-size: @normalFont;
+
+    .subtitle {
+      color: @primary;
+      font-weight: @boldest;
+    }
+
+    p {
+      padding-top: 0.05rem;
+      text-align: justify;
+    }
+  }
+}
+
+/deep/.modal-footer {
+  height: 0.46rem;
+  padding-right: 0.4rem;
+}
+
+.float-right {
+  float: right;
+}
+
+.clear-staged-transactions {
+  font-size: @smallFont;
+  cursor: pointer;
+}
 </style>

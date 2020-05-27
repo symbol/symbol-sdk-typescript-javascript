@@ -14,17 +14,16 @@
  *
  */
 // external dependencies
-import { MultisigAccountInfo, MultisigAccountModificationTransaction, PublicAccount, TransactionType } from 'symbol-sdk'
+import {
+  Deadline,
+  MultisigAccountInfo,
+  MultisigAccountModificationTransaction,
+  PublicAccount,
+  UInt64,
+} from 'symbol-sdk'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // internal dependencies
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
-import {
-  CosignatoryModification,
-  CosignatoryModifications,
-  MultisigAccountModificationFormFieldsType,
-  ViewMultisigAccountModificationTransaction,
-} from '@/core/transactions/ViewMultisigAccountModificationTransaction'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -47,8 +46,16 @@ import CosignatoryModificationsDisplay from '@/components/CosignatoryModificatio
 import ApprovalAndRemovalInput from '@/components/ApprovalAndRemovalInput/ApprovalAndRemovalInput.vue'
 // @ts-ignore
 import MultisigCosignatoriesDisplay from '@/components/MultisigCosignatoriesDisplay/MultisigCosignatoriesDisplay.vue'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
-import { mapGetters } from 'vuex'
+
+/// region custom types
+export interface CosignatoryModification {
+  addOrRemove: 'add' | 'remove'
+  cosignatory: PublicAccount
+}
+
+export type CosignatoryModifications = {
+  [publicKey: string]: CosignatoryModification
+}
 
 @Component({
   components: {
@@ -64,11 +71,6 @@ import { mapGetters } from 'vuex'
     ModalTransactionConfirmation,
     ApprovalAndRemovalInput,
     MultisigCosignatoriesDisplay,
-  },
-  computed: {
-    ...mapGetters({
-      networkConfiguration: 'network/networkConfiguration',
-    }),
   },
 })
 export class FormMultisigAccountModificationTransactionTs extends FormTransactionBase {
@@ -98,15 +100,13 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * Form items
    * @var {any}
    */
-  public formItems: MultisigAccountModificationFormFieldsType = {
+  public formItems = {
     signerPublicKey: '',
     minApprovalDelta: 0,
     minRemovalDelta: 0,
     cosignatoryModifications: {},
     maxFee: 0,
   }
-
-  private networkConfiguration: NetworkConfigurationModel
 
   public get multisigOperationType(): 'conversion' | 'modification' {
     if (this.isCosignatoryMode) {
@@ -125,17 +125,6 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {void}
    */
   protected resetForm() {
-    // - re-populate form if transaction staged
-    if (this.stagedTransactions.length) {
-      const transaction = this.stagedTransactions.find(
-        (staged) => staged.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION,
-      )
-      if (transaction === undefined) return
-      this.setTransactions([transaction as MultisigAccountModificationTransaction])
-      this.isAwaitingSignature = true
-      return
-    }
-
     // - set default deltas values
     const defaultMinApprovalDelta = this.multisigOperationType === 'conversion' ? 1 : 0
     const defaultMinRemovalDelta = this.multisigOperationType === 'conversion' ? 1 : 0
@@ -148,15 +137,6 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
 
     // - maxFee must be absolute
     this.formItems.maxFee = this.defaultFee
-  }
-
-  /**
-   * Getter for whether forms should aggregate transactions
-   * @see {FormTransactionBase}
-   * @return {boolean} Always true
-   */
-  protected isAggregateMode(): boolean {
-    return true
   }
 
   /**
@@ -174,16 +154,25 @@ export class FormMultisigAccountModificationTransactionTs extends FormTransactio
    * @return {MultisigAccountModificationTransaction[]}
    */
   protected getTransactions(): MultisigAccountModificationTransaction[] {
-    this.factory = new TransactionFactory(this.$store)
-    try {
-      // - prepare transaction parameters
-      let view = new ViewMultisigAccountModificationTransaction(this.$store)
-      view = view.parse(this.formItems)
-      // - prepare transaction
-      return [this.factory.build(view)]
-    } catch (error) {
-      console.error('Error happened in FormTransferTransaction.transactions(): ', error)
-    }
+    const publicKeyAdditions = Object.values(this.formItems.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === 'add')
+      .map(({ cosignatory }) => cosignatory)
+
+    const publicKeyDeletions = Object.values(this.formItems.cosignatoryModifications)
+      .filter(({ addOrRemove }) => addOrRemove === 'remove')
+      .map(({ cosignatory }) => cosignatory)
+
+    return [
+      MultisigAccountModificationTransaction.create(
+        Deadline.create(),
+        this.formItems.minApprovalDelta,
+        this.formItems.minRemovalDelta,
+        publicKeyAdditions,
+        publicKeyDeletions,
+        this.networkType,
+        UInt64.fromUint(this.formItems.maxFee),
+      ),
+    ]
   }
 
   /**

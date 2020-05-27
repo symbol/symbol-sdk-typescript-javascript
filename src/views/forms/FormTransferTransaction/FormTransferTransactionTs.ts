@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Address, Message, Mosaic, MosaicId, NamespaceId, TransferTransaction, UInt64 } from 'symbol-sdk'
+import {
+  Address,
+  Deadline,
+  Message,
+  Mosaic,
+  MosaicId,
+  NamespaceId,
+  PlainMessage,
+  RawUInt64,
+  TransferTransaction,
+  UInt64,
+} from 'symbol-sdk'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
 import { Formatters } from '@/core/utils/Formatters'
-import { TransferFormFieldsType, ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 import { AddressValidator, AliasValidator } from '@/core/validation/validators'
 import { MosaicInputsManager } from './MosaicInputsManager'
 import { ITransactionEntry } from '@/views/pages/dashboard/invoice/DashboardInvoicePageTs'
@@ -48,7 +57,6 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 import FormRow from '@/components/FormRow/FormRow.vue'
 import { MosaicService } from '@/services/MosaicService'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
 export interface MosaicAttachment {
@@ -77,7 +85,6 @@ export interface MosaicAttachment {
     ...mapGetters({
       currentHeight: 'network/currentHeight',
       balanceMosaics: 'mosaic/balanceMosaics',
-      networkConfiguration: 'network/networkConfiguration',
     }),
   },
 })
@@ -130,8 +137,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
 
   private balanceMosaics: MosaicModel[]
 
-  private networkConfiguration: NetworkConfigurationModel
-
   /**
    * Reset the form with properties
    * @return {void}
@@ -180,15 +185,6 @@ export class FormTransferTransactionTs extends FormTransactionBase {
   }
 
   /**
-   * Getter for whether forms should aggregate transactions
-   * @see {FormTransactionBase}
-   * @return {boolean} True if creating transfer for multisig
-   */
-  protected isAggregateMode(): boolean {
-    return this.isCosignatoryMode
-  }
-
-  /**
    * Returns the mosaic list of the current account or current signer
    * depending on the multisig situation
    * @protected
@@ -214,32 +210,33 @@ export class FormTransferTransactionTs extends FormTransactionBase {
    * @return {TransferTransaction[]}
    */
   protected getTransactions(): TransferTransaction[] {
-    this.factory = new TransactionFactory(this.$store)
-    try {
-      // - read form
-      const data: TransferFormFieldsType = {
-        recipient: this.instantiatedRecipient,
-        mosaics: this.formItems.attachedMosaics
-          .filter(({ uid }) => uid) // filter out null values
-          .map(
-            (spec: MosaicAttachment): MosaicAttachment => ({
-              mosaicHex: spec.mosaicHex,
-              amount: spec.amount, // amount is relative
-            }),
-          ),
-        message: this.formItems.messagePlain,
-        maxFee: UInt64.fromUint(this.formItems.maxFee),
-      }
-
-      // - prepare transaction parameters
-      let view = new ViewTransferTransaction(this.$store)
-      view = view.parse(data)
-
-      // - prepare transfer transaction
-      return [this.factory.build(view)]
-    } catch (error) {
-      console.error('Error happened in FormTransferTransaction.transactions(): ', error)
+    const mosaicsInfo = this.$store.getters['mosaic/mosaics'] as MosaicModel[]
+    const mosaics = this.formItems.attachedMosaics
+      .filter(({ uid }) => uid) // filter out null values
+      .map(
+        (spec: MosaicAttachment): Mosaic => {
+          const info = mosaicsInfo.find((i) => i.mosaicIdHex === spec.mosaicHex)
+          const div = info ? info.divisibility : 0
+          // - format amount to absolute
+          return new Mosaic(
+            new MosaicId(RawUInt64.fromHex(spec.mosaicHex)),
+            UInt64.fromUint(spec.amount * Math.pow(10, div)),
+          )
+        },
+      )
+    if (!mosaics.length) {
+      return []
     }
+    return [
+      TransferTransaction.create(
+        Deadline.create(),
+        this.instantiatedRecipient,
+        mosaics,
+        PlainMessage.create(this.formItems.messagePlain || ''),
+        this.networkType,
+        UInt64.fromUint(this.formItems.maxFee),
+      ),
+    ]
   }
 
   /**

@@ -170,64 +170,69 @@ export default class LoginPageTs extends Vue {
    * @return {void}
    */
   private async processLogin() {
-    const currentProfileName = this.formItems.currentProfileName
-    const profile = this.profileService.getProfileByName(currentProfileName)
-    const settingService = new SettingService()
+    try {
+      const currentProfileName = this.formItems.currentProfileName
+      const profile = this.profileService.getProfileByName(currentProfileName)
+      const settingService = new SettingService()
 
-    // if profile doesn't exist, authentication is not valid
-    if (!profile) {
-      return this.$store.dispatch('notification/ADD_ERROR', 'Invalid login attempt')
-    }
+      // if profile doesn't exist, authentication is not valid
+      if (!profile) {
+        return this.$store.dispatch('notification/ADD_ERROR', 'Invalid login attempt')
+      }
 
-    // profile exists, fetch data
-    const settings: SettingsModel = settingService.getProfileSettings(currentProfileName)
+      // profile exists, fetch data
+      const settings: SettingsModel = settingService.getProfileSettings(currentProfileName)
 
-    const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts)
-    if (knownAccounts.length == 0) {
-      throw new Error('knownAccounts is empty')
-    }
+      const knownAccounts: AccountModel[] = this.accountService.getKnownAccounts(profile.accounts)
+      if (knownAccounts.length == 0) {
+        throw new Error('knownAccounts is empty')
+      }
 
-    // use service to generate password hash
-    const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
+      // use service to generate password hash
+      const passwordHash = ProfileService.getPasswordHash(new Password(this.formItems.password))
 
-    // read profile's password hash and compare
-    if (profile.password !== passwordHash) {
-      return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
-    }
+      // read profile's password hash and compare
+      if (profile.password !== passwordHash) {
+        return this.$store.dispatch('notification/ADD_ERROR', NotificationType.WRONG_PASSWORD_ERROR)
+      }
 
-    // if profile setup was not finalized, redirect
-    if (!profile.seed) {
-      this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
-      this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
+      // if profile setup was not finalized, redirect
+      if (!profile.seed) {
+        this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
+        this.$store.dispatch('temporary/SET_PASSWORD', this.formItems.password)
+        this.$store.dispatch(
+          'diagnostic/ADD_WARNING',
+          'Profile has not setup mnemonic pass phrase, redirecting: ' + currentProfileName,
+        )
+        return this.$router.push({
+          name: 'profiles.createProfile.generateMnemonic',
+        })
+      }
+
+      // read default account from settings
+      const defaultAccountId = settings.defaultAccount ? settings.defaultAccount : knownAccounts[0].id
+      if (!defaultAccountId) {
+        throw new Error('defaultAccountId could not be resolved')
+      }
+      const defaultAccount = knownAccounts.find((w) => w.id == defaultAccountId)
+      if (!defaultAccount) {
+        throw new Error(`defaultAccount could not be resolved from id ${defaultAccountId}`)
+      }
+
+      // LOGIN SUCCESS: update app state
+      await this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
+      this.$store.dispatch('network/CONNECT')
+      this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', profile.accounts)
+      await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount)
       this.$store.dispatch(
-        'diagnostic/ADD_WARNING',
-        'Profile has not setup mnemonic pass phrase, redirecting: ' + currentProfileName,
+        'diagnostic/ADD_DEBUG',
+        'Profile login successful with currentProfileName: ' + currentProfileName,
       )
-      return this.$router.push({
-        name: 'profiles.createProfile.generateMnemonic',
-      })
+      $eventBus.$emit('onLogin', currentProfileName)
+      return this.$router.push({ name: 'dashboard' })
+    } catch (e) {
+      console.log('Unknown error trying to login', JSON.stringify(e))
+      return this.$store.dispatch('notification/ADD_ERROR', `Unknown error trying to login: ${JSON.stringify(e)}`)
     }
-
-    // read default account from settings
-    const defaultAccountId = settings.defaultAccount ? settings.defaultAccount : knownAccounts[0].id
-    if (!defaultAccountId) {
-      throw new Error('defaultAccountId could not be resolved')
-    }
-    const defaultAccount = knownAccounts.find((w) => w.id == defaultAccountId)
-    if (!defaultAccount) {
-      throw new Error(`defaultAccount could not be resolved from id ${defaultAccountId}`)
-    }
-
-    // LOGIN SUCCESS: update app state
-    await this.$store.dispatch('profile/SET_CURRENT_PROFILE', profile)
-    await this.$store.dispatch('account/SET_CURRENT_ACCOUNT', defaultAccount)
-    this.$store.dispatch('account/SET_KNOWN_ACCOUNTS', profile.accounts)
-    this.$store.dispatch(
-      'diagnostic/ADD_DEBUG',
-      'Profile login successful with currentProfileName: ' + currentProfileName,
-    )
-
-    $eventBus.$emit('onLogin', currentProfileName)
-    return this.$router.push({ name: 'dashboard' })
   }
 }

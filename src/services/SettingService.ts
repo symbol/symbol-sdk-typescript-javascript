@@ -53,6 +53,6 @@ export class SettingService {
     const language = appConfig.languages.find((l) => l.value == browserLocale)
       ? browserLocale
       : appConfig.languages[0].value
-    return new SettingsModel(profileName, language, feesConfig.normal, '', networkConfig.explorerUrl)
+    return new SettingsModel(profileName, language, feesConfig.median, '', networkConfig.explorerUrl)
   }
 }

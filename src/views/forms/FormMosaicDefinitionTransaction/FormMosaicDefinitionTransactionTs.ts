@@ -15,6 +15,7 @@
  */
 // external dependencies
 import {
+  Deadline,
   MosaicDefinitionTransaction,
   MosaicFlags,
   MosaicId,
@@ -27,16 +28,7 @@ import {
 } from 'symbol-sdk'
 import { Component } from 'vue-property-decorator'
 // internal dependencies
-import {
-  MosaicDefinitionFormFieldsType,
-  ViewMosaicDefinitionTransaction,
-} from '@/core/transactions/ViewMosaicDefinitionTransaction'
-import {
-  MosaicSupplyChangeFormFieldsType,
-  ViewMosaicSupplyChangeTransaction,
-} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -116,15 +108,6 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
     this.formItems.maxFee = this.defaultFee
   }
 
-  /**
-   * Getter for whether forms should aggregate transactions
-   * @see {FormTransactionBase}
-   * @return {boolean} True if creating mosaic for multisig
-   */
-  protected isAggregateMode(): boolean {
-    return true
-  }
-
   /// region computed properties getter/setter
   /**
    * Getter for MOSAIC DEFINITION and SUPPLY CHANGE transactions that will be staged
@@ -132,48 +115,30 @@ export class FormMosaicDefinitionTransactionTs extends FormTransactionBase {
    * @return {TransferTransaction[]}
    */
   protected getTransactions(): Transaction[] {
-    this.factory = new TransactionFactory(this.$store)
-    try {
-      const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
-      const randomNonce = MosaicNonce.createRandom()
-
-      // - read form for definition
-      const mosaicId = MosaicId.createFromNonce(randomNonce, publicAccount)
-      const definitionData: MosaicDefinitionFormFieldsType = {
-        nonce: randomNonce,
-        mosaicId: mosaicId,
-        mosaicFlags: MosaicFlags.create(
-          this.formItems.supplyMutable,
-          this.formItems.transferable,
-          this.formItems.restrictable,
-        ),
-        divisibility: this.formItems.divisibility,
-        permanent: this.formItems.permanent,
-        duration: this.formItems.duration,
-        maxFee: UInt64.fromUint(this.formItems.maxFee),
-      }
-
-      // - read form for supply change
-      const supplyChangeData: MosaicSupplyChangeFormFieldsType = {
-        mosaicId: mosaicId,
-        action: MosaicSupplyChangeAction.Increase,
-        delta: UInt64.fromUint(this.formItems.supply),
-        maxFee: UInt64.fromUint(this.formItems.maxFee),
-      }
-
-      // - prepare mosaic definition transaction
-      let definitionView = new ViewMosaicDefinitionTransaction(this.$store)
-      definitionView = definitionView.parse(definitionData)
-
-      // - prepare mosaic supply change transaction
-      let supplyChangeView = new ViewMosaicSupplyChangeTransaction(this.$store)
-      supplyChangeView = supplyChangeView.parse(supplyChangeData)
-
-      // - prepare mosaic definition and supply change
-      return [this.factory.build(definitionView), this.factory.build(supplyChangeView)]
-    } catch (error) {
-      console.error('Error happened in FormMosaicDefinitionTransaction.transactions(): ', error)
-    }
+    const maxFee = UInt64.fromUint(this.formItems.maxFee)
+    const publicAccount = PublicAccount.createFromPublicKey(this.selectedSigner.publicKey, this.networkType)
+    const randomNonce = MosaicNonce.createRandom()
+    // - read form for definition
+    const mosaicId = MosaicId.createFromNonce(randomNonce, publicAccount)
+    const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+      Deadline.create(),
+      randomNonce,
+      mosaicId,
+      MosaicFlags.create(this.formItems.supplyMutable, this.formItems.transferable, this.formItems.restrictable),
+      this.formItems.divisibility,
+      UInt64.fromUint(this.formItems.duration),
+      this.networkType,
+      maxFee,
+    )
+    const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+      Deadline.create(),
+      mosaicId,
+      MosaicSupplyChangeAction.Increase,
+      UInt64.fromUint(this.formItems.supply),
+      this.networkType,
+      maxFee,
+    )
+    return [mosaicDefinitionTransaction, mosaicSupplyChangeTransaction]
   }
 
   /**

@@ -49,6 +49,7 @@ export class MultisigService {
         publicKey: currentAccount.publicKey,
         label: currentAccount.name,
         multisig: currentAccountMultisigInfo && currentAccountMultisigInfo.isMultisig(),
+        requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
       },
     ]
 
@@ -62,6 +63,7 @@ export class MultisigService {
         publicKey,
         multisig: true,
         label: this.getAccountLabel(address, knownAccounts),
+        requiredCosignatures: (currentAccountMultisigInfo && currentAccountMultisigInfo.minApproval) || 0,
       })),
     )
   }

@@ -243,4 +243,17 @@ export class NetworkConfigurationHelpers {
       this.defaults.harvestingMosaicId
     )
   }
+
+  public static defaultDynamicFeeMultiplier(
+    networkConfiguration: NetworkConfiguration | undefined,
+    defaultValue: number | undefined = undefined,
+  ): number {
+    return (
+      (networkConfiguration &&
+        networkConfiguration.chain &&
+        Formatters.configurationNumberAsNumber(networkConfiguration.chain.defaultDynamicFeeMultiplier)) ||
+      defaultValue ||
+      this.defaults.defaultDynamicFeeMultiplier
+    )
+  }
 }

@@ -13,74 +13,34 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import {
-  AliasAction,
-  Deadline,
-  MosaicAliasTransaction,
-  MosaicId,
-  NamespaceId,
-  NetworkType,
-  TransactionType,
-  UInt64,
-} from 'symbol-sdk'
+import { AliasAction, Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, NetworkType } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
-import { getTestAccount } from '@MOCKS/profiles'
-import { getFakeTransaction } from '@MOCKS/Transactions'
-import { AliasFormFieldsType, ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
+import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
 
 const store = createStore({})
 
 describe('transactions/ViewAliasTransaction', () => {
   describe('use() should', () => {
     test('populate mosaic alias transaction fields', () => {
-      // prepare
-      const view = new ViewAliasTransaction(store)
-      const alias = getFakeTransaction(TransactionType.MOSAIC_ALIAS, {
-        deadline: Deadline.create(),
-        networkType: NetworkType.TEST_NET,
-        namespaceId: new NamespaceId('symbol.xym'),
-        aliasAction: AliasAction.Link,
-        mosaicId: new MosaicId('747B276C30626442'),
-      }) as MosaicAliasTransaction
+      const namespaceId = new NamespaceId('alias')
+      const mosaicId = new MosaicId('747B276C30626442')
+      const alias = MosaicAliasTransaction.create(
+        Deadline.create(),
+        AliasAction.Link,
+        namespaceId,
+        mosaicId,
+        NetworkType.MIJIN_TEST,
+      )
 
-      // act
-      view.use(alias)
+      const view = new ViewAliasTransaction(store, alias)
 
       // assert
       expect(view).toBeDefined()
       expect(view.transaction).toBeDefined()
-      expect(view.values.has('namespaceId')).toBe(true)
-      expect(view.values.has('aliasTarget')).toBe(true)
-      expect(view.values.has('aliasAction')).toBe(true)
+      expect(view.detailItems.length).toBe(3)
     })
 
     // XXX test recognition of Namespace vs Address for recipient
     // XXX test recognition of Namespace vs MosaicId for mosaics
-  })
-
-  describe('parse() should', () => {
-    test('populate mosaic alias transaction fields', () => {
-      // prepare
-      const symbol = new NamespaceId('symbol.xym')
-      const view = new ViewAliasTransaction(store)
-      const formItems: AliasFormFieldsType = {
-        namespaceId: symbol,
-        aliasTarget: getTestAccount('cosigner1').address,
-        aliasAction: AliasAction.Unlink,
-        maxFee: UInt64.fromUint(0),
-      }
-
-      // act
-      view.parse(formItems)
-
-      // assert
-      expect(view.values).toBeDefined()
-      expect(view.values.has('namespaceId')).toBe(true)
-      expect(view.values.has('aliasTarget')).toBe(true)
-      expect(view.values.has('aliasAction')).toBe(true)
-      expect(view.values.get('namespaceId').toHex()).toBe(symbol.toHex())
-      expect(view.values.get('aliasTarget').plain()).toBe(getTestAccount('cosigner1').address.plain())
-      expect(view.values.get('aliasAction')).toBe(AliasAction.Unlink)
-    })
   })
 })

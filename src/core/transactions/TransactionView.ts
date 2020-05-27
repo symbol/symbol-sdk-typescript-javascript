@@ -14,31 +14,12 @@
  *
  */
 import { Store } from 'vuex'
-import { Transaction, TransactionInfo } from 'symbol-sdk'
+import { AggregateTransactionInfo, Transaction, TransactionInfo } from 'symbol-sdk'
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
+import i18n from '@/language'
+import { TransactionStatus } from '@/core/transactions/TransactionStatus'
 
-export abstract class TransactionView<FormFieldsType> {
-  /**
-   * Fields that are common to all transaction types
-   * @var {string[]}
-   */
-  protected readonly common: string[] = [
-    'signature',
-    'signerPublicKey',
-    'networkType',
-    'type',
-    'deadline',
-    'effectiveFee',
-    'isIncoming',
-    'hasBlockInfo',
-  ]
-
-  /**
-   * Fields that are specific to extending transaction types
-   * @var {string[]}
-   */
-  protected readonly fields: string[]
-
+export abstract class TransactionView<T extends Transaction> {
   /**
    * Vuex store instance
    * @var {Store<any>}
@@ -46,82 +27,126 @@ export abstract class TransactionView<FormFieldsType> {
   protected readonly $store: Store<any>
 
   /**
-   * Values that are specific to extending transaction types
-   * @var {Map<string, any>}
-   */
-  public values: Map<string, any>
-
-  /**
    * The transaction header info
    * @var {TransactionInfo}
    */
-  public info: TransactionInfo
+  public readonly info: TransactionInfo | AggregateTransactionInfo | undefined
 
   /**
    * The transaction body
    * @var {Transaction}
    */
-  public transaction: Transaction
+  public readonly transaction: T
+
+  /**
+   * The header items for the view.
+   */
+  public readonly headerItems: TransactionDetailItem[]
+
+  /**
+   * The the details items for the view.
+   */
+  public readonly detailItems: TransactionDetailItem[]
 
   /**
    * Construct a transaction view around \a store
    * @param {Store<any>} store
    */
-  public constructor(store: Store<any>) {
+  public constructor(store: Store<any>, transaction: T) {
     this.$store = store
-    this.values = new Map<string, any>()
+    this.transaction = transaction
+    this.info = transaction.transactionInfo || undefined
+    this.headerItems = this.resolveHeaderItems()
+    this.detailItems = this.resolveDetailItems()
   }
 
-  /// region abstract methods
   /**
-   * Parse form items and return a TransactionView
-   * @param {FormFieldsType} formItems
-   * @return {TransactionView<FormFieldsType>}
+   * Is the transaction incoming?
    */
-  public abstract parse(formItems: FormFieldsType): TransactionView<FormFieldsType>
+  public get isIncoming(): boolean {
+    return false
+  }
 
   /**
-   * Use a transaction object and return a TransactionView
-   * @param {Transaction} transaction
-   * @return {TransactionView<FormFieldsType>}
+   * Returns the status of the transaction
+   * @param transaction the transaction.
    */
-  public abstract use(transaction: Transaction): TransactionView<FormFieldsType>
-  /// end-region abstract methods
-
-  /**
-   * Initialize a transaction view around \a transaction
-   * @param {Transaction} transaction
-   * @return {TransactionView<FormFieldsType>}
-   */
-  protected initialize(transaction: Transaction): TransactionView<FormFieldsType> {
-    if (!!transaction.transactionInfo) {
-      this.info = transaction.transactionInfo
+  public static getTransactionStatus(transaction: Transaction): TransactionStatus {
+    if (!transaction.signer) {
+      return TransactionStatus.unconfirmed
+    } else if (transaction.isConfirmed()) {
+      return TransactionStatus.confirmed
+    } else if (transaction.isUnconfirmed()) {
+      return TransactionStatus.unconfirmed
+    } else {
+      return TransactionStatus.partial
     }
-
-    // - signed transaction fields
-    this.values.set('signature', transaction.signature)
-
-    if (!!transaction.signer) {
-      this.values.set('signerPublicKey', transaction.signer.publicKey)
-    }
-
-    // - network related fields
-    this.values.set('networkType', transaction.networkType)
-
-    // - populate common fields
-    this.values.set('type', transaction.type)
-    this.values.set('deadline', transaction.deadline)
-    this.values.set('maxFee', transaction.maxFee.compact())
-
-    return this
   }
 
   /**
    * It returns a list that that it easy to render when displaying TransactionDetailRow components.
    */
-  public resolveDetailItems(): TransactionDetailItem[] {
-    return Array.from(this.values.entries()).map(([key, value]) => {
-      return { key, value }
-    })
+  protected resolveDetailItems(): TransactionDetailItem[] {
+    return []
+  }
+  /**
+   * Displayed items
+   * @see {Store.Mosaic}
+   * @type {({ key: string, value: string | boolean, | Mosaic }[])}
+   */
+  protected resolveHeaderItems(): TransactionDetailItem[] {
+    return [
+      {
+        key: 'transaction_type',
+        value: `${i18n.t(`transaction_descriptor_${this.transaction.type}`)}`,
+      },
+      {
+        key: 'status',
+        value: i18n.t(`transaction_status_${TransactionView.getTransactionStatus(this.transaction)}`),
+      },
+      {
+        key: 'hash',
+        value: (this.info && this.info.hash) || undefined,
+      },
+      this.getFeeDetailItem(),
+      {
+        key: 'block_height',
+        value:
+          this.info && this.info.height && this.info.height.compact()
+            ? `${i18n.t('block')} #${this.info.height.compact()}`
+            : undefined,
+      },
+      {
+        key: 'deadline',
+        value: `${this.transaction.deadline.value.toLocalDate()} ${this.transaction.deadline.value.toLocalTime()}`,
+      },
+      {
+        key: 'signature',
+        value: this.transaction.signature,
+      },
+      {
+        key: 'signerPublicKey',
+        value: (this.transaction.signer && this.transaction.signer.publicKey) || undefined,
+      },
+    ].filter((pair) => pair.value)
+  }
+
+  protected getFeeDetailItem(): TransactionDetailItem {
+    if (this.transaction.isConfirmed()) {
+      return {
+        key: 'paid_fee',
+        value: this.transaction,
+        isPaidFee: true,
+      }
+    } else {
+      return {
+        key: 'max_fee',
+        value: {
+          amount: this.transaction.maxFee.compact() || 0,
+          color: 'red',
+        },
+        isMosaic: true,
+      }
+    }
   }
 }

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Deadline, NetworkType, PlainMessage, TransactionType, TransferTransaction, UInt64 } from 'symbol-sdk'
+import { Account, Deadline, NamespaceId, NetworkType, PlainMessage, TransferTransaction } from 'symbol-sdk'
 import { createStore } from '@MOCKS/Store'
-import { getTestAccount } from '@MOCKS/profiles'
-import { getFakeTransaction } from '@MOCKS/Transactions'
-import { TransferFormFieldsType, ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
+import { ViewTransferTransaction } from '@/core/transactions/ViewTransferTransaction'
 
 const store = createStore({})
 
@@ -25,51 +23,26 @@ describe('transactions/ViewTransferTransaction', () => {
   describe('use() should', () => {
     test('populate transfer transaction fields', () => {
       // prepare
-      const view = new ViewTransferTransaction(store)
-      const transfer2 = getFakeTransaction(TransactionType.TRANSFER, {
-        deadline: Deadline.create(),
-        networkType: NetworkType.TEST_NET,
-        recipient: getTestAccount('cosigner1').address,
-        mosaics: [],
-        message: PlainMessage.create('ViewTransferTransaction'),
-      }) as TransferTransaction
+      const alias = new NamespaceId('test')
+
+      const transferTransaction = TransferTransaction.create(
+        Deadline.create(),
+        alias,
+        [],
+        PlainMessage.create('test-message'),
+        NetworkType.MIJIN_TEST,
+      )
+
+      store.getters['account/currentSignerAddress'] = Account.generateNewAccount(NetworkType.MAIN_NET).address
 
       // act
-      view.use(transfer2)
+      const view = new ViewTransferTransaction(store, transferTransaction)
 
       // assert
       expect(view).toBeDefined()
       expect(view.transaction).toBeDefined()
-      expect(view.values.has('recipient')).toBe(true)
-      expect(view.values.has('mosaics')).toBe(true)
-      expect(view.values.has('message')).toBe(true)
-    })
 
-    // XXX test recognition of Namespace vs Address for recipient
-    // XXX test recognition of Namespace vs MosaicId for mosaics
-  })
-
-  describe('parse() should', () => {
-    test('populate transfer transaction fields', () => {
-      // prepare
-      const view = new ViewTransferTransaction(store)
-      const formItems: TransferFormFieldsType = {
-        recipient: getTestAccount('cosigner1').address,
-        mosaics: [],
-        message: 'ViewTransferTransaction',
-        maxFee: UInt64.fromUint(0),
-      }
-
-      // act
-      view.parse(formItems)
-
-      // assert
-      expect(view.values).toBeDefined()
-      expect(view.values.has('recipient')).toBe(true)
-      expect(view.values.has('mosaics')).toBe(true)
-      expect(view.values.has('message')).toBe(true)
-      expect(view.values.get('recipient').plain()).toBe(getTestAccount('cosigner1').address.plain())
-      expect(view.values.get('message').payload).toBe('ViewTransferTransaction')
+      expect(view.detailItems.length).toBe(3)
     })
   })
 })

@@ -13,22 +13,8 @@
             <TransactionDetails :transaction="transaction" />
           </div>
 
-          <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onTransactionsSigned" @error="onError" />
+          <HardwareConfirmationButton v-if="isUsingHardwareWallet" @success="onSigner" @error="onError" />
           <FormProfileUnlock v-else @success="onAccountUnlocked" @error="onError" />
-        </div>
-      </div>
-
-      <div slot="footer" class="modal-footer">
-        <div v-if="stagedTransactions && stagedTransactions.length > 1">
-          <span
-            class="clear-staged-transactions"
-            @click="
-              $store.dispatch('account/CLEAR_STAGED_TRANSACTIONS')
-              show = false
-            "
-          >
-            {{ $t('clear_staged_transactions') }}
-          </span>
         </div>
       </div>
     </Modal>

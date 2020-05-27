@@ -13,85 +13,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicDefinitionTransaction, MosaicFlags, MosaicId, MosaicNonce, UInt64 } from 'symbol-sdk'
+import { MosaicDefinitionTransaction, MosaicFlags, MosaicId } from 'symbol-sdk'
 // internal dependencies
 import { TransactionView } from './TransactionView'
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 
-/// region custom types
-export type MosaicDefinitionFormFieldsType = {
-  nonce: MosaicNonce
-  mosaicId: MosaicId
-  mosaicFlags: MosaicFlags
-  divisibility: number
-  permanent: boolean
-  duration: number
-  maxFee: UInt64
-}
-/// end-region custom types
-
-export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefinitionFormFieldsType> {
-  /**
-   * Fields that are specific to mosaic definition transactions
-   * @var {string[]}
-   */
-  protected readonly fields: string[] = ['nonce', 'mosaicId', 'mosaicFlags', 'divisibility', 'duration']
-
-  /**
-   * Parse form items and return a ViewMosaicDefinitionTransaction
-   * @param {MosaicDefinitionFormFieldsType} formItems
-   * @return {ViewMosaicDefinitionTransaction}
-   */
-  public parse(formItems: MosaicDefinitionFormFieldsType): ViewMosaicDefinitionTransaction {
-    // - parse form items to view values
-    this.values.set('nonce', formItems.nonce)
-    this.values.set('mosaicId', formItems.mosaicId)
-    this.values.set('mosaicFlags', formItems.mosaicFlags)
-    this.values.set('divisibility', formItems.divisibility)
-    this.values.set('duration', formItems.permanent ? undefined : UInt64.fromUint(formItems.duration))
-
-    // - set fee and return
-    this.values.set('maxFee', formItems.maxFee)
-    return this
-  }
-
-  /**
-   * Use a transaction object and return a ViewMosaicDefinitionTransaction
-   * @param {MosaicDefinitionTransaction} transaction
-   * @return {ViewMosaicDefinitionTransaction}
-   */
-  public use(transaction: MosaicDefinitionTransaction): ViewMosaicDefinitionTransaction {
-    // - set transaction
-    this.transaction = transaction
-
-    // - populate common values
-    this.initialize(transaction)
-
-    // - read transaction fields
-    this.values.set('nonce', transaction.nonce)
-    this.values.set('mosaicId', transaction.mosaicId)
-    this.values.set('mosaicFlags', transaction.flags)
-    this.values.set('divisibility', transaction.divisibility)
-
-    // - set duration if applying
-    const isPermanent = 0 === transaction.duration.compact()
-    this.values.set('duration', isPermanent ? undefined : transaction.duration)
-    return this
-  }
-
+export class ViewMosaicDefinitionTransaction extends TransactionView<MosaicDefinitionTransaction> {
   /**
    * Displayed items
    */
-  public resolveDetailItems(): TransactionDetailItem[] {
-    const mosaicId: MosaicId = this.values.get('mosaicId')
-    const divisibility: number = this.values.get('divisibility')
-    const mosaicFlags: MosaicFlags = this.values.get('mosaicFlags')
+  protected resolveDetailItems(): TransactionDetailItem[] {
+    const mosaicId: MosaicId = this.transaction.mosaicId
+    const divisibility: number = this.transaction.divisibility
+    const mosaicFlags: MosaicFlags = this.transaction.flags
 
     return [
       { key: 'mosaicId', value: mosaicId.toHex() },
       {
         key: 'table_header_divisibility',
         value: `${divisibility}`,
+      },
+      {
+        key: 'duration',
+        value: this.transaction.duration.compact(),
       },
       {
         key: 'table_header_transferable',

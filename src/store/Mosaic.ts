@@ -132,11 +132,10 @@ export default {
       Vue.set(state, 'mosaicConfigurations', mosaicConfigurations),
   },
   actions: {
-    async initialize({ commit, getters, dispatch }) {
+    async initialize({ commit, getters }) {
       const callback = async () => {
         const mosaicService = new MosaicService()
         commit('mosaicConfigurations', mosaicService.getMosaicConfigurations())
-        await dispatch('LOAD_NETWORK_CURRENCIES')
         commit('setInitialized', true)
       }
       // acquire async lock until initialized

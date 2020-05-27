@@ -18,7 +18,8 @@
     "maxMessageSize": 1024,
     "maxMosaicAtomicUnits":  9000000000000000,
     "currencyMosaicId": "05D6A80DE3C9ADCA",
-    "harvestingMosaicId": "05D6A80DE3C9ADCA"
+    "harvestingMosaicId": "05D6A80DE3C9ADCA",
+    "defaultDynamicFeeMultiplier": 1000
   },
   "nodes": [
     {"friendlyName": "API EU West 1", "roles": 2, "url":"http://api-01.eu-west-1.testnet-0951-v1.symboldev.network:3000"},

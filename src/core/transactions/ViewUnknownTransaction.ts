@@ -13,45 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { Transaction, UInt64 } from 'symbol-sdk'
+import { Transaction } from 'symbol-sdk'
 // internal dependencies
 import { TransactionView } from './TransactionView'
 
-/// region custom types
-export type UnknownTransactionFormFields = {
-  maxFee: UInt64
-}
-/// end-region custom types
-
-export class ViewUnknownTransaction extends TransactionView<UnknownTransactionFormFields> {
-  /**
-   * Fields that are specific to transfer transactions
-   * @var {string[]}
-   */
-  protected readonly fields: string[] = ['maxFee']
-
-  /**
-   * Parse form items and return a ViewUnknownTransaction
-   * @param {UnknownTransactionFormFields} formItems
-   * @return {ViewUnknownTransaction}
-   */
-  public parse(formItems: UnknownTransactionFormFields): ViewUnknownTransaction {
-    // - set fee and return
-    this.values.set('maxFee', formItems.maxFee)
-    return this
-  }
-
-  /**
-   * Use a transaction object and return a ViewUnknownTransaction
-   * @param {Transaction} transaction
-   * @return {ViewUnknownTransaction}
-   */
-  public use(transaction: Transaction): ViewUnknownTransaction {
-    // - set transaction
-    this.transaction = transaction
-
-    // - populate common values
-    this.initialize(transaction)
-    return this
-  }
-}
+export class ViewUnknownTransaction extends TransactionView<Transaction> {}

@@ -25,10 +25,9 @@ import {
   RepositoryFactory,
   UInt64,
 } from 'symbol-sdk'
-import { combineLatest, forkJoin, Observable, of } from 'rxjs'
+import { combineLatest, forkJoin, from, Observable, of } from 'rxjs'
 import { flatMap, map, tap, toArray } from 'rxjs/operators'
 // internal dependencies
-import { fromIterable } from 'rxjs/internal-compatibility'
 import { MosaicConfigurationModel } from '@/core/database/entities/MosaicConfigurationModel'
 import { MosaicModel } from '@/core/database/entities/MosaicModel'
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
@@ -215,7 +214,7 @@ export class MosaicService {
     ids: (NamespaceId | MosaicId)[],
   ): Observable<{ from: NamespaceId | MosaicId; to: MosaicId }[]> {
     const namespaceRepository = repositoryFactory.createNamespaceRepository()
-    return fromIterable(ids)
+    return from(ids)
       .pipe(
         flatMap((id) => {
           if (id instanceof MosaicId) {

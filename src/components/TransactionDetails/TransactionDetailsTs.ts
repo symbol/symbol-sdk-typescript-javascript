@@ -17,7 +17,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AggregateTransaction, Transaction } from 'symbol-sdk'
 
 // internal dependencies
-import { TransactionService, TransactionViewType } from '@/services/TransactionService'
 import { Formatters } from '@/core/utils/Formatters'
 
 // child components
@@ -25,6 +24,8 @@ import { Formatters } from '@/core/utils/Formatters'
 import DetailView from './DetailView.vue'
 // @ts-ignore
 import TransactionDetailsHeader from '@/components/TransactionDetailsHeader/TransactionDetailsHeader.vue'
+import { TransactionViewFactory } from '@/core/transactions/TransactionViewFactory'
+import { TransactionView } from '@/core/transactions/TransactionView'
 
 //@ts-ignore
 @Component({
@@ -37,7 +38,7 @@ export class TransactionDetailsTs extends Vue {
    */
   @Prop({ default: null }) transaction: Transaction
 
-  protected views: TransactionViewType[] = []
+  protected views: TransactionView<Transaction>[] = []
 
   /**
    * Formatters
@@ -45,15 +46,7 @@ export class TransactionDetailsTs extends Vue {
    */
   public formatters = Formatters
 
-  /**
-   * Transaction service
-   * @var {TransactionService}
-   */
-  public service: TransactionService
-
   public mounted() {
-    this.service = new TransactionService(this.$store)
-
     if (this.transaction instanceof AggregateTransaction) {
       this.views = [this.getView(this.transaction), ...this.transaction.innerTransactions.map((tx) => this.getView(tx))]
       return
@@ -62,7 +55,7 @@ export class TransactionDetailsTs extends Vue {
     this.views = [this.getView(this.transaction)]
   }
 
-  private getView(transaction: Transaction): TransactionViewType {
-    return this.service.getView(transaction)
+  private getView(transaction: Transaction): TransactionView<Transaction> {
+    return TransactionViewFactory.getView(this.$store, transaction)
   }
 }

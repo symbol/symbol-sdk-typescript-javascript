@@ -15,8 +15,6 @@
  */
 import RSSParser from 'rss-parser'
 import axios from 'axios'
-// internal dependencies
-import { AbstractService } from './AbstractService'
 // configuration
 import appConfig from '@/../config/app.conf.json'
 
@@ -61,7 +59,7 @@ export interface ArticleEntry {
   link: string
 }
 
-export class CommunityService extends AbstractService {
+export class CommunityService {
   /**
    * Get latest articles from RSS feed
    * @return {Promise<ArticleEntry[]}

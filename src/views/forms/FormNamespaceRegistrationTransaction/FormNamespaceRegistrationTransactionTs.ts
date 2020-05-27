@@ -15,6 +15,7 @@
  */
 // external dependencies
 import {
+  Deadline,
   NamespaceId,
   NamespaceRegistrationTransaction,
   NamespaceRegistrationType,
@@ -24,12 +25,7 @@ import {
 import { Component, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
-import {
-  NamespaceRegistrationFormFieldsType,
-  ViewNamespaceRegistrationTransaction,
-} from '@/core/transactions/ViewNamespaceRegistrationTransaction'
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -50,7 +46,6 @@ import MaxFeeAndSubmit from '@/components/MaxFeeAndSubmit/MaxFeeAndSubmit.vue'
 import ModalTransactionConfirmation from '@/views/modals/ModalTransactionConfirmation/ModalTransactionConfirmation.vue'
 // configuration
 import { NamespaceModel } from '@/core/database/entities/NamespaceModel'
-import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { NamespaceService } from '@/services/NamespaceService'
 import { FilterHelpers } from '@/core/utils/FilterHelpers'
 
@@ -71,7 +66,6 @@ import { FilterHelpers } from '@/core/utils/FilterHelpers'
     ...mapGetters({
       ownedNamespaces: 'namespace/ownedNamespaces',
       currentHeight: 'network/currentHeight',
-      networkConfiguration: 'network/networkConfiguration',
     }),
   },
 })
@@ -82,7 +76,6 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   @Prop({ default: null }) parentNamespaceId: NamespaceId
   @Prop({ default: null }) duration: number
 
-  protected networkConfiguration: NetworkConfigurationModel
   /**
    * Current account's owned namespaces
    */
@@ -145,45 +138,33 @@ export class FormNamespaceRegistrationTransactionTs extends FormTransactionBase 
   }
 
   /**
-   * Getter for whether forms should aggregate transactions
-   * @see {FormTransactionBase}
-   * @return {boolean} True if creating namespace for multisig
-   */
-  protected isAggregateMode(): boolean {
-    return this.isCosignatoryMode
-  }
-
-  /**
    * Getter for NAMESPACE REGISTRATION transactions that will be staged
    * @see {FormTransactionBase}
-   * @return {TransferTransaction[]}
+   * @return {Transaction[]}
    */
   protected getTransactions(): Transaction[] {
-    this.factory = new TransactionFactory(this.$store)
-    try {
-      // - read form for definition
-      const data: NamespaceRegistrationFormFieldsType = {
-        registrationType: this.formItems.registrationType,
-        rootNamespaceName:
-          NamespaceRegistrationType.RootNamespace === this.formItems.registrationType
-            ? this.formItems.newNamespaceName
-            : this.formItems.parentNamespaceName,
-        subNamespaceName:
-          NamespaceRegistrationType.SubNamespace === this.formItems.registrationType
-            ? this.formItems.newNamespaceName
-            : '',
-        duration: this.formItems.duration,
-        maxFee: UInt64.fromUint(this.formItems.maxFee),
-      }
-
-      // - prepare transaction
-      let view = new ViewNamespaceRegistrationTransaction(this.$store)
-      view = view.parse(data)
-
-      // - return instantiated Transaction
-      return [this.factory.build(view)]
-    } catch (error) {
-      console.error('Error happened in FormNamespaceRegistrationTransaction.transactions(): ', error)
+    const maxFee = UInt64.fromUint(this.formItems.maxFee)
+    const deadline = Deadline.create()
+    if (NamespaceRegistrationType.RootNamespace === this.formItems.registrationType)
+      return [
+        NamespaceRegistrationTransaction.createRootNamespace(
+          deadline,
+          this.formItems.newNamespaceName,
+          UInt64.fromUint(this.formItems.duration),
+          this.networkType,
+          maxFee,
+        ),
+      ]
+    else {
+      return [
+        NamespaceRegistrationTransaction.createSubNamespace(
+          deadline,
+          this.formItems.newNamespaceName,
+          this.formItems.parentNamespaceName,
+          this.networkType,
+          maxFee,
+        ),
+      ]
     }
   }
 

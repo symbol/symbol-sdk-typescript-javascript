@@ -14,39 +14,23 @@
  *
  */
 import Vue from 'vue'
-import {
-  AccountInfo,
-  Address,
-  CosignatureSignedTransaction,
-  IListener,
-  MultisigAccountInfo,
-  NetworkType,
-  RepositoryFactory,
-  SignedTransaction,
-  Transaction,
-  TransactionService,
-} from 'symbol-sdk'
+import { AccountInfo, Address, IListener, MultisigAccountInfo, NetworkType, RepositoryFactory } from 'symbol-sdk'
 import { of, Subscription } from 'rxjs'
-import { catchError, map, timeoutWith, tap, mapTo } from 'rxjs/operators'
-import * as _ from 'lodash'
-
 // internal dependencies
 import { $eventBus } from '../events'
 import { RESTService } from '@/services/RESTService'
 import { AwaitLock } from './AwaitLock'
-import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 import { AccountModel } from '@/core/database/entities/AccountModel'
 import { MultisigService } from '@/services/MultisigService'
+import * as _ from 'lodash'
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { AccountService } from '@/services/AccountService'
-
-// configuration
-import appConfig from '@/../config/app.conf.json'
-const { AGGREGATE_BROADCAST_TIMEOUT } = appConfig.constants
+import { catchError, map } from 'rxjs/operators'
 
 /// region globals
 const Lock = AwaitLock.create()
 /// end-region globals
+
 /**
  * Type SubscriptionType for account Store
  * @type {SubscriptionType}
@@ -61,6 +45,7 @@ export type Signer = {
   publicKey: string
   address: Address
   multisig: boolean
+  requiredCosignatures: number
 }
 
 // Account state typing
@@ -79,11 +64,6 @@ interface AccountState {
   knownAddresses: Address[]
   accountsInfo: AccountInfo[]
   multisigAccountsInfo: MultisigAccountInfo[]
-
-  stageOptions: { isAggregate: boolean; isMultisig: boolean }
-  stagedTransactions: Transaction[]
-  signedTransactions: SignedTransaction[]
-  // Subscriptions to webSocket channels
   subscriptions: Record<string, SubscriptionType[]>
 }
 
@@ -102,13 +82,6 @@ const accountState: AccountState = {
   knownAddresses: [],
   accountsInfo: [],
   multisigAccountsInfo: [],
-  stageOptions: {
-    isAggregate: false,
-    isMultisig: false,
-  },
-  stagedTransactions: [],
-  signedTransactions: [],
-  // Subscriptions to websocket channels.
   subscriptions: {},
 }
 
@@ -135,9 +108,6 @@ export default {
     accountsInfo: (state: AccountState) => state.accountsInfo,
     multisigAccountsInfo: (state: AccountState) => state.multisigAccountsInfo,
     getSubscriptions: (state: AccountState) => state.subscriptions,
-    stageOptions: (state: AccountState) => state.stageOptions,
-    stagedTransactions: (state: AccountState) => state.stagedTransactions,
-    signedTransactions: (state: AccountState) => state.signedTransactions,
   },
   mutations: {
     setInitialized: (state: AccountState, initialized: boolean) => {
@@ -199,45 +169,6 @@ export default {
       // update state
       Vue.set(state.subscriptions, address, newSubscriptions)
     },
-
-    stageOptions: (state: AccountState, options) => Vue.set(state, 'stageOptions', options),
-    setStagedTransactions: (state: AccountState, transactions: Transaction[]) =>
-      Vue.set(state, 'stagedTransactions', transactions),
-    addStagedTransaction: (state: AccountState, transaction: Transaction) => {
-      // - get previously staged transactions
-      const staged = state.stagedTransactions
-
-      // - push transaction on stage (order matters)
-      staged.push(transaction)
-
-      // - update state
-      return Vue.set(state, 'stagedTransactions', staged)
-    },
-    clearStagedTransaction: (state) => Vue.set(state, 'stagedTransactions', []),
-    addSignedTransaction: (state: AccountState, transaction: SignedTransaction) => {
-      // - get previously signed transactions
-      const signed = state.signedTransactions
-
-      // - update state
-      signed.push(transaction)
-      return Vue.set(state, 'signedTransactions', signed)
-    },
-    removeSignedTransaction: (state: AccountState, transaction: SignedTransaction) => {
-      // - get previously signed transactions
-      const signed = state.signedTransactions
-
-      // - find transaction by hash and delete
-      const idx = signed.findIndex((tx) => tx.hash === transaction.hash)
-      if (undefined === idx) {
-        return
-      }
-
-      // skip `idx`
-      const remaining = signed.splice(0, idx).concat(signed.splice(idx + 1, signed.length - idx - 1))
-
-      // - use Array.from to reset indexes
-      return Vue.set(state, 'signedTransactions', Array.from(remaining))
-    },
   },
   actions: {
     /**
@@ -286,10 +217,9 @@ export default {
       commit('currentAccount', currentAccount)
 
       // reset current signer
-      await dispatch('SET_CURRENT_SIGNER', {
+      dispatch('SET_CURRENT_SIGNER', {
         publicKey: currentAccount.publicKey,
       })
-      await dispatch('initialize', { address: currentAccountAddress.plain() })
       $eventBus.$emit('onAccountChange', currentAccountAddress.plain())
     },
 
@@ -337,7 +267,7 @@ export default {
       dispatch('transaction/SIGNER_CHANGED', {}, { root: true })
 
       // open / close websocket connections
-      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress.plain())
+      if (previousSignerAddress) await dispatch('UNSUBSCRIBE', previousSignerAddress)
       await dispatch('SUBSCRIBE', currentSignerAddress)
 
       await dispatch('LOAD_ACCOUNT_INFO')
@@ -351,11 +281,11 @@ export default {
       dispatch('namespace/RESET_NAMESPACES', {}, { root: true })
       dispatch('mosaic/RESET_MOSAICS', {}, { root: true })
       dispatch('transaction/LOAD_TRANSACTIONS', undefined, { root: true })
-      await dispatch('LOAD_ACCOUNT_INFO')
-      dispatch('namespace/LOAD_NAMESPACES', {}, { root: true })
       await dispatch('mosaic/LOAD_NETWORK_CURRENCIES', undefined, {
         root: true,
       })
+      await dispatch('LOAD_ACCOUNT_INFO')
+      dispatch('namespace/LOAD_NAMESPACES', {}, { root: true })
       dispatch('mosaic/LOAD_MOSAICS', {}, { root: true })
     },
 
@@ -443,15 +373,6 @@ export default {
       commit('knownAccounts', new AccountService().getKnownAccounts(accounts))
     },
 
-    ADD_STAGED_TRANSACTION({ commit }, stagedTransaction: Transaction) {
-      commit('addStagedTransaction', stagedTransaction)
-    },
-    CLEAR_STAGED_TRANSACTIONS({ commit }) {
-      commit('clearStagedTransaction')
-    },
-    RESET_TRANSACTION_STAGE({ commit }) {
-      commit('setStagedTransactions', [])
-    },
     /**
      * Websocket API
      */
@@ -495,105 +416,6 @@ export default {
         subscriptions: null,
       }
       commit('updateSubscriptions', payload)
-    },
-
-    async REST_ANNOUNCE_PARTIAL(
-      { commit, dispatch, rootGetters },
-      { issuer, signedLock, signedPartial },
-    ): Promise<BroadcastResult> {
-      if (!issuer || issuer.length !== 40) {
-        return
-      }
-
-      dispatch(
-        'diagnostic/ADD_DEBUG',
-        'Store action account/REST_ANNOUNCE_PARTIAL dispatched with: ' +
-          JSON.stringify({
-            issuer: issuer,
-            signedLockHash: signedLock.hash,
-            signedPartialHash: signedPartial.hash,
-          }),
-        { root: true },
-      )
-
-      // - prepare REST parameters
-      const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-      const transactionHttp = repositoryFactory.createTransactionRepository()
-      const receiptsHttp = repositoryFactory.createReceiptRepository()
-      const transactionService = new TransactionService(transactionHttp, receiptsHttp)
-      // - prepare scoped *confirmation listener*
-      const listener = rootGetters['network/listener']
-
-      return transactionService
-        .announceHashLockAggregateBonded(signedLock, signedPartial, listener)
-        .pipe(
-          catchError((error) => of(new BroadcastResult(signedPartial, false, error))),
-          mapTo(new BroadcastResult(signedPartial, true)),
-          timeoutWith(
-            AGGREGATE_BROADCAST_TIMEOUT,
-            of(new BroadcastResult(signedPartial, false, 'Aggregate transaction broadcast timed out')),
-          ),
-          tap(() => {
-            commit('removeSignedTransaction', signedLock)
-            commit('removeSignedTransaction', signedPartial)
-          }),
-        )
-        .toPromise()
-    },
-    async REST_ANNOUNCE_TRANSACTION(
-      { commit, dispatch, rootGetters },
-      signedTransaction: SignedTransaction,
-    ): Promise<BroadcastResult> {
-      dispatch(
-        'diagnostic/ADD_DEBUG',
-        'Store action account/REST_ANNOUNCE_TRANSACTION dispatched with: ' +
-          JSON.stringify({
-            hash: signedTransaction.hash,
-            payload: signedTransaction.payload,
-          }),
-        { root: true },
-      )
-
-      try {
-        // prepare REST parameters
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-        const transactionHttp = repositoryFactory.createTransactionRepository()
-
-        // prepare symbol-sdk TransactionService
-        await transactionHttp.announce(signedTransaction)
-        commit('removeSignedTransaction', signedTransaction)
-        return new BroadcastResult(signedTransaction, true)
-      } catch (e) {
-        commit('removeSignedTransaction', signedTransaction)
-        return new BroadcastResult(signedTransaction, false, e.toString())
-      }
-    },
-    async REST_ANNOUNCE_COSIGNATURE(
-      { dispatch, rootGetters },
-      cosignature: CosignatureSignedTransaction,
-    ): Promise<BroadcastResult> {
-      dispatch(
-        'diagnostic/ADD_DEBUG',
-        'Store action account/REST_ANNOUNCE_COSIGNATURE dispatched with: ' +
-          JSON.stringify({
-            hash: cosignature.parentHash,
-            signature: cosignature.signature,
-            signerPublicKey: cosignature.signerPublicKey,
-          }),
-        { root: true },
-      )
-
-      try {
-        // prepare REST parameters
-        const repositoryFactory = rootGetters['network/repositoryFactory'] as RepositoryFactory
-        const transactionHttp = repositoryFactory.createTransactionRepository()
-
-        // prepare symbol-sdk TransactionService
-        await transactionHttp.announceAggregateBondedCosignature(cosignature)
-        return new BroadcastResult(cosignature, true)
-      } catch (e) {
-        return new BroadcastResult(cosignature, false, e.toString())
-      }
     },
   },
 }

@@ -33,8 +33,12 @@ export class NodeService {
    */
   private readonly storage = NodeModelStorage.INSTANCE
 
+  public getKnowNodesOnly(): NodeModel[] {
+    return _.uniqBy(this.loadNodes().concat(this.loadStaticNodes()), 'url')
+  }
+
   public getNodes(repositoryFactory: RepositoryFactory, repositoryFactoryUrl: string): Observable<NodeModel[]> {
-    const storedNodes = this.loadNodes().concat(this.loadStaticNodes())
+    const storedNodes = this.getKnowNodesOnly()
     const nodeRepository = repositoryFactory.createNodeRepository()
 
     return nodeRepository.getNodeInfo().pipe(

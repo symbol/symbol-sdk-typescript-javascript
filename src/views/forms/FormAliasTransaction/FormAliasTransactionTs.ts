@@ -19,6 +19,7 @@ import {
   AliasAction,
   AliasTransaction,
   AliasType,
+  Deadline,
   MosaicAliasTransaction,
   MosaicId,
   NamespaceId,
@@ -29,8 +30,6 @@ import { mapGetters } from 'vuex'
 // internal dependencies
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 import { FormTransactionBase } from '../FormTransactionBase/FormTransactionBase'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
-import { ViewAliasTransaction } from '@/core/transactions/ViewAliasTransaction'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -195,42 +194,35 @@ export class FormAliasTransactionTs extends FormTransactionBase {
   }
 
   /**
-   * Getter for whether forms should aggregate transactions
-   * @see {FormTransactionBase}
-   * @return {boolean} True if creating alias for multisig
-   */
-  protected isAggregateMode(): boolean {
-    return this.isCosignatoryMode
-  }
-
-  /**
    * Getter for ALIAS transactions that will be staged
    * @see {FormTransactionBase}
    * @return {AliasTransaction[]}
    */
   protected getTransactions(): AliasTransaction[] {
-    this.factory = new TransactionFactory(this.$store)
-    try {
-      // - prepare transaction parameters
-      let view = new ViewAliasTransaction(this.$store)
-
-      // instantiate the alias target
-      const instantiatedAliasTarget =
-        this.aliasTargetType === 'address'
-          ? Address.createFromRawAddress(this.formItems.aliasTarget)
-          : new MosaicId(this.formItems.aliasTarget)
-
-      view = view.parse({
-        namespaceId: new NamespaceId(this.formItems.namespaceFullName),
-        aliasTarget: instantiatedAliasTarget,
-        aliasAction: this.formItems.aliasAction,
-        maxFee: UInt64.fromUint(this.formItems.maxFee),
-      })
-
-      // - prepare transaction
-      return [this.factory.build(view)]
-    } catch (error) {
-      console.error('Error happened in FormAliasTransactionTs.transactions(): ', error)
+    const namespaceId = new NamespaceId(this.formItems.namespaceFullName)
+    const maxFee = UInt64.fromUint(this.formItems.maxFee)
+    if (this.aliasTargetType === 'address')
+      return [
+        AddressAliasTransaction.create(
+          Deadline.create(),
+          this.formItems.aliasAction,
+          namespaceId,
+          Address.createFromRawAddress(this.formItems.aliasTarget),
+          this.networkType,
+          maxFee,
+        ),
+      ]
+    else {
+      return [
+        MosaicAliasTransaction.create(
+          Deadline.create(),
+          this.formItems.aliasAction,
+          namespaceId,
+          new MosaicId(this.formItems.aliasTarget),
+          this.networkType,
+          maxFee,
+        ),
+      ]
     }
   }
 

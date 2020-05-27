@@ -13,36 +13,9 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-@import '../../resources/css/variables.less';
 
-.transaction_modal {
-  display: grid;
-  grid-template-rows: 100%;
-  grid-template-columns: 100%;
-
-  .ivu-modal {
-    width: 12rem !important;
-  }
-
-  .ivu-modal-content {
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: scroll;
-  }
-
-  .explain {
-    padding: 0.2rem;
-    padding-left: 0.4rem;
-    font-size: @normalFont;
-
-    .subtitle {
-      color: @primary;
-      font-weight: @boldest;
-    }
-
-    p {
-      padding-top: 0.05rem;
-      text-align: justify;
-    }
-  }
+export enum TransactionStatus {
+  confirmed = 'confirmed',
+  unconfirmed = 'unconfirmed',
+  partial = 'partial',
 }

@@ -17,8 +17,8 @@ export const onPeerConnection = (store) => {
   store.subscribe((mutation) => {
     if (mutation.type === 'network/currentPeerInfo') {
       // - Done connection to new node
-      const nodeUrl = store.getters['network/currentPeer'].url
-      store.dispatch('statistics/initialize', nodeUrl)
+      // const nodeUrl = store.getters['network/currentPeer'].url
+      // store.dispatch('statistics/initialize', nodeUrl)
     }
   })
 }

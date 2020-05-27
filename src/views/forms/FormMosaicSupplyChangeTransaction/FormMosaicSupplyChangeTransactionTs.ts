@@ -14,16 +14,18 @@
  *
  */
 // external dependencies
-import { MosaicId, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, Transaction, UInt64 } from 'symbol-sdk'
+import {
+  Deadline,
+  MosaicId,
+  MosaicSupplyChangeAction,
+  MosaicSupplyChangeTransaction,
+  Transaction,
+  UInt64,
+} from 'symbol-sdk'
 import { Component, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-// internal dependencies
-import {
-  MosaicSupplyChangeFormFieldsType,
-  ViewMosaicSupplyChangeTransaction,
-} from '@/core/transactions/ViewMosaicSupplyChangeTransaction'
+
 import { FormTransactionBase } from '@/views/forms/FormTransactionBase/FormTransactionBase'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
 import { ValidationRuleset } from '@/core/validation/ValidationRuleset'
 // child components
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
@@ -173,39 +175,21 @@ export class FormMosaicSupplyChangeTransactionTs extends FormTransactionBase {
   }
 
   /**
-   * Getter for whether forms should aggregate transactions
-   * @see {FormTransactionBase}
-   * @return {boolean} True if creating supply change for multisig
-   */
-  protected isAggregateMode(): boolean {
-    return this.isCosignatoryMode
-  }
-
-  /**
    * Getter for SUPPLY CHANGE transactions that will be staged
    * @see {FormTransactionBase}
-   * @return {TransferTransaction[]}
+   * @return {Transaction[]}
    */
   protected getTransactions(): Transaction[] {
-    this.factory = new TransactionFactory(this.$store)
-    try {
-      // - read form for supply change
-      const supplyChangeData: MosaicSupplyChangeFormFieldsType = {
-        mosaicId: new MosaicId(this.formItems.mosaicHexId),
-        action: MosaicSupplyChangeAction.Increase,
-        delta: UInt64.fromUint(this.formItems.delta),
-        maxFee: UInt64.fromUint(this.formItems.maxFee),
-      }
-
-      // - prepare mosaic definition transaction
-      let supplyChangeView = new ViewMosaicSupplyChangeTransaction(this.$store)
-      supplyChangeView = supplyChangeView.parse(supplyChangeData)
-
-      // - prepare mosaic supply change
-      return [this.factory.build(supplyChangeView)]
-    } catch (error) {
-      console.error('Error happened in FormMosaicSupplyChangeTransaction.getTransactions(): ', error)
-    }
+    return [
+      MosaicSupplyChangeTransaction.create(
+        Deadline.create(),
+        new MosaicId(this.formItems.mosaicHexId),
+        MosaicSupplyChangeAction.Increase,
+        UInt64.fromUint(this.formItems.delta),
+        this.networkType,
+        UInt64.fromUint(this.formItems.maxFee),
+      ),
+    ]
   }
 
   /**

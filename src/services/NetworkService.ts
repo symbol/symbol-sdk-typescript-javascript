@@ -17,14 +17,13 @@
 import { NetworkModel } from '@/core/database/entities/NetworkModel'
 import { NetworkConfiguration, RepositoryFactory, RepositoryFactoryHttp } from 'symbol-sdk'
 import { URLHelpers } from '@/core/utils/URLHelpers'
-import { combineLatest, defer, EMPTY, Observable } from 'rxjs'
+import { combineLatest, defer, EMPTY, from, Observable } from 'rxjs'
 import { catchError, concatMap, flatMap, map, take, tap } from 'rxjs/operators'
 import * as _ from 'lodash'
 
 import { ObservableHelpers } from '@/core/utils/ObservableHelpers'
 
 import networkConfig from '../../config/network.conf.json'
-import { fromIterable } from 'rxjs/internal-compatibility'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 import { NetworkConfigurationHelpers } from '@/core/utils/NetworkConfigurationHelpers'
 import { NetworkModelStorage } from '@/core/database/storage/NetworkModelStorage'
@@ -52,16 +51,21 @@ export class NetworkService {
    * the next available url will be used.
    *
    * @param candidateUrl the new url.
+   * @param generationHash of the current profile
    */
   public getNetworkModel(
     candidateUrl: string | undefined,
+    generationHash?: string | undefined,
   ): Observable<{
     fallback: boolean
     networkModel: NetworkModel
     repositoryFactory: RepositoryFactory
   }> {
-    const possibleUrls = this.resolveCandidates(candidateUrl, this.storage.getLatest())
-    const repositoryFactoryObservable = fromIterable(possibleUrls)
+    const possibleUrls = this.resolveCandidates(
+      candidateUrl,
+      this.storage.get(generationHash) || this.storage.getLatest(),
+    )
+    const repositoryFactoryObservable = from(possibleUrls)
       .pipe(concatMap((url) => this.createRepositoryFactory(url)))
       .pipe(take(1))
     return repositoryFactoryObservable.pipe(
@@ -71,29 +75,48 @@ export class NetworkService {
             const storedNetworkModel = this.storage.get(generationHash)
             const networkRepository = repositoryFactory.createNetworkRepository()
             const nodeRepository = repositoryFactory.createNodeRepository()
-            return combineLatest([
-              repositoryFactory
-                .getNetworkType()
-                .pipe(
-                  ObservableHelpers.defaultLast(
-                    (storedNetworkModel && storedNetworkModel.networkType) || networkConfig.defaultNetworkType,
-                  ),
+            const networkTypeObservable = repositoryFactory
+              .getNetworkType()
+              .pipe(
+                ObservableHelpers.defaultLast(
+                  (storedNetworkModel && storedNetworkModel.networkType) || networkConfig.defaultNetworkType,
                 ),
-              repositoryFactory
-                .getGenerationHash()
-                .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.generationHash)),
-              networkRepository.getNetworkProperties().pipe(
-                map((d) => this.toNetworkConfigurationModel(d)),
-                ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.networkConfiguration),
-              ),
-              nodeRepository
-                .getNodeInfo()
-                .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.nodeInfo)),
+              )
+            const generationHashObservable = repositoryFactory
+              .getGenerationHash()
+              .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.generationHash))
+
+            const networkPropertiesObservable = networkRepository.getNetworkProperties().pipe(
+              map((d) => this.toNetworkConfigurationModel(d)),
+              ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.networkConfiguration),
+            )
+            const nodeInfoObservable = nodeRepository
+              .getNodeInfo()
+              .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.nodeInfo))
+
+            const transactionFeesObservable = repositoryFactory
+              .createNetworkRepository()
+              .getTransactionFees()
+              .pipe(ObservableHelpers.defaultLast(storedNetworkModel && storedNetworkModel.transactionFees))
+
+            return combineLatest([
+              networkTypeObservable,
+              generationHashObservable,
+              networkPropertiesObservable,
+              nodeInfoObservable,
+              transactionFeesObservable,
             ]).pipe(
-              map((restData) => {
+              map(([networkType, generationHash, networkProperties, nodeInfo, transactionFees]) => {
                 return {
                   fallback: !!candidateUrl && candidateUrl !== url,
-                  networkModel: new NetworkModel(url, restData[0], restData[1], restData[2], restData[3]),
+                  networkModel: new NetworkModel(
+                    url,
+                    networkType,
+                    generationHash,
+                    networkProperties,
+                    transactionFees,
+                    nodeInfo,
+                  ),
                   repositoryFactory,
                 }
               }),
@@ -140,6 +163,7 @@ export class NetworkService {
       maxMosaicAtomicUnits: NetworkConfigurationHelpers.maxMosaicAtomicUnits(dto),
       currencyMosaicId: NetworkConfigurationHelpers.currencyMosaicId(dto),
       harvestingMosaicId: NetworkConfigurationHelpers.harvestingMosaicId(dto),
+      defaultDynamicFeeMultiplier: NetworkConfigurationHelpers.defaultDynamicFeeMultiplier(dto),
     }
     return { ...fileDefaults, ...fromDto }
   }

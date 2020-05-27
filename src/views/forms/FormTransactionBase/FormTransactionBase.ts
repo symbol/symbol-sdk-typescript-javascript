@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction } from 'symbol-sdk'
+import { MosaicId, MultisigAccountInfo, NetworkType, PublicAccount, Transaction, TransactionFees } from 'symbol-sdk'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { TransactionFactory } from '@/core/transactions/TransactionFactory'
-import { TransactionService } from '@/services/TransactionService'
-import { BroadcastResult } from '@/core/transactions/BroadcastResult'
 import { ValidationObserver } from 'vee-validate'
 import { Signer } from '@/store/Account'
 import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyModel'
+import { TransactionCommand, TransactionCommandMode } from '@/services/TransactionCommand'
+import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
 
 @Component({
   computed: {
@@ -36,10 +35,11 @@ import { NetworkCurrencyModel } from '@/core/database/entities/NetworkCurrencyMo
       currentSignerMultisigInfo: 'account/currentSignerMultisigInfo',
       currentAccountMultisigInfo: 'account/currentAccountMultisigInfo',
       isCosignatoryMode: 'account/isCosignatoryMode',
-      stagedTransactions: 'account/stagedTransactions',
       networkMosaic: 'mosaic/networkMosaic',
       networkCurrency: 'mosaic/networkCurrency',
       signers: 'account/signers',
+      networkConfiguration: 'network/networkConfiguration',
+      transactionFees: 'network/transactionFees',
     }),
   },
 })
@@ -111,6 +111,12 @@ export class FormTransactionBase extends Vue {
 
   public networkCurrency: NetworkCurrencyModel
 
+  public networkConfiguration: NetworkConfigurationModel
+
+  public command: TransactionCommand
+
+  private transactionFees: TransactionFees
+
   /**
    * Type the ValidationObserver refs
    * @type {{
@@ -139,17 +145,10 @@ export class FormTransactionBase extends Vue {
   public isAwaitingSignature: boolean = false
 
   /**
-   * Transaction factory
-   * @var {TransactionFactory}
-   */
-  public factory: TransactionFactory
-
-  /**
    * Hook called when the component is mounted
    * @return {void}
    */
   public async created() {
-    this.factory = new TransactionFactory(this.$store)
     this.resetForm()
   }
 
@@ -199,15 +198,6 @@ export class FormTransactionBase extends Vue {
   protected resetForm() {
     throw new Error("Method 'resetForm()' must be overloaded in derivate components.")
   }
-
-  /**
-   * Getter for whether forms should aggregate transactions
-   * @throws {Error} If not overloaded in derivate component
-   */
-  protected isAggregateMode(): boolean {
-    throw new Error("Method 'isAggregateMode()' must be overloaded in derivate components.")
-  }
-
   /**
    * Getter for whether forms should aggregate transactions in BONDED
    * @return {boolean}
@@ -230,6 +220,7 @@ export class FormTransactionBase extends Vue {
    * @throws {Error} If not overloaded in derivate component
    */
   protected setTransactions(transactions: Transaction[]) {
+    //TODO do we need these methods?
     const error = `setTransactions() must be overloaded. Call got ${transactions.length} transactions.`
     throw new Error(error)
   }
@@ -252,44 +243,47 @@ export class FormTransactionBase extends Vue {
     await this.$store.dispatch('account/SET_CURRENT_SIGNER', { publicKey })
   }
 
+  protected getTransactionCommandMode(transactions: Transaction[]): TransactionCommandMode {
+    if (this.isMultisigMode()) {
+      return TransactionCommandMode.MULTISIGN
+    }
+    if (transactions.length > 1) {
+      return TransactionCommandMode.AGGREGATE
+    } else {
+      return TransactionCommandMode.SIMPLE
+    }
+  }
+
+  public createTransactionCommand(): TransactionCommand {
+    const transactions = this.getTransactions()
+    const mode = this.getTransactionCommandMode(transactions)
+    return new TransactionCommand(
+      mode,
+      this.selectedSigner,
+      transactions,
+      this.networkMosaic,
+      this.generationHash,
+      this.networkType,
+      this.networkConfiguration,
+      this.transactionFees,
+    )
+  }
+
   /**
    * Process form input
    * @return {void}
    */
-  public async onSubmit() {
-    const transactions = this.getTransactions()
-
-    this.$store.dispatch(
-      'diagnostic/ADD_DEBUG',
-      'Adding ' + transactions.length + ' transaction(s) to stage (prepared & unsigned)',
-    )
-
-    // - check whether transactions must be aggregated
-    // - also set isMultisig flag in case of cosignatory mode
-    if (this.isAggregateMode()) {
-      this.$store.commit('account/stageOptions', {
-        isAggregate: true,
-        isMultisig: this.isMultisigMode(),
-      })
-    }
-
-    // - add transactions to stage (to be signed)
-    await Promise.all(
-      transactions.map(async (transaction) => {
-        await this.$store.dispatch('account/ADD_STAGED_TRANSACTION', transaction)
-      }),
-    )
-
+  public onSubmit() {
     // - open signature modal
+    this.command = this.createTransactionCommand()
     this.onShowConfirmationModal()
   }
 
   /**
    * Hook called when the child component ModalTransactionConfirmation triggers
    * the event 'success'
-   * @return {void}
    */
-  public async onConfirmationSuccess(issuer: PublicAccount) {
+  public onConfirmationSuccess() {
     // if the form was in multisig, set the signer to be the main account
     // this triggers resetForm in the @Watch('currentAccount') hook
     if (this.isMultisigMode()) {
@@ -297,37 +291,8 @@ export class FormTransactionBase extends Vue {
     } else {
       this.resetForm()
     }
-
     this.hasConfirmationModal = false
     this.$emit('on-confirmation-success')
-
-    // XXX does the user want to broadcast NOW ?
-
-    // - read transaction stage options
-    const options = this.$store.getters['account/stageOptions']
-    const service = new TransactionService(this.$store)
-    let results: BroadcastResult[] = []
-
-    // - case 1 "announce partial"
-    if (options.isMultisig) {
-      results = await service.announcePartialTransactions(issuer)
-    }
-    // - case 2 "announce complete"
-    else {
-      results = await service.announceSignedTransactions()
-    }
-
-    // - notify about errors and exit
-    const errors = results.filter((result) => false === result.success)
-    if (errors.length) {
-      errors.map((result) => this.$store.dispatch('notification/ADD_ERROR', result.error))
-      return
-    }
-
-    // - notify about broadcast success (_transactions now unconfirmed_)
-    const message = options.isMultisig ? 'success_transaction_partial_announced' : 'success_transactions_announced'
-    this.$store.dispatch('notification/ADD_SUCCESS', message)
-
     // Reset form validation
     this.resetFormValidation()
   }
@@ -355,7 +320,6 @@ export class FormTransactionBase extends Vue {
    * @return {void}
    */
   public onConfirmationCancel() {
-    this.$store.dispatch('account/RESET_TRANSACTION_STAGE')
     this.hasConfirmationModal = false
   }
 }

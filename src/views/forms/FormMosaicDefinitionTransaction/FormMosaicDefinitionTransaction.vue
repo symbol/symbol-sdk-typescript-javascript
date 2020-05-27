@@ -40,6 +40,7 @@
 
     <ModalTransactionConfirmation
       v-if="hasConfirmationModal"
+      :command="command"
       :visible="hasConfirmationModal"
       @success="onConfirmationSuccess"
       @error="onConfirmationError"

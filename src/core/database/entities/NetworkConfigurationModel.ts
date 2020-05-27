@@ -30,4 +30,5 @@ export class NetworkConfigurationModel {
   public readonly maxMosaicAtomicUnits: number
   public readonly currencyMosaicId: string
   public readonly harvestingMosaicId: string
+  public readonly defaultDynamicFeeMultiplier: number
 }

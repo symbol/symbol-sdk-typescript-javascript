@@ -18,7 +18,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AggregateTransaction, MosaicId, Transaction } from 'symbol-sdk'
 // internal dependencies
 import { AccountModel } from '@/core/database/entities/AccountModel'
-import { TransactionService } from '@/services/TransactionService'
 // child components
 // @ts-ignore
 import ModalTransactionCosignature from '@/views/modals/ModalTransactionCosignature/ModalTransactionCosignature.vue'
@@ -94,12 +93,6 @@ export class TransactionListTs extends Vue {
   public partialTransactions: Transaction[]
 
   /**
-   * Transaction service
-   * @var {TransactionService}
-   */
-  public service: TransactionService
-
-  /**
    * set the default to select all
    */
   public displayedTransactionStatus: TransactionGroup
@@ -137,14 +130,6 @@ export class TransactionListTs extends Vue {
     return this.displayedTransactionStatus === TransactionGroup.all
       ? 'no_data_transactions'
       : `no_${this.displayedTransactionStatus}_transactions`
-  }
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  public async created() {
-    this.service = new TransactionService(this.$store)
   }
 
   /// region computed properties getter/setter

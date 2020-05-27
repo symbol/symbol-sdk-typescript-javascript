@@ -14,105 +14,23 @@
  *
  */
 // external dependencies
-import { PublicAccount, MultisigAccountModificationTransaction, UInt64, Address } from 'symbol-sdk'
-
+import { Address, MultisigAccountModificationTransaction, NetworkType } from 'symbol-sdk'
 // internal dependencies
 import { TransactionView } from './TransactionView'
 import { TransactionDetailItem } from '@/core/transactions/TransactionDetailItem'
 import i18n from '@/language'
-/// region custom types
-export interface CosignatoryModification {
-  addOrRemove: 'add' | 'remove'
-  cosignatory: PublicAccount
-}
-
-export type CosignatoryModifications = {
-  [publicKey: string]: CosignatoryModification
-}
-
-export type MultisigAccountModificationFormFieldsType = {
-  signerPublicKey: string
-  minApprovalDelta: number
-  minRemovalDelta: number
-  cosignatoryModifications: CosignatoryModifications
-  maxFee: number
-}
-/// end-region custom types
 
 // eslint-disable-next-line max-len
 export class ViewMultisigAccountModificationTransaction extends TransactionView<
-  MultisigAccountModificationFormFieldsType
+  MultisigAccountModificationTransaction
 > {
-  /**
-   * Fields that are specific to transfer transactions
-   * @var {string[]}
-   */
-  protected readonly fields: string[] = [
-    'minApprovalDelta',
-    'minRemovalDelta',
-    'publicKeyAdditions',
-    'publicKeyDeletions',
-    'maxFee',
-  ]
-
-  /**
-   * Parse form items and return a ViewMultisigAccountModificationTransaction
-   * @param {MultisigAccountModificationFormFieldsType} formItems
-   * @return {ViewMultisigAccountModificationTransaction}
-   */
-  public parse(formItems: MultisigAccountModificationFormFieldsType): ViewMultisigAccountModificationTransaction {
-    // set approval and removal deltas
-    this.values.set('minApprovalDelta', formItems.minApprovalDelta)
-    this.values.set('minRemovalDelta', formItems.minRemovalDelta)
-
-    // get public keys additions and deletions
-    const publicKeyAdditions = Object.values(formItems.cosignatoryModifications)
-      .filter(({ addOrRemove }) => addOrRemove === 'add')
-      .map(({ cosignatory }) => cosignatory)
-
-    const publicKeyDeletions = Object.values(formItems.cosignatoryModifications)
-      .filter(({ addOrRemove }) => addOrRemove === 'remove')
-      .map(({ cosignatory }) => cosignatory)
-
-    // set public keys additions and deletions
-    this.values.set('publicKeyAdditions', publicKeyAdditions)
-    this.values.set('publicKeyDeletions', publicKeyDeletions)
-
-    // - set fee and return
-    this.values.set('maxFee', UInt64.fromUint(formItems.maxFee))
-    return this
-  }
-
-  /**
-   * Use a transaction object and return a ViewTransferTransaction
-   * @param {ViewMultisigAccountModificationTransaction} transaction
-   * @returns {ViewMultisigAccountModificationTransaction}
-   */
-  public use(transaction: MultisigAccountModificationTransaction): ViewMultisigAccountModificationTransaction {
-    // - set transaction
-    this.transaction = transaction
-
-    // - populate common values
-    this.initialize(transaction)
-
-    // set approval and removal deltas
-    this.values.set('minApprovalDelta', transaction.minApprovalDelta)
-    this.values.set('minRemovalDelta', transaction.minRemovalDelta)
-
-    // set public keys additions and deletions
-    this.values.set('publicKeyAdditions', transaction.publicKeyAdditions)
-    this.values.set('publicKeyDeletions', transaction.publicKeyDeletions)
-
-    return this
-  }
-
-  public resolveDetailItems(): TransactionDetailItem[] {
+  protected resolveDetailItems(): TransactionDetailItem[] {
     // get data from view values
-    const networkType = this.$store.getters['network/networkType']
-    const minApprovalDelta: number = this.values.get('minApprovalDelta')
-    const minRemovalDelta: number = this.values.get('minRemovalDelta')
-    const publicKeyAdditions: PublicAccount[] = this.values.get('publicKeyAdditions')
-    const publicKeyDeletions: PublicAccount[] = this.values.get('publicKeyDeletions')
+    const networkType: NetworkType = this.$store.getters['network/networkType']
+    const minApprovalDelta = this.transaction.minApprovalDelta
+    const minRemovalDelta = this.transaction.minRemovalDelta
+    const publicKeyAdditions = this.transaction.publicKeyAdditions
+    const publicKeyDeletions = this.transaction.publicKeyDeletions
 
     // push approval and removal deltas to view items
     const items = [
@@ -135,10 +53,6 @@ export class ViewMultisigAccountModificationTransaction extends TransactionView<
       }
     })
 
-    // push rendered public key additions and deletions to the view items
-    if (additions.length) items.push(...additions)
-    if (deletions.length) items.push(...deletions)
-
-    return items
+    return [...items, ...additions, ...deletions]
   }
 }

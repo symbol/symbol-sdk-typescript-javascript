@@ -14,7 +14,7 @@
  *
  */
 import Vue from 'vue'
-import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory } from 'symbol-sdk'
+import { BlockInfo, IListener, Listener, NetworkType, RepositoryFactory, TransactionFees } from 'symbol-sdk'
 import { Subscription } from 'rxjs'
 // internal dependencies
 import { $eventBus } from '../events'
@@ -30,6 +30,7 @@ import { NodeService } from '@/services/NodeService'
 import { NodeModel } from '@/core/database/entities/NodeModel'
 import { URLInfo } from '@/core/utils/URLInfo'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { ProfileModel } from '@/core/database/entities/ProfileModel'
 
 const Lock = AwaitLock.create()
 
@@ -65,6 +66,7 @@ interface NetworkState {
   knowNodes: NodeModel[]
   currentHeight: number
   subscriptions: Subscription[]
+  transactionFees: TransactionFees
 }
 
 const defaultPeer = URLHelpers.formatUrl(networkConfig.defaultNodeUrl)
@@ -79,6 +81,7 @@ const networkState: NetworkState = {
   networkConfiguration: networkConfig.networkConfigurationDefaults,
   repositoryFactory: NetworkService.createRepositoryFactory(networkConfig.defaultNodeUrl),
   listener: undefined,
+  transactionFees: undefined,
   isConnected: false,
   knowNodes: [],
   currentHeight: 0,
@@ -101,6 +104,7 @@ export default {
     isConnected: (state: NetworkState) => state.isConnected,
     knowNodes: (state: NetworkState) => state.knowNodes,
     currentHeight: (state: NetworkState) => state.currentHeight,
+    transactionFees: (state: NetworkState) => state.transactionFees,
   },
   mutations: {
     setInitialized: (state: NetworkState, initialized: boolean) => {
@@ -122,6 +126,9 @@ export default {
     generationHash: (state: NetworkState, generationHash: string) => Vue.set(state, 'generationHash', generationHash),
     networkType: (state: NetworkState, networkType: NetworkType) => Vue.set(state, 'networkType', networkType),
     currentPeer: (state: NetworkState, currentPeer: URLInfo) => Vue.set(state, 'currentPeer', currentPeer),
+    transactionFees: (state: NetworkState, transactionFees: TransactionFees) => {
+      state.transactionFees = transactionFees
+    },
 
     addPeer: (state: NetworkState, peerUrl: string) => {
       const knowNodes: NodeModel[] = state.knowNodes
@@ -152,6 +159,7 @@ export default {
   actions: {
     async initialize({ commit, dispatch, getters }) {
       const callback = async () => {
+        // commit('knowNodes', new NodeService().getKnowNodesOnly())
         await dispatch('CONNECT')
         // update store
         commit('setInitialized', true)
@@ -167,26 +175,32 @@ export default {
       await Lock.uninitialize(callback, { getters })
     },
 
-    async CONNECT({ commit, dispatch, getters }, newCandidate: string | undefined) {
+    async CONNECT({ commit, dispatch, getters, rootGetters }, newCandidate: string | undefined) {
+      const currentProfile: ProfileModel = rootGetters['profile/currentProfile']
       const networkService = new NetworkService()
-      const { networkModel, repositoryFactory, fallback } = await networkService
-        .getNetworkModel(newCandidate)
+      const nodeService = new NodeService()
+      const networkModelResult = await networkService
+        .getNetworkModel(newCandidate, (currentProfile && currentProfile.generationHash) || undefined)
         .toPromise()
+      if (!networkModelResult) {
+        throw new Error('Connect error, active peer cannot be found')
+      }
+      const { networkModel, repositoryFactory, fallback } = networkModelResult
       if (fallback) {
         throw new Error('Connection Error.')
       }
       const oldGenerationHash = getters['generationHash']
-      const getNodesPromise = new NodeService().getNodes(repositoryFactory, networkModel.url).toPromise()
+      const getNodesPromise = nodeService.getNodes(repositoryFactory, networkModel.url).toPromise()
       const getBlockchainHeightPromise = repositoryFactory.createChainRepository().getBlockchainHeight().toPromise()
       const nodes = await getNodesPromise
       const currentHeight = (await getBlockchainHeightPromise).compact()
       const listener = repositoryFactory.createListener()
-      await listener.open()
 
       const currentPeer = URLHelpers.getNodeUrl(networkModel.url)
       commit('currentPeer', currentPeer)
       commit('networkModel', networkModel)
       commit('networkConfiguration', networkModel.networkConfiguration)
+      commit('transactionFees', networkModel.transactionFees)
       commit('networkType', networkModel.networkType)
       commit('generationHash', networkModel.generationHash)
       commit('repositoryFactory', repositoryFactory)
@@ -200,14 +214,17 @@ export default {
       commit('setConnected', true)
       $eventBus.$emit('newConnection', currentPeer)
       // subscribe to updates
-      dispatch('SUBSCRIBE')
+
       if (oldGenerationHash != networkModel.generationHash) {
         dispatch('account/NETWORK_CHANGED', {}, { root: true })
         dispatch('statistics/LOAD', {}, { root: true })
       }
+      await listener.open()
+      await dispatch('UNSUBSCRIBE')
+      dispatch('SUBSCRIBE')
     },
 
-    async SET_CURRENT_PEER({ dispatch, rootGetters }, currentPeerUrl) {
+    async SET_CURRENT_PEER({ dispatch }, currentPeerUrl) {
       if (!UrlValidator.validate(currentPeerUrl)) {
         throw Error('Cannot change node. URL is not valid: ' + currentPeerUrl)
       }
@@ -231,14 +248,8 @@ export default {
 
       try {
         // - disconnect from previous node
-        await dispatch('UNSUBSCRIBE')
 
         await dispatch('CONNECT', currentPeerUrl)
-
-        const currentAccount = rootGetters['account/currentAccount']
-
-        // - re-open listeners
-        dispatch('account/initialize', { address: currentAccount.address }, { root: true })
       } catch (e) {
         console.log(e)
         dispatch(

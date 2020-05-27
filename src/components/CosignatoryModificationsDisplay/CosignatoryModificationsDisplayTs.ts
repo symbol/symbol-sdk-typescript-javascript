@@ -18,9 +18,6 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { Address, NetworkType } from 'symbol-sdk'
 
-// internal dependencies
-import { CosignatoryModifications } from '@/core/transactions/ViewMultisigAccountModificationTransaction'
-
 // child components
 import { ValidationProvider } from 'vee-validate'
 // @ts-ignore
@@ -28,6 +25,7 @@ import FormRow from '@/components/FormRow/FormRow.vue'
 
 // @ts-ignore
 import ErrorTooltip from '@/components/ErrorTooltip/ErrorTooltip.vue'
+import { CosignatoryModifications } from '@/views/forms/FormMultisigAccountModificationTransaction/FormMultisigAccountModificationTransactionTs'
 
 @Component({
   components: {

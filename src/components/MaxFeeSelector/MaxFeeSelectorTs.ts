@@ -37,45 +37,56 @@ export class MaxFeeSelectorTs extends Vue {
   @Prop({
     default: 'form-line-container',
   })
-  className: string
+  public className: string
 
   /**
    * Networks currency mosaic name
    * @var {string}
    */
-  public networkMosaicName: string
+  private networkMosaicName: string
 
   /**
    * Known mosaics info
    * @var {MosaicInfo[]}
    */
-  public networkCurrency: NetworkCurrencyModel
+  private networkCurrency: NetworkCurrencyModel
 
   /**
    * Default fee setting
    * @var {number}
    */
-  public defaultFee: number
+  private defaultFee: number
+
+  /**
+   * The fees to be displayed in the dropw down.
+   */
+  private fees: { label: string; maxFee: number }[]
 
   @Prop({
     default: 1,
   })
   multiplier: number
 
+  public created() {
+    this.fees = Object.entries(feesConfig).map((entry) => ({ label: this.getLabel(entry), maxFee: entry[1] }))
+  }
+
+  private getLabel([key, value]: [string, number]) {
+    //SPECIAL VALUES!!!
+    if (value == 1 || value == 2) {
+      return this.$t('fee_speed_' + key).toString()
+    }
+    return this.$t('fee_speed_' + key).toString() + ': ' + this.getRelative(value) + ' ' + this.networkMosaicName
+  }
+
   /**
    * Value set by the parent component's v-model
    * @type {number}
    */
   @Prop({
-    default: feesConfig.normal,
+    default: feesConfig.median,
   })
   value: number
-
-  /**
-   * Fees specification
-   * @var {any}
-   */
-  public feeValues = feesConfig
 
   /// region computed properties getter/setter
   /**
@@ -103,7 +114,6 @@ export class MaxFeeSelectorTs extends Vue {
     if (this.networkCurrency === undefined) {
       return amount
     }
-
     return amount / Math.pow(10, this.networkCurrency.divisibility)
   }
 }

@@ -74,12 +74,4 @@ export class NetworkStatisticsPanelTs extends Vue {
   protected get blockGenerationTargetTime(): number {
     return this.networkConfiguration.blockGenerationTargetTime
   }
-
-  /**
-   * Hook called when the component is mounted
-   * @return {void}
-   */
-  created() {
-    this.$store.dispatch('statistics/initialize')
-  }
 }

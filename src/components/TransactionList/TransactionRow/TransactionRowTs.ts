@@ -18,7 +18,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
 import { MosaicId, NamespaceId, Transaction, TransactionType, TransferTransaction } from 'symbol-sdk'
 // internal dependencies
-import { TransactionService, TransactionStatus, TransactionViewType } from '@/services/TransactionService'
 import { Formatters } from '@/core/utils/Formatters'
 import { TimeHelpers } from '@/core/utils/TimeHelpers'
 // child components
@@ -28,6 +27,9 @@ import MosaicAmountDisplay from '@/components/MosaicAmountDisplay/MosaicAmountDi
 import ActionDisplay from '@/components/ActionDisplay/ActionDisplay.vue'
 // resources
 import { dashboardImages, officialIcons, transactionTypeToIcon } from '@/views/resources/Images'
+import { TransactionViewFactory } from '@/core/transactions/TransactionViewFactory'
+import { TransactionView } from '@/core/transactions/TransactionView'
+import { TransactionStatus } from '@/core/transactions/TransactionStatus'
 
 @Component({
   components: {
@@ -47,11 +49,6 @@ export class TransactionRowTs extends Vue {
    * Explorer base path
    */
   protected explorerBaseUrl: string
-
-  /**
-   * Transaction service
-   */
-  public service: TransactionService = new TransactionService(this.$store)
 
   /**
    * Network mosaic id
@@ -75,8 +72,8 @@ export class TransactionRowTs extends Vue {
   protected timeHelpers: TimeHelpers = TimeHelpers
 
   /// region computed properties getter/setter
-  public get view(): TransactionViewType {
-    return this.service.getView(this.transaction as any)
+  public get view(): TransactionView<Transaction> {
+    return TransactionViewFactory.getView(this.$store, this.transaction)
   }
 
   /// end-region computed properties getter/setter
@@ -92,7 +89,7 @@ export class TransactionRowTs extends Vue {
 
       // - transfers have specific incoming/outgoing icons
       if (view.transaction.type === this.transactionType.TRANSFER) {
-        return view.values.get('isIncoming') ? officialIcons.incoming : officialIcons.outgoing
+        return view.isIncoming ? officialIcons.incoming : officialIcons.outgoing
       }
 
       // - otherwise use per-type icon
@@ -108,8 +105,7 @@ export class TransactionRowTs extends Vue {
    * Returns true if \a transaction is an incoming transaction
    */
   public isIncomingTransaction(): boolean {
-    // - read per-transaction-type details
-    return this.view.values.get('isIncoming')
+    return this.view.isIncoming
   }
 
   /**
@@ -159,15 +155,11 @@ export class TransactionRowTs extends Vue {
     return false
   }
 
-  public getTransactionStatus(transaction: Transaction) {
-    return TransactionService.getTransactionStatus(transaction)
-  }
-
   /**
    * Returns the transaction height or number of confirmations
    */
   public getHeight(): string {
-    const transactionStatus = this.getTransactionStatus(this.transaction)
+    const transactionStatus = TransactionView.getTransactionStatus(this.transaction)
     if (transactionStatus == TransactionStatus.confirmed) {
       return this.view.info?.height.compact().toLocaleString()
     } else {
