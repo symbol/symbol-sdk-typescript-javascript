@@ -6,7 +6,8 @@
 
 <script lang="ts">
 import { AppLogoTs } from './AppLogoTs'
-import './AppLogo.less'
-
 export default class AppLogo extends AppLogoTs {}
 </script>
+<style lang="less" scoped>
+@import './AppLogo.less';
+</style>

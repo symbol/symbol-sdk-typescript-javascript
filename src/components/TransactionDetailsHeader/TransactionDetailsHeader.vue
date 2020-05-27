@@ -10,6 +10,9 @@
 
 <script lang="ts">
 import { TransactionDetailsHeaderTs } from './TransactionDetailsHeaderTs'
-import './TransactionDetailsHeader.less'
+
 export default class TransactionDetailsHeader extends TransactionDetailsHeaderTs {}
 </script>
+<style lang="less" scoped>
+@import './TransactionDetailsHeader.less';
+</style>

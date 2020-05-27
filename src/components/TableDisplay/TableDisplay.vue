@@ -110,5 +110,7 @@
 <script lang="ts">
 import { TableDisplayTs } from './TableDisplayTs'
 export default class TableDisplay extends TableDisplayTs {}
-import './TableDisplay.less'
 </script>
+<style lang="less" scoped>
+@import './TableDisplay.less';
+</style>

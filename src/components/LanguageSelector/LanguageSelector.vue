@@ -10,7 +10,9 @@
 
 <script lang="ts">
 import { LanguageSelectorTs } from './LanguageSelectorTs'
-import './LanguageSelector.less'
 
 export default class LanguageSelector extends LanguageSelectorTs {}
 </script>
+<style lang="less" scoped>
+@import './LanguageSelector.less';
+</style>

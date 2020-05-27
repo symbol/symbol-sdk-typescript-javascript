@@ -6,7 +6,8 @@
 
 <script lang="ts">
 import { AnimatedNumberTs } from './AnimatedNumberTs'
-import './AnimatedNumber.less'
-
 export default class AnimatedNumber extends AnimatedNumberTs {}
 </script>
+<style lang="less" scoped>
+@import './AnimatedNumber.less';
+</style>

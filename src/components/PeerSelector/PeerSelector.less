@@ -66,3 +66,34 @@
     margin-right: 0.03rem;
   }
 }
+.endpoint-healthy,
+.endpoint-unhealthy {
+  -webkit-app-region: no-drag;
+
+  i.point {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: #18b566;
+    border-radius: 50%;
+    margin-left: 0.4rem;
+  }
+
+  .point {
+    vertical-align: middle;
+    margin-right: 0.08rem;
+    margin-left: 0;
+  }
+
+  .network_type_text {
+    font-size: @smallerFont;
+    vertical-align: unset;
+    color: #fff;
+  }
+}
+
+.endpoint-unhealthy {
+  i {
+    background-color: red;
+  }
+}

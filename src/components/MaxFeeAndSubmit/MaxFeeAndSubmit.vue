@@ -60,6 +60,6 @@ export default class MaxFeeAndSubmit extends Vue {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './MaxFeeAndSubmit.less';
 </style>

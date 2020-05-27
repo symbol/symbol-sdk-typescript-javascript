@@ -99,7 +99,7 @@ import { FormProfilePasswordUpdateTs } from './FormProfilePasswordUpdateTs'
 export default class FormProfilePasswordUpdate extends FormProfilePasswordUpdateTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .password-settings-container {
   display: block;
   width: 100%;

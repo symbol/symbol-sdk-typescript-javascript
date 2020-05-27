@@ -9,7 +9,8 @@
 
 <script lang="ts">
 import { PageTitleTs } from './PageTitleTs'
-import './PageTitle.less'
-
 export default class PageTitle extends PageTitleTs {}
 </script>
+<style lang="less" scoped>
+@import './PageTitle.less';
+</style>

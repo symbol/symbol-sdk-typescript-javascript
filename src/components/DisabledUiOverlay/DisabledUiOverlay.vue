@@ -18,7 +18,8 @@
 
 <script lang="ts">
 import { DisabledUiOverlayTs } from './DisabledUiOverlayTs'
-import './DisabledUiOverlay.less'
-
 export default class DisabledUiOverlay extends DisabledUiOverlayTs {}
 </script>
+<style lang="less" scoped>
+@import './DisabledUiOverlay.less';
+</style>

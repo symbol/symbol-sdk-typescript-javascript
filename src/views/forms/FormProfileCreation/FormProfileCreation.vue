@@ -168,7 +168,7 @@ import { FormProfileCreationTs } from './FormProfileCreationTs'
 export default class FormProfileCreation extends FormProfileCreationTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .right-hints-section {
   display: block;
   width: 5rem;

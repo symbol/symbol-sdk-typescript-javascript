@@ -43,6 +43,7 @@ export default class TableRow extends TableRowTs {}
 </script>
 
 <style scoped lang="less">
+/* @TODO TableDisplay.less shouldn't be imported here*/
 @import '../TableDisplay/TableDisplay.less';
 @import './TableRow.less';
 </style>

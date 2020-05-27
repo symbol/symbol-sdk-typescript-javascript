@@ -12,7 +12,7 @@ import { AmountDisplayTs } from './AmountDisplayTs'
 export default class AmountDisplay extends AmountDisplayTs {}
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 @import '../../views/resources/css/variables.less';
 
 .amount-display-container {

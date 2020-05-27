@@ -152,7 +152,8 @@
 
 <script lang="ts">
 import { ModalMnemonicBackupWizardTs } from './ModalMnemonicBackupWizardTs'
-import './ModalMnemonicBackupWizard.less'
-
 export default class ModalMnemonicBackupWizard extends ModalMnemonicBackupWizardTs {}
 </script>
+<style lang="less" scoped>
+@import './ModalMnemonicBackupWizard.less';
+</style>

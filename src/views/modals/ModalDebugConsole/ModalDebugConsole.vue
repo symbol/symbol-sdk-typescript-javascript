@@ -24,8 +24,6 @@ v-for="(entry, index) in logs"
 // external dependencies
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { mapGetters } from 'vuex'
-// resources
-import './ModalDebugConsole.less'
 
 @Component({
   computed: {
@@ -84,3 +82,6 @@ export default class ModalDebugConsole extends Vue {
   }
 }
 </script>
+<style lang="less" scoped>
+@import './ModalDebugConsole.less';
+</style>

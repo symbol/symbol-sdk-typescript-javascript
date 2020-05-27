@@ -28,7 +28,8 @@
 
 <script lang="ts">
 import VerifyMnemonicTs from './VerifyMnemonicTs'
-import './VerifyMnemonic.less'
-
 export default class VerifyMnemonic extends VerifyMnemonicTs {}
 </script>
+<style lang="less" scoped>
+@import './VerifyMnemonic.less';
+</style>

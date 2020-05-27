@@ -13,6 +13,6 @@ import { AccountBackupPageTs } from './AccountBackupPageTs'
 export default class AccountBackupPage extends AccountBackupPageTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './AccountBackupPage.less';
 </style>

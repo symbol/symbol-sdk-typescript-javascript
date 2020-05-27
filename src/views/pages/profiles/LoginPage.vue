@@ -117,7 +117,8 @@
 
 <script lang="ts">
 import LoginPageTs from './LoginPageTs'
-import './LoginPage.less'
-
 export default class LoginPage extends LoginPageTs {}
 </script>
+<style lang="less" scoped>
+@import './LoginPage.less';
+</style>

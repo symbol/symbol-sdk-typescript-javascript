@@ -42,7 +42,8 @@
 
 <script lang="ts">
 import { NetworkStatisticsPanelTs } from './NetworkStatisticsPanelTs'
-import './NetworkStatisticsPanel.less'
-
 export default class NetworkStatisticsPanel extends NetworkStatisticsPanelTs {}
 </script>
+<style lang="less" scoped>
+@import './NetworkStatisticsPanel.less';
+</style>

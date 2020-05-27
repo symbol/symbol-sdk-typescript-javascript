@@ -15,7 +15,7 @@ import { AccountContactQRTs } from './AccountContactQRTs'
 export default class AccountContactQR extends AccountContactQRTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .centered {
   text-align: center;
 }

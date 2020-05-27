@@ -25,7 +25,8 @@
 
 <script lang="ts">
 import { AccountBackupOptionsTs } from './AccountBackupOptionsTs'
-import './AccountBackupOptions.less'
-
 export default class AccountBackupOptions extends AccountBackupOptionsTs {}
 </script>
+<style lang="less" scoped>
+@import './AccountBackupOptions.less';
+</style>

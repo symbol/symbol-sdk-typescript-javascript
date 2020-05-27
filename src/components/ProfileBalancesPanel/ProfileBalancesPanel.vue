@@ -40,7 +40,8 @@
 
 <script lang="ts">
 import { ProfileBalancesPanelTs } from './ProfileBalancesPanelTs'
-import './ProfileBalancesPanel.less'
-
 export default class ProfileBalancesPanel extends ProfileBalancesPanelTs {}
 </script>
+<style lang="less" scoped>
+@import './ProfileBalancesPanel.less';
+</style>

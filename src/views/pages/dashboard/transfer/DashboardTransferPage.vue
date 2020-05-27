@@ -9,7 +9,8 @@
 <script lang="ts">
 // @ts-ignore
 import { DashboardTransferPageTs } from './DashboardTransferPageTs'
-import './DashboardTransferPage.less'
-
 export default class DashboardTransferPage extends DashboardTransferPageTs {}
 </script>
+<style lang="less" scoped>
+@import './DashboardTransferPage.less';
+</style>

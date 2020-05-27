@@ -93,7 +93,7 @@ import { FormAliasTransactionTs } from './FormAliasTransactionTs'
 export default class FormAliasTransaction extends FormAliasTransactionTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .account-unlock-container {
   display: block;
   width: 100%;

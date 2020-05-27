@@ -6,7 +6,8 @@
 
 <script lang="ts">
 import { MosaicAmountDisplayTs } from './MosaicAmountDisplayTs'
-import './MosaicAmountDisplay.less'
-
 export default class MosaicAmountDisplay extends MosaicAmountDisplayTs {}
 </script>
+<style lang="less" scoped>
+@import './MosaicAmountDisplay.less';
+</style>

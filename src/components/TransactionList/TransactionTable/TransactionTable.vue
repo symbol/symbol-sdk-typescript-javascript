@@ -31,6 +31,6 @@ import { TransactionTableTs } from './TransactionTableTs'
 export default class TransactionTable extends TransactionTableTs {}
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import './TransactionTable.less';
 </style>

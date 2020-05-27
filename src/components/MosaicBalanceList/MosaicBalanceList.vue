@@ -78,7 +78,8 @@
 
 <script lang="ts">
 import { MosaicBalanceListTs } from './MosaicBalanceListTs'
-import './MosaicBalanceList.less'
-
 export default class MosaicBalanceList extends MosaicBalanceListTs {}
 </script>
+<style lang="less" scoped>
+@import './MosaicBalanceList.less';
+</style>

@@ -53,7 +53,7 @@ import { FormAccountNameUpdateTs } from './FormAccountNameUpdateTs'
 export default class FormAccountNameUpdate extends FormAccountNameUpdateTs {}
 </script>
 
-<style scope>
+<style lang="less" scoped>
 .account-name-update-container {
   display: block;
   width: 100%;

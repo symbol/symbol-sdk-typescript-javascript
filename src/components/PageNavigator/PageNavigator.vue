@@ -32,6 +32,9 @@
 
 <script lang="ts">
 import { PageNavigatorTs } from './PageNavigatorTs'
-import './PageNavigator.less'
+
 export default class PageNavigator extends PageNavigatorTs {}
 </script>
+<style lang="less" scoped>
+@import './PageNavigator.less';
+</style>

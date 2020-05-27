@@ -29,7 +29,7 @@ import TableDisplay from '@/components/TableDisplay/TableDisplay.vue'
 export default class MosaicListPage extends Vue {}
 </script>
 
-<style scoped lang="css">
+<style lang="less" scoped>
 .table-section {
   padding: 0.2rem 0 0 0.2rem;
   height: 100%;

@@ -51,7 +51,8 @@
 
 <script lang="ts">
 import { ModalTransactionCosignatureTs } from './ModalTransactionCosignatureTs'
-import './ModalTransactionCosignature.less'
-
 export default class ModalTransactionCosignature extends ModalTransactionCosignatureTs {}
 </script>
+<style lang="less" scoped>
+@import './ModalTransactionCosignature.less';
+</style>

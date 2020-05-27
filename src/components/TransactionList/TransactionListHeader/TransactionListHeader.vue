@@ -24,6 +24,6 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class TransactionListHeader extends Vue {}
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 @import './TransactionListHeader.less';
 </style>

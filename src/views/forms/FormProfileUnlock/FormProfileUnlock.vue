@@ -38,7 +38,7 @@ import { FormProfileUnlockTs } from './FormProfileUnlockTs'
 export default class FormProfileUnlock extends FormProfileUnlockTs {}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .account-unlock-container {
   display: block;
   width: 100%;

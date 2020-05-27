@@ -21,7 +21,8 @@
 
 <script lang="ts">
 import { AccountSelectorFieldTs } from './AccountSelectorFieldTs'
-import './AccountSelectorField.less'
-
 export default class AccountSelectorField extends AccountSelectorFieldTs {}
 </script>
+<style lang="less" scoped>
+@import './AccountSelectorField.less';
+</style>

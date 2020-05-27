@@ -11,7 +11,8 @@
 
 <script lang="ts">
 import { WindowControlsTs } from './WindowControlsTs'
-import './WindowControls.less'
-
 export default class WindowControls extends WindowControlsTs {}
 </script>
+<style lang="less" scoped>
+@import './WindowControls.less';
+</style>

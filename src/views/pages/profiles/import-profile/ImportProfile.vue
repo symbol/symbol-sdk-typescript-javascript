@@ -19,7 +19,8 @@
 
 <script lang="ts">
 import ImportProfileTs from './ImportProfileTs'
-import './ImportProfile.less'
-
 export default class ImportProfile extends ImportProfileTs {}
 </script>
+<style lang="less" scoped>
+@import './ImportProfile.less';
+</style>

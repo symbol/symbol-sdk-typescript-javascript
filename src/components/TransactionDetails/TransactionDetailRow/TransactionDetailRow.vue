@@ -61,6 +61,7 @@ export default class TransactionDetailRow extends Vue {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+/* @TODO TransactionDetails.less shouldn't be here */
 @import '../TransactionDetails.less';
 </style>

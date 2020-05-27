@@ -41,7 +41,8 @@
 
 <script lang="ts">
 import { DashboardInvoicePageTs } from './DashboardInvoicePageTs'
-import './DashboardInvoicePage.less'
-
 export default class DashboardInvoicePage extends DashboardInvoicePageTs {}
 </script>
+<style lang="less" scoped>
+@import './DashboardInvoicePage.less';
+</style>

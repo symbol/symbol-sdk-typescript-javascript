@@ -98,7 +98,7 @@ import { FormSubAccountCreationTs } from './FormSubAccountCreationTs'
 export default class FormSubAccountCreation extends FormSubAccountCreationTs {}
 </script>
 
-<style scope>
+<style lang="less" scoped>
 .sub-account-creation-container {
   display: block;
   width: 100%;

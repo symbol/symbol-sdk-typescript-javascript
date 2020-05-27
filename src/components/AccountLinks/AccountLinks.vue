@@ -22,14 +22,10 @@
 
 <script lang="ts">
 import { AccountLinksTs } from './AccountLinksTs'
-import './AccountLinks.less'
 
 export default class AccountLinks extends AccountLinksTs {}
 </script>
 
 <style lang="less" scoped>
-.edit-button {
-  height: 0.35rem !important;
-  padding: 0 0.3rem;
-}
+@import './AccountLinks.less';
 </style>

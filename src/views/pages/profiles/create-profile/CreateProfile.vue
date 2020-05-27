@@ -19,7 +19,8 @@
 
 <script lang="ts">
 import CreateProfileTs from './CreateProfileTs'
-import './CreateProfile.less'
-
 export default class CreateProfile extends CreateProfileTs {}
 </script>
+<style lang="less" scoped>
+@import './CreateProfile.less';
+</style>

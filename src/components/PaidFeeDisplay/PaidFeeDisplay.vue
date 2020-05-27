@@ -27,7 +27,7 @@ import { PaidFeeDisplayTs } from './PaidFeeDisplayTs'
 
 export default class PaidFeeDisplay extends PaidFeeDisplayTs {}
 </script>
-<style>
+<style lang="less" scoped>
 .inline-spin {
   display: inline-block !important;
 }

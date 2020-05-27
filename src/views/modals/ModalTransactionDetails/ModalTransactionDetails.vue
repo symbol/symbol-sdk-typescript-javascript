@@ -8,7 +8,8 @@
 
 <script lang="ts">
 import { ModalTransactionDetailsTs } from './ModalTransactionDetailsTs'
-import './ModalTransactionDetails.less'
-
 export default class ModalTransactionDetails extends ModalTransactionDetailsTs {}
 </script>
+<style lang="less" scoped>
+@import './ModalTransactionDetails.less';
+</style>

@@ -69,7 +69,7 @@
   .point {
     -webkit-app-region: no-drag;
   }
-
+  //unused
   .input_point {
     padding-top: 20px;
 
@@ -119,11 +119,11 @@
       }
     }
   }
-
+  //unused
   .node_list_container {
     max-height: 160px;
   }
-
+  //unused
   .node_list {
     max-height: 250px;
 
@@ -131,7 +131,7 @@
       border: none;
     }
   }
-
+  //unused
   .point_item {
     margin: 10px 20px;
     padding-right: 30px;
@@ -180,38 +180,6 @@
           float: left;
           margin-left: 25px;
           position: relative;
-        }
-
-        .endpoint-healthy,
-        .endpoint-unhealthy {
-          -webkit-app-region: no-drag;
-
-          i.point {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            background-color: #18b566;
-            border-radius: 50%;
-            margin-left: 0.4rem;
-          }
-
-          .point {
-            vertical-align: middle;
-            margin-right: 0.08rem;
-            margin-left: 0;
-          }
-
-          .network_type_text {
-            font-size: @smallerFont;
-            vertical-align: unset;
-            color: #fff;
-          }
-        }
-
-        .endpoint-unhealthy {
-          i {
-            background-color: red;
-          }
         }
       }
 
@@ -274,7 +242,7 @@
     z-index: 9;
   }
 
-  .ivu-select-dropdown-list {
+  /deep/.ivu-select-dropdown-list {
     .ivu-select-item-focus {
       background-color: transparent;
     }
@@ -288,9 +256,56 @@
       background-color: #f3f3f3;
     }
   }
-
+  //unused
   .node-input-container {
     width: 100%;
     margin-right: 20px;
+  }
+}
+.mac.wrap {
+  .top_window {
+    .controller {
+      .app_controller {
+        margin-right: 40px !important;
+        /deep/.switch_account {
+          -webkit-app-region: no-drag;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin-top: 0.16rem;
+          .select_account_icon {
+            width: 22px;
+            height: 22px;
+            position: relative;
+            top: 0.04rem;
+            filter: brightness(100);
+          }
+          .ivu-select {
+            font-size: 20px;
+          }
+        }
+        /deep/.ivu-select-selection {
+          background-color: transparent;
+          border: none;
+          box-shadow: none;
+          .ivu-select-placeholder,
+          .ivu-select-selected-value {
+            font-size: @smallerFont;
+            font-weight: 400;
+            color: white !important;
+            margin-left: 0;
+          }
+          i::before {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.max-z-index {
+  .ivu-select-dropdown {
+    z-index: 2147483647 !important;
   }
 }

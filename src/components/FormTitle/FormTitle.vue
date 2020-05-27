@@ -8,8 +8,9 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator'
-import './FormTitle.less'
-
 @Component
 export default class FormTitle extends Vue {}
 </script>
+<style lang="less" scoped>
+@import './FormTitle.less';
+</style>

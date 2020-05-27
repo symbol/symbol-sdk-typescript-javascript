@@ -50,8 +50,9 @@
 
 <script lang="ts">
 import { PageLayoutTs } from './PageLayoutTs'
-import './PageLayout.common.less'
-import './PageLayout.mac.less'
-
 export default class PageLayout extends PageLayoutTs {}
 </script>
+<style lang="less" scoped>
+@import './PageLayout.common.less';
+@import './PageLayout.mac.less';
+</style>

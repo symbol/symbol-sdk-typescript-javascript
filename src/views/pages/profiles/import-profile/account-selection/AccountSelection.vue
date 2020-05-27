@@ -75,7 +75,8 @@
 
 <script>
 import AccountSelectionTs from './AccountSelectionTs'
-import './AccountSelection.less'
-
 export default class AccountSelection extends AccountSelectionTs {}
 </script>
+<style lang="less" scoped>
+@import './AccountSelection.less';
+</style>

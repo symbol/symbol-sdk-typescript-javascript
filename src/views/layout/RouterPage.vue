@@ -6,7 +6,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import './RouterPage.less'
 
 export default class Login extends Vue {}
 </script>
+<style lang="less" scoped>
+@import './RouterPage.less';
+</style>

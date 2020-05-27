@@ -10,6 +10,8 @@
 
 <script lang="ts">
 import GenerateMnemonicTs from './GenerateMnemonicTs'
-import './GenerateMnemonic.less'
 export default class GenerateMnemonic extends GenerateMnemonicTs {}
 </script>
+<style lang="less" scoped>
+@import './GenerateMnemonic.less';
+</style>
