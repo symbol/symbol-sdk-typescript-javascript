@@ -11,6 +11,9 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 #### Added
 
 - Upgrade to testnet 0.9.5.1 with SDK v0.19.2 (fixes #385)
+- Added **recommended fees** feature using transaction size and network median fees
+- Added transaction command to replace staged transactions
+- Added TransactionAnnouncerService to cope with transaction timeouts and errors
 - Improved components styling with scoped less (fixes #307, #273)
 - Removed duplicate cancel actions on modals (fixes #367)
 
