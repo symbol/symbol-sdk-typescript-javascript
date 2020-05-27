@@ -13,6 +13,7 @@ import { AddressValidator, AliasValidator, MaxDecimalsValidator, PublicKeyValida
 import { ProfileModel } from '@/core/database/entities/ProfileModel'
 import { AccountService } from '@/services/AccountService'
 import { NetworkConfigurationModel } from '@/core/database/entities/NetworkConfigurationModel'
+import { Values } from 'vue-i18n'
 
 // TODO CustomValidationRules needs to be created when the network configuration is resolved, UI
 // needs to use the resolved CustomValidationRules
@@ -30,7 +31,7 @@ export class CustomValidationRules {
       validate: (value) => {
         return AddressValidator.validate(value)
       },
-      message: `${i18n.t(`${NotificationType.ADDRESS_INVALID}`)}`,
+      message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.ADDRESS_INVALID, values)}`,
     })
 
     extend('maxDecimals', {
@@ -38,7 +39,7 @@ export class CustomValidationRules {
         const { maxDecimalNumber } = args
         return MaxDecimalsValidator.validate(value, maxDecimalNumber)
       },
-      message: `${i18n.t('max_decimal_number_error')}`,
+      message: (fieldName: string, values: Values) => `${i18n.t('max_decimal_number_error', values)}`,
       params: ['maxDecimalNumber'],
     })
 
@@ -49,7 +50,7 @@ export class CustomValidationRules {
         if (isValidAddress || isValidAlias) return true
         return false
       },
-      message: `${i18n.t('error_incorrect_field')}`,
+      message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
     })
 
     extend('addressOrAliasNetworkType', {
@@ -58,7 +59,7 @@ export class CustomValidationRules {
         if (!AddressValidator.validate(value)) return true
         return Address.createFromRawAddress(value).networkType == networkType
       },
-      message: `${i18n.t(`${NotificationType.NETWORK_TYPE_INVALID}`)}`,
+      message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.NETWORK_TYPE_INVALID, values)}`,
       params: ['networkType'],
     })
 
@@ -66,7 +67,7 @@ export class CustomValidationRules {
       validate: (value) => {
         return UrlValidator.validate(value)
       },
-      message: `${i18n.t('error_incorrect_url')}`,
+      message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_url', values)}`,
     })
 
     extend('confirmPassword', {
@@ -74,7 +75,7 @@ export class CustomValidationRules {
         const { target } = args
         return value === target
       },
-      message: `${i18n.t(`${NotificationType.PASSWORDS_NOT_MATCHING}`)}`,
+      message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PASSWORDS_NOT_MATCHING, values)}`,
       params: ['target'],
     })
 
@@ -82,7 +83,7 @@ export class CustomValidationRules {
       validate(value) {
         return !new ProfileService().getProfileByName(value)
       },
-      message: `${i18n.t(`${NotificationType.PROFILE_NAME_EXISTS_ERROR}`)}`,
+      message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
     })
 
     extend('profilePassword', {
@@ -96,7 +97,7 @@ export class CustomValidationRules {
         const inputHash = ProfileService.getPasswordHash(new Password(value))
         return inputHash === currentHash
       },
-      message: `${i18n.t(`${NotificationType.WRONG_PASSWORD_ERROR}`)}`,
+      message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.WRONG_PASSWORD_ERROR, values)}`,
     })
 
     extend('profileAccountName', {
@@ -108,7 +109,8 @@ export class CustomValidationRules {
         const knownAccounts = Object.values(accountService.getKnownAccounts(currentProfile.accounts))
         return undefined === knownAccounts.find((w) => value === w.name)
       },
-      message: `${i18n.t(`${NotificationType.ERROR_ACCOUNT_NAME_ALREADY_EXISTS}`)}`,
+      message: (fieldName: string, values: Values) =>
+        `${i18n.t(NotificationType.ERROR_ACCOUNT_NAME_ALREADY_EXISTS, values)}`,
     })
 
     extend('privateKey', {
@@ -120,7 +122,7 @@ export class CustomValidationRules {
           return false
         }
       },
-      message: `${i18n.t(`${NotificationType.PROFILE_NAME_EXISTS_ERROR}`)}`,
+      message: (fieldName: string, values: Values) => `${i18n.t(NotificationType.PROFILE_NAME_EXISTS_ERROR, values)}`,
     })
 
     extend('addressOrPublicKey', {
@@ -130,16 +132,16 @@ export class CustomValidationRules {
         if (isValidAddress || isValidPublicKey) return true
         return false
       },
-      message: `${i18n.t('error_incorrect_field')}`,
+      message: (fieldName: string, values: Values) => `${i18n.t('error_incorrect_field', values)}`,
     })
 
     extend('maxNamespaceDuration', {
       validate: (value) => {
         return value <= currentNetwork.maxNamespaceDuration
       },
-      message: `${i18n.t('error_new_namespace_duration_max_value', {
-        maxValue: currentNetwork.maxNamespaceDuration,
-      })}`,
+      message: (fieldName: string, values: Values) => {
+        return `${i18n.t('error_incorrect_field', { ...values, maxValue: currentNetwork.maxNamespaceDuration })}`
+      },
     })
 
     extend('passwordRegex', {
@@ -153,7 +155,7 @@ export class CustomValidationRules {
           if (!array) return false
           return array.includes(value)
         },
-        message: `${i18n.t('error_not_exist')}`,
+        message: (fieldName: string, values: Values) => `${i18n.t('error_not_exist', values)}`,
       })
   }
 }
