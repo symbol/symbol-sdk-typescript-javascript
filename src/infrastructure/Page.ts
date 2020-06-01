@@ -96,4 +96,11 @@ export class Page<T> {
     public getTotalPages(): number {
         return this.totalPages;
     }
+
+    /**
+     * @return if this page is the last one.
+     */
+    public isLast(): boolean {
+        return this.getPageNumber() >= this.getTotalPages();
+    }
 }

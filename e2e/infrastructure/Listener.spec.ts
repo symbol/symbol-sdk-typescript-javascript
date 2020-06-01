@@ -253,7 +253,7 @@ describe('Listener', () => {
                         address: cosignAccount1.publicAccount.address,
                         group: TransactionGroupSubsetEnum.Partial,
                     };
-                    transactionRepository.searchTransactions(criteria).subscribe((transactions) => {
+                    transactionRepository.search(criteria).subscribe((transactions) => {
                         const transactionToCosign = transactions[0];
                         const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
                         const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
@@ -288,7 +288,7 @@ describe('Listener', () => {
                     address: cosignAccount1.publicAccount.address,
                     group: TransactionGroupSubsetEnum.Partial,
                 };
-                transactionRepository.searchTransactions(criteria).subscribe((transactions) => {
+                transactionRepository.search(criteria).subscribe((transactions) => {
                     const transactionToCosign = transactions[0];
                     const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
                     const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);

@@ -170,7 +170,7 @@ describe('TransactionHttp', () => {
             ),
         ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
 
-        const transactions = await transactionHttp.searchTransactions({ address: account.address }).toPromise();
+        const transactions = await transactionHttp.search({ address: account.address }).toPromise();
 
         expect(transactions.getData().length).to.be.equal(1);
         expect(transactions.getData()[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());

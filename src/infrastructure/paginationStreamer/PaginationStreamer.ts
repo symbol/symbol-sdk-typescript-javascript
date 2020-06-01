@@ -1,0 +1,66 @@
+/*
+ * Copyright 2020 NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { SearchCriteria } from '../searchCriteria/SearchCriteria';
+import { Searcher } from './Searcher';
+import { Observable } from 'rxjs/internal/Observable';
+import { defer } from 'rxjs/internal/observable/defer';
+import { flatMap, concat } from 'rxjs/operators';
+import { from } from 'rxjs/internal/observable/from';
+
+/**
+ * Utility helper that stream pages of searches into an Observable.
+ *
+ * A streamer will help users to walk through searches without knowing the underlying pagination implementation.
+ */
+export class PaginationStreamer<E, C extends SearchCriteria> {
+    /**
+     * Constructor
+     *
+     * @param searcher the searcher repository
+     */
+    constructor(
+        /**
+         * The search method, likely to be the search method of entity's repository
+         */
+        private readonly searcher: Searcher<E, C>,
+    ) {}
+
+    /**
+     * Main method of the helper, it streams the results in observable only loading the pages when necessary.
+     *
+     * @param criteria the criteria
+     * @return the observable of entities.
+     */
+    public search(criteria: C): Observable<E> {
+        return this.searchInternnal(criteria, 1);
+    }
+
+    private searchInternnal(criteria: C, pageNumber: number): Observable<E> {
+        criteria.pageNumber = pageNumber;
+        return defer(() =>
+            this.searcher.search(criteria).pipe(
+                flatMap((page) => {
+                    if (page.isLast()) {
+                        return from(page.getData());
+                    } else {
+                        return concat(from(page.getData()), this.searchInternnal(criteria, pageNumber + 1));
+                    }
+                }),
+            ),
+        );
+    }
+}

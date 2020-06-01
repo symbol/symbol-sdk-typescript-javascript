@@ -25,7 +25,7 @@ import { PlainMessage } from '../../src/model/message/PlainMessage';
 describe('Page', () => {
     it('should create Page', () => {
         const account = TestingAccount;
-        const page = new Page<Transaction>(
+        let page = new Page<Transaction>(
             [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
             1,
             1,
@@ -36,5 +36,15 @@ describe('Page', () => {
         expect(page.getPageNumber()).to.be.equal(1);
         expect(page.getPageSize()).to.be.equal(1);
         expect(page.getTotalEntries()).to.be.equal(1);
+        expect(page.isLast()).to.be.true;
+
+        page = new Page<Transaction>(
+            [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            1,
+            1,
+            1,
+            3,
+        );
+        expect(page.isLast()).to.be.false;
     });
 });

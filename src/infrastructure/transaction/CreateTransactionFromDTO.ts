@@ -500,21 +500,23 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
         transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
         transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED
     ) {
-        const innerTransactions = transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
-            const aggregateTransactionInfo = innerTransactionDTO.meta
-                ? new AggregateTransactionInfo(
-                      UInt64.fromNumericString(innerTransactionDTO.meta.height),
-                      innerTransactionDTO.meta.index,
-                      innerTransactionDTO.id,
-                      innerTransactionDTO.meta.aggregateHash,
-                      innerTransactionDTO.meta.aggregateId,
-                  )
-                : undefined;
-            innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
-            innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
-            innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-            return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
-        });
+        const innerTransactions = transactionDTO.transaction.transactions
+            ? transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
+                  const aggregateTransactionInfo = innerTransactionDTO.meta
+                      ? new AggregateTransactionInfo(
+                            UInt64.fromNumericString(innerTransactionDTO.meta.height),
+                            innerTransactionDTO.meta.index,
+                            innerTransactionDTO.id,
+                            innerTransactionDTO.meta.aggregateHash,
+                            innerTransactionDTO.meta.aggregateId,
+                        )
+                      : undefined;
+                  innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
+                  innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
+                  innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
+                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
+              })
+            : [];
         return new AggregateTransaction(
             transactionDTO.transaction.network,
             transactionDTO.transaction.type,

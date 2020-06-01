@@ -200,7 +200,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @param criteria Transaction search criteria
      * @returns {Observable<Page<Transaction>>}
      */
-    public searchTransactions(criteria: TransactionSearchCriteria): Observable<Page<Transaction>> {
+    public search(criteria: TransactionSearchCriteria): Observable<Page<Transaction>> {
         return this.call(
             this.transactionRoutesApi.searchTransactions(
                 criteria.address?.plain(),

@@ -22,13 +22,14 @@ import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnn
 import { TransactionStatus } from '../model/transaction/TransactionStatus';
 import { Page } from './Page';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
+import { Searcher } from './paginationStreamer/Searcher';
 
 /**
  * Transaction interface repository.
  *
  * @since 1.0
  */
-export interface TransactionRepository {
+export interface TransactionRepository extends Searcher<Transaction, TransactionSearchCriteria> {
     /**
      * Gets a transaction for a transactionId
      * @param transactionId - Transaction id or hash.
@@ -85,11 +86,11 @@ export interface TransactionRepository {
      */
     announceAggregateBondedCosignature(cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse>;
 
-    /**
-     * Search transactions based on the criteria's filtering and sorting returning a page.
-     *
-     * @param criteria the criteria
-     * @return a page of transactions.
-     */
-    searchTransactions(criteria: TransactionSearchCriteria): Observable<Page<Transaction>>;
+    // /**
+    //  * Search transactions based on the criteria's filtering and sorting returning a page.
+    //  *
+    //  * @param criteria the criteria
+    //  * @return a page of transactions.
+    //  */
+    // searchTransactions(criteria: TransactionSearchCriteria): Observable<Page<Transaction>>;
 }
