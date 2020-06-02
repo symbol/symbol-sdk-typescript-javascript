@@ -160,7 +160,7 @@ describe('MosaicHttp', () => {
 
     describe('searchMosaics', () => {
         it('should call searchMosaics successfully', async () => {
-            const mosaics = await mosaicRepository.searchMosaics({ ownerAddress: account.address }).toPromise();
+            const mosaics = await mosaicRepository.search({ ownerAddress: account.address }).toPromise();
             expect(mosaics.getData().length).to.be.greaterThan(0);
             expect(mosaics.getData().find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
         });

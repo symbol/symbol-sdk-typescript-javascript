@@ -126,7 +126,7 @@ describe('BlockHttp', () => {
                 body,
             }),
         );
-        const blockInfos = await blockRepository.searchBlocks({ signerPublicKey: blockDTO.signerPublicKey }).toPromise();
+        const blockInfos = await blockRepository.search({ signerPublicKey: blockDTO.signerPublicKey }).toPromise();
         assertBlockInfo(blockInfos.getData()[0]);
     });
 

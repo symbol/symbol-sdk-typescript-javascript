@@ -91,7 +91,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @param criteria Mosaic search criteria
      * @returns {Page<MosaicInfo>}
      */
-    public searchMosaics(criteria: MosaicSearchCriteria): Observable<Page<MosaicInfo>> {
+    public search(criteria: MosaicSearchCriteria): Observable<Page<MosaicInfo>> {
         return this.networkTypeObservable.pipe(
             mergeMap((networkType) =>
                 this.call(

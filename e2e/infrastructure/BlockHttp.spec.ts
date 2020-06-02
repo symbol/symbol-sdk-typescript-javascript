@@ -96,7 +96,7 @@ describe('BlockHttp', () => {
 
     describe('searchBlock', () => {
         it('should return block info given height and limit', async () => {
-            const blocksInfo = await blockRepository.searchBlocks({} as BlockSearchCriteria).toPromise();
+            const blocksInfo = await blockRepository.search({} as BlockSearchCriteria).toPromise();
             expect(blocksInfo.getData().length).to.be.greaterThan(0);
         });
     });

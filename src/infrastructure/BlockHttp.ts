@@ -62,7 +62,7 @@ export class BlockHttp extends Http implements BlockRepository {
      * @param criteria - Block search criteria
      * @returns Observable<BlockInfo[]>
      */
-    public searchBlocks(criteria: BlockSearchCriteria): Observable<Page<BlockInfo>> {
+    public search(criteria: BlockSearchCriteria): Observable<Page<BlockInfo>> {
         return this.call(
             this.blockRoutesApi.searchBlocks(
                 criteria.signerPublicKey,

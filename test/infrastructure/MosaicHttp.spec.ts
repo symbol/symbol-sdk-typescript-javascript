@@ -106,7 +106,7 @@ describe('MosaicHttp', () => {
         when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve({ response, body }),
         );
-        const mosaicsInfo = await mosaicRepository.searchMosaics({ ownerAddress: address }).toPromise();
+        const mosaicsInfo = await mosaicRepository.search({ ownerAddress: address }).toPromise();
         assertMosaicInfo(mosaicsInfo.getData()[0]);
     });
 
@@ -133,7 +133,7 @@ describe('MosaicHttp', () => {
             new Error('Mocked Error'),
         );
         await mosaicRepository
-            .searchMosaics({ ownerAddress: address })
+            .search({ ownerAddress: address })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });

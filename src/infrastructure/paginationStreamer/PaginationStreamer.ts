@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import { concat } from 'rxjs';
 import { SearchCriteria } from '../searchCriteria/SearchCriteria';
 import { Searcher } from './Searcher';
 import { Observable } from 'rxjs/internal/Observable';
 import { defer } from 'rxjs/internal/observable/defer';
-import { flatMap, concat } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
 import { from } from 'rxjs/internal/observable/from';
 
 /**
@@ -46,21 +47,22 @@ export class PaginationStreamer<E, C extends SearchCriteria> {
      * @return the observable of entities.
      */
     public search(criteria: C): Observable<E> {
-        return this.searchInternnal(criteria, 1);
+        return this.searchInternal(criteria, 1);
     }
 
-    private searchInternnal(criteria: C, pageNumber: number): Observable<E> {
+    private searchInternal(criteria: C, pageNumber: number): Observable<E> {
         criteria.pageNumber = pageNumber;
-        return defer(() =>
-            this.searcher.search(criteria).pipe(
+        return defer(() => {
+            const observable = this.searcher.search(criteria);
+            return observable.pipe(
                 flatMap((page) => {
                     if (page.isLast()) {
                         return from(page.getData());
                     } else {
-                        return concat(from(page.getData()), this.searchInternnal(criteria, pageNumber + 1));
+                        return concat(from(page.getData()), this.searchInternal(criteria, pageNumber + 1));
                     }
                 }),
-            ),
-        );
+            );
+        });
     }
 }
