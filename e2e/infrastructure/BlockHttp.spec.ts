@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, toArray } from 'rxjs/operators';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
@@ -26,6 +26,9 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { BlockSearchCriteria } from '../../src/infrastructure/searchCriteria/BlockSearchCriteria';
+import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
+import { deepEqual } from 'assert';
+import { take } from 'rxjs/operators';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -96,10 +99,21 @@ describe('BlockHttp', () => {
 
     describe('searchBlock', () => {
         it('should return block info given height and limit', async () => {
-            const blocksInfo = await blockRepository.search({} as BlockSearchCriteria).toPromise();
+            const blocksInfo = await blockRepository.search({}).toPromise();
             expect(blocksInfo.getData().length).to.be.greaterThan(0);
         });
     });
+
+    describe('searchBlock with streamer', () => {
+        it('should return block info given height and limit', async () => {
+            const streamer = new BlockPaginationStreamer(blockRepository);
+            const blockInfoStreamer = await streamer.search({ pageSize: 20 }).pipe(take(20), toArray()).toPromise();
+            const blocksInfo = await blockRepository.search({ pageSize: 20 }).toPromise();
+            expect(blockInfoStreamer.length).to.be.greaterThan(0);
+            deepEqual(blockInfoStreamer, blocksInfo.getData());
+        });
+    });
+
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', async () => {
             const merkleReceipts = await receiptRepository

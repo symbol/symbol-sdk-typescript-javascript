@@ -29,6 +29,9 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
+import { toArray, take } from 'rxjs/operators';
+import { deepEqual } from 'assert';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
@@ -163,6 +166,20 @@ describe('MosaicHttp', () => {
             const mosaics = await mosaicRepository.search({ ownerAddress: account.address }).toPromise();
             expect(mosaics.getData().length).to.be.greaterThan(0);
             expect(mosaics.getData().find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+        });
+    });
+
+    describe('searchMosaics with streamer', () => {
+        it('should call searchMosaics successfully', async () => {
+            const streamer = new MosaicPaginationStreamer(mosaicRepository);
+            const mosaicsStreamer = await streamer
+                .search({ ownerAddress: account.address, pageSize: 3 })
+                .pipe(take(3), toArray())
+                .toPromise();
+            const mosaics = await mosaicRepository.search({ ownerAddress: account.address, pageSize: 3 }).toPromise();
+            expect(mosaicsStreamer.length).to.be.greaterThan(0);
+            expect(mosaicsStreamer.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+            deepEqual(mosaics.getData(), mosaicsStreamer);
         });
     });
 

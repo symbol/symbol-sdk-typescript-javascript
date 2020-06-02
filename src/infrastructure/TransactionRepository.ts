@@ -84,12 +84,4 @@ export interface TransactionRepository extends Searcher<Transaction, Transaction
      * @returns Observable<TransactionAnnounceResponse>
      */
     announceAggregateBondedCosignature(cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse>;
-
-    // /**
-    //  * Search transactions based on the criteria's filtering and sorting returning a page.
-    //  *
-    //  * @param criteria the criteria
-    //  * @return a page of transactions.
-    //  */
-    // searchTransactions(criteria: TransactionSearchCriteria): Observable<Page<Transaction>>;
 }

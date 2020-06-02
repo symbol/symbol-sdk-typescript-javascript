@@ -69,6 +69,9 @@ import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTra
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/model';
+import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
+import { toArray, take } from 'rxjs/operators';
+import { deepEqual } from 'assert';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -1464,6 +1467,18 @@ describe('TransactionHttp', () => {
                 .search({ height: UInt64.fromUint(1) } as TransactionSearchCriteria)
                 .toPromise();
             expect(transactions.getData().length).to.be.greaterThan(0);
+        });
+    });
+
+    describe('searchTransactions using steamer', () => {
+        it('should return transaction info given address', async () => {
+            const streamer = new TransactionPaginationStreamer(transactionRepository);
+            const transactionsNoStreamer = await transactionRepository
+                .search({ address: account.address, pageSize: 3 } as TransactionSearchCriteria)
+                .toPromise();
+            const transactions = await streamer.search({ address: account.address, pageSize: 3 }).pipe(take(3), toArray()).toPromise();
+            expect(transactions.length).to.be.greaterThan(0);
+            deepEqual(transactionsNoStreamer.getData(), transactions);
         });
     });
 });
