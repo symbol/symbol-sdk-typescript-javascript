@@ -124,6 +124,29 @@ const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
 
 /**
  * @internal
+ * Extract transaction meta data
+ *
+ * @param meta - Transaction meta data
+ * @param id - TransactionId
+ * @return {TransactionInfo | AggregateTransactionInfo | undefined}
+ */
+const extractTransactionMeta = (meta: any, id: string): TransactionInfo | AggregateTransactionInfo | undefined => {
+    if (!meta) {
+        return undefined;
+    }
+    if (meta.aggregateHash || meta.aggregateId) {
+        return new AggregateTransactionInfo(
+            UInt64.fromNumericString(meta.height),
+            meta.index,
+            id || meta.id,
+            meta.aggregateHash,
+            meta.aggregateId,
+        );
+    }
+    return new TransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id || meta.id, meta.hash, meta.merkleComponentHash);
+};
+/**
+ * @internal
  * @param transactionDTO
  * @param transactionInfo
  * @returns {any}
@@ -500,21 +523,15 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
         transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
         transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED
     ) {
-        const innerTransactions = transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
-            const aggregateTransactionInfo = innerTransactionDTO.meta
-                ? new AggregateTransactionInfo(
-                      UInt64.fromNumericString(innerTransactionDTO.meta.height),
-                      innerTransactionDTO.meta.index,
-                      innerTransactionDTO.meta.id,
-                      innerTransactionDTO.meta.aggregateHash,
-                      innerTransactionDTO.meta.aggregateId,
-                  )
-                : undefined;
-            innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
-            innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
-            innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-            return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
-        });
+        const innerTransactions = transactionDTO.transaction.transactions
+            ? transactionDTO.transaction.transactions.map((innerTransactionDTO) => {
+                  const aggregateTransactionInfo = extractTransactionMeta(innerTransactionDTO.meta, innerTransactionDTO.id);
+                  innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
+                  innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
+                  innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
+                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
+              })
+            : [];
         return new AggregateTransaction(
             transactionDTO.transaction.network,
             transactionDTO.transaction.type,
@@ -534,26 +551,12 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
             transactionDTO.transaction.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey, transactionDTO.transaction.network)
                 : undefined,
-            transactionDTO.meta
-                ? new TransactionInfo(
-                      UInt64.fromNumericString(transactionDTO.meta.height),
-                      transactionDTO.meta.index,
-                      transactionDTO.meta.id,
-                      transactionDTO.meta.hash,
-                      transactionDTO.meta.merkleComponentHash,
-                  )
-                : undefined,
+            extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
         );
     } else {
-        const transactionInfo = transactionDTO.meta
-            ? new TransactionInfo(
-                  UInt64.fromNumericString(transactionDTO.meta.height),
-                  transactionDTO.meta.index,
-                  transactionDTO.meta.id,
-                  transactionDTO.meta.hash,
-                  transactionDTO.meta.merkleComponentHash,
-              )
-            : undefined;
-        return CreateStandaloneTransactionFromDTO(transactionDTO.transaction, transactionInfo);
+        return CreateStandaloneTransactionFromDTO(
+            transactionDTO.transaction,
+            extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
+        );
     }
 };

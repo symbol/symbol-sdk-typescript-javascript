@@ -17,39 +17,22 @@
 import { Observable } from 'rxjs';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { QueryParams } from './QueryParams';
+import { Searcher } from './paginationStreamer/Searcher';
+import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 
 /**
  * Blockchain interface repository.
  *
  * @since 1.0
  */
-export interface BlockRepository {
+export interface BlockRepository extends Searcher<BlockInfo, BlockSearchCriteria> {
     /**
      * Gets a BlockInfo for a given block height
      * @param height - Block height
      * @returns Observable<BlockInfo>
      */
     getBlockByHeight(height: UInt64): Observable<BlockInfo>;
-
-    /**
-     * Gets array of transactions included in a block for a block height
-     * @param height - Block height
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<Transaction[]>
-     */
-    getBlockTransactions(height: UInt64, queryParams?: QueryParams): Observable<Transaction[]>;
-
-    /**
-     * Gets array of BlockInfo for a block height with limit
-     * @param height - Block height from which will be the first block in the array
-     * @param limit - Number of blocks returned
-     * @returns Observable<BlockInfo[]>
-     */
-
-    getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]>;
 
     /**
      * Get the merkle path for a given a transaction and block

@@ -24,12 +24,12 @@ describe('CreateTransactionFromDTO', () => {
     describe('TransferTransaction', () => {
         it('standalone', () => {
             const transferTransactionDTO = {
+                id: '5CD2B76B2B3F0F0001751380',
                 meta: {
                     height: '78',
                     hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     index: 0,
-                    id: '5CD2B76B2B3F0F0001751380',
                 },
                 transaction: {
                     signature:
@@ -61,12 +61,12 @@ describe('CreateTransactionFromDTO', () => {
 
         it('standalone without message', () => {
             const transferTransactionDTO = {
+                id: '5CD2B76B2B3F0F0001751380',
                 meta: {
                     height: '78',
                     hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     index: 0,
-                    id: '5CD2B76B2B3F0F0001751380',
                 },
                 transaction: {
                     signature:
@@ -94,10 +94,10 @@ describe('CreateTransactionFromDTO', () => {
 
         it('aggregate', () => {
             const aggregateTransferTransactionDTO = {
+                id: '5A0069D83F17CF0001777E55',
                 meta: {
                     hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                     height: '1860',
-                    id: '5A0069D83F17CF0001777E55',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
@@ -118,11 +118,11 @@ describe('CreateTransactionFromDTO', () => {
                     signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
+                            id: '5A0069D83F17CF0001777E56',
                             meta: {
                                 aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
-                                id: '5A0069D83F17CF0001777E56',
                                 index: 0,
                             },
                             transaction: {
@@ -160,10 +160,10 @@ describe('CreateTransactionFromDTO', () => {
         describe('namespace', () => {
             it('standalone', () => {
                 const registerNamespaceTransactionDTO = {
+                    id: '59FDA0733F17CF0001772CA7',
                     meta: {
                         hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                         height: '1',
-                        id: '59FDA0733F17CF0001772CA7',
                         index: 19,
                         merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     },
@@ -191,10 +191,10 @@ describe('CreateTransactionFromDTO', () => {
 
             it('aggregate', () => {
                 const aggregateNamespaceRegistrationTransactionDTO = {
+                    id: '5A0069D83F17CF0001777E55',
                     meta: {
                         hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                         height: '1860',
-                        id: '5A0069D83F17CF0001777E55',
                         index: 0,
                         merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                     },
@@ -215,11 +215,11 @@ describe('CreateTransactionFromDTO', () => {
                         signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                         transactions: [
                             {
+                                id: '5A0069D83F17CF0001777E56',
                                 meta: {
                                     aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                     aggregateId: '5A0069D83F17CF0001777E55',
                                     height: '1860',
-                                    id: '5A0069D83F17CF0001777E56',
                                     index: 0,
                                 },
                                 transaction: {
@@ -252,10 +252,10 @@ describe('CreateTransactionFromDTO', () => {
         describe('subnamespace', () => {
             it('standalone', () => {
                 const registerNamespaceTransactionDTO = {
+                    id: '59FDA0733F17CF0001772CA7',
                     meta: {
                         hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                         height: '1',
-                        id: '59FDA0733F17CF0001772CA7',
                         index: 19,
                         merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     },
@@ -282,10 +282,10 @@ describe('CreateTransactionFromDTO', () => {
 
             it('aggregate', () => {
                 const aggregateNamespaceRegistrationTransactionDTO = {
+                    id: '5A0069D83F17CF0001777E55',
                     meta: {
                         hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                         height: '1860',
-                        id: '5A0069D83F17CF0001777E55',
                         index: 0,
                         merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                     },
@@ -306,11 +306,11 @@ describe('CreateTransactionFromDTO', () => {
                         signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                         transactions: [
                             {
+                                id: '5A0069D83F17CF0001777E56',
                                 meta: {
                                     aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                     aggregateId: '5A0069D83F17CF0001777E55',
                                     height: '1860',
-                                    id: '5A0069D83F17CF0001777E56',
                                     index: 0,
                                 },
                                 transaction: {
@@ -344,10 +344,10 @@ describe('CreateTransactionFromDTO', () => {
     describe('MosaicDefinitionTransaction', () => {
         it('standalone', () => {
             const mosaicDefinitionTransactionDTO = {
+                id: '59FDA0733F17CF0001772CA7',
                 meta: {
                     hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     height: '1',
-                    id: '59FDA0733F17CF0001772CA7',
                     index: 19,
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                 },
@@ -376,10 +376,10 @@ describe('CreateTransactionFromDTO', () => {
 
         it('aggregate', () => {
             const aggregateMosaicDefinitionTransactionDTO = {
+                id: '5A0069D83F17CF0001777E55',
                 meta: {
                     hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                     height: '1860',
-                    id: '5A0069D83F17CF0001777E55',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
@@ -400,11 +400,11 @@ describe('CreateTransactionFromDTO', () => {
                     signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
+                            id: '5A0069D83F17CF0001777E56',
                             meta: {
                                 aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
-                                id: '5A0069D83F17CF0001777E56',
                                 index: 0,
                             },
                             transaction: {
@@ -435,10 +435,10 @@ describe('CreateTransactionFromDTO', () => {
     describe('MosaicSupplyChangeTransaction', () => {
         it('standalone', () => {
             const mosaicSupplyChangeTransactionDTO = {
+                id: '59FDA0733F17CF0001772CA7',
                 meta: {
                     hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     height: '1',
-                    id: '59FDA0733F17CF0001772CA7',
                     index: 19,
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                 },
@@ -465,10 +465,10 @@ describe('CreateTransactionFromDTO', () => {
 
         it('aggregate', () => {
             const aggregateMosaicSupplyChangeTransactionDTO = {
+                id: '5A0069D83F17CF0001777E55',
                 meta: {
                     hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                     height: '1860',
-                    id: '5A0069D83F17CF0001777E55',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
@@ -489,11 +489,11 @@ describe('CreateTransactionFromDTO', () => {
                     signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
+                            id: '5A0069D83F17CF0001777E56',
                             meta: {
                                 aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
-                                id: '5A0069D83F17CF0001777E56',
                                 index: 0,
                             },
                             transaction: {
@@ -522,10 +522,10 @@ describe('CreateTransactionFromDTO', () => {
     describe('MultisigAccountModificationTransaction', () => {
         it('standalone', () => {
             const modifyMultisigAccountTransactionDTO = {
+                id: '59FDA0733F17CF0001772CA7',
                 meta: {
                     hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     height: '1',
-                    id: '59FDA0733F17CF0001772CA7',
                     index: 19,
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                 },
@@ -553,10 +553,10 @@ describe('CreateTransactionFromDTO', () => {
 
         it('aggregate', () => {
             const aggregateMultisigAccountModificationTransactionDTO = {
+                id: '5A0069D83F17CF0001777E55',
                 meta: {
                     hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                     height: '1860',
-                    id: '5A0069D83F17CF0001777E55',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
@@ -577,11 +577,11 @@ describe('CreateTransactionFromDTO', () => {
                     signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
+                            id: '5A0069D83F17CF0001777E56',
                             meta: {
                                 aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
-                                id: '5A0069D83F17CF0001777E56',
                                 index: 0,
                             },
                             transaction: {

@@ -19,9 +19,15 @@ import http = require('http');
 import {
     BlockRoutesApi,
     TransactionRoutesApi,
-    TransactionStateTypeEnum,
+    TransactionGroupEnum,
     TransactionStatusDTO,
-    TransactionStatusTypeEnum,
+    TransactionStatusEnum,
+    TransactionPage,
+    TransactionInfoExtendedDTO,
+    TransactionMetaDTO,
+    Pagination,
+    TransferTransactionDTO,
+    NetworkTypeEnum,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
@@ -33,6 +39,7 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
 
 describe('TransactionHttp', () => {
     const account = TestingAccount;
@@ -76,10 +83,10 @@ describe('TransactionHttp', () => {
     it('Test getTransactionStatus method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInconsistentUnlinkData;
+        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
-        transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
+        transactionStatusDTO.group = TransactionGroupEnum.Failed;
         transactionStatusDTO.height = '567';
 
         when(transactionRoutesApi.getTransactionStatus(deepEqual(hash))).thenReturn(
@@ -97,10 +104,10 @@ describe('TransactionHttp', () => {
     it('Test getTransactionsStatuses method', async () => {
         const hash = 'abc';
         const transactionStatusDTO = new TransactionStatusDTO();
-        transactionStatusDTO.code = TransactionStatusTypeEnum.FailureAccountLinkInconsistentUnlinkData;
+        transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
-        transactionStatusDTO.group = TransactionStateTypeEnum.Failed;
+        transactionStatusDTO.group = TransactionGroupEnum.Failed;
         transactionStatusDTO.height = '567';
         when(transactionRoutesApi.getTransactionsStatuses(deepEqual({ hashes: [hash] }))).thenReturn(
             Promise.resolve({ response: instance(clientResponse), body: [transactionStatusDTO] }),
@@ -114,5 +121,68 @@ describe('TransactionHttp', () => {
         expect(transactionStatus.hash).to.be.equal(hash);
         expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Inconsistent_Unlink_Data');
         expect(transactionStatus.group).to.be.equal('failed');
+    });
+
+    it('Test searchTransaction method', async () => {
+        const page = new TransactionPage();
+        const paginationDto = new Pagination();
+        paginationDto.pageNumber = 1;
+        paginationDto.pageSize = 1;
+        paginationDto.totalEntries = 1;
+        paginationDto.totalPages = 1;
+
+        const transactionInfoDto = new TransactionInfoExtendedDTO();
+        const metaDto = new TransactionMetaDTO();
+        metaDto.hash = 'hash';
+        metaDto.height = '1';
+        metaDto.index = 0;
+        metaDto.merkleComponentHash = 'merkleHash';
+
+        const transactionDto = new TransferTransactionDTO();
+        transactionDto.deadline = '1';
+        transactionDto.maxFee = '1';
+        transactionDto.mosaics = [];
+        transactionDto.network = NetworkTypeEnum.NUMBER_104;
+        transactionDto.recipientAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+        transactionDto.type = TransactionType.TRANSFER.valueOf();
+        transactionDto.version = 1;
+
+        transactionInfoDto.id = 'id';
+        transactionInfoDto.meta = metaDto;
+        transactionInfoDto.transaction = transactionDto;
+
+        page.data = [transactionInfoDto];
+        page.pagination = paginationDto;
+
+        when(
+            transactionRoutesApi.searchTransactions(
+                deepEqual(account.address.plain()),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
+
+        const transactions = await transactionHttp.search({ address: account.address }).toPromise();
+
+        expect(transactions.data.length).to.be.equal(1);
+        expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
+        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+            Address.createFromEncoded('906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB').plain(),
+        );
+        expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
+        expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
+
+        expect(transactions.pageNumber).to.be.equal(1);
+        expect(transactions.pageSize).to.be.equal(1);
+        expect(transactions.totalEntries).to.be.equal(1);
+        expect(transactions.totalPages).to.be.equal(1);
     });
 });

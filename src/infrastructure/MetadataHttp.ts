@@ -61,8 +61,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
             this.metadataRoutesApi.getAccountMetadata(
                 address.plain(),
                 this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
                 this.queryParams(queryParams).ordering,
+                this.queryParams(queryParams).id,
             ),
             (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
         );

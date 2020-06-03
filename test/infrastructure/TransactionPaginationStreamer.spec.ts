@@ -13,17 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { expect } from 'chai';
-import { TransactionFilter } from '../../src/infrastructure/TransactionFilter';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
-
-describe('TransactionFilter', () => {
-    it('should return correct query param', () => {
-        const param = new TransactionFilter({
-            types: [TransactionType.TRANSFER, TransactionType.ACCOUNT_KEY_LINK],
-        });
-
-        expect(param.convertCSV(param.types)).to.be.equal('16724,16716');
-    });
-});

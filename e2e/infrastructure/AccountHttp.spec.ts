@@ -16,13 +16,10 @@
 
 import { expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { TransactionFilter } from '../../src/infrastructure/infrastructure';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -32,7 +29,6 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
@@ -47,7 +43,6 @@ describe('AccountHttp', () => {
     let cosignAccount3: Account;
     let accountAddress: Address;
     let accountPublicKey: string;
-    let publicAccount: PublicAccount;
     let accountRepository: AccountRepository;
     let multisigRepository: MultisigRepository;
     let namespaceRepository: NamespaceRepository;
@@ -65,7 +60,6 @@ describe('AccountHttp', () => {
             cosignAccount3 = helper.cosignAccount3;
             accountAddress = helper.account.address;
             accountPublicKey = helper.account.publicKey;
-            publicAccount = helper.account.publicAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             accountRepository = helper.repositoryFactory.createAccountRepository();
@@ -198,19 +192,6 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('outgoingTransactions', () => {
-        it('should call outgoingTransactions successfully', async () => {
-            const transactions = await accountRepository.getAccountOutgoingTransactions(publicAccount.address).toPromise();
-            expect(transactions.length).to.be.greaterThan(0);
-        });
-    });
-
-    describe('aggregateBondedTransactions', () => {
-        it('should call aggregateBondedTransactions successfully', async () => {
-            await accountRepository.getAccountPartialTransactions(publicAccount.address).toPromise();
-        });
-    });
-
     describe('transactions', () => {
         it('should not return accounts when account does not exist', () => {
             return accountRepository
@@ -227,38 +208,6 @@ describe('AccountHttp', () => {
                         return Promise.resolve();
                     },
                 );
-        });
-    });
-
-    describe('transactions', () => {
-        it('should call transactions successfully by type', async () => {
-            const transactions = await accountRepository
-                .getAccountTransactions(
-                    publicAccount.address,
-                    new QueryParams(),
-                    new TransactionFilter({
-                        types: [TransactionType.TRANSFER, TransactionType.AGGREGATE_COMPLETE],
-                    }),
-                )
-                .toPromise();
-            expect(transactions.length).to.be.greaterThan(0);
-            transactions.forEach((t) => {
-                expect(t.type === TransactionType.TRANSFER || t.type === TransactionType.AGGREGATE_COMPLETE).to.be.eq(true);
-            });
-        });
-    });
-
-    describe('transactions', () => {
-        it('should call transactions successfully', async () => {
-            const transactions = await accountRepository.getAccountTransactions(publicAccount.address).toPromise();
-            expect(transactions.length).to.be.greaterThan(0);
-        });
-    });
-
-    describe('unconfirmedTransactions', () => {
-        it('should call unconfirmedTransactions successfully', async () => {
-            const transactions = await accountRepository.getAccountUnconfirmedTransactions(publicAccount.address).toPromise();
-            expect(transactions.length).to.be.equal(0);
         });
     });
 

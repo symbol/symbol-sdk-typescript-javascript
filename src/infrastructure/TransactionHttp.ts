@@ -30,6 +30,8 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionRepository } from './TransactionRepository';
+import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
+import { Page } from './Page';
 
 /**
  * Transaction http repository.
@@ -78,11 +80,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @param transactionIds - Array of transactions id and/or hash.
      * @returns Observable<Transaction[]>
      */
-    public getTransactions(transactionIds: string[]): Observable<Transaction[]> {
+    public getTransactionsById(transactionIds: string[]): Observable<Transaction[]> {
         const transactionIdsBody = {
             transactionIds,
         };
-        return observableFrom(this.transactionRoutesApi.getTransactions(transactionIdsBody)).pipe(
+        return observableFrom(this.transactionRoutesApi.getTransactionsById(transactionIdsBody)).pipe(
             map(({ body }) =>
                 body.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
@@ -116,23 +118,6 @@ export class TransactionHttp extends Http implements TransactionRepository {
         return observableFrom(this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
             map(({ body }) => body.map(this.toTransactionStatus)),
             catchError((error) => throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * This method maps a TransactionStatusDTO from rest to the SDK's TransactionStatus model object.
-     *
-     * @internal
-     * @param {TransactionStatusDTO} dto the TransactionStatusDTO object from rest.
-     * @returns {TransactionStatus} a TransactionStatus model
-     */
-    private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
-        return new TransactionStatus(
-            dto.group,
-            dto.hash,
-            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
-            dto.code,
-            dto.height ? UInt64.fromNumericString(dto.height) : undefined,
         );
     }
 
@@ -206,6 +191,48 @@ export class TransactionHttp extends Http implements TransactionRepository {
             catchError((err) => {
                 return throwError(err);
             }),
+        );
+    }
+
+    /**
+     * Returns an array of transactions.
+     * @summary Get transactions
+     * @param criteria Transaction search criteria
+     * @returns {Observable<Page<Transaction>>}
+     */
+    public search(criteria: TransactionSearchCriteria): Observable<Page<Transaction>> {
+        return this.call(
+            this.transactionRoutesApi.searchTransactions(
+                criteria.address?.plain(),
+                criteria.recipientAddress?.plain(),
+                criteria.signerPublicKey,
+                criteria.height?.toString(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                criteria.group,
+                criteria.order,
+                criteria.transactionTypes?.map((type) => type.valueOf()),
+                criteria.embedded,
+            ),
+            (body) => super.toPage(body.pagination, body.data, CreateTransactionFromDTO),
+        );
+    }
+
+    /**
+     * This method maps a TransactionStatusDTO from rest to the SDK's TransactionStatus model object.
+     *
+     * @internal
+     * @param {TransactionStatusDTO} dto the TransactionStatusDTO object from rest.
+     * @returns {TransactionStatus} a TransactionStatus model
+     */
+    private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
+        return new TransactionStatus(
+            dto.group,
+            dto.hash,
+            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
+            dto.code,
+            dto.height ? UInt64.fromNumericString(dto.height) : undefined,
         );
     }
 }

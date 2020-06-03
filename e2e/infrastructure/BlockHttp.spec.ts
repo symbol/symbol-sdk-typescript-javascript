@@ -15,18 +15,19 @@
  */
 
 import { expect } from 'chai';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, toArray } from 'rxjs/operators';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
-import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { TransactionInfo } from '../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
+import { deepEqual } from 'assert';
+import { take } from 'rxjs/operators';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -37,6 +38,7 @@ describe('BlockHttp', () => {
     let chainHeight;
     let generationHash: string;
     let networkType: NetworkType;
+    let transactionHash;
 
     before(() => {
         return helper.start().then(() => {
@@ -76,6 +78,7 @@ describe('BlockHttp', () => {
             const signedTransaction = transferTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction) => {
                 chainHeight = transaction.transactionInfo!.height.toString();
+                transactionHash = transaction.transactionInfo?.hash?.toString();
                 return chainHeight;
             });
         });
@@ -93,32 +96,23 @@ describe('BlockHttp', () => {
         });
     });
 
-    describe('getBlockTransactions', () => {
-        let nextId: string;
-        let firstId: string;
-
-        it('should return block transactions data given height', async () => {
-            const transactions = await blockRepository.getBlockTransactions(UInt64.fromUint(1)).toPromise();
-            nextId = transactions[0].transactionInfo!.id;
-            firstId = transactions[1].transactionInfo!.id;
-            expect(transactions.length).to.be.greaterThan(0);
-        });
-
-        it('should return block transactions data given height with paginated transactionId', async () => {
-            const transactions = await blockRepository
-                .getBlockTransactions(UInt64.fromUint(1), new QueryParams({ pageSize: 10, id: nextId }))
-                .toPromise();
-            expect(transactions[0].transactionInfo!.id).to.be.equal(firstId);
-            expect(transactions.length).to.be.greaterThan(0);
-        });
-    });
-
-    describe('getBlocksByHeightWithLimit', () => {
+    describe('searchBlock', () => {
         it('should return block info given height and limit', async () => {
-            const blocksInfo = await blockRepository.getBlocksByHeightWithLimit(chainHeight, 50).toPromise();
-            expect(blocksInfo.length).to.be.greaterThan(0);
+            const blocksInfo = await blockRepository.search({}).toPromise();
+            expect(blocksInfo.data.length).to.be.greaterThan(0);
         });
     });
+
+    describe('searchBlock with streamer', () => {
+        it('should return block info given height and limit', async () => {
+            const streamer = new BlockPaginationStreamer(blockRepository);
+            const blockInfoStreamer = await streamer.search({ pageSize: 20 }).pipe(take(20), toArray()).toPromise();
+            const blocksInfo = await blockRepository.search({ pageSize: 20 }).toPromise();
+            expect(blockInfoStreamer.length).to.be.greaterThan(0);
+            deepEqual(blockInfoStreamer, blocksInfo.data);
+        });
+    });
+
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', async () => {
             const merkleReceipts = await receiptRepository
@@ -134,19 +128,7 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', async () => {
-            const merkleTransactionss = await blockRepository
-                .getBlockTransactions(chainHeight)
-                .pipe(
-                    mergeMap((_) => {
-                        const hash = (_[0].transactionInfo as TransactionInfo).hash;
-                        if (hash) {
-                            return blockRepository.getMerkleTransaction(chainHeight, hash);
-                        }
-                        // If reaching this line, something is not right
-                        throw new Error('Tansacation hash is undefined');
-                    }),
-                )
-                .toPromise();
+            const merkleTransactionss = await blockRepository.getMerkleTransaction(chainHeight, transactionHash).toPromise();
             expect(merkleTransactionss.merklePath).not.to.be.null;
         });
     });

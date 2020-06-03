@@ -20,12 +20,11 @@ import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
-import { QueryParams } from './QueryParams';
-import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
+import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
+import { Page } from './Page';
 
 /**
  * Blockchain http repository.
@@ -59,35 +58,22 @@ export class BlockHttp extends Http implements BlockRepository {
     }
 
     /**
-     * Gets array of transactions included in a block for a block height
-     * @param height - Block height
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<Transaction[]>
-     */
-    public getBlockTransactions(height: UInt64, queryParams?: QueryParams): Observable<Transaction[]> {
-        return this.call(
-            this.blockRoutesApi.getBlockTransactions(
-                height.toString(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering,
-            ),
-            (body) =>
-                body.map((transactionDTO) => {
-                    return CreateTransactionFromDTO(transactionDTO);
-                }),
-        );
-    }
-
-    /**
-     * Gets array of BlockInfo for a block height with limit
-     * @param height - Block height from which will be the first block in the array
-     * @param limit - Number of blocks returned.
+     * Gets an array of bocks.
+     * @param criteria - Block search criteria
      * @returns Observable<BlockInfo[]>
      */
-    public getBlocksByHeightWithLimit(height: UInt64, limit: number): Observable<BlockInfo[]> {
-        return this.call(this.blockRoutesApi.getBlocksByHeightWithLimit(height.toString(), limit), (body) =>
-            body.map((blockDTO) => this.toBlockInfo(blockDTO)),
+    public search(criteria: BlockSearchCriteria): Observable<Page<BlockInfo>> {
+        return this.call(
+            this.blockRoutesApi.searchBlocks(
+                criteria.signerPublicKey,
+                criteria.beneficiaryPublicKey,
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                criteria.order,
+                criteria.orderBy,
+            ),
+            (body) => super.toPage(body.pagination, body.data, this.toBlockInfo),
         );
     }
 
@@ -101,6 +87,7 @@ export class BlockHttp extends Http implements BlockRepository {
     private toBlockInfo(dto: BlockInfoDTO): BlockInfo {
         const networkType = dto.block.network.valueOf();
         return new BlockInfo(
+            dto.id ?? '',
             dto.meta.hash,
             dto.meta.generationHash,
             UInt64.fromNumericString(dto.meta.totalFee),

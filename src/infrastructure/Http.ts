@@ -17,10 +17,10 @@
 import * as http from 'http';
 import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
-import { NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NodeRoutesApi, Pagination } from 'symbol-openapi-typescript-node-client';
 import { NetworkType } from '../model/network/NetworkType';
 import { QueryParams } from './QueryParams';
-import { TransactionFilter } from './TransactionFilter';
+import { Page } from './Page';
 
 /**
  * Http extended by all http services
@@ -59,12 +59,6 @@ export abstract class Http {
         };
     }
 
-    transactionFilter(filter?: TransactionFilter): any {
-        return {
-            type: filter ? filter.types : undefined,
-        };
-    }
-
     errorHandling(error: any): Error {
         if (error.response && error.response.statusCode && error.response.body) {
             const formattedError = {
@@ -98,6 +92,31 @@ export abstract class Http {
         return observableFrom(remoteCall).pipe(
             map(({ body }, index) => mapper(body, index)),
             catchError((error) => throwError(this.errorHandling(error))),
+        );
+    }
+
+    /**
+     * This method maps a rest page object from rest to the SDK's Page model object.
+     *
+     * @internal
+     * @param pagination rest pagination object.
+     * @param data rest pagination data object.
+     * @param mapper the mapper from dto to the model object.
+     * @param networkType the network type.
+     * @returns Page<T> model
+     */
+    protected toPage<D, M>(
+        pagination: Pagination,
+        data: D[],
+        mapper: (value: D, networkType?: NetworkType) => M,
+        networkType?: NetworkType,
+    ): Page<M> {
+        return new Page<M>(
+            data.map((d) => mapper(d, networkType)),
+            pagination?.pageNumber,
+            pagination?.pageSize,
+            pagination?.totalEntries,
+            pagination?.totalPages,
         );
     }
 }

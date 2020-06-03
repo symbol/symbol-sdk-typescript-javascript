@@ -39,6 +39,7 @@ describe('BlockService', () => {
     function mockBlockInfo(isFake = false): BlockInfo {
         if (isFake) {
             return new BlockInfo(
+                'id',
                 'hash',
                 'generationHash',
                 UInt64.fromNumericString('0'),
@@ -64,6 +65,7 @@ describe('BlockService', () => {
             );
         }
         return new BlockInfo(
+            'id',
             'hash',
             'generationHash',
             UInt64.fromNumericString('0'),
@@ -89,14 +91,18 @@ describe('BlockService', () => {
         );
     }
 
-    function mockMerklePath(): MerkleProofInfo {
-        return new MerkleProofInfo([
-            new MerklePathItem(PositionEnum.Left, 'CDE45D740536E5361F392025A44B26546A138958E69CD6F18D22908F8F11ECF2'),
-            new MerklePathItem(PositionEnum.Right, '4EF55DAB8FEF9711B23DA71D2ACC58EFFF3969C3D572E06ACB898F99BED4827A'),
-            new MerklePathItem(PositionEnum.Left, '1BB95470065ED69D184948A0175EDC2EAB9E86A0CEB47B648A58A02A5445AF66'),
-            new MerklePathItem(PositionEnum.Right, 'D96B03809B8B198EFA5824191A979F7B85C0E9B7A6623DAFF38D4B2927EFDFB5'),
-            new MerklePathItem(PositionEnum.Right, '9981EBDBCA8E36BA4D4D4A450072026AC8C85BA6497666219E0E049BE3362E51'),
-        ]);
+    function mockMerklePath(emtpy = false): MerkleProofInfo {
+        return new MerkleProofInfo(
+            emtpy
+                ? []
+                : [
+                      new MerklePathItem(PositionEnum.Left, 'CDE45D740536E5361F392025A44B26546A138958E69CD6F18D22908F8F11ECF2'),
+                      new MerklePathItem(PositionEnum.Right, '4EF55DAB8FEF9711B23DA71D2ACC58EFFF3969C3D572E06ACB898F99BED4827A'),
+                      new MerklePathItem(PositionEnum.Left, '1BB95470065ED69D184948A0175EDC2EAB9E86A0CEB47B648A58A02A5445AF66'),
+                      new MerklePathItem(PositionEnum.Right, 'D96B03809B8B198EFA5824191A979F7B85C0E9B7A6623DAFF38D4B2927EFDFB5'),
+                      new MerklePathItem(PositionEnum.Right, '9981EBDBCA8E36BA4D4D4A450072026AC8C85BA6497666219E0E049BE3362E51'),
+                  ],
+        );
     }
 
     before(() => {
@@ -106,11 +112,16 @@ describe('BlockService', () => {
         const mockRepoFactory = mock<RepositoryFactory>();
 
         when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOf(mockBlockInfo()));
+        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(4)))).thenReturn(observableOf(mockBlockInfo()));
         when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(2)))).thenReturn(observableOf(mockBlockInfo(true)));
+        when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(3)))).thenReject(new Error());
         when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
         when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(3)), leaf)).thenReject(new Error());
+        when(mockBlockRepository.getMerkleTransaction(deepEqual(UInt64.fromUint(4)), leaf)).thenReturn(observableOf(mockMerklePath(true)));
         when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
         when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
+        when(mockReceiptRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(3)), leaf)).thenReject(new Error());
         const blockRepository = instance(mockBlockRepository);
         const receiptRepository = instance(mockReceiptRepository);
 
@@ -130,6 +141,16 @@ describe('BlockService', () => {
         expect(result).to.be.false;
     });
 
+    it('should validate transaction - emtpy path item', async () => {
+        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(4)).toPromise();
+        expect(result).to.be.false;
+    });
+
+    it('should validate transaction - error', async () => {
+        const result = await blockService.validateTransactionInBlock(leaf, UInt64.fromUint(3)).toPromise();
+        expect(result).to.be.false;
+    });
+
     it('should validate statement', async () => {
         const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(1)).toPromise();
         expect(result).to.be.true;
@@ -137,6 +158,11 @@ describe('BlockService', () => {
 
     it('should validate statement - wrong hash', async () => {
         const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(2)).toPromise();
+        expect(result).to.be.false;
+    });
+
+    it('should validate statement - error', async () => {
+        const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(3)).toPromise();
         expect(result).to.be.false;
     });
 });

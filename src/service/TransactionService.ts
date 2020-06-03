@@ -54,7 +54,7 @@ export class TransactionService implements ITransactionService {
      * @returns Observable<Transaction[]>
      */
     public resolveAliases(transationHashes: string[]): Observable<Transaction[]> {
-        return this.transactionRepository.getTransactions(transationHashes).pipe(
+        return this.transactionRepository.getTransactionsById(transationHashes).pipe(
             mergeMap((_) => _),
             mergeMap((transaction) => this.resolveTransaction(transaction)),
             toArray(),

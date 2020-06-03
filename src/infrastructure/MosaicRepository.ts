@@ -15,16 +15,17 @@
  */
 
 import { Observable } from 'rxjs';
-import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
+import { Searcher } from './paginationStreamer/Searcher';
+import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 
 /**
  * Mosaic interface repository.
  *
  * @since 1.0
  */
-export interface MosaicRepository {
+export interface MosaicRepository extends Searcher<MosaicInfo, MosaicSearchCriteria> {
     /**
      * Gets a MosaicInfo for a given mosaicId
      * @param mosaicId - Mosaic id
@@ -38,18 +39,4 @@ export interface MosaicRepository {
      * @returns Observable<MosaicInfo[]>
      */
     getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]>;
-
-    /**
-     * Gets mosaics created for a given address.
-     * @summary Get mosaics created for given address
-     * @param address Address
-     */
-    getMosaicsFromAccount(address: Address): Observable<MosaicInfo[]>;
-
-    /**
-     * Gets mosaics created for a given array of addresses.
-     * @summary Get mosaics created for given array of addresses
-     * @param addresses Address
-     */
-    getMosaicsFromAccounts(addresses: Address[]): Observable<MosaicInfo[]>;
 }

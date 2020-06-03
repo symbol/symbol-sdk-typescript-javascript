@@ -19,7 +19,9 @@ import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../../model/restriction/AccountRestrictions';
 import { AccountRestrictionsInfo } from '../../model/restriction/AccountRestrictionsInfo';
-import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../model/model';
+import { AddressRestrictionFlag } from '../../model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../model/restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../../model/restriction/OperationRestrictionFlag';
 
 export class DtoMapping {
     /**

@@ -23,6 +23,7 @@ import { UInt64 } from '../UInt64';
  */
 export class BlockInfo {
     /**
+     * @param recordId
      * @param hash
      * @param generationHash
      * @param totalFee
@@ -48,6 +49,10 @@ export class BlockInfo {
      * @param numStatements
      */
     constructor(
+        /**
+         * The database record id.
+         */
+        public readonly recordId: string,
         /**
          * The block hash.
          */

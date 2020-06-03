@@ -23,20 +23,14 @@ import {
     AccountTypeEnum,
     ActivityBucketDTO,
     Mosaic,
-    TransactionTypeEnum,
-    TransactionInfoDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { QueryParams } from '../../src/infrastructure/QueryParams';
-import { TransactionFilter } from '../../src/infrastructure/TransactionFilter';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
-import { Transaction } from '../../src/model/transaction/Transaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client/dist/model/accountKeyDTO';
 
 describe('AccountHttp', () => {
@@ -78,35 +72,6 @@ describe('AccountHttp', () => {
         accountRoutesApi: instance(accountRoutesApi),
     });
 
-    const transactionInfoDTO = {
-        meta: {
-            hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
-            height: '18160',
-            id: '5A0069D83F17CF0001777E55',
-            index: 0,
-            merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
-        },
-        transaction: {
-            deadline: '1000',
-            maxFee: '0',
-            signature:
-                '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
-                '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-            signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
-            minApprovalDelta: 1,
-            minRemovalDelta: 1,
-            modifications: [
-                {
-                    cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' + 'FB8B7310D45F77C1250B97',
-                    modificationAction: 0,
-                },
-            ],
-            type: 16725,
-            version: 1,
-            network: 144,
-        },
-    };
-
     before(() => {
         reset(response);
         reset(accountRoutesApi);
@@ -135,12 +100,6 @@ describe('AccountHttp', () => {
         expect(accountInfo.activityBucket[0].totalFeesPaid.toString()).to.be.equals(activityBucketDTO.totalFeesPaid);
     }
 
-    function assertTransaction(transaction: Transaction): void {
-        expect(transaction).to.be.not.null;
-        expect(transaction.type).to.be.equals(transactionInfoDTO.transaction.type);
-        expect(transaction.deadline.toString()).to.be.equals(transactionInfoDTO.transaction.deadline);
-    }
-
     it('getAccountInfo', async () => {
         when(accountRoutesApi.getAccountInfo(address.plain())).thenReturn(Promise.resolve({ response, body: accountInfoDto }));
         const accountInfo = await accountRepository.getAccountInfo(address).toPromise();
@@ -153,154 +112,5 @@ describe('AccountHttp', () => {
         when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve({ response, body: [accountInfoDto] }));
         const accountInfos = await accountRepository.getAccountsInfo([address]).toPromise();
         assertAccountInfo(accountInfos[0]);
-    });
-
-    it('getAccountTransactions', async () => {
-        when(
-            accountRoutesApi.getAccountConfirmedTransactions(address.plain(), 1, 'a', '-id', deepEqual([TransactionTypeEnum.NUMBER_16725])),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository
-            .getAccountTransactions(
-                address,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-                new TransactionFilter({ types: [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] }),
-            )
-            .toPromise();
-        assertTransaction(transactions[0]);
-    });
-
-    it('getAccountTransactions', async () => {
-        when(accountRoutesApi.getAccountConfirmedTransactions(address.plain(), undefined, undefined, undefined, undefined)).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository.getAccountTransactions(address).toPromise();
-        assertTransaction(transactions[0]);
-    });
-
-    it('getAccountIncomingTransactions', async () => {
-        when(
-            accountRoutesApi.getAccountIncomingTransactions(address.plain(), 1, 'a', '-id', deepEqual([TransactionTypeEnum.NUMBER_16725])),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository
-            .getAccountIncomingTransactions(
-                address,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-                new TransactionFilter({ types: [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] }),
-            )
-            .toPromise();
-        assertTransaction(transactions[0]);
-    });
-
-    it('getAccountOutgoingTransactions', async () => {
-        when(
-            accountRoutesApi.getAccountOutgoingTransactions(address.plain(), 1, 'a', '-id', deepEqual([TransactionTypeEnum.NUMBER_16725])),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository
-            .getAccountOutgoingTransactions(
-                address,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-                new TransactionFilter({ types: [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] }),
-            )
-            .toPromise();
-        assertTransaction(transactions[0]);
-    });
-
-    it('getAccountPartialTransactions', async () => {
-        when(
-            accountRoutesApi.getAccountPartialTransactions(address.plain(), 1, 'a', '-id', deepEqual([TransactionTypeEnum.NUMBER_16725])),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository
-            .getAccountPartialTransactions(
-                address,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-                new TransactionFilter({ types: [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] }),
-            )
-            .toPromise();
-        assertTransaction(transactions[0]);
-    });
-
-    it('getAccountUnconfirmedTransactions', async () => {
-        when(
-            accountRoutesApi.getAccountUnconfirmedTransactions(
-                address.plain(),
-                2,
-                'b',
-                '-id',
-                deepEqual([TransactionTypeEnum.NUMBER_16725]),
-            ),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository
-            .getAccountUnconfirmedTransactions(
-                address,
-                new QueryParams({
-                    pageSize: 2,
-                    id: 'b',
-                }),
-                new TransactionFilter({ types: [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] }),
-            )
-            .toPromise();
-        assertTransaction(transactions[0]);
-    });
-
-    it('getAccountPartialTransactions', async () => {
-        when(
-            accountRoutesApi.getAccountPartialTransactions(address.plain(), 1, 'a', '-id', deepEqual([TransactionTypeEnum.NUMBER_16725])),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body: [Object.assign(new TransactionInfoDTO(), transactionInfoDTO)],
-            }),
-        );
-        const transactions = await accountRepository
-            .getAccountPartialTransactions(
-                address,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-                new TransactionFilter({ types: [TransactionType.MULTISIG_ACCOUNT_MODIFICATION] }),
-            )
-            .toPromise();
-        assertTransaction(transactions[0]);
     });
 });
