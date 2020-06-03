@@ -101,8 +101,6 @@ describe('MosaicHttp', () => {
         body.data = [mosaicInfoDto];
         body.pagination = pagination;
 
-        console.log(body);
-
         when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve({ response, body }),
         );
