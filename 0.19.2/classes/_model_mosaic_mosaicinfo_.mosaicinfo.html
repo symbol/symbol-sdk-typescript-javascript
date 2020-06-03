@@ -103,6 +103,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#height" class="tsd-kind-icon">height</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#owner" class="tsd-kind-icon">owner</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#recordid" class="tsd-kind-icon">record<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#revision" class="tsd-kind-icon">revision</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#supply" class="tsd-kind-icon">supply</a></li>
 							</ul>
@@ -124,19 +125,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Mosaic<wbr>Info<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a>, supply<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, height<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, owner<span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a>, revision<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, flags<span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicflags_.mosaicflags.html" class="tsd-signature-type">MosaicFlags</a>, divisibility<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, duration<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Mosaic<wbr>Info<span class="tsd-signature-symbol">(</span>recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a>, supply<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, height<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, owner<span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a>, revision<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, flags<span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicflags_.mosaicflags.html" class="tsd-signature-type">MosaicFlags</a>, divisibility<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, duration<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L25">model/mosaic/MosaicInfo.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L25">model/mosaic/MosaicInfo.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>recordId: <span class="tsd-signature-type">string</span></h5>
+								</li>
 								<li>
 									<h5>id: <a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></h5>
 								</li>
@@ -179,7 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">divisibility<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L64">model/mosaic/MosaicInfo.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L69">model/mosaic/MosaicInfo.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -194,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">duration<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L68">model/mosaic/MosaicInfo.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L73">model/mosaic/MosaicInfo.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -208,7 +212,7 @@
 					<div class="tsd-signature tsd-kind-icon">flags<span class="tsd-signature-symbol">:</span> <a href="_model_mosaic_mosaicflags_.mosaicflags.html" class="tsd-signature-type">MosaicFlags</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L60">model/mosaic/MosaicInfo.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L65">model/mosaic/MosaicInfo.ts:65</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -223,7 +227,7 @@
 					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L48">model/mosaic/MosaicInfo.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L53">model/mosaic/MosaicInfo.ts:53</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -238,7 +242,7 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L40">model/mosaic/MosaicInfo.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L45">model/mosaic/MosaicInfo.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -253,7 +257,7 @@
 					<div class="tsd-signature tsd-kind-icon">owner<span class="tsd-signature-symbol">:</span> <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L52">model/mosaic/MosaicInfo.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L57">model/mosaic/MosaicInfo.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -263,12 +267,27 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="recordid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> record<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">record<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L41">model/mosaic/MosaicInfo.ts:41</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The database record id.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="revision" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> revision</h3>
 					<div class="tsd-signature tsd-kind-icon">revision<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L56">model/mosaic/MosaicInfo.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L61">model/mosaic/MosaicInfo.ts:61</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -283,7 +302,7 @@
 					<div class="tsd-signature tsd-kind-icon">supply<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L44">model/mosaic/MosaicInfo.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L49">model/mosaic/MosaicInfo.ts:49</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -305,7 +324,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L91">model/mosaic/MosaicInfo.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L96">model/mosaic/MosaicInfo.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -327,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L75">model/mosaic/MosaicInfo.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L80">model/mosaic/MosaicInfo.ts:80</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -349,7 +368,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/model/mosaic/MosaicInfo.ts#L83">model/mosaic/MosaicInfo.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/mosaic/MosaicInfo.ts#L88">model/mosaic/MosaicInfo.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -403,6 +422,9 @@
 								<a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#owner" class="tsd-kind-icon">owner</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#recordid" class="tsd-kind-icon">record<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_mosaic_mosaicinfo_.mosaicinfo.html#revision" class="tsd-kind-icon">revision</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -444,10 +466,11 @@
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 			</ul>
 		</div>
 	</div>

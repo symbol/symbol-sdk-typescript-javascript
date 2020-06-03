@@ -85,7 +85,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MosaicRepository</span>
+						<a href="_infrastructure_paginationstreamer_searcher_.searcher.html" class="tsd-signature-type">Searcher</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">, </span><a href="_infrastructure_searchcriteria_mosaicsearchcriteria_.mosaicsearchcriteria.html" class="tsd-signature-type">MosaicSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">MosaicRepository</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -104,8 +109,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaic" class="tsd-kind-icon">get<wbr>Mosaic</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaics" class="tsd-kind-icon">get<wbr>Mosaics</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaicsfromaccount" class="tsd-kind-icon">get<wbr>Mosaics<wbr>From<wbr>Account</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaicsfromaccounts" class="tsd-kind-icon">get<wbr>Mosaics<wbr>From<wbr>Accounts</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_infrastructure_mosaicrepository_.mosaicrepository.html#search" class="tsd-kind-icon">search</a></li>
 							</ul>
 						</section>
 					</div>
@@ -123,7 +127,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/infrastructure/MosaicRepository.ts#L33">infrastructure/MosaicRepository.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/infrastructure/MosaicRepository.ts#L34">infrastructure/MosaicRepository.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -155,7 +159,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/infrastructure/MosaicRepository.ts#L40">infrastructure/MosaicRepository.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/infrastructure/MosaicRepository.ts#L41">infrastructure/MosaicRepository.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -177,75 +181,36 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmosaicsfromaccount" class="tsd-anchor"></a>
-					<h3>get<wbr>Mosaics<wbr>From<wbr>Account</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaics<wbr>From<wbr>Account<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="search" class="tsd-anchor"></a>
+					<h3>search</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">search<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_infrastructure_searchcriteria_mosaicsearchcriteria_.mosaicsearchcriteria.html" class="tsd-signature-type">MosaicSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_infrastructure_paginationstreamer_searcher_.searcher.html">Searcher</a>.<a href="_infrastructure_paginationstreamer_searcher_.searcher.html#search">search</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/infrastructure/MosaicRepository.ts#L47">infrastructure/MosaicRepository.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/infrastructure/paginationStreamer/Searcher.ts#L33">infrastructure/paginationStreamer/Searcher.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Gets mosaics created for a given address.</p>
+									<p>It searches entities of a type based on a criteria.</p>
 								</div>
-								<dl class="tsd-comment-tags">
-									<dt>summary</dt>
-									<dd><p>Get mosaics created for given address</p>
-									</dd>
-								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>address: <a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<h5>criteria: <a href="_infrastructure_searchcriteria_mosaicsearchcriteria_.mosaicsearchcriteria.html" class="tsd-signature-type">MosaicSearchCriteria</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Address</p>
+										<p>the criteria</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmosaicsfromaccounts" class="tsd-anchor"></a>
-					<h3>get<wbr>Mosaics<wbr>From<wbr>Accounts</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaics<wbr>From<wbr>Accounts<span class="tsd-signature-symbol">(</span>addresses<span class="tsd-signature-symbol">: </span><a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/060749f/src/infrastructure/MosaicRepository.ts#L54">infrastructure/MosaicRepository.ts:54</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Gets mosaics created for a given array of addresses.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>summary</dt>
-									<dd><p>Get mosaics created for given array of addresses</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>addresses: <a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Address</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_mosaic_mosaicinfo_.mosaicinfo.html" class="tsd-signature-type">MosaicInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a page of entities.</p>
 						</li>
 					</ul>
 				</section>
@@ -275,11 +240,8 @@
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaics" class="tsd-kind-icon">get<wbr>Mosaics</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaicsfromaccount" class="tsd-kind-icon">get<wbr>Mosaics<wbr>From<wbr>Account</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_mosaicrepository_.mosaicrepository.html#getmosaicsfromaccounts" class="tsd-kind-icon">get<wbr>Mosaics<wbr>From<wbr>Accounts</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_infrastructure_mosaicrepository_.mosaicrepository.html#search" class="tsd-kind-icon">search</a>
 							</li>
 						</ul>
 					</li>
@@ -302,6 +264,7 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
