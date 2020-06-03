@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"io.nem.symbol.sdk.openapi.okhttp_gson.api"},{"l":"io.nem.symbol.sdk.openapi.okhttp_gson.invoker"},{"l":"io.nem.symbol.sdk.openapi.okhttp_gson.invoker.auth"},{"l":"io.nem.symbol.sdk.openapi.okhttp_gson.model"}]
