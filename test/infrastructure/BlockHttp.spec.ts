@@ -127,7 +127,7 @@ describe('BlockHttp', () => {
             }),
         );
         const blockInfos = await blockRepository.search({ signerPublicKey: blockDTO.signerPublicKey }).toPromise();
-        assertBlockInfo(blockInfos.getData()[0]);
+        assertBlockInfo(blockInfos.data[0]);
     });
 
     it('getMerkleTransaction', async () => {

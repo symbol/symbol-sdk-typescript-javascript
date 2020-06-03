@@ -164,8 +164,8 @@ describe('MosaicHttp', () => {
     describe('searchMosaics', () => {
         it('should call searchMosaics successfully', async () => {
             const mosaics = await mosaicRepository.search({ ownerAddress: account.address }).toPromise();
-            expect(mosaics.getData().length).to.be.greaterThan(0);
-            expect(mosaics.getData().find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+            expect(mosaics.data.length).to.be.greaterThan(0);
+            expect(mosaics.data.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
         });
     });
 
@@ -179,7 +179,7 @@ describe('MosaicHttp', () => {
             const mosaics = await mosaicRepository.search({ ownerAddress: account.address, pageSize: 3 }).toPromise();
             expect(mosaicsStreamer.length).to.be.greaterThan(0);
             expect(mosaicsStreamer.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
-            deepEqual(mosaics.getData(), mosaicsStreamer);
+            deepEqual(mosaics.data, mosaicsStreamer);
         });
     });
 

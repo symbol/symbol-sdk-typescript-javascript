@@ -99,7 +99,7 @@ describe('BlockHttp', () => {
     describe('searchBlock', () => {
         it('should return block info given height and limit', async () => {
             const blocksInfo = await blockRepository.search({}).toPromise();
-            expect(blocksInfo.getData().length).to.be.greaterThan(0);
+            expect(blocksInfo.data.length).to.be.greaterThan(0);
         });
     });
 
@@ -109,7 +109,7 @@ describe('BlockHttp', () => {
             const blockInfoStreamer = await streamer.search({ pageSize: 20 }).pipe(take(20), toArray()).toPromise();
             const blocksInfo = await blockRepository.search({ pageSize: 20 }).toPromise();
             expect(blockInfoStreamer.length).to.be.greaterThan(0);
-            deepEqual(blockInfoStreamer, blocksInfo.getData());
+            deepEqual(blockInfoStreamer, blocksInfo.data);
         });
     });
 

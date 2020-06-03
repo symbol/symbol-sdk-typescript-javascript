@@ -39,39 +39,4 @@ export class Page<T> {
     ) {
         this.isLastPage = this.pageNumber >= this.totalPages;
     }
-
-    /**
-     * @return The page data.
-     */
-    public getData(): T[] {
-        return this.data;
-    }
-
-    /**
-     * @return the current page number starting from 1.
-     */
-    public getPageNumber(): number {
-        return this.pageNumber;
-    }
-
-    /**
-     * @return the page size.
-     */
-    public getPageSize(): number {
-        return this.pageSize;
-    }
-
-    /**
-     * @return the total entries.
-     */
-    public getTotalEntries(): number {
-        return this.totalEntries;
-    }
-
-    /**
-     * @return the total pages.
-     */
-    public getTotalPages(): number {
-        return this.totalPages;
-    }
 }

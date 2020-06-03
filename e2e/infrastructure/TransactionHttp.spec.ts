@@ -1460,13 +1460,13 @@ describe('TransactionHttp', () => {
     describe('searchTransactions', () => {
         it('should return transaction info given address', async () => {
             const transactions = await transactionRepository.search({ address: account.address } as TransactionSearchCriteria).toPromise();
-            expect(transactions.getData().length).to.be.greaterThan(0);
+            expect(transactions.data.length).to.be.greaterThan(0);
         });
         it('should return transaction info given height', async () => {
             const transactions = await transactionRepository
                 .search({ height: UInt64.fromUint(1) } as TransactionSearchCriteria)
                 .toPromise();
-            expect(transactions.getData().length).to.be.greaterThan(0);
+            expect(transactions.data.length).to.be.greaterThan(0);
         });
     });
 
@@ -1478,7 +1478,7 @@ describe('TransactionHttp', () => {
                 .toPromise();
             const transactions = await streamer.search({ address: account.address, pageSize: 3 }).pipe(take(3), toArray()).toPromise();
             expect(transactions.length).to.be.greaterThan(0);
-            deepEqual(transactionsNoStreamer.getData(), transactions);
+            deepEqual(transactionsNoStreamer.data, transactions);
         });
     });
 });

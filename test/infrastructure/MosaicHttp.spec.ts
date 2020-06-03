@@ -105,7 +105,7 @@ describe('MosaicHttp', () => {
             Promise.resolve({ response, body }),
         );
         const mosaicsInfo = await mosaicRepository.search({ ownerAddress: address }).toPromise();
-        assertMosaicInfo(mosaicsInfo.getData()[0]);
+        assertMosaicInfo(mosaicsInfo.data[0]);
     });
 
     it('getMosaic - Error', async () => {

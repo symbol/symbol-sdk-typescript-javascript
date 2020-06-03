@@ -172,17 +172,17 @@ describe('TransactionHttp', () => {
 
         const transactions = await transactionHttp.search({ address: account.address }).toPromise();
 
-        expect(transactions.getData().length).to.be.equal(1);
-        expect(transactions.getData()[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactions.getData()[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+        expect(transactions.data.length).to.be.equal(1);
+        expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
+        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
             Address.createFromEncoded('906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB').plain(),
         );
-        expect(transactions.getData()[0].transactionInfo?.id).to.be.equal('id');
-        expect(transactions.getData()[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
+        expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
 
-        expect(transactions.getPageNumber()).to.be.equal(1);
-        expect(transactions.getPageSize()).to.be.equal(1);
-        expect(transactions.getTotalEntries()).to.be.equal(1);
-        expect(transactions.getTotalPages()).to.be.equal(1);
+        expect(transactions.pageNumber).to.be.equal(1);
+        expect(transactions.pageSize).to.be.equal(1);
+        expect(transactions.totalEntries).to.be.equal(1);
+        expect(transactions.totalPages).to.be.equal(1);
     });
 });

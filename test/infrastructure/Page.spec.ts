@@ -32,10 +32,10 @@ describe('Page', () => {
             1,
             1,
         );
-        expect(page.getData().length).to.be.equal(1);
-        expect(page.getPageNumber()).to.be.equal(1);
-        expect(page.getPageSize()).to.be.equal(1);
-        expect(page.getTotalEntries()).to.be.equal(1);
+        expect(page.data.length).to.be.equal(1);
+        expect(page.pageNumber).to.be.equal(1);
+        expect(page.pageSize).to.be.equal(1);
+        expect(page.totalEntries).to.be.equal(1);
         expect(page.isLastPage).to.be.true;
 
         page = new Page<Transaction>(

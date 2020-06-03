@@ -57,9 +57,9 @@ export class PaginationStreamer<E, C extends SearchCriteria> {
             return observable.pipe(
                 flatMap((page) => {
                     if (page.isLastPage) {
-                        return from(page.getData());
+                        return from(page.data);
                     } else {
-                        return concat(from(page.getData()), this.searchInternal(criteria, pageNumber + 1));
+                        return concat(from(page.data), this.searchInternal(criteria, pageNumber + 1));
                     }
                 }),
             );
