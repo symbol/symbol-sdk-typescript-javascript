@@ -39,6 +39,7 @@ describe('BlockService', () => {
     function mockBlockInfo(isFake = false): BlockInfo {
         if (isFake) {
             return new BlockInfo(
+                'id',
                 'hash',
                 'generationHash',
                 UInt64.fromNumericString('0'),
@@ -64,6 +65,7 @@ describe('BlockService', () => {
             );
         }
         return new BlockInfo(
+            'id',
             'hash',
             'generationHash',
             UInt64.fromNumericString('0'),

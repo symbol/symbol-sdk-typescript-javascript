@@ -87,6 +87,7 @@ export class BlockHttp extends Http implements BlockRepository {
     private toBlockInfo(dto: BlockInfoDTO): BlockInfo {
         const networkType = dto.block.network.valueOf();
         return new BlockInfo(
+            dto.id ?? '',
             dto.meta.hash,
             dto.meta.generationHash,
             UInt64.fromNumericString(dto.meta.totalFee),

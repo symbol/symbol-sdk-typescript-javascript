@@ -116,6 +116,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      */
     private toMosaicInfo(mosaicInfo: MosaicInfoDTO, networkType: NetworkType): MosaicInfo {
         return new MosaicInfo(
+            mosaicInfo.id,
             new MosaicId(mosaicInfo.mosaic.id),
             UInt64.fromNumericString(mosaicInfo.mosaic.supply),
             UInt64.fromNumericString(mosaicInfo.mosaic.startHeight),

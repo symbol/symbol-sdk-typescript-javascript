@@ -23,6 +23,7 @@ import { UInt64 } from '../../../src/model/UInt64';
 describe('BlockInfo', () => {
     it('should createComplete an BlockInfo object', () => {
         const blockDTO = {
+            id: '12345',
             block: {
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
@@ -55,6 +56,7 @@ describe('BlockInfo', () => {
         };
 
         const blockInfo = new BlockInfo(
+            blockDTO.id,
             blockDTO.meta.hash,
             blockDTO.meta.generationHash,
             blockDTO.meta.totalFee,
@@ -80,6 +82,7 @@ describe('BlockInfo', () => {
             blockDTO.meta.numStatements,
         );
 
+        expect(blockInfo.recordId).to.be.equal(blockDTO.id);
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
         expect(blockInfo.generationHash).to.be.equal(blockDTO.meta.generationHash);
         deepEqual(blockInfo.totalFee, blockDTO.meta.totalFee);

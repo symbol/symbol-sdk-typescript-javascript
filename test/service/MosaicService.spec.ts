@@ -36,6 +36,7 @@ describe('MosaicService', () => {
 
     function buildMosaicInfo(mosaicId: MosaicId, publicAccount: PublicAccount): MosaicInfo {
         return new MosaicInfo(
+            '123',
             mosaicId,
             UInt64.fromUint(10),
             UInt64.fromUint(1),

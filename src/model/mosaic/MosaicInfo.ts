@@ -24,6 +24,7 @@ import { MosaicId } from './MosaicId';
  */
 export class MosaicInfo {
     /**
+     * @param recordId
      * @param id
      * @param supply
      * @param height
@@ -34,6 +35,10 @@ export class MosaicInfo {
      * @param duration
      */
     constructor(
+        /**
+         * The database record id.
+         */
+        public readonly recordId: string,
         /**
          * The mosaic id.
          */

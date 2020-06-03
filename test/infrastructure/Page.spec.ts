@@ -36,7 +36,7 @@ describe('Page', () => {
         expect(page.getPageNumber()).to.be.equal(1);
         expect(page.getPageSize()).to.be.equal(1);
         expect(page.getTotalEntries()).to.be.equal(1);
-        expect(page.isLast()).to.be.true;
+        expect(page.isLastPage).to.be.true;
 
         page = new Page<Transaction>(
             [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
@@ -45,6 +45,6 @@ describe('Page', () => {
             1,
             3,
         );
-        expect(page.isLast()).to.be.false;
+        expect(page.isLastPage).to.be.false;
     });
 });

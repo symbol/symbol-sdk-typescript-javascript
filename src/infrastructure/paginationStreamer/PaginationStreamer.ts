@@ -56,7 +56,7 @@ export class PaginationStreamer<E, C extends SearchCriteria> {
             const observable = this.searcher.search(criteria);
             return observable.pipe(
                 flatMap((page) => {
-                    if (page.isLast()) {
+                    if (page.isLastPage) {
                         return from(page.getData());
                     } else {
                         return concat(from(page.getData()), this.searchInternal(criteria, pageNumber + 1));

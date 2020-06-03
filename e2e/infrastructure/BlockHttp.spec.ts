@@ -25,7 +25,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { BlockSearchCriteria } from '../../src/infrastructure/searchCriteria/BlockSearchCriteria';
 import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
 import { deepEqual } from 'assert';
 import { take } from 'rxjs/operators';

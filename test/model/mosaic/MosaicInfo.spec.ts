@@ -25,11 +25,9 @@ import { UInt64 } from '../../../src/model/UInt64';
 
 describe('MosaicInfo', () => {
     const mosaicInfoDTO = {
-        meta: {
-            id: '59FDA0733F17CF0001772CBC',
-        },
+        id: '59FDA0733F17CF0001772CBC',
         mosaic: {
-            mosaicId: new MosaicId([3646934825, 3576016193]),
+            id: new MosaicId([3646934825, 3576016193]),
             supply: new UInt64([3403414400, 2095475]),
             height: new UInt64([1, 0]),
             owner: PublicAccount.createFromPublicKey(
@@ -45,7 +43,8 @@ describe('MosaicInfo', () => {
 
     it('should createComplete an MosaicInfo object', () => {
         const mosaicInfo = new MosaicInfo(
-            mosaicInfoDTO.mosaic.mosaicId,
+            mosaicInfoDTO.id,
+            mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
             mosaicInfoDTO.mosaic.height,
             mosaicInfoDTO.mosaic.owner,
@@ -55,7 +54,8 @@ describe('MosaicInfo', () => {
             UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
         );
 
-        deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.mosaicId);
+        deepEqual(mosaicInfo.recordId, mosaicInfoDTO.id);
+        deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.id);
         deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
         deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
         expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
@@ -68,7 +68,8 @@ describe('MosaicInfo', () => {
     it('should createComplete an MosaicInfo object without duration', () => {
         mosaicInfoDTO.mosaic.duration = '0';
         const mosaicInfo = new MosaicInfo(
-            mosaicInfoDTO.mosaic.mosaicId,
+            mosaicInfoDTO.id,
+            mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
             mosaicInfoDTO.mosaic.height,
             mosaicInfoDTO.mosaic.owner,
@@ -78,7 +79,8 @@ describe('MosaicInfo', () => {
             UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
         );
 
-        deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.mosaicId);
+        deepEqual(mosaicInfo.recordId, mosaicInfoDTO.id);
+        deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.id);
         deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
         deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
         expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
@@ -91,7 +93,8 @@ describe('MosaicInfo', () => {
     describe('isSupplyMutable', () => {
         it("should return true when it's mutable", () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.id,
+                mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -105,7 +108,8 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's immutable", () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.id,
+                mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -121,7 +125,8 @@ describe('MosaicInfo', () => {
     describe('isTransferable', () => {
         it("should return true when it's transferable", () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.id,
+                mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -135,7 +140,8 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's not transferable", () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.id,
+                mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -151,7 +157,8 @@ describe('MosaicInfo', () => {
     describe('isRestrictable', () => {
         it("should return true when it's restrictable", () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.id,
+                mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -165,7 +172,8 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's not restrictable", () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.id,
+                mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,

@@ -135,9 +135,15 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
         return undefined;
     }
     if (meta.aggregateHash || meta.aggregateId) {
-        return new AggregateTransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id, meta.aggregateHash, meta.aggregateId);
+        return new AggregateTransactionInfo(
+            UInt64.fromNumericString(meta.height),
+            meta.index,
+            id || meta.id,
+            meta.aggregateHash,
+            meta.aggregateId,
+        );
     }
-    return new TransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id, meta.hash, meta.merkleComponentHash);
+    return new TransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id || meta.id, meta.hash, meta.merkleComponentHash);
 };
 /**
  * @internal

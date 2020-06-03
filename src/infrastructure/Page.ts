@@ -20,31 +20,7 @@
  * @param <T> then model type.
  */
 export class Page<T> {
-    /**
-     * The page's entities.
-     */
-    private readonly data: T[];
-
-    /**
-     * The current page number. 1 means first page
-     */
-    private readonly pageNumber: number;
-
-    /**
-     * The page size.
-     */
-    private readonly pageSize: number;
-
-    /**
-     * The total entries.
-     */
-    private readonly totalEntries: number;
-
-    /**
-     * The total pages.
-     */
-    private readonly totalPages: number;
-
+    public isLastPage: boolean;
     /**
      * Constructor.
      *
@@ -54,12 +30,14 @@ export class Page<T> {
      * @param totalEntries the total entries.
      * @param totalPages the total pages for the given criteria.
      */
-    constructor(data: T[], pageNumber = 0, pageSize = 0, totalEntries = 0, totalPages = 0) {
-        this.data = data;
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
-        this.totalEntries = totalEntries;
-        this.totalPages = totalPages;
+    constructor(
+        public readonly data: T[],
+        public readonly pageNumber: number,
+        public readonly pageSize: number,
+        public readonly totalEntries: number,
+        public readonly totalPages: number,
+    ) {
+        this.isLastPage = this.pageNumber >= this.totalPages;
     }
 
     /**
@@ -95,12 +73,5 @@ export class Page<T> {
      */
     public getTotalPages(): number {
         return this.totalPages;
-    }
-
-    /**
-     * @return if this page is the last one.
-     */
-    public isLast(): boolean {
-        return this.getPageNumber() >= this.getTotalPages();
     }
 }

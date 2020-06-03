@@ -51,3 +51,8 @@ export * from './Page';
 export * from './searchCriteria/TransactionSearchCriteria';
 export * from './searchCriteria/SearchCriteria';
 export * from './RepositoryFactoryConfig';
+export * from './paginationStreamer/BlockPaginationStreamer';
+export * from './paginationStreamer/MosaicPaginationStreamer';
+export * from './paginationStreamer/PaginationStreamer';
+export * from './paginationStreamer/Searcher';
+export * from './paginationStreamer/TransactionPaginationStreamer';
