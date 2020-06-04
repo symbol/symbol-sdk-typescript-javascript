@@ -29,6 +29,7 @@ import { Deadline } from '../model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../model/transaction/NamespaceMetadataTransaction';
 import { UInt64 } from '../model/UInt64';
+import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
 
 /**
  * MetadataTransaction service
@@ -49,7 +50,7 @@ export class MetadataTransactionService {
      * @param key - Metadata scoped key
      * @param value - New metadata value
      * @param sourceAddress - sender (signer) address
-     * @param targetId - Target Id (MosaicId | NamespaceId)
+     * @param targetId - Target Id (UnresolvedMosaicId)
      * @param maxFee - Max fee
      * @return {AccountMetadataTransaction | MosaicMetadataTransaction | NamespaceMetadataTransaction}
      */
@@ -61,7 +62,7 @@ export class MetadataTransactionService {
         key: UInt64,
         value: string,
         sourceAddress: Address,
-        targetId?: MosaicId | NamespaceId,
+        targetId?: UnresolvedMosaicId,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): Observable<AccountMetadataTransaction | MosaicMetadataTransaction | NamespaceMetadataTransaction> {
         switch (metadataType) {

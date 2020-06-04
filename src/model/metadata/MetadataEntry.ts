@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { MetadataType } from './MetadataType';
 import { Address } from '../account/Address';
+import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * A mosaic describes an instance of a mosaic definition.
@@ -33,7 +33,7 @@ export class MetadataEntry {
      * @param {UInt64} scopedMetadataKey - The key scoped to source, target and type
      * @param {MetadatType} metadataType - The metadata type (Account | Mosaic | Namespace)
      * @param {string} value - The metadata value
-     * @param {MosaicId | NamespaceId | undefined} targetId - The target mosaic or namespace identifier
+     * @param {UnresolvedMosaicId | undefined} targetId - The target mosaic or namespace identifier
      */
     constructor(
         /**

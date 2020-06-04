@@ -30,13 +30,14 @@ import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 import { ResolutionType } from './ResolutionType';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
@@ -63,7 +64,7 @@ export class ResolutionStatement {
         /**
          * An unresolved address or unresolved mosaicId.
          */
-        public readonly unresolved: Address | MosaicId | NamespaceId,
+        public readonly unresolved: UnresolvedAddress | UnresolvedMosaicId,
         /**
          * The array of resolution entries.
          */
@@ -84,7 +85,7 @@ export class ResolutionStatement {
                       ReceiptVersion.RESOLUTION_STATEMENT,
                       type.valueOf(),
                       new UnresolvedAddressDto(
-                          UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType),
+                          UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as UnresolvedAddress, networkType),
                       ),
                       this.resolutionEntries.map(
                           (entry) =>
@@ -97,7 +98,7 @@ export class ResolutionStatement {
                 : new MosaicResolutionStatementBuilder(
                       ReceiptVersion.RESOLUTION_STATEMENT,
                       type.valueOf(),
-                      new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO()),
+                      new UnresolvedMosaicIdDto(UInt64.fromHex((this.unresolved as UnresolvedMosaicId).toHex()).toDTO()),
                       this.resolutionEntries.map(
                           (entry) =>
                               new MosaicResolutionEntryBuilder(

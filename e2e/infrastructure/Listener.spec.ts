@@ -19,7 +19,6 @@ import { filter } from 'rxjs/operators';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -35,6 +34,7 @@ import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTrans
 import { UInt64 } from '../../src/model/UInt64';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
+import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -97,7 +97,7 @@ describe('Listener', () => {
     const createHashLockTransactionAndAnnounce = (
         signedAggregatedTransaction: SignedTransaction,
         signer: Account,
-        mosaicId: MosaicId | NamespaceId,
+        mosaicId: UnresolvedMosaicId,
     ): void => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),

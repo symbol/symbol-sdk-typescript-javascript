@@ -29,7 +29,6 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
@@ -42,6 +41,7 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * Announce an mosaic metadata transaction to associate a key-value state to an account.
@@ -67,7 +67,7 @@ export class MosaicMetadataTransaction extends Transaction {
         deadline: Deadline,
         targetAddress: UnresolvedAddress,
         scopedMetadataKey: UInt64,
-        targetMosaicId: MosaicId | NamespaceId,
+        targetMosaicId: UnresolvedMosaicId,
         valueSizeDelta: number,
         value: string,
         networkType: NetworkType,
@@ -120,7 +120,7 @@ export class MosaicMetadataTransaction extends Transaction {
         /**
          * Target mosaic identifier.
          */
-        public readonly targetMosaicId: MosaicId | NamespaceId,
+        public readonly targetMosaicId: UnresolvedMosaicId,
         /**
          * Change in value size in bytes.
          */

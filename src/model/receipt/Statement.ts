@@ -21,6 +21,8 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { ResolutionStatement } from './ResolutionStatement';
 import { ResolutionType } from './ResolutionType';
 import { TransactionStatement } from './TransactionStatement';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class Statement {
     /**
@@ -53,7 +55,7 @@ export class Statement {
      * @returns {Address}
      */
     public resolveAddress(
-        unresolvedAddress: Address | NamespaceId,
+        unresolvedAddress: UnresolvedAddress,
         height: string,
         transactionIndex: number,
         aggregateTransactionIndex = 0,
@@ -78,7 +80,7 @@ export class Statement {
      * @returns {MosaicId}
      */
     public resolveMosaicId(
-        unresolvedMosaicId: MosaicId | NamespaceId,
+        unresolvedMosaicId: UnresolvedMosaicId,
         height: string,
         transactionIndex: number,
         aggregateTransactionIndex = 0,

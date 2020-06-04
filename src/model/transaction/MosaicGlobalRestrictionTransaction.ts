@@ -28,8 +28,6 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { MosaicRestrictionType } from '../restriction/MosaicRestrictionType';
@@ -41,6 +39,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class MosaicGlobalRestrictionTransaction extends Transaction {
     /**
@@ -73,14 +72,14 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        mosaicId: MosaicId | NamespaceId,
+        mosaicId: UnresolvedMosaicId,
         restrictionKey: UInt64,
         previousRestrictionValue: UInt64,
         previousRestrictionType: MosaicRestrictionType,
         newRestrictionValue: UInt64,
         newRestrictionType: MosaicRestrictionType,
         networkType: NetworkType,
-        referenceMosaicId: MosaicId | NamespaceId = UnresolvedMapping.toUnresolvedMosaic(UInt64.fromUint(0).toHex()),
+        referenceMosaicId: UnresolvedMosaicId = UnresolvedMapping.toUnresolvedMosaic(UInt64.fromUint(0).toHex()),
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
         signer?: PublicAccount,
@@ -126,11 +125,11 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         /**
          * The mosaic id.
          */
-        public readonly mosaicId: MosaicId | NamespaceId,
+        public readonly mosaicId: UnresolvedMosaicId,
         /**
          * The refrence mosaic id.
          */
-        public readonly referenceMosaicId: MosaicId | NamespaceId,
+        public readonly referenceMosaicId: UnresolvedMosaicId,
         /**
          * The restriction key.
          */

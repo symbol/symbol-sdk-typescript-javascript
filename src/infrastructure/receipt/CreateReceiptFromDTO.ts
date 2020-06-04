@@ -31,13 +31,15 @@ import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import { UInt64 } from '../../model/UInt64';
+import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../../model/mosaic/UnresolvedMosaicId';
 
 /**
  * @interal
  * @param unresolvedAddress unresolved address
  * @returns {Address | NamespaceId}
  */
-const extractUnresolvedAddress = (unresolvedAddress: any): Address | NamespaceId => {
+const extractUnresolvedAddress = (unresolvedAddress: any): UnresolvedAddress => {
     if (typeof unresolvedAddress === 'string') {
         return UnresolvedMapping.toUnresolvedAddress(unresolvedAddress);
     } else if (typeof unresolvedAddress === 'object') {
@@ -126,9 +128,9 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
  * @internal
  * @param receiptType receipt type
  * @param id Artifact id
- * @returns {MosaicId | NamespaceId}
+ * @returns {UnresolvedMosaicId}
  */
-const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | NamespaceId => {
+const extractArtifactId = (receiptType: ReceiptType, id: string): UnresolvedMosaicId => {
     switch (receiptType) {
         case ReceiptType.Mosaic_Expired:
             return new MosaicId(id);

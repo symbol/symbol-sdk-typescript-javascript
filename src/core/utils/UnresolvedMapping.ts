@@ -19,6 +19,8 @@ import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NetworkType } from '../../model/network/NetworkType';
 import { Convert } from '../format/Convert';
 import { RawAddress } from '../format/RawAddress';
+import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../../model/mosaic/UnresolvedMosaicId';
 
 /**
  * @internal
@@ -28,9 +30,9 @@ export class UnresolvedMapping {
      * @internal
      * Map unresolved mosaic string to MosaicId or NamespaceId
      * @param {string} mosaicId The unresolvedMosaic id in hex.
-     * @returns {MosaicId | NamespaceId}
+     * @returns {UnresolvedMosaicId}
      */
-    public static toUnresolvedMosaic(mosaicId: string): MosaicId | NamespaceId {
+    public static toUnresolvedMosaic(mosaicId: string): UnresolvedMosaicId {
         if (!Convert.isHexString(mosaicId)) {
             throw new Error('Input string is not in valid hexadecimal notation.');
         }
@@ -48,9 +50,9 @@ export class UnresolvedMapping {
     /**
      * Map unresolved address string to Address or NamespaceId
      * @param {string} address The unresolved address in hex
-     * @returns {Address | NamespaceId}
+     * @returns {UnresolvedAddress}
      */
-    public static toUnresolvedAddress(address: string): Address | NamespaceId {
+    public static toUnresolvedAddress(address: string): UnresolvedAddress {
         if (!Convert.isHexString(address)) {
             throw new Error('Input string is not in valid hexadecimal notation.');
         }
@@ -71,11 +73,11 @@ export class UnresolvedMapping {
     /**
      * Return unresolved address bytes of the unresolved address
      * @internal
-     * @param {Address | NamespaceId} unresolvedAddress The unresolved address
+     * @param {UnresolvedAddress} unresolvedAddress The unresolved address
      * @param {networkType} the network type serialized in the output.
      * @return {Uint8Array}
      */
-    public static toUnresolvedAddressBytes(unresolvedAddress: Address | NamespaceId, networkType: NetworkType): Uint8Array {
+    public static toUnresolvedAddressBytes(unresolvedAddress: UnresolvedAddress, networkType: NetworkType): Uint8Array {
         if (unresolvedAddress instanceof NamespaceId) {
             // received hexadecimal notation of namespaceId (alias)
             return RawAddress.aliasToRecipient(Convert.hexToUint8((unresolvedAddress as NamespaceId).toHex()), networkType);

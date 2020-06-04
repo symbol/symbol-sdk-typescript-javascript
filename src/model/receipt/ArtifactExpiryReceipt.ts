@@ -16,10 +16,10 @@
 
 import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
@@ -32,7 +32,7 @@ export class ArtifactExpiryReceipt extends Receipt {
      * @param type - The receipt type
      * @param size - the receipt size
      */
-    constructor(public readonly artifactId: MosaicId | NamespaceId, version: ReceiptVersion, type: ReceiptType, size?: number) {
+    constructor(public readonly artifactId: UnresolvedMosaicId, version: ReceiptVersion, type: ReceiptType, size?: number) {
         super(version, type, size);
     }
 

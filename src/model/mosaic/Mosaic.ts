@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
-import { MosaicId } from './MosaicId';
+import { UnresolvedMosaicId } from './UnresolvedMosaicId';
 
 /**
  * A mosaic describes an instance of a mosaic definition.
@@ -32,7 +31,7 @@ export class Mosaic {
         /**
          * The mosaic id
          */
-        public readonly id: MosaicId | NamespaceId,
+        public readonly id: UnresolvedMosaicId,
         /**
          * The mosaic amount. The quantity is always given in smallest units for the mosaic
          * i.e. if it has a divisibility of 3 the quantity is given in millis.

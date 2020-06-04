@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { Address } from '../account/Address';
-import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
@@ -28,6 +25,8 @@ import { PublicAccount } from '../account/PublicAccount';
 import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class AccountRestrictionTransaction {
     /**
@@ -45,8 +44,8 @@ export class AccountRestrictionTransaction {
     public static createAddressRestrictionModificationTransaction(
         deadline: Deadline,
         restrictionFlags: AddressRestrictionFlag,
-        restrictionAdditions: (Address | NamespaceId)[],
-        restrictionDeletions: (Address | NamespaceId)[],
+        restrictionAdditions: UnresolvedAddress[],
+        restrictionDeletions: UnresolvedAddress[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
@@ -79,8 +78,8 @@ export class AccountRestrictionTransaction {
     public static createMosaicRestrictionModificationTransaction(
         deadline: Deadline,
         restrictionFlags: MosaicRestrictionFlag,
-        restrictionAdditions: (MosaicId | NamespaceId)[],
-        restrictionDeletions: (MosaicId | NamespaceId)[],
+        restrictionAdditions: UnresolvedMosaicId[],
+        restrictionDeletions: UnresolvedMosaicId[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,

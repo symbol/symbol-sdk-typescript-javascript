@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Address } from './Address';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { MosaicId } from './MosaicId';
 
 /**
- * Custom type for unresolved address
+ * Custom type for unresolved mosaicId
  */
-export type UnresolvedAddress = Address | NamespaceId;
+export type UnresolvedMosaicId = MosaicId | NamespaceId;

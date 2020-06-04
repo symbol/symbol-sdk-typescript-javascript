@@ -57,6 +57,7 @@ export * from './mosaic/NetworkCurrencyPublic';
 export * from './mosaic/NetworkHarvestLocal';
 export * from './mosaic/MosaicNames';
 export * from './mosaic/ResolvedMosaic';
+export * from './mosaic/UnresolvedMosaicId';
 
 // Mosaic
 export * from './metadata/Metadata';
