@@ -41,8 +41,8 @@ export class Address {
     public static createFromRawAddress(rawAddress: string): Address {
         let networkType: NetworkType;
         const addressTrimAndUpperCase: string = rawAddress.trim().toUpperCase().replace(/-/g, '');
-        if (addressTrimAndUpperCase.length !== 40) {
-            throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 40 characters long');
+        if (addressTrimAndUpperCase.length !== 39) {
+            throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 39 characters long');
         }
         if (addressTrimAndUpperCase.charAt(0) === 'S') {
             networkType = NetworkType.MIJIN_TEST;

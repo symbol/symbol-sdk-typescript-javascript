@@ -17,7 +17,7 @@ import { expect } from 'chai';
 import { Convert as convert, RawAddress as address } from '../../../src/core/format';
 import { NetworkType } from '../../../src/model/model';
 
-const Address_Decoded_Size = 25;
+const Address_Decoded_Size = 24;
 
 describe('address', () => {
     describe('stringToAddress', () => {
@@ -30,8 +30,21 @@ describe('address', () => {
 
         it('can create address from valid encoded address', () => {
             // Arrange:
-            const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFG';
-            const expectedHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6';
+            const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDA';
+            const expectedHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38C';
+
+            // Act:
+            const decoded = address.stringToAddress(encoded);
+
+            // Assert:
+            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
+        });
+
+        it('can create address from valid encoded address', () => {
+            // Arrange:
+            const encoded = 'NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y';
+            const expectedHex = '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF';
 
             // Act:
             const decoded = address.stringToAddress(encoded);
@@ -51,17 +64,17 @@ describe('address', () => {
 
         it('cannot create address from invalid encoded string', () => {
             // Assert:
-            assertCannotCreateAddress('NC5(5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LAS', 'illegal base32 character (');
-            assertCannotCreateAddress('NC5J1DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LAS', 'illegal base32 character 1');
-            assertCannotCreateAddress('NC5J5?I2URIC4H3T3IMXQS25PWQWZIPEV6EV7LAS', 'illegal base32 character ?');
+            assertCannotCreateAddress('NC5(5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LA', 'illegal base32 character (');
+            assertCannotCreateAddress('NC5J1DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LA', 'illegal base32 character 1');
+            assertCannotCreateAddress('NC5J5?I2URIC4H3T3IMXQS25PWQWZIPEV6EV7LA', 'illegal base32 character ?');
         });
     });
 
     describe('addressToString', () => {
         it('can create encoded address from address', () => {
             // Arrange:
-            const decodedHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6';
-            const expected = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFG';
+            const decodedHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38C';
+            const expected = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDA';
 
             // Act:
             const encoded = address.addressToString(convert.hexToUint8(decodedHex));
@@ -81,8 +94,8 @@ describe('address', () => {
     describe('publicKeyToAddress', () => {
         it('can create address from public key for well known network', () => {
             // Arrange:
-            const expectedHex = '6023BB7C3C089D996585466380EDBDC19D49591848B3727714';
-            const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
+            const expectedHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
             const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN);
@@ -95,8 +108,8 @@ describe('address', () => {
 
         it('can create address from public key for custom network', () => {
             // Arrange:
-            const expectedHex = '9023BB7C3C089D996585466380EDBDC19D495918486F4F86A7';
-            const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
+            const expectedHex = '9026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B2';
+            const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
             const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
@@ -109,7 +122,7 @@ describe('address', () => {
 
         it('address calculation is deterministic', () => {
             // Arrange:
-            const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
+            const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
             const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
@@ -122,8 +135,8 @@ describe('address', () => {
 
         it('different public keys result in different addresses', () => {
             // Arrange:
-            const publicKey1 = convert.hexToUint8('1464953393CE96A08ABA6184601FD08864E910696B060FF7064474726E666CA8');
-            const publicKey2 = convert.hexToUint8('b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf');
+            const publicKey1 = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
+            const publicKey2 = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
             const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.MIJIN_TEST);
@@ -137,7 +150,7 @@ describe('address', () => {
 
         it('different networks result in different addresses', () => {
             // Arrange:
-            const publicKey = convert.hexToUint8('b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf');
+            const publicKey = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
             const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
@@ -153,7 +166,7 @@ describe('address', () => {
     describe('isValidAddress', () => {
         it('returns true for valid address', () => {
             // Arrange:
-            const validHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6';
+            const validHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
@@ -162,7 +175,7 @@ describe('address', () => {
 
         it('returns false for address with invalid checksum', () => {
             // Arrange:
-            const validHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6';
+            const validHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
             const decoded = convert.hexToUint8(validHex);
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
@@ -172,7 +185,7 @@ describe('address', () => {
 
         it('returns false for address with invalid hash', () => {
             // Arrange:
-            const validHex = '6823BB7C3C089D996585466380EDBDC19D4959184893E38CA6';
+            const validHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
             const decoded = convert.hexToUint8(validHex);
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
@@ -204,11 +217,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ3365',
-                'NDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YCZOQR4',
-                'NCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRH6SYIUT',
-                'NDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFDDCHAF',
-                'NDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QAZ4BMVY',
+                'NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y',
+                'NDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YCZOQQ',
+                'NCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRH6SYIQ',
+                'NDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFDDCHA',
+                'NDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QAZ4BMQ',
             ];
 
             // Sanity:
@@ -244,11 +257,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5UW',
-                'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KHD',
-                'TCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRE3VIBRU',
-                'TDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEPHRSM7',
-                'TDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCY5ZUBR',
+                'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q',
+                'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA',
+                'TCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRE3VIBQ',
+                'TDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEPHRSI',
+                'TDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCY5ZUA',
             ];
 
             // Sanity:
@@ -284,11 +297,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'MATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34YACREP',
-                'MDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22B27FN3',
-                'MCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFDHL7JO',
-                'MDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFN3NK2Z',
-                'MDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCLCVED4',
+                'MATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34YACRA',
+                'MDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22B27FI',
+                'MCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFDHL7I',
+                'MDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFN3NKY',
+                'MDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCLCVEA',
             ];
 
             // Sanity:
@@ -324,11 +337,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMUQ',
-                'SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYY4U',
-                'SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXSH',
-                'SDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWH6N46CD',
-                'SDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDVZG2PO',
+                'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ',
+                'SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY',
+                'SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXQ',
+                'SDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWH6N46A',
+                'SDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDVZG2I',
             ];
 
             // Sanity:

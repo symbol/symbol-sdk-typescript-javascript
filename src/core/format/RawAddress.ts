@@ -25,10 +25,10 @@ export class RawAddress {
     static readonly constants = {
         sizes: {
             ripemd160: 20,
-            addressDecoded: 25,
-            addressEncoded: 40,
+            addressDecoded: 24,
+            addressEncoded: 39,
             key: 32,
-            checksum: 4,
+            checksum: 3,
         },
     };
     /**
@@ -40,8 +40,7 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressEncoded !== encoded.length) {
             throw Error(`${encoded} does not represent a valid encoded address`);
         }
-
-        return Base32.Base32Decode(encoded);
+        return Base32.Base32Decode(`${encoded}A`).subarray(0, RawAddress.constants.sizes.addressDecoded);
     };
 
     /**
@@ -68,7 +67,9 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             throw Error(`${Convert.uint8ToHex(decoded)} does not represent a valid decoded address`);
         }
-        return Base32.Base32Encode(decoded);
+        const padded = new Uint8Array(RawAddress.constants.sizes.addressDecoded + 1);
+        padded.set(decoded);
+        return Base32.Base32Encode(padded).slice(0, -1);
     };
 
     /**
