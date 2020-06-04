@@ -15,13 +15,13 @@
  */
 
 import { expect } from 'chai';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { MosaicAmountView } from '../../../src/service/MosaicAmountView';
+import { Address } from '../../../src/model/account/Address';
 
 describe('MosaicAmountView', () => {
     let mosaicInfo: MosaicInfo;
@@ -32,7 +32,7 @@ describe('MosaicAmountView', () => {
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply
             new UInt64([1, 0]), // height
-            PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+            Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
             1, // revision
             MosaicFlags.create(true, true, true),
             3,
@@ -64,7 +64,7 @@ describe('MosaicAmountView', () => {
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply
             new UInt64([1, 0]), // height
-            PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+            Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
             1, // revision
             MosaicFlags.create(true, true, true),
             0,

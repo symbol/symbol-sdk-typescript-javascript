@@ -34,7 +34,7 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { AddressRestrictionFlag } from '../../src/model/model';
+import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
 
 describe('RestrictionHttp', () => {
     const helper = new IntegrationTestHelper();

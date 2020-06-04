@@ -76,7 +76,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '010000000000000001000000000000000900000000000000080' + '000000000000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451',
+            '010000000000000001000000000000000900000000000000080000000000000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA4',
         );
     });
 
@@ -100,7 +100,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            'C51FB4C93FCA509501000000000000000900000000000000080000000000' + '000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA451',
+            'C51FB4C93FCA509501000000000000000900000000000000080000000000000090D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA4',
         );
     });
 
@@ -125,7 +125,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01000000000000000100000000000000090000000000000008000000000' + '0000091C51FB4C93FCA509500000000000000000000000000000000',
+            '010000000000000001000000000000000900000000000000080000000000000091C51FB4C93FCA5095000000000000000000000000000000',
         );
     });
 
@@ -160,7 +160,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
             UInt64.fromUint(9),
         ).setMaxFee(2);
-        expect(transaction.maxFee.compact()).to.be.equal(370);
+        expect(transaction.maxFee.compact()).to.be.equal(368);
 
         const signedTransaction = transaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;

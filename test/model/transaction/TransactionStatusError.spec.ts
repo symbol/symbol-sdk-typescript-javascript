@@ -24,7 +24,7 @@ import { UInt64 } from '../../../src/model/UInt64';
 describe('TransactionStatusError', () => {
     it('should createComplete an TransactionStatusError object', () => {
         const statusInfoErrorDTO = {
-            address: Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            address: Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             deadline: '1010',
             hash: 'transaction-hash',
             code: 'error-message',

@@ -125,11 +125,11 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return {
                 minApprovalDelta: multisigTx.minApprovalDelta,
                 minRemovalDelta: multisigTx.minRemovalDelta,
-                publicKeyAdditions: multisigTx.publicKeyAdditions.map((addition) => {
-                    return addition.publicKey;
+                addressAdditions: multisigTx.addressAdditions.map((addition) => {
+                    return addition.toDTO();
                 }),
-                publicKeyDeletions: multisigTx.publicKeyDeletions.map((deletion) => {
-                    return deletion.publicKey;
+                addressDeletions: multisigTx.addressDeletions.map((deletion) => {
+                    return deletion.toDTO();
                 }),
             };
         case TransactionType.MOSAIC_ALIAS:
@@ -227,7 +227,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.ACCOUNT_METADATA:
             const accountMetadataTx = transaction as AccountMetadataTransaction;
             return {
-                targetPublicKey: accountMetadataTx.targetPublicKey,
+                targetAddress: accountMetadataTx.targetAddress,
                 scopedMetadataKey: accountMetadataTx.scopedMetadataKey.toHex(),
                 valueSizeDelta: accountMetadataTx.valueSizeDelta,
                 valueSize: accountMetadataTx.value.length,
@@ -236,7 +236,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.MOSAIC_METADATA:
             const mosaicMetadataTx = transaction as MosaicMetadataTransaction;
             return {
-                targetPublicKey: mosaicMetadataTx.targetPublicKey,
+                targetAddress: mosaicMetadataTx.targetAddress,
                 scopedMetadataKey: mosaicMetadataTx.scopedMetadataKey.toHex(),
                 valueSizeDelta: mosaicMetadataTx.valueSizeDelta,
                 targetMosaicId: mosaicMetadataTx.targetMosaicId.id.toHex(),
@@ -246,7 +246,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.NAMESPACE_METADATA:
             const namespaceMetaTx = transaction as NamespaceMetadataTransaction;
             return {
-                targetPublicKey: namespaceMetaTx.targetPublicKey,
+                targetAddress: namespaceMetaTx.targetAddress,
                 scopedMetadataKey: namespaceMetaTx.scopedMetadataKey.toHex(),
                 valueSizeDelta: namespaceMetaTx.valueSizeDelta,
                 targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),

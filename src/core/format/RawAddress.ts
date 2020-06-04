@@ -50,11 +50,11 @@ export class RawAddress {
      * @returns {Uint8Array} The padded notation of the alias
      */
     public static aliasToRecipient = (namespaceId: Uint8Array, networkType: NetworkType): Uint8Array => {
-        // 0x91 | namespaceId on 8 bytes | 16 bytes 0-pad = 25 bytes
-        const padded = new Uint8Array(1 + 8 + 16);
+        // 0x91 | namespaceId on 8 bytes | 15 bytes 0-pad = 24 bytes
+        const padded = new Uint8Array(1 + 8 + 15);
         padded.set([networkType.valueOf() | 0x01], 0);
         padded.set(namespaceId.reverse(), 1);
-        padded.set(Convert.hexToUint8('00'.repeat(16)), 9);
+        padded.set(Convert.hexToUint8('00'.repeat(15)), 9);
         return padded;
     };
 

@@ -22,6 +22,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -34,6 +35,9 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 /**
  * Announce an account metadata transaction to associate a key-value state to an account.
@@ -42,7 +46,7 @@ export class AccountMetadataTransaction extends Transaction {
     /**
      * Create a account meta data transaction object
      * @param deadline - transaction deadline
-     * @param targetPublicKey - Public key of the target account.
+     * @param targetAddress - target account address.
      * @param scopedMetadataKey - Metadata key scoped to source, target and type.
      * @param valueSizeDelta - Change in value size in bytes.
      * @param value - String value with UTF-8 encoding
@@ -56,7 +60,7 @@ export class AccountMetadataTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        targetPublicKey: string,
+        targetAddress: UnresolvedAddress,
         scopedMetadataKey: UInt64,
         valueSizeDelta: number,
         value: string,
@@ -70,7 +74,7 @@ export class AccountMetadataTransaction extends Transaction {
             TransactionVersion.ACCOUNT_METADATA,
             deadline,
             maxFee,
-            targetPublicKey,
+            targetAddress,
             scopedMetadataKey,
             valueSizeDelta,
             value,
@@ -84,7 +88,7 @@ export class AccountMetadataTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param targetPublicKey
+     * @param targetAddress
      * @param scopedMetadataKey
      * @param valueSizeDelta
      * @param value
@@ -98,9 +102,9 @@ export class AccountMetadataTransaction extends Transaction {
         deadline: Deadline,
         maxFee: UInt64,
         /**
-         * Public key of the target account.
+         * target account address.
          */
-        public readonly targetPublicKey: string,
+        public readonly targetAddress: UnresolvedAddress,
         /**
          * Metadata key scoped to source, target and type.
          */
@@ -136,7 +140,7 @@ export class AccountMetadataTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = AccountMetadataTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getTargetPublicKey().key),
+            UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             new UInt64(builder.getScopedMetadataKey()),
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
@@ -158,12 +162,12 @@ export class AccountMetadataTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const targetPublicKey = 32;
+        const targetAddress = 24;
         const byteScopedMetadataKey = 8;
         const byteValueSizeDelta = 2;
         const valueSize = 2;
 
-        return byteSize + targetPublicKey + byteScopedMetadataKey + byteValueSizeDelta + valueSize + this.value.length;
+        return byteSize + targetAddress + byteScopedMetadataKey + byteValueSizeDelta + valueSize + this.value.length;
     }
 
     /**
@@ -182,7 +186,7 @@ export class AccountMetadataTransaction extends Transaction {
             TransactionType.ACCOUNT_METADATA.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
+            new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
             this.scopedMetadataKey.toDTO(),
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
@@ -200,7 +204,7 @@ export class AccountMetadataTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_METADATA.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
+            new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
             this.scopedMetadataKey.toDTO(),
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
@@ -219,9 +223,14 @@ export class AccountMetadataTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
+     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address): boolean {
-        return super.isSigned(address) || Address.createFromPublicKey(this.targetPublicKey, this.networkType).equals(address);
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            this.targetAddress.equals(address) ||
+            alias.find((name) => this.targetAddress.equals(name)) !== undefined
+        );
     }
 }

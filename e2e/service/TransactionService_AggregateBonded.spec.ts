@@ -117,7 +117,7 @@ describe('TransactionService', () => {
                 Deadline.create(),
                 2,
                 1,
-                [cosignAccount1.publicAccount, cosignAccount2.publicAccount, cosignAccount3.publicAccount],
+                [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
                 [],
                 networkType,
                 helper.maxFee,
@@ -223,7 +223,7 @@ describe('TransactionService', () => {
                 -1,
                 0,
                 [],
-                [cosignAccount1.publicAccount],
+                [cosignAccount1.address],
                 networkType,
                 helper.maxFee,
             );
@@ -232,7 +232,7 @@ describe('TransactionService', () => {
                 0,
                 0,
                 [],
-                [cosignAccount2.publicAccount],
+                [cosignAccount2.address],
                 networkType,
                 helper.maxFee,
             );
@@ -242,7 +242,7 @@ describe('TransactionService', () => {
                 -1,
                 -1,
                 [],
-                [cosignAccount3.publicAccount],
+                [cosignAccount3.address],
                 networkType,
                 helper.maxFee,
             );

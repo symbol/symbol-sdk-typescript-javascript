@@ -168,7 +168,7 @@ describe('Unresolved Mapping', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
-                account.publicKey,
+                account.address,
                 UInt64.fromUint(5),
                 namespaceIdMosaic,
                 10,

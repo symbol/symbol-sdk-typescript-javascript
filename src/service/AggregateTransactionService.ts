@@ -54,9 +54,9 @@ export class AggregateTransactionService {
         /**
          * Include both initiator & cosigners
          */
-        const signers = aggregateTransaction.cosignatures.map((cosigner) => cosigner.signer.publicKey);
+        const signers = aggregateTransaction.cosignatures.map((cosigner) => cosigner.signer.address);
         if (signedTransaction.signerPublicKey) {
-            signers.push(signedTransaction.signerPublicKey);
+            signers.push(Address.createFromPublicKey(signedTransaction.signerPublicKey, aggregateTransaction.networkType));
         }
         return observableFrom(aggregateTransaction.innerTransactions)
             .pipe(
@@ -68,9 +68,9 @@ export class AggregateTransactionService {
                         mergeMap((_) =>
                             _.minApproval !== 0 && _.minRemoval !== 0
                                 ? this.multisigRepository
-                                      .getMultisigAccountGraphInfo(_.account.address)
+                                      .getMultisigAccountGraphInfo(_.accountAddress)
                                       .pipe(map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)))
-                                : observableOf(signers.find((s) => s === _.account.publicKey) !== undefined),
+                                : observableOf(signers.find((s) => s.equals(_.accountAddress)) !== undefined),
                         ),
                     ),
                 ),
@@ -92,9 +92,9 @@ export class AggregateTransactionService {
         return this.multisigRepository.getMultisigAccountGraphInfo(address).pipe(
             map((graph) => {
                 const cosignatures = ([] as MultisigAccountInfo[])
-                    .concat(...Array.from(graph.multisigAccounts.values()))
-                    .map((info) => info.cosignatories.map((cosig) => cosig.publicKey));
-                return new Set(([] as string[]).concat(...cosignatures)).size;
+                    .concat(...Array.from(graph.multisigEntries.values()))
+                    .map((info) => info.cosignatoryAddresses.map((cosig) => cosig));
+                return new Set(([] as Address[]).concat(...cosignatures)).size;
             }),
         );
     }
@@ -123,14 +123,14 @@ export class AggregateTransactionService {
      */
     private validateCosignatories(
         graphInfo: MultisigAccountGraphInfo,
-        cosignatories: string[],
+        cosignatories: Address[],
         innerTransaction: InnerTransaction,
     ): boolean {
         /**
          *  Validate cosignatories from bottom level to top
          */
-        const sortedKeys = Array.from(graphInfo.multisigAccounts.keys()).sort((a, b) => b - a);
-        const cosignatoriesReceived = cosignatories;
+        const sortedKeys = Array.from(graphInfo.multisigEntries.keys()).sort((a, b) => b - a);
+        const cosignatoriesReceived = cosignatories.map((cosig) => cosig.plain());
         let validationResult = false;
 
         let isMultisigRemoval = false;
@@ -140,20 +140,20 @@ export class AggregateTransactionService {
          * use minRemoval instead of minApproval for cosignatories validation.
          */
         if (innerTransaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
-            if ((innerTransaction as MultisigAccountModificationTransaction).publicKeyDeletions.length) {
+            if ((innerTransaction as MultisigAccountModificationTransaction).addressDeletions.length) {
                 isMultisigRemoval = true;
             }
         }
 
         sortedKeys.forEach((key) => {
-            const multisigInfo = graphInfo.multisigAccounts.get(key);
+            const multisigInfo = graphInfo.multisigEntries.get(key);
             if (multisigInfo && !validationResult) {
                 multisigInfo.forEach((multisig) => {
                     if (multisig.minApproval >= 1 && multisig.minRemoval) {
                         // To make sure it is multisig account
                         const matchedCosignatories = this.compareArrays(
                             cosignatoriesReceived,
-                            multisig.cosignatories.map((cosig) => cosig.publicKey),
+                            multisig.cosignatoryAddresses.map((cosig) => cosig.plain()),
                         );
 
                         /**
@@ -165,8 +165,8 @@ export class AggregateTransactionService {
                             (matchedCosignatories.length >= multisig.minApproval && !isMultisigRemoval) ||
                             (matchedCosignatories.length >= multisig.minRemoval && isMultisigRemoval)
                         ) {
-                            if (cosignatoriesReceived.indexOf(multisig.account.publicKey) === -1) {
-                                cosignatoriesReceived.push(multisig.account.publicKey);
+                            if (cosignatoriesReceived.indexOf(multisig.accountAddress.plain()) === -1) {
+                                cosignatoriesReceived.push(multisig.accountAddress.plain());
                             }
                             validationResult = true;
                         } else {

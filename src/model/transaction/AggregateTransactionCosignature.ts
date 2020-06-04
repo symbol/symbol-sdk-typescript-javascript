@@ -15,15 +15,21 @@
  */
 
 import { PublicAccount } from '../account/PublicAccount';
+import { UInt64 } from '../UInt64';
 /**
  * Model representing cosignature of an aggregate transaction.
  */
 export class AggregateTransactionCosignature {
     /**
+     * @param version
      * @param signature
      * @param signer
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: UInt64,
         /**
          * The signature of aggregate transaction done by the cosigner.
          */
@@ -39,6 +45,7 @@ export class AggregateTransactionCosignature {
      */
     public toDTO(): any {
         return {
+            version: this.version.toDTO(),
             signature: this.signature,
             signerPublicKey: this.signer.toDTO(),
         };

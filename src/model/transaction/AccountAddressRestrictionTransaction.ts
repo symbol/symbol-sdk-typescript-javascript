@@ -40,6 +40,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 export class AccountAddressRestrictionTransaction extends Transaction {
     /**
@@ -57,8 +58,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
     public static create(
         deadline: Deadline,
         restrictionFlags: AddressRestrictionFlag,
-        restrictionAdditions: (Address | NamespaceId)[],
-        restrictionDeletions: (Address | NamespaceId)[],
+        restrictionAdditions: UnresolvedAddress[],
+        restrictionDeletions: UnresolvedAddress[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
@@ -150,8 +151,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const byteAdditionCount = 1;
         const byteDeletionCount = 1;
         const byteAccountRestrictionTransactionBody_Reserved1 = 4;
-        const byteRestrictionAdditions = 25 * this.restrictionAdditions.length;
-        const byteRestrictionDeletions = 25 * this.restrictionDeletions.length;
+        const byteRestrictionAdditions = 24 * this.restrictionAdditions.length;
+        const byteRestrictionDeletions = 24 * this.restrictionDeletions.length;
 
         return (
             byteSize +
@@ -182,10 +183,10 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
-                return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(addition, this.networkType));
+                return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),
             this.restrictionDeletions.map((deletion) => {
-                return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(deletion, this.networkType));
+                return new UnresolvedAddressDto(deletion.encodeUnresolvedAddress(this.networkType));
             }),
         );
         return transactionBuilder.serialize();
@@ -203,10 +204,10 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
             this.restrictionFlags.valueOf(),
             this.restrictionAdditions.map((addition) => {
-                return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(addition, this.networkType));
+                return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),
             this.restrictionDeletions.map((deletion) => {
-                return new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(deletion, this.networkType));
+                return new UnresolvedAddressDto(deletion.encodeUnresolvedAddress(this.networkType));
             }),
         );
     }
@@ -239,10 +240,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
     public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
             super.isSigned(address) ||
-            this.restrictionAdditions.find((_) => _.equals(address)) !== undefined ||
-            this.restrictionDeletions.find((_) => _.equals(address)) !== undefined ||
-            this.restrictionAdditions.find((_: NamespaceId) => alias.find((name) => name.equals(_) !== undefined)) !== undefined ||
-            this.restrictionDeletions.find((_: NamespaceId) => alias.find((name) => name.equals(_) !== undefined)) !== undefined
+            this.restrictionAdditions.find((_) => _.equals(address) || alias.find((a) => _.equals(a)) !== undefined) !== undefined ||
+            this.restrictionDeletions.find((_) => _.equals(address) || alias.find((a) => _.equals(a)) !== undefined) !== undefined
         );
     }
 }

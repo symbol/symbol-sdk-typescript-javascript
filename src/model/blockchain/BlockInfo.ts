@@ -17,6 +17,7 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
+import { Address } from '../account/Address';
 
 /**
  * The block info structure describes basic information of a block.
@@ -45,7 +46,7 @@ export class BlockInfo {
      * @param blockTransactionsHash
      * @param blockReceiptsHash
      * @param blockStateHash
-     * @param beneficiaryPublicKey
+     * @param beneficiaryAddress
      * @param numStatements
      */
     constructor(
@@ -141,9 +142,9 @@ export class BlockInfo {
          */
         public readonly proofVerificationHash: string,
         /**
-         * The beneficiary public key.
+         * The beneficiary address.
          */
-        public readonly beneficiaryPublicKey?: PublicAccount | undefined,
+        public readonly beneficiaryAddress?: Address | undefined,
         /**
          * The number of statements included.
          */

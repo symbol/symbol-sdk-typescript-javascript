@@ -34,12 +34,13 @@ import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { UInt64 } from '../../src/model/UInt64';
+import { Address } from '../../src/model/account/Address';
+import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('BlockHttp', () => {
     const blockDTO = new BlockDTO();
     blockDTO.version = 1;
     blockDTO.network = NetworkTypeEnum.NUMBER_152;
-    blockDTO.beneficiaryPublicKey = 'a';
     blockDTO.difficulty = '2';
     blockDTO.feeMultiplier = 3;
     blockDTO.height = '4';
@@ -47,7 +48,10 @@ describe('BlockHttp', () => {
     blockDTO.type = 6;
     blockDTO.signerPublicKey = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
     blockDTO.timestamp = '7';
-    blockDTO.beneficiaryPublicKey = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8';
+    blockDTO.beneficiaryAddress = Address.createFromPublicKey(
+        '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
+        NetworkType.MIJIN_TEST,
+    ).encoded();
 
     const blockMetaDTO = new BlockMetaDTO();
     blockMetaDTO.generationHash = 'abc';
@@ -81,7 +85,7 @@ describe('BlockHttp', () => {
         expect(blockInfo.feeMultiplier).to.be.equals(blockInfoDto.block.feeMultiplier);
         expect(blockInfo.networkType).to.be.equals(blockInfoDto.block.network);
         expect(blockInfo.version).to.be.equals(blockInfoDto.block.version);
-        expect(blockInfo.beneficiaryPublicKey!.publicKey).to.be.equals(blockInfoDto.block.beneficiaryPublicKey);
+        expect(blockInfo.beneficiaryAddress?.encoded()).to.be.equals(blockInfoDto.block.beneficiaryAddress);
         expect(blockInfo.difficulty.toString()).to.be.equals(blockInfoDto.block.difficulty);
         expect(blockInfo.feeMultiplier).to.be.equals(blockInfoDto.block.feeMultiplier);
         expect(blockInfo.signer!.publicKey).to.be.equals(blockInfoDto.block.signerPublicKey);

@@ -131,7 +131,7 @@ describe('TransactionService', () => {
         // Use new mosaicAlias in metadata
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(5),
             mosaicAlias,
             10,

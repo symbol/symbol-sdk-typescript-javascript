@@ -134,7 +134,7 @@ describe('AccountHttp', () => {
                 Deadline.create(),
                 2,
                 1,
-                [cosignAccount1.publicAccount, cosignAccount2.publicAccount, cosignAccount3.publicAccount],
+                [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
                 [],
                 networkType,
                 helper.maxFee,
@@ -182,13 +182,13 @@ describe('AccountHttp', () => {
             const multisigAccountGraphInfo = await multisigRepository
                 .getMultisigAccountGraphInfo(multisigAccount.publicAccount.address)
                 .toPromise();
-            expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigAccount.publicKey);
+            expect(multisigAccountGraphInfo.multisigEntries.get(0)![0].accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
         });
     });
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', async () => {
             const multisigAccountInfo = await multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).toPromise();
-            expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
+            expect(multisigAccountInfo.accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
         });
     });
 
@@ -245,7 +245,7 @@ describe('AccountHttp', () => {
                 -1,
                 0,
                 [],
-                [cosignAccount1.publicAccount],
+                [cosignAccount1.address],
                 networkType,
                 helper.maxFee,
             );
@@ -254,7 +254,7 @@ describe('AccountHttp', () => {
                 0,
                 0,
                 [],
-                [cosignAccount2.publicAccount],
+                [cosignAccount2.address],
                 networkType,
                 helper.maxFee,
             );
@@ -264,7 +264,7 @@ describe('AccountHttp', () => {
                 -1,
                 -1,
                 [],
-                [cosignAccount3.publicAccount],
+                [cosignAccount3.address],
                 networkType,
                 helper.maxFee,
             );

@@ -96,7 +96,7 @@ describe('MetadataTransactionService', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
-                targetAccount.publicKey,
+                targetAccount.address,
                 key,
                 mosaicId,
                 newValue.length,
@@ -122,7 +122,7 @@ describe('MetadataTransactionService', () => {
         it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
-                targetAccount.publicKey,
+                targetAccount.address,
                 key,
                 namespaceId,
                 newValue.length,
@@ -156,17 +156,17 @@ describe('MetadataTransactionService', () => {
                     deadline,
                     networkType,
                     MetadataType.Account,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     key,
                     newValue,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                 )
                 .toPromise();
 
             expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
             expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
             expect(transaction.value).to.be.equal(newValue);
-            expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+            expect(transaction.targetAddress).to.be.deep.equal(targetAccount.address);
         });
 
         it('should create MosaicMetadataTransaction', async () => {
@@ -177,10 +177,10 @@ describe('MetadataTransactionService', () => {
                     deadline,
                     networkType,
                     MetadataType.Mosaic,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     key,
                     updateValue,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     mosaicId,
                 )
                 .toPromise()) as MosaicMetadataTransaction;
@@ -190,7 +190,7 @@ describe('MetadataTransactionService', () => {
             expect(transaction.value).to.be.equals(
                 Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))),
             );
-            expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+            expect(transaction.targetAddress).to.be.deep.equal(targetAccount.address);
             expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
         });
 
@@ -203,10 +203,10 @@ describe('MetadataTransactionService', () => {
                     deadline,
                     networkType,
                     MetadataType.Namespace,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     key,
                     updateValue,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     namespaceId,
                 )
                 .toPromise()) as NamespaceMetadataTransaction;
@@ -217,7 +217,7 @@ describe('MetadataTransactionService', () => {
             expect(transaction.value).to.be.equals(
                 Convert.decodeHex(Convert.xor(Convert.utf8ToUint8(newValue), Convert.utf8ToUint8(updateValue))),
             );
-            expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
+            expect(transaction.targetAddress).to.be.deep.equal(targetAccount.address);
             expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
         });
     });
@@ -231,10 +231,10 @@ describe('MetadataTransactionService', () => {
                     deadline,
                     networkType,
                     MetadataType.Mosaic,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     key,
                     newValue + 'delta',
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     mosaicId,
                     helper.maxFee,
                 )
@@ -260,10 +260,10 @@ describe('MetadataTransactionService', () => {
                     deadline,
                     networkType,
                     MetadataType.Mosaic,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     key,
                     newValue + 'delta' + 'extra delta',
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     mosaicId,
                     helper.maxFee,
                 )
@@ -291,10 +291,10 @@ describe('MetadataTransactionService', () => {
                     deadline,
                     networkType,
                     MetadataType.Mosaic,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     key,
                     newValue,
-                    targetAccount.publicAccount,
+                    targetAccount.address,
                     mosaicId,
                 )
                 .toPromise()

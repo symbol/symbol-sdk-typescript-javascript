@@ -100,7 +100,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createMultisigRepository(): MultisigRepository {
-        return new MultisigHttp(this.url, this.networkType);
+        return new MultisigHttp(this.url);
     }
 
     createNamespaceRepository(): NamespaceRepository {

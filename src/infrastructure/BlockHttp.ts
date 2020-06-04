@@ -25,6 +25,7 @@ import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 import { Page } from './Page';
+import { Address } from '../model/account/Address';
 
 /**
  * Blockchain http repository.
@@ -66,7 +67,7 @@ export class BlockHttp extends Http implements BlockRepository {
         return this.call(
             this.blockRoutesApi.searchBlocks(
                 criteria.signerPublicKey,
-                criteria.beneficiaryPublicKey,
+                criteria.beneficiaryAddress,
                 criteria.pageSize,
                 criteria.pageNumber,
                 criteria.offset,
@@ -109,7 +110,7 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.block.proofGamma,
             dto.block.proofScalar,
             dto.block.proofVerificationHash,
-            dto.block.beneficiaryPublicKey ? PublicAccount.createFromPublicKey(dto.block.beneficiaryPublicKey, networkType) : undefined,
+            dto.block.beneficiaryAddress ? Address.createFromEncoded(dto.block.beneficiaryAddress) : undefined,
             dto.meta.numStatements,
         );
     }

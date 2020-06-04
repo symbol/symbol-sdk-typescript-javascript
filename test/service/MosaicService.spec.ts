@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { MosaicFlags, AccountInfo, AccountType } from '../../src/model/model';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
@@ -29,6 +28,9 @@ import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { of as observableOf } from 'rxjs';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { TestingAccount } from '../conf/conf.spec';
+import { AccountType } from '../../src/model/account/AccountType';
+import { AccountInfo } from '../../src/model/account/AccountInfo';
+import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 
 describe('MosaicService', () => {
     const accountRepositoryMock = mock<AccountRepository>();
@@ -40,7 +42,7 @@ describe('MosaicService', () => {
             mosaicId,
             UInt64.fromUint(10),
             UInt64.fromUint(1),
-            publicAccount,
+            publicAccount.address,
             0,
             new MosaicFlags(1),
             6,

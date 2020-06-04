@@ -30,12 +30,12 @@ describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {
         const accountInfoDTO = {
             account: {
-                address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
+                address: Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144'),
                 addressHeight: new UInt64([1, 0]),
                 importance: new UInt64([405653170, 0]),
                 importanceHeight: new UInt64([6462, 0]),
                 accountType: 0,
-                supplementalAccountKeys: [{ keyType: 1, key: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142' }],
+                supplementalAccountKeys: [{ keyType: 1, key: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144' }],
                 activityBucket: [
                     {
                         startHeight: '1000',
@@ -50,7 +50,7 @@ describe('AccountInfo', () => {
                         id: new MosaicId([3646934825, 3576016193]),
                     },
                 ],
-                publicKey: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
+                publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
                 publicKeyHeight: new UInt64([13, 0]),
             },
         };
@@ -81,6 +81,6 @@ describe('AccountInfo', () => {
         deepEqual(accountInfo.publicKeyHeight, accountInfoDTO.account.publicKeyHeight);
         deepEqual(accountInfo.importance, accountInfoDTO.account.importance);
         deepEqual(accountInfo.importanceHeight, accountInfoDTO.account.importanceHeight);
-        deepEqual(accountInfo.publicAccount, PublicAccount.createFromPublicKey(accountInfoDTO.account.publicKey, NetworkType.MIJIN_TEST));
+        deepEqual(accountInfo.publicAccount, PublicAccount.createFromPublicKey(accountInfoDTO.account.publicKey, NetworkType.MIJIN));
     });
 });

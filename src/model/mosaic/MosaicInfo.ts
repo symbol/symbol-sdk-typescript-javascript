@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PublicAccount } from '../account/PublicAccount';
 import { UInt64 } from '../UInt64';
 import { MosaicFlags } from './MosaicFlags';
 import { MosaicId } from './MosaicId';
+import { Address } from '../account/Address';
 
 /**
  * The mosaic info structure describes a mosaic.
@@ -27,8 +27,8 @@ export class MosaicInfo {
      * @param recordId
      * @param id
      * @param supply
-     * @param height
-     * @param owner
+     * @param startHeight
+     * @param ownerAddress
      * @param revision
      * @param flags
      * @param divisibility
@@ -50,11 +50,11 @@ export class MosaicInfo {
         /**
          * The block height were mosaic was created.
          */
-        public readonly height: UInt64,
+        public readonly startHeight: UInt64,
         /**
-         * The public key of the mosaic creator.
+         * The mosaic owner address.
          */
-        public readonly owner: PublicAccount,
+        public readonly ownerAddress: Address,
         /**
          * The mosaic revision
          */

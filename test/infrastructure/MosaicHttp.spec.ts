@@ -43,7 +43,6 @@ describe('MosaicHttp', () => {
     mosaicDto.flags = 1;
     mosaicDto.id = mosaicId.toHex();
     mosaicDto.ownerAddress = address.encoded();
-    mosaicDto.ownerPublicKey = publicAccount.publicKey;
     mosaicDto.revision = 0;
     mosaicDto.startHeight = '1';
     mosaicDto.supply = '100';
@@ -68,10 +67,9 @@ describe('MosaicHttp', () => {
         expect(mosaicInfo.divisibility).to.be.equals(6);
         expect(mosaicInfo.duration.toString()).to.be.equals(mosaicDto.duration);
         expect(mosaicInfo.flags.getValue()).to.be.equals(mosaicDto.flags);
-        expect(mosaicInfo.height.toString()).to.be.equals(mosaicDto.startHeight);
+        expect(mosaicInfo.startHeight.toString()).to.be.equals(mosaicDto.startHeight);
         expect(mosaicInfo.supply.toString()).to.be.equals(mosaicDto.supply);
-        expect(mosaicInfo.owner.publicKey).to.be.equals(mosaicDto.ownerPublicKey);
-        expect(mosaicInfo.owner.address.encoded()).to.be.equals(mosaicDto.ownerAddress);
+        expect(mosaicInfo.ownerAddress.encoded()).to.be.equals(mosaicDto.ownerAddress);
         expect(mosaicInfo.revision).to.be.equals(mosaicDto.revision);
         expect(mosaicInfo.id.toHex()).to.be.equals(mosaicId.toHex());
     }
@@ -109,7 +107,7 @@ describe('MosaicHttp', () => {
     });
 
     it('getMosaic - Error', async () => {
-        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenThrow(new Error('Mocked Error'));
+        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReject(new Error('Mocked Error'));
         await mosaicRepository
             .getMosaic(mosaicId)
             .toPromise()
@@ -119,7 +117,7 @@ describe('MosaicHttp', () => {
     it('getMosaics - Error', async () => {
         const mosaicIds = new MosaicIds();
         mosaicIds.mosaicIds = [mosaicId.toHex()];
-        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenThrow(new Error('Mocked Error'));
+        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReject(new Error('Mocked Error'));
         await mosaicRepository
             .getMosaics([mosaicId])
             .toPromise()

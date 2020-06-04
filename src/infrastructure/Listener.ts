@@ -436,7 +436,7 @@ export class Listener implements IListener {
             dto.block.proofGamma,
             dto.block.proofScalar,
             dto.block.proofVerificationHash,
-            dto.block.beneficiaryPublicKey ? PublicAccount.createFromPublicKey(dto.block.beneficiaryPublicKey, networkType) : undefined,
+            dto.block.beneficiaryAddress ? Address.createFromEncoded(dto.block.beneficiaryAddress) : undefined,
         );
     }
 }

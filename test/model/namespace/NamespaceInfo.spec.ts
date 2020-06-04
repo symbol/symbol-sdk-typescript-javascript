@@ -16,12 +16,12 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceInfo } from '../../../src/model/namespace/NamespaceInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
+import { Address } from '../../../src/model/account/Address';
 
 describe('NamespaceInfo', () => {
     let rootNamespaceDTO;
@@ -35,7 +35,7 @@ describe('NamespaceInfo', () => {
             dto.namespace.depth,
             [dto.namespace.level0],
             dto.namespace.parentId,
-            PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
+            Address.createFromEncoded(dto.namespace.ownerAddress),
             dto.namespace.startHeight,
             dto.namespace.endHeight,
             dto.namespace.alias,
@@ -51,7 +51,7 @@ describe('NamespaceInfo', () => {
             dto.namespace.depth,
             [dto.namespace.level0, dto.namespace.level1],
             dto.namespace.parentId,
-            PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
+            Address.createFromEncoded(dto.namespace.ownerAddress),
             dto.namespace.startHeight,
             dto.namespace.endHeight,
             dto.namespace.alias,
@@ -69,7 +69,10 @@ describe('NamespaceInfo', () => {
                 depth: 1,
                 endHeight: new UInt64([4294967295, 4294967295]),
                 level0: new NamespaceId([929036875, 2226345261]),
-                owner: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                ownerAddress: Address.createFromPublicKey(
+                    'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    NetworkType.MIJIN_TEST,
+                ).encoded(),
                 parentId: new NamespaceId([0, 0]),
                 startHeight: new UInt64([1, 0]),
                 type: 0,
@@ -88,7 +91,10 @@ describe('NamespaceInfo', () => {
                 level0: new NamespaceId([3316183705, 3829351378]),
                 level1: new NamespaceId([1781696705, 4157485863]),
                 parentId: new NamespaceId([3316183705, 3829351378]),
-                owner: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
+                ownerAddress: Address.createFromPublicKey(
+                    '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
+                    NetworkType.MIJIN_TEST,
+                ).encoded(),
                 startHeight: [795, 0],
                 endHeight: [50795, 0],
                 alias: { type: 0 },
@@ -104,7 +110,7 @@ describe('NamespaceInfo', () => {
         expect(namespaceInfo.metaId).to.be.equal(rootNamespaceDTO.meta.id);
         expect(namespaceInfo.depth).to.be.equal(rootNamespaceDTO.namespace.depth);
         deepEqual(namespaceInfo.levels[0], rootNamespaceDTO.namespace.level0);
-        expect(namespaceInfo.owner.publicKey).to.be.equal(rootNamespaceDTO.namespace.owner);
+        expect(namespaceInfo.ownerAddress.encoded()).to.be.equal(rootNamespaceDTO.namespace.ownerAddress);
         deepEqual(namespaceInfo.startHeight, rootNamespaceDTO.namespace.startHeight);
         deepEqual(namespaceInfo.endHeight, rootNamespaceDTO.namespace.endHeight);
         expect(namespaceInfo.alias.type).to.be.equal(rootNamespaceDTO.namespace.alias.type);

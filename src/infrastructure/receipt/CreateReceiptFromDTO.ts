@@ -16,7 +16,6 @@
 
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
-import { PublicAccount } from '../../model/account/PublicAccount';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
@@ -93,13 +92,12 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
 /**
  * @internal
  * @param receiptDTO
- * @param networkType
  * @returns {BalanceChangeReceipt}
  * @constructor
  */
-const createBalanceChangeReceipt = (receiptDTO, networkType): Receipt => {
+const createBalanceChangeReceipt = (receiptDTO): Receipt => {
     return new BalanceChangeReceipt(
-        PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, networkType),
+        Address.createFromEncoded(receiptDTO.targetAddress),
         new MosaicId(receiptDTO.mosaicId),
         UInt64.fromNumericString(receiptDTO.amount),
         receiptDTO.version,
@@ -110,13 +108,12 @@ const createBalanceChangeReceipt = (receiptDTO, networkType): Receipt => {
 /**
  * @internal
  * @param receiptDTO
- * @param networkType
  * @returns {BalanceTransferReceipt}
  * @constructor
  */
-const createBalanceTransferReceipt = (receiptDTO, networkType): Receipt => {
+const createBalanceTransferReceipt = (receiptDTO): Receipt => {
     return new BalanceTransferReceipt(
-        PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, networkType),
+        Address.createFromEncoded(receiptDTO.senderAddress),
         Address.createFromEncoded(receiptDTO.recipientAddress),
         new MosaicId(receiptDTO.mosaicId),
         UInt64.fromNumericString(receiptDTO.amount),
@@ -170,11 +167,10 @@ const createInflationReceipt = (receiptDTO): Receipt => {
 
 /**
  * @param receiptDTO
- * @param networkType
  * @returns {Receipt}
  * @constructor
  */
-export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
+export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
     switch (receiptDTO.type) {
         case ReceiptType.Harvest_Fee:
         case ReceiptType.LockHash_Created:
@@ -183,11 +179,11 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
         case ReceiptType.LockSecret_Created:
         case ReceiptType.LockSecret_Completed:
         case ReceiptType.LockSecret_Expired:
-            return createBalanceChangeReceipt(receiptDTO, networkType);
+            return createBalanceChangeReceipt(receiptDTO);
         case ReceiptType.Mosaic_Levy:
         case ReceiptType.Mosaic_Rental_Fee:
         case ReceiptType.Namespace_Rental_Fee:
-            return createBalanceTransferReceipt(receiptDTO, networkType);
+            return createBalanceTransferReceipt(receiptDTO);
         case ReceiptType.Mosaic_Expired:
         case ReceiptType.Namespace_Expired:
         case ReceiptType.Namespace_Deleted:
@@ -202,31 +198,29 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
 /**
  * @internal
  * @param statementDTO
- * @param networkType
  * @returns {TransactionStatement}
  * @constructor
  */
-const createTransactionStatement = (statementDTO, networkType): TransactionStatement => {
+const createTransactionStatement = (statementDTO): TransactionStatement => {
     return new TransactionStatement(
         UInt64.fromNumericString(statementDTO.height),
         new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
         statementDTO.receipts.map((receipt) => {
-            return CreateReceiptFromDTO(receipt, networkType);
+            return CreateReceiptFromDTO(receipt);
         }),
     );
 };
 
 /**
  * @param receiptDTO
- * @param networkType
  * @returns {Statement}
  * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
  * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
  * @constructor
  */
-export const CreateStatementFromDTO = (receiptDTO, networkType): Statement => {
+export const CreateStatementFromDTO = (receiptDTO): Statement => {
     return new Statement(
-        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement, networkType)),
+        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement)),
         receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Address)),
         receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Mosaic)),
     );

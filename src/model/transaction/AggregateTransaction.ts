@@ -172,6 +172,7 @@ export class AggregateTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const consignatures = builder.getCosignatures().map((cosig) => {
             return new AggregateTransactionCosignature(
+                new UInt64(cosig.version),
                 Convert.uint8ToHex(cosig.signature.signature),
                 PublicAccount.createFromPublicKey(Convert.uint8ToHex(cosig.signerPublicKey.key), networkType),
             );
@@ -243,7 +244,7 @@ export class AggregateTransaction extends Transaction {
         cosignatories.forEach((cosigner) => {
             const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(cosigner.privateKey);
             const signature = KeyPair.sign(keyPairEncoded, transactionHashBytes);
-            signedPayload += cosigner.publicKey + Convert.uint8ToHex(signature);
+            signedPayload += UInt64.fromUint(0).toHex() + cosigner.publicKey + Convert.uint8ToHex(signature);
         });
 
         // Calculate new size
@@ -273,7 +274,7 @@ export class AggregateTransaction extends Transaction {
         const signedTransaction = this.signWith(initiatorAccount, generationHash);
         let signedPayload = signedTransaction.payload;
         cosignatureSignedTransactions.forEach((cosignedTransaction) => {
-            signedPayload += cosignedTransaction.signerPublicKey + cosignedTransaction.signature;
+            signedPayload += UInt64.fromUint(0).toHex() + cosignedTransaction.signerPublicKey + cosignedTransaction.signature;
         });
 
         // Calculate new size
@@ -321,7 +322,7 @@ export class AggregateTransaction extends Transaction {
             byteTransactions += paddedTransactionByte.length;
         });
 
-        const byteCosignatures = this.cosignatures.length * 96;
+        const byteCosignatures = this.cosignatures.length * 104;
         return byteSize + byteTransactionHash + bytePayloadSize + byteHeader_Reserved1 + byteTransactions + byteCosignatures;
     }
 
@@ -336,7 +337,7 @@ export class AggregateTransaction extends Transaction {
         const cosignatures = this.cosignatures.map((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
             const signatureBytes = Convert.hexToUint8(cosignature.signature);
-            return new CosignatureBuilder(new KeyDto(signerBytes), new SignatureDto(signatureBytes));
+            return new CosignatureBuilder(cosignature.version.toDTO(), new KeyDto(signerBytes), new SignatureDto(signatureBytes));
         });
 
         const transactionBuilder =

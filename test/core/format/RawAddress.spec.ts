@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import { Convert as convert, RawAddress as address } from '../../../src/core/format';
-import { NetworkType } from '../../../src/model/model';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 const Address_Decoded_Size = 24;
 

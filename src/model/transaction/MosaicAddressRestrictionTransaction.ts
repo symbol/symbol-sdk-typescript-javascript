@@ -184,7 +184,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const byteRestrictionKey = 8;
         const bytePreviousRestrictionValue = 8;
         const byteNewRestrictionValue = 8;
-        const byteTargetAddress = 25;
+        const byteTargetAddress = 24;
 
         return byteSize + byteMosaicId + byteRestrictionKey + byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
     }

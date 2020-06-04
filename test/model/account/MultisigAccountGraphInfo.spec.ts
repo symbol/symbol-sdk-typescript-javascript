@@ -18,8 +18,8 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { MultisigAccountGraphInfo } from '../../../src/model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { Address } from '../../../src/model/account/Address';
 
 describe('MultisigAccountGraphInfo', () => {
     it('should createComplete an MultisigAccountGraphInfo object', () => {
@@ -28,28 +28,28 @@ describe('MultisigAccountGraphInfo', () => {
             multisigEntries: [
                 {
                     multisig: {
-                        account: PublicAccount.createFromPublicKey(
+                        accountAddress: Address.createFromPublicKey(
                             'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
                             NetworkType.MIJIN_TEST,
                         ),
-                        cosignatories: [
-                            PublicAccount.createFromPublicKey(
+                        cosignatoryAddresses: [
+                            Address.createFromPublicKey(
                                 'CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
                                 NetworkType.MIJIN_TEST,
                             ),
-                            PublicAccount.createFromPublicKey(
+                            Address.createFromPublicKey(
                                 '68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763',
                                 NetworkType.MIJIN_TEST,
                             ),
-                            PublicAccount.createFromPublicKey(
+                            Address.createFromPublicKey(
                                 'DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14',
                                 NetworkType.MIJIN_TEST,
                             ),
                         ],
                         minApproval: 3,
                         minRemoval: 3,
-                        multisigAccounts: [
-                            PublicAccount.createFromPublicKey(
+                        multisigAddresses: [
+                            Address.createFromPublicKey(
                                 '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
                                 NetworkType.MIJIN_TEST,
                             ),
@@ -64,35 +64,35 @@ describe('MultisigAccountGraphInfo', () => {
             multisigAccountGraphInfoDTO.level,
             multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
                 return new MultisigAccountInfo(
-                    multisigAccountInfoDTO.multisig.account,
+                    multisigAccountInfoDTO.multisig.accountAddress,
                     multisigAccountInfoDTO.multisig.minApproval,
                     multisigAccountInfoDTO.multisig.minRemoval,
-                    multisigAccountInfoDTO.multisig.cosignatories,
-                    multisigAccountInfoDTO.multisig.multisigAccounts,
+                    multisigAccountInfoDTO.multisig.cosignatoryAddresses,
+                    multisigAccountInfoDTO.multisig.multisigAddresses,
                 );
             }),
         );
 
         const multisigAccountInfoGraph = new MultisigAccountGraphInfo(multisigAccounts);
 
-        expect(multisigAccountInfoGraph.multisigAccounts.get(2)).to.not.be.equal(undefined);
-        expect(multisigAccountInfoGraph.multisigAccounts.get(1)).to.be.equal(undefined);
-        expect(multisigAccountInfoGraph.multisigAccounts.get(2)![0].account).to.be.equal(
-            multisigAccountGraphInfoDTO.multisigEntries[0].multisig.account,
+        expect(multisigAccountInfoGraph.multisigEntries.get(2)).to.not.be.equal(undefined);
+        expect(multisigAccountInfoGraph.multisigEntries.get(1)).to.be.equal(undefined);
+        expect(multisigAccountInfoGraph.multisigEntries.get(2)![0].accountAddress.plain()).to.be.equal(
+            multisigAccountGraphInfoDTO.multisigEntries[0].multisig.accountAddress.plain(),
         );
-        expect(multisigAccountInfoGraph.multisigAccounts.get(2)![0].minApproval).to.be.equal(
+        expect(multisigAccountInfoGraph.multisigEntries.get(2)![0].minApproval).to.be.equal(
             multisigAccountGraphInfoDTO.multisigEntries[0].multisig.minApproval,
         );
-        expect(multisigAccountInfoGraph.multisigAccounts.get(2)![0].minRemoval).to.be.equal(
+        expect(multisigAccountInfoGraph.multisigEntries.get(2)![0].minRemoval).to.be.equal(
             multisigAccountGraphInfoDTO.multisigEntries[0].multisig.minRemoval,
         );
         deepEqual(
-            multisigAccountInfoGraph.multisigAccounts.get(2)![0].cosignatories,
-            multisigAccountGraphInfoDTO.multisigEntries[0].multisig.cosignatories,
+            multisigAccountInfoGraph.multisigEntries.get(2)![0].cosignatoryAddresses,
+            multisigAccountGraphInfoDTO.multisigEntries[0].multisig.cosignatoryAddresses,
         );
         deepEqual(
-            multisigAccountInfoGraph.multisigAccounts.get(2)![0].multisigAccounts,
-            multisigAccountGraphInfoDTO.multisigEntries[0].multisig.multisigAccounts,
+            multisigAccountInfoGraph.multisigEntries.get(2)![0].multisigAddresses,
+            multisigAccountGraphInfoDTO.multisigEntries[0].multisig.multisigAddresses,
         );
     });
 

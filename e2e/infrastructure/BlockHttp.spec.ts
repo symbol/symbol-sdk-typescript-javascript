@@ -91,7 +91,7 @@ describe('BlockHttp', () => {
             expect(blockInfo.height.higher).to.be.equal(0);
             expect(blockInfo.timestamp.lower).to.be.equal(0);
             expect(blockInfo.timestamp.higher).to.be.equal(0);
-            expect(blockInfo.beneficiaryPublicKey).not.to.be.undefined;
+            expect(blockInfo.beneficiaryAddress).not.to.be.undefined;
             expect(blockInfo.numStatements).not.to.be.undefined;
         });
     });

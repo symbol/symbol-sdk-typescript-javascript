@@ -230,10 +230,11 @@ export class TransferTransaction extends Transaction {
         const byteSize = super.size;
 
         // recipient and number of mosaics are static byte size
-        const byteRecipientAddress = 25;
+        const byteRecipientAddress = 24;
         const byteMosaicsCount = 1;
         const byteMessageSize = 2;
         const byteTransferTransactionBody_Reserved1 = 4;
+        const byteTransferTransactionBody_Reserved2 = 1;
 
         // read message payload size
         const bytePayload = this.getMessageBuffer().length;
@@ -245,7 +246,8 @@ export class TransferTransaction extends Transaction {
             byteSize +
             byteMosaicsCount +
             byteRecipientAddress +
-            +byteTransferTransactionBody_Reserved1 +
+            byteTransferTransactionBody_Reserved1 +
+            byteTransferTransactionBody_Reserved2 +
             byteMessageSize +
             bytePayload +
             byteMosaics

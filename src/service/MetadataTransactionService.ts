@@ -19,7 +19,6 @@ import { catchError, map } from 'rxjs/operators';
 import { Convert } from '../core/format/Convert';
 import { MetadataRepository } from '../infrastructure/MetadataRepository';
 import { Address } from '../model/account/Address';
-import { PublicAccount } from '../model/account/PublicAccount';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataType } from '../model/metadata/MetadataType';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -46,10 +45,10 @@ export class MetadataTransactionService {
      * @param deadline - Deadline
      * @param networkType - Network identifier
      * @param metadataType - Matadata type
-     * @param targetPublicAccount - Target public account
+     * @param targetAddress - Target address
      * @param key - Metadata scoped key
      * @param value - New metadata value
-     * @param senderPublicAccount - sender (signer) public account
+     * @param sourceAddress - sender (signer) address
      * @param targetId - Target Id (MosaicId | NamespaceId)
      * @param maxFee - Max fee
      * @return {AccountMetadataTransaction | MosaicMetadataTransaction | NamespaceMetadataTransaction}
@@ -58,24 +57,16 @@ export class MetadataTransactionService {
         deadline: Deadline,
         networkType: NetworkType,
         metadataType: MetadataType,
-        targetPublicAccount: PublicAccount,
+        targetAddress: Address,
         key: UInt64,
         value: string,
-        senderPublicAccount: PublicAccount,
+        sourceAddress: Address,
         targetId?: MosaicId | NamespaceId,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): Observable<AccountMetadataTransaction | MosaicMetadataTransaction | NamespaceMetadataTransaction> {
         switch (metadataType) {
             case MetadataType.Account:
-                return this.createAccountMetadataTransaction(
-                    deadline,
-                    networkType,
-                    targetPublicAccount.publicKey,
-                    key,
-                    value,
-                    senderPublicAccount.publicKey,
-                    maxFee,
-                );
+                return this.createAccountMetadataTransaction(deadline, networkType, targetAddress, key, value, sourceAddress, maxFee);
             case MetadataType.Mosaic:
                 if (!targetId || !(targetId instanceof MosaicId)) {
                     throw Error('TargetId for MosaicMetadataTransaction is invalid');
@@ -83,11 +74,11 @@ export class MetadataTransactionService {
                 return this.createMosaicMetadataTransaction(
                     deadline,
                     networkType,
-                    targetPublicAccount.publicKey,
+                    targetAddress,
                     targetId as MosaicId,
                     key,
                     value,
-                    senderPublicAccount.publicKey,
+                    sourceAddress,
                     maxFee,
                 );
             case MetadataType.Namespace:
@@ -97,11 +88,11 @@ export class MetadataTransactionService {
                 return this.createNamespaceMetadataTransaction(
                     deadline,
                     networkType,
-                    targetPublicAccount.publicKey,
+                    targetAddress,
                     targetId as NamespaceId,
                     key,
                     value,
-                    senderPublicAccount.publicKey,
+                    sourceAddress,
                     maxFee,
                 );
             default:
@@ -113,88 +104,78 @@ export class MetadataTransactionService {
      * @internal
      * @param deadline - Deadline
      * @param networkType - Network identifier
-     * @param targetPublicKey - Target public key
+     * @param targetAddress - Target address
      * @param key - Metadata key
      * @param value - New metadata value
-     * @param senderPublicKey - sender (signer) public key
+     * @param sourceAddress - sender (signer) address
      * @param maxFee - max fee
      * @returns {Observable<AccountMetadataTransaction>}
      */
     private createAccountMetadataTransaction(
         deadline: Deadline,
         networkType: NetworkType,
-        targetPublicKey: string,
+        targetAddress: Address,
         key: UInt64,
         value: string,
-        senderPublicKey: string,
+        sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<AccountMetadataTransaction> {
-        return this.metadataRepository
-            .getAccountMetadataByKeyAndSender(Address.createFromPublicKey(targetPublicKey, networkType), key.toHex(), senderPublicKey)
-            .pipe(
-                map((metadata: Metadata) => {
-                    const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
+        return this.metadataRepository.getAccountMetadataByKeyAndSender(targetAddress, key.toHex(), sourceAddress).pipe(
+            map((metadata: Metadata) => {
+                const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
+                const newValueBytes = Convert.utf8ToUint8(value);
+                return AccountMetadataTransaction.create(
+                    deadline,
+                    targetAddress,
+                    key,
+                    newValueBytes.length - currentValueByte.length,
+                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
+                    networkType,
+                    maxFee,
+                );
+            }),
+            catchError((err: Error) => {
+                const error = JSON.parse(err.message);
+                if (error && error.statusCode && error.statusCode === 404) {
                     const newValueBytes = Convert.utf8ToUint8(value);
-                    return AccountMetadataTransaction.create(
-                        deadline,
-                        targetPublicKey,
-                        key,
-                        newValueBytes.length - currentValueByte.length,
-                        Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
-                        networkType,
-                        maxFee,
+                    return of(
+                        AccountMetadataTransaction.create(deadline, targetAddress, key, newValueBytes.length, value, networkType, maxFee),
                     );
-                }),
-                catchError((err: Error) => {
-                    const error = JSON.parse(err.message);
-                    if (error && error.statusCode && error.statusCode === 404) {
-                        const newValueBytes = Convert.utf8ToUint8(value);
-                        return of(
-                            AccountMetadataTransaction.create(
-                                deadline,
-                                targetPublicKey,
-                                key,
-                                newValueBytes.length,
-                                value,
-                                networkType,
-                                maxFee,
-                            ),
-                        );
-                    }
-                    throw Error(err.message);
-                }),
-            );
+                }
+                throw Error(err.message);
+            }),
+        );
     }
 
     /**
      * @internal
      * @param deadline - Deadline
      * @param networkType - Network identifier
-     * @param targetPublicKey - Target public key
+     * @param targetAddress - Target Address
      * @param mosaicId - Mosaic Id
      * @param key - Metadata key
      * @param value - New metadata value
-     * @param senderPublicKey - sender (signer) public key
+     * @param sourceAddress - sender (signer) address
      * @param maxFee - max fee
      * @returns {Observable<MosaicMetadataTransaction>}
      */
     private createMosaicMetadataTransaction(
         deadline: Deadline,
         networkType: NetworkType,
-        targetPublicKey: string,
+        targetAddress: Address,
         mosaicId: MosaicId,
         key: UInt64,
         value: string,
-        senderPublicKey: string,
+        sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<MosaicMetadataTransaction> {
-        return this.metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, key.toHex(), senderPublicKey).pipe(
+        return this.metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, key.toHex(), sourceAddress).pipe(
             map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return MosaicMetadataTransaction.create(
                     deadline,
-                    targetPublicKey,
+                    targetAddress,
                     key,
                     mosaicId,
                     newValueBytes.length - currentValueByte.length,
@@ -210,7 +191,7 @@ export class MetadataTransactionService {
                     return of(
                         MosaicMetadataTransaction.create(
                             deadline,
-                            targetPublicKey,
+                            targetAddress,
                             key,
                             mosaicId,
                             newValueBytes.length,
@@ -229,31 +210,31 @@ export class MetadataTransactionService {
      * @internal
      * @param deadline - Deadline
      * @param networkType - Network identifier
-     * @param targetPublicKey - Target public key
+     * @param targetAddress - Target address
      * @param namespaceId - Namespace Id
      * @param key - Metadata key
      * @param value - New metadata value
-     * @param senderPublicKey - sender (signer) public key
+     * @param sourceAddress - sender (signer) address
      * @param maxFee - max fee
      * @returns {Observable<NamespaceMetadataTransaction>}
      */
     private createNamespaceMetadataTransaction(
         deadline: Deadline,
         networkType: NetworkType,
-        targetPublicKey: string,
+        targetAddress: Address,
         namespaceId: NamespaceId,
         key: UInt64,
         value: string,
-        senderPublicKey: string,
+        sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<NamespaceMetadataTransaction> {
-        return this.metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, key.toHex(), senderPublicKey).pipe(
+        return this.metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, key.toHex(), sourceAddress).pipe(
             map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return NamespaceMetadataTransaction.create(
                     deadline,
-                    targetPublicKey,
+                    targetAddress,
                     key,
                     namespaceId,
                     newValueBytes.length - currentValueByte.length,
@@ -269,7 +250,7 @@ export class MetadataTransactionService {
                     return of(
                         NamespaceMetadataTransaction.create(
                             deadline,
-                            targetPublicKey,
+                            targetAddress,
                             key,
                             namespaceId,
                             newValueBytes.length,

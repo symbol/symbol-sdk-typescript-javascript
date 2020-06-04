@@ -23,6 +23,7 @@ import { MultisigRepository } from '../../src/infrastructure/MultisigRepository'
 import { Account } from '../../src/model/account/Account';
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { deepEqual } from 'assert';
 
 describe('MultisigHttp', () => {
     const networkType = NetworkType.MIJIN_TEST;
@@ -36,19 +37,19 @@ describe('MultisigHttp', () => {
     const account3 = Account.generateNewAccount(networkType);
     const account4 = Account.generateNewAccount(networkType);
 
-    multisigDTO.accountAddress = account.address.plain();
-    multisigDTO.accountPublicKey = account.publicKey;
-    multisigDTO.cosignatoryPublicKeys = [account1.publicKey, account2.publicKey];
+    multisigDTO.accountAddress = account.address.encoded();
+    multisigDTO.accountAddress = account.address.encoded();
+    multisigDTO.cosignatoryAddresses = [account1.address.encoded(), account2.address.encoded()];
     multisigDTO.minApproval = 2;
     multisigDTO.minRemoval = 3;
-    multisigDTO.multisigPublicKeys = [account3.publicKey, account4.publicKey];
+    multisigDTO.multisigAddresses = [account3.address.encoded(), account4.address.encoded()];
 
     accountInfoDto.multisig = multisigDTO;
 
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const multisigRoutesApi: MultisigRoutesApi = mock();
-    const accountRepository: MultisigRepository = DtoMapping.assign(new MultisigHttp(url, networkType), {
+    const accountRepository: MultisigRepository = DtoMapping.assign(new MultisigHttp(url), {
         multisigRoutesApi: instance(multisigRoutesApi),
     });
 
@@ -60,11 +61,11 @@ describe('MultisigHttp', () => {
     function assertMultisigInfo(accountInfo: MultisigAccountInfo): void {
         expect(accountInfo).to.be.not.null;
         expect(accountInfo.isMultisig()).to.be.equals(true);
-        expect(accountInfo.account).to.be.deep.equals(account.publicAccount);
-        expect(accountInfo.cosignatories).to.deep.equals([account1.publicAccount, account2.publicAccount]);
+        deepEqual(accountInfo.accountAddress, account.address);
+        expect(accountInfo.cosignatoryAddresses).to.deep.equals([account1.address, account2.address]);
         expect(accountInfo.minApproval).to.be.equals(multisigDTO.minApproval);
         expect(accountInfo.minRemoval).to.be.equals(multisigDTO.minRemoval);
-        expect(accountInfo.multisigAccounts).to.deep.equals([account3.publicAccount, account4.publicAccount]);
+        expect(accountInfo.multisigAddresses).to.deep.equals([account3.address, account4.address]);
     }
 
     it('getMultisigAccountInfo', async () => {
@@ -83,14 +84,14 @@ describe('MultisigHttp', () => {
         body2.multisigEntries = [accountInfoDto, accountInfoDto];
         when(multisigRoutesApi.getAccountMultisigGraph(address.plain())).thenReturn(Promise.resolve({ response, body: [body, body2] }));
         const graphInfo = await accountRepository.getMultisigAccountGraphInfo(address).toPromise();
-        expect(graphInfo.multisigAccounts.size).to.be.eq(2);
-        const list10: MultisigAccountInfo[] = graphInfo.multisigAccounts.get(10) as MultisigAccountInfo[];
+        expect(graphInfo.multisigEntries.size).to.be.eq(2);
+        const list10: MultisigAccountInfo[] = graphInfo.multisigEntries.get(10) as MultisigAccountInfo[];
         expect(list10.length).to.be.eq(3);
         assertMultisigInfo(list10[0]);
         assertMultisigInfo(list10[1]);
         assertMultisigInfo(list10[2]);
 
-        const list20: MultisigAccountInfo[] = graphInfo.multisigAccounts.get(20) as MultisigAccountInfo[];
+        const list20: MultisigAccountInfo[] = graphInfo.multisigEntries.get(20) as MultisigAccountInfo[];
         expect(list20.length).to.be.eq(2);
         assertMultisigInfo(list20[0]);
         assertMultisigInfo(list20[1]);

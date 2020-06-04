@@ -16,12 +16,12 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
+import { Address } from '../../../src/model/account/Address';
 
 describe('MosaicInfo', () => {
     const mosaicInfoDTO = {
@@ -29,8 +29,8 @@ describe('MosaicInfo', () => {
         mosaic: {
             id: new MosaicId([3646934825, 3576016193]),
             supply: new UInt64([3403414400, 2095475]),
-            height: new UInt64([1, 0]),
-            owner: PublicAccount.createFromPublicKey(
+            startHeight: new UInt64([1, 0]),
+            ownerAddress: Address.createFromPublicKey(
                 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.MIJIN_TEST,
             ),
@@ -46,8 +46,8 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.id,
             mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
-            mosaicInfoDTO.mosaic.height,
-            mosaicInfoDTO.mosaic.owner,
+            mosaicInfoDTO.mosaic.startHeight,
+            mosaicInfoDTO.mosaic.ownerAddress,
             mosaicInfoDTO.mosaic.revision,
             new MosaicFlags(mosaicInfoDTO.mosaic.flags),
             mosaicInfoDTO.mosaic.divisibility,
@@ -57,8 +57,8 @@ describe('MosaicInfo', () => {
         deepEqual(mosaicInfo.recordId, mosaicInfoDTO.id);
         deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.id);
         deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
-        deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
-        expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
+        deepEqual(mosaicInfo.startHeight, mosaicInfoDTO.mosaic.startHeight);
+        expect(mosaicInfo.ownerAddress.equals(mosaicInfoDTO.mosaic.ownerAddress)).to.be.true;
         deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
@@ -71,8 +71,8 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.id,
             mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
-            mosaicInfoDTO.mosaic.height,
-            mosaicInfoDTO.mosaic.owner,
+            mosaicInfoDTO.mosaic.startHeight,
+            mosaicInfoDTO.mosaic.ownerAddress,
             mosaicInfoDTO.mosaic.revision,
             new MosaicFlags(mosaicInfoDTO.mosaic.flags),
             mosaicInfoDTO.mosaic.divisibility,
@@ -82,8 +82,8 @@ describe('MosaicInfo', () => {
         deepEqual(mosaicInfo.recordId, mosaicInfoDTO.id);
         deepEqual(mosaicInfo.id, mosaicInfoDTO.mosaic.id);
         deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
-        deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
-        expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
+        deepEqual(mosaicInfo.startHeight, mosaicInfoDTO.mosaic.startHeight);
+        expect(mosaicInfo.ownerAddress.equals(mosaicInfoDTO.mosaic.ownerAddress)).to.be.true;
         deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
@@ -96,8 +96,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.startHeight,
+                mosaicInfoDTO.mosaic.ownerAddress,
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(true, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
@@ -111,8 +111,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.startHeight,
+                mosaicInfoDTO.mosaic.ownerAddress,
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
@@ -128,8 +128,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.startHeight,
+                mosaicInfoDTO.mosaic.ownerAddress,
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, true, false),
                 mosaicInfoDTO.mosaic.divisibility,
@@ -143,8 +143,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.startHeight,
+                mosaicInfoDTO.mosaic.ownerAddress,
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, false),
                 mosaicInfoDTO.mosaic.divisibility,
@@ -160,8 +160,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.startHeight,
+                mosaicInfoDTO.mosaic.ownerAddress,
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, true),
                 mosaicInfoDTO.mosaic.divisibility,
@@ -175,8 +175,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.startHeight,
+                mosaicInfoDTO.mosaic.ownerAddress,
                 mosaicInfoDTO.mosaic.revision,
                 MosaicFlags.create(false, false, false),
                 mosaicInfoDTO.mosaic.divisibility,

@@ -182,7 +182,7 @@ export class SecretLockTransaction extends Transaction {
         const byteAmount = 8;
         const byteDuration = 8;
         const byteAlgorithm = 1;
-        const byteRecipient = 25;
+        const byteRecipient = 24;
 
         // convert secret to uint8
         const byteSecret = convert.hexToUint8(this.secret).length;

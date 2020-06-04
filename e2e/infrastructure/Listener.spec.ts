@@ -19,7 +19,6 @@ import { filter } from 'rxjs/operators';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -30,6 +29,12 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
+import { Address } from '../../src/model/account/Address';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -199,7 +204,7 @@ describe('Listener', () => {
                 Deadline.create(),
                 2,
                 1,
-                [cosignAccount1.publicAccount, cosignAccount2.publicAccount, cosignAccount3.publicAccount],
+                [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
                 [],
                 networkType,
                 helper.maxFee,
@@ -313,7 +318,7 @@ describe('Listener', () => {
                 -1,
                 0,
                 [],
-                [cosignAccount1.publicAccount],
+                [cosignAccount1.address],
                 networkType,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
@@ -321,7 +326,7 @@ describe('Listener', () => {
                 0,
                 0,
                 [],
-                [cosignAccount2.publicAccount],
+                [cosignAccount2.address],
                 networkType,
             );
 
@@ -330,7 +335,7 @@ describe('Listener', () => {
                 -1,
                 -1,
                 [],
-                [cosignAccount3.publicAccount],
+                [cosignAccount3.address],
                 networkType,
             );
 

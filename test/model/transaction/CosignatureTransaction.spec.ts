@@ -44,6 +44,7 @@ describe('CosignatureTransaction', () => {
             transaction: {
                 cosignatures: [
                     {
+                        version: '0',
                         signature:
                             '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                             'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
@@ -76,7 +77,7 @@ describe('CosignatureTransaction', () => {
                                     id: '85BBEA6CC462B244',
                                 },
                             ],
-                            recipientAddress: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+                            recipientAddress: '6823BB7C3C089D996585466380EDBDC19D4959184893E38C',
                             signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                             type: 16724,
                             version: 36865,

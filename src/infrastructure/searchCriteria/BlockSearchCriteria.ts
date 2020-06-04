@@ -30,7 +30,7 @@ export interface BlockSearchCriteria extends SearchCriteria {
     /**
      * beneficiary public key. (optional)
      */
-    beneficiaryPublicKey?: string;
+    beneficiaryAddress?: string;
 
     /**
      * Order by block id or height. (optional)

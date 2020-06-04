@@ -47,10 +47,10 @@ export interface MetadataRepository {
      * Returns the account metadata given an account id and a key
      * @param address - Account address to be created from PublicKey or RawAddress
      * @param key - Metadata key
-     * @param publicKey - Sender public key
+     * @param sourceAddress - Sender address
      * @returns Observable<Metadata>
      */
-    getAccountMetadataByKeyAndSender(address: Address, key: string, publicKey: string): Observable<Metadata>;
+    getAccountMetadataByKeyAndSender(address: Address, key: string, sourceAddress: Address): Observable<Metadata>;
 
     /**
      * Returns the mosaic metadata given a mosaic id.
@@ -72,10 +72,10 @@ export interface MetadataRepository {
      * Returns the mosaic metadata given a mosaic id and metadata key.
      * @param mosaicId - Mosaic identifier.
      * @param key - Metadata key.
-     * @param publicKey - Sender public key
+     * @param sourceAddress - Sender address
      * @returns Observable<Metadata>
      */
-    getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, publicKey: string): Observable<Metadata>;
+    getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, sourceAddress: Address): Observable<Metadata>;
 
     /**
      * Returns the mosaic metadata given a mosaic id.
@@ -97,8 +97,8 @@ export interface MetadataRepository {
      * Returns the namespace metadata given a mosaic id and metadata key.
      * @param namespaceId - Namespace identifier.
      * @param key - Metadata key.
-     * @param publicKey - Sender public key
+     * @param sourceAddress - Sender address
      * @returns Observable<Metadata>
      */
-    getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, publicKey: string): Observable<Metadata>;
+    getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, sourceAddress: Address): Observable<Metadata>;
 }

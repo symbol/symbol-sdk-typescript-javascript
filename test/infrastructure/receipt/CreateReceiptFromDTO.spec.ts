@@ -28,7 +28,6 @@ import { UInt64 } from '../../../src/model/UInt64';
 describe('Receipt - CreateStatementFromDTO', () => {
     let account: Account;
     let statementDto;
-    const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
         account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
@@ -45,7 +44,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                             {
                                 version: 1,
                                 type: 8515,
-                                targetPublicKey: account.publicKey,
+                                targetAddress: account.address.encoded(),
                                 mosaicId: '85BBEA6CC462B244',
                                 amount: '1000',
                             },
@@ -57,14 +56,14 @@ describe('Receipt - CreateStatementFromDTO', () => {
                 {
                     statement: {
                         height: '1488',
-                        unresolved: '9103B60AAF2762688300000000000000000000000000000000',
+                        unresolved: '9103B60AAF27626883000000000000000000000000000000',
                         resolutionEntries: [
                             {
                                 source: {
                                     primaryId: 4,
                                     secondaryId: 0,
                                 },
-                                resolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                                resolved: '917E7E29A01014C2F3000000000000000000000000000000',
                             },
                         ],
                     },
@@ -72,14 +71,14 @@ describe('Receipt - CreateStatementFromDTO', () => {
                 {
                     statement: {
                         height: '1488',
-                        unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                        unresolved: '917E7E29A01014C2F3000000000000000000000000000000',
                         resolutionEntries: [
                             {
                                 source: {
                                     primaryId: 2,
                                     secondaryId: 0,
                                 },
-                                resolved: '9103B60AAF2762688300000000000000000000000000000000',
+                                resolved: '9103B60AAF27626883000000000000000000000000000000',
                             },
                         ],
                     },
@@ -120,7 +119,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         };
     });
     it('should create Statement', () => {
-        const statement = CreateStatementFromDTO(statementDto, netWorkType);
+        const statement = CreateStatementFromDTO(statementDto);
         const unresolvedAddress = statement.addressResolutionStatements[0].unresolved as NamespaceId;
         const unresolvedMosaicId = statement.mosaicResolutionStatements[0].unresolved as NamespaceId;
 
@@ -138,7 +137,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         deepEqual(unresolvedAddress.toHex(), '83686227AF0AB603');
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain()).to.be.equal(
-            Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain(),
+            Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000').plain(),
         );
 
         deepEqual(statement.mosaicResolutionStatements[0].height, UInt64.fromNumericString('1506'));

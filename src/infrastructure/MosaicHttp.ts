@@ -16,7 +16,6 @@
 
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { PublicAccount } from '../model/account/PublicAccount';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
@@ -27,6 +26,7 @@ import { MosaicRepository } from './MosaicRepository';
 import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 import { Page } from './Page';
 import { MosaicRoutesApi, MosaicIds, MosaicInfoDTO } from 'symbol-openapi-typescript-node-client';
+import { Address } from '../model/account/Address';
 
 /**
  * Mosaic http repository.
@@ -63,11 +63,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo>
      */
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body, networkType)),
-            ),
-        );
+        return this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body));
     }
 
     /**
@@ -78,11 +74,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
     public getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> {
         const ids = new MosaicIds();
         ids.mosaicIds = mosaicIds.map((id) => id.toHex());
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                this.call(this.mosaicRoutesApi.getMosaics(ids), (body) => body.map((b) => this.toMosaicInfo(b, networkType))),
-            ),
-        );
+        return this.call(this.mosaicRoutesApi.getMosaics(ids), (body) => body.map((b) => this.toMosaicInfo(b)));
     }
 
     /**
@@ -114,13 +106,13 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @param mosaicInfo the dto object.
      * @returns the model object
      */
-    private toMosaicInfo(mosaicInfo: MosaicInfoDTO, networkType: NetworkType): MosaicInfo {
+    private toMosaicInfo(mosaicInfo: MosaicInfoDTO): MosaicInfo {
         return new MosaicInfo(
             mosaicInfo.id,
             new MosaicId(mosaicInfo.mosaic.id),
             UInt64.fromNumericString(mosaicInfo.mosaic.supply),
             UInt64.fromNumericString(mosaicInfo.mosaic.startHeight),
-            PublicAccount.createFromPublicKey(mosaicInfo.mosaic.ownerPublicKey, networkType),
+            Address.createFromEncoded(mosaicInfo.mosaic.ownerAddress),
             mosaicInfo.mosaic.revision,
             new MosaicFlags(mosaicInfo.mosaic.flags),
             mosaicInfo.mosaic.divisibility,

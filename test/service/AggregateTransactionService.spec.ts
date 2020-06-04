@@ -93,35 +93,29 @@ describe('AggregateTransactionService', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
     function givenMultisig2AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], []);
+        return new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], []);
     }
     function givenMultisig3AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], []);
+        return new MultisigAccountInfo(multisig3.address, 2, 2, [account2.address, account3.address], []);
     }
 
     function givenAccount1Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account1.publicAccount, 0, 0, [], [multisig2.publicAccount]);
+        return new MultisigAccountInfo(account1.address, 0, 0, [], [multisig2.address]);
     }
     function givenAccount2Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account2.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
+        return new MultisigAccountInfo(account2.address, 0, 0, [], [multisig2.address, multisig3.address]);
     }
     function givenAccount3Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account3.publicAccount, 0, 0, [], [multisig2.publicAccount, multisig3.publicAccount]);
+        return new MultisigAccountInfo(account3.address, 0, 0, [], [multisig2.address, multisig3.address]);
     }
     function givenAccount4Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account4.publicAccount, 0, 0, [], []);
+        return new MultisigAccountInfo(account4.address, 0, 0, [], []);
     }
 
     function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], [])]).set(1, [
-            new MultisigAccountInfo(
-                multisig1.publicAccount,
-                1,
-                1,
-                [account2.publicAccount, account3.publicAccount],
-                [multisig2.publicAccount],
-            ),
+        map.set(0, [new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
+            new MultisigAccountInfo(multisig1.address, 1, 1, [account2.address, account3.address], [multisig2.address]),
         ]);
 
         return new MultisigAccountGraphInfo(map);
@@ -129,14 +123,8 @@ describe('AggregateTransactionService', () => {
 
     function givenMultisig2AccountGraphInfoDuplicated(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.publicAccount, 2, 1, [multisig1.publicAccount, account1.publicAccount], [])]).set(1, [
-            new MultisigAccountInfo(
-                multisig1.publicAccount,
-                1,
-                1,
-                [account1.publicAccount, account2.publicAccount, account3.publicAccount],
-                [multisig2.publicAccount],
-            ),
+        map.set(0, [new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
+            new MultisigAccountInfo(multisig1.address, 1, 1, [account1.address, account2.address, account3.address], [multisig2.address]),
         ]);
 
         return new MultisigAccountGraphInfo(map);
@@ -144,7 +132,7 @@ describe('AggregateTransactionService', () => {
 
     function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig3.publicAccount, 2, 2, [account2.publicAccount, account3.publicAccount], [])]);
+        map.set(0, [new MultisigAccountInfo(multisig3.address, 2, 2, [account2.address, account3.address], [])]);
 
         return new MultisigAccountGraphInfo(map);
     }
@@ -201,7 +189,7 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -234,7 +222,7 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -267,7 +255,7 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -383,7 +371,7 @@ describe('AggregateTransactionService', () => {
             1,
             1,
             [],
-            [account1.publicAccount],
+            [account1.address],
             NetworkType.MIJIN_TEST,
         );
 
@@ -411,7 +399,7 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -443,7 +431,7 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,

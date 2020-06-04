@@ -68,10 +68,12 @@ import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructu
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/model';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
+import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -188,7 +190,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
-                account.publicKey,
+                account.address,
                 UInt64.fromUint(5),
                 10,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -207,7 +209,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: AggregateTransaction) => {
                 transaction.innerTransactions.forEach((innerTx) => {
-                    expect((innerTx as AccountMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+                    expect((innerTx as AccountMetadataTransaction).targetAddress, 'TargetAddress').not.to.be.undefined;
                     expect((innerTx as AccountMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
                     expect((innerTx as AccountMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
                     expect((innerTx as AccountMetadataTransaction).value, 'Value').not.to.be.undefined;
@@ -220,7 +222,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
-                account.publicKey,
+                account.address,
                 UInt64.fromUint(5),
                 mosaicId,
                 10,
@@ -239,7 +241,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: AggregateTransaction) => {
                 transaction.innerTransactions.forEach((innerTx) => {
-                    expect((innerTx as MosaicMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+                    expect((innerTx as MosaicMetadataTransaction).targetAddress, 'TargetAddress').not.to.be.undefined;
                     expect((innerTx as MosaicMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
                     expect((innerTx as MosaicMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
                     expect((innerTx as MosaicMetadataTransaction).value, 'Value').not.to.be.undefined;
@@ -294,7 +296,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
-                account.publicKey,
+                account.address,
                 UInt64.fromUint(5),
                 namespaceId,
                 10,
@@ -313,7 +315,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction).then((transaction: AggregateTransaction) => {
                 transaction.innerTransactions.forEach((innerTx) => {
-                    expect((innerTx as NamespaceMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+                    expect((innerTx as NamespaceMetadataTransaction).targetAddress, 'TargetAddress').not.to.be.undefined;
                     expect((innerTx as NamespaceMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
                     expect((innerTx as NamespaceMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
                     expect((innerTx as NamespaceMetadataTransaction).value, 'Value').not.to.be.undefined;

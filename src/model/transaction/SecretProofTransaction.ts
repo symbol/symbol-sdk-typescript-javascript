@@ -153,7 +153,7 @@ export class SecretProofTransaction extends Transaction {
         // hash algorithm and proof size static byte size
         const byteAlgorithm = 1;
         const byteProofSize = 2;
-        const byteRecipient = 25;
+        const byteRecipient = 24;
 
         // convert secret and proof to uint8
         const byteSecret = convert.hexToUint8(this.secret).length;

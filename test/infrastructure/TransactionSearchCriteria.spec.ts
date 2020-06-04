@@ -18,8 +18,10 @@ import { expect } from 'chai';
 import { Order, TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TestingAccount } from '../conf/conf.spec';
-import { UInt64, TransactionType, Address } from '../../src/model/model';
 import { deepEqual } from 'assert';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { UInt64 } from '../../src/model/UInt64';
+import { Address } from '../../src/model/account/Address';
 
 describe('TransactionSearchCriteria', () => {
     const account = TestingAccount;
@@ -53,7 +55,7 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.signerPublicKey).to.be.equal(account.publicKey);
         deepEqual(criteria.transactionTypes, [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
 
-        const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         criteria = {
             order: Order.Desc,
             pageNumber: 2,

@@ -225,12 +225,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
-            transactionDTO.publicKeyAdditions
-                ? transactionDTO.publicKeyAdditions.map((addition) => PublicAccount.createFromPublicKey(addition, transactionDTO.network))
-                : [],
-            transactionDTO.publicKeyDeletions
-                ? transactionDTO.publicKeyDeletions.map((deletion) => PublicAccount.createFromPublicKey(deletion, transactionDTO.network))
-                : [],
+            transactionDTO.addressAdditions ? transactionDTO.addressAdditions.map((addition) => extractRecipient(addition)) : [],
+            transactionDTO.addressDeletions ? transactionDTO.addressDeletions.map((deletion) => extractRecipient(deletion)) : [],
             transactionDTO.signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
@@ -422,7 +418,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.targetPublicKey,
+            extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
@@ -438,7 +434,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.targetPublicKey,
+            extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.targetMosaicId),
             transactionDTO.valueSizeDelta,
@@ -455,7 +451,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.targetPublicKey,
+            extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
@@ -542,6 +538,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
             transactionDTO.transaction.cosignatures
                 ? transactionDTO.transaction.cosignatures.map((aggregateCosignatureDTO) => {
                       return new AggregateTransactionCosignature(
+                          UInt64.fromNumericString(aggregateCosignatureDTO.version),
                           aggregateCosignatureDTO.signature,
                           PublicAccount.createFromPublicKey(aggregateCosignatureDTO.signerPublicKey, transactionDTO.transaction.network),
                       );

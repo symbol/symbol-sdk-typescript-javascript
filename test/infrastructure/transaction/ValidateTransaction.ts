@@ -90,8 +90,8 @@ const ValidateTransaction = {
         expect(modifyMultisigAccountTransaction.minRemovalDelta).to.be.equal(
             modifyMultisigAccountTransactionDTO.transaction.minRemovalDelta,
         );
-        expect(modifyMultisigAccountTransaction.publicKeyAdditions.length).to.be.equal(1);
-        expect(modifyMultisigAccountTransaction.publicKeyDeletions.length).to.be.equal(0);
+        expect(modifyMultisigAccountTransaction.addressAdditions.length).to.be.equal(1);
+        expect(modifyMultisigAccountTransaction.addressDeletions.length).to.be.equal(0);
     },
     validateNamespaceCreationTx: (registerNamespaceTransaction: any, registerNamespaceTransactionDTO: any): void => {
         expect(registerNamespaceTransaction.registrationType).to.be.equal(registerNamespaceTransactionDTO.transaction.registrationType);

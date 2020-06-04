@@ -47,7 +47,7 @@ describe('TransactionHttp', () => {
     it('should return an error when a non aggregate transaction bonded is announced via announceAggregateBonded method', () => {
         const tx = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SAGY2PTFX4T2XYKYXTJXYCTQRP3FESQH5MEQI2RQ'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.MIJIN_TEST,
@@ -143,7 +143,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+        transactionDto.recipientAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -175,7 +175,7 @@ describe('TransactionHttp', () => {
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB').plain(),
+            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
         );
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
