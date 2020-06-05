@@ -69,10 +69,13 @@ export class Address {
 
     /**
      * Determines the validity of an raw address string.
-     * @param {string} rawAddress The raw address string. Expected format SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P
+     * @param {string} rawAddress The raw address string. Expected format SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
     public static isValidRawAddress = (rawAddress: string): boolean => {
+        if (!['A', 'I', 'Q', 'Y'].includes(rawAddress.slice(-1).toUpperCase())) {
+            return false;
+        }
         try {
             return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress));
         } catch (err) {

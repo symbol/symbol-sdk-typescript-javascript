@@ -151,6 +151,29 @@ describe('Address', () => {
             // Assert:
             expect(Address.isValidRawAddress(rawAddress)).to.equal(false);
         });
+
+        it('returns false if last char not in A, I, Q, Y', () => {
+            // Arrange:
+            const rawAddress = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDF';
+
+            // Assert:
+            expect(Address.isValidRawAddress(rawAddress)).to.equal(false);
+        });
+
+        it('returns true if last char in A, I, Q, Y', () => {
+            // Arrange:
+            const rawAddress = [
+                'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDA',
+                'TDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEPHRSI',
+                'MDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFN3NKY',
+                'MCOVTFVVDZGNURZFU4IJLJR37X5TXNWMTTARXZQ',
+            ];
+
+            // Assert:
+            rawAddress.forEach((address) => {
+                expect(Address.isValidRawAddress(address)).to.equal(true);
+            });
+        });
     });
 
     describe('isValidEncodedAddress', () => {
