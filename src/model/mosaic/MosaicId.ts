@@ -38,7 +38,7 @@ export class MosaicId {
      * @return  {MosaicId}
      */
     public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
-        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(owner.publicKey));
+        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(owner.address.encoded()));
         return new MosaicId(mosaicId);
     }
 

@@ -25,41 +25,8 @@ const constants = {
 
 const basicMosaicInfo = {
     nonce: [0x78, 0xe3, 0x6f, 0xb7],
-    publicId: [
-        0x4a,
-        0xff,
-        0x7b,
-        0x4b,
-        0xa8,
-        0xc1,
-        0xc2,
-        0x6a,
-        0x79,
-        0x17,
-        0x57,
-        0x59,
-        0x93,
-        0x34,
-        0x66,
-        0x27,
-        0xcb,
-        0x6c,
-        0x80,
-        0xde,
-        0x62,
-        0xcd,
-        0x92,
-        0xf7,
-        0xf9,
-        0xae,
-        0xdb,
-        0x70,
-        0x64,
-        0xa3,
-        0xde,
-        0x62,
-    ],
-    id: [0xc0afc518, 0x3ad842a8],
+    address: [144, 43, 151, 19, 142, 202, 193, 168, 140, 158, 106, 98, 111, 47, 199, 100, 233, 98, 104, 137, 71, 177, 230, 122],
+    id: [339608571, 538088181],
 };
 
 const mosaicTestVector = {
@@ -215,7 +182,7 @@ describe('id generator', () => {
     describe('generate mosaic id', () => {
         it('generates correct well known id', () => {
             // Assert:
-            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId)).to.deep.equal(basicMosaicInfo.id);
+            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.address)).to.deep.equal(basicMosaicInfo.id);
         });
 
         // @dataProvider mosaicTestVector

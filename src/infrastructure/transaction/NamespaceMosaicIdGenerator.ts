@@ -20,11 +20,11 @@ import { IdGenerator } from '../../core/format';
 export class NamespaceMosaicIdGenerator {
     /**
      * @param {Uint8Array} nonce Mosaic nonce
-     * @param {Uint8Array} ownerPublicId Public key
+     * @param {Uint8Array} ownerAddress Address
      * @returns {number[]} mosaic Id
      */
-    public static mosaicId = (nonce: Uint8Array, ownerPublicId: Uint8Array): number[] => {
-        return IdGenerator.generateMosaicId(nonce, ownerPublicId);
+    public static mosaicId = (nonce: Uint8Array, ownerAddress: Uint8Array): number[] => {
+        return IdGenerator.generateMosaicId(nonce, ownerAddress);
     };
 
     /**
