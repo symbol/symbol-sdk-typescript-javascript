@@ -26,6 +26,7 @@ describe('BlockInfo', () => {
         const blockDTO = {
             id: '12345',
             block: {
+                size: 1,
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
@@ -58,6 +59,7 @@ describe('BlockInfo', () => {
 
         const blockInfo = new BlockInfo(
             blockDTO.id,
+            blockDTO.block.size,
             blockDTO.meta.hash,
             blockDTO.meta.generationHash,
             blockDTO.meta.totalFee,
@@ -84,6 +86,7 @@ describe('BlockInfo', () => {
         );
 
         expect(blockInfo.recordId).to.be.equal(blockDTO.id);
+        expect(blockInfo.size).to.be.equal(blockDTO.block.size);
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
         expect(blockInfo.generationHash).to.be.equal(blockDTO.meta.generationHash);
         deepEqual(blockInfo.totalFee, blockDTO.meta.totalFee);

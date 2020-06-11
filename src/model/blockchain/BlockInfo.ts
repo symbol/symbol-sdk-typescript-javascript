@@ -25,6 +25,7 @@ import { Address } from '../account/Address';
 export class BlockInfo {
     /**
      * @param recordId
+     * @param size
      * @param hash
      * @param generationHash
      * @param totalFee
@@ -54,6 +55,10 @@ export class BlockInfo {
          * The database record id.
          */
         public readonly recordId: string,
+        /**
+         * Entity size in bytes.
+         */
+        public readonly size: number,
         /**
          * The block hash.
          */

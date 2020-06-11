@@ -40,7 +40,7 @@ export class ChainProperties {
      * @param minVoterBalance - Minimum number of harvesting mosaic atomic units needed for an account to be eligible for voting.
      * @param harvestBeneficiaryPercentage - Percentage of the harvested fee that is collected by the beneficiary account.
      * @param harvestNetworkPercentage - Percentage of the harvested fee that is collected by network.
-     * @param harvestNetworkFeeSinkPublicKey - The harvest network fee sink public key.
+     * @param harvestNetworkFeeSinkAddress - The harvest network fee sink address.
      * @param blockPruneInterval - Number of blocks between cache pruning.
      * @param maxTransactionsPerBlock - Maximum number of transactions per block.
      */
@@ -67,7 +67,7 @@ export class ChainProperties {
         public readonly minVoterBalance?: string,
         public readonly harvestBeneficiaryPercentage?: string,
         public readonly harvestNetworkPercentage?: string,
-        public readonly harvestNetworkFeeSinkPublicKey?: string,
+        public readonly harvestNetworkFeeSinkAddress?: string,
         public readonly blockPruneInterval?: string,
         public readonly maxTransactionsPerBlock?: string,
     ) {}

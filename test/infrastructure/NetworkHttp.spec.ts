@@ -125,7 +125,7 @@ describe('NetworkHttp', () => {
         const network = new NetworkPropertiesDTO();
         network.identifier = 'id';
         network.nodeEqualityStrategy = NodeIdentityEqualityStrategy.Host;
-        network.publicKey = 'pubKey';
+        network.nemesisSignerPublicKey = 'pubKey';
         network.generationHashSeed = 'genHash';
         network.epochAdjustment = '123456';
 
@@ -152,7 +152,7 @@ describe('NetworkHttp', () => {
         chain.minHarvesterBalance = '1';
         chain.totalChainImportance = '1';
         chain.harvestNetworkPercentage = '1';
-        chain.harvestNetworkFeeSinkPublicKey = 'key';
+        chain.harvestNetworkFeeSinkAddress = 'key';
         chain.blockFinalizationInterval = '1';
         chain.minVoterBalance = '1';
 
@@ -184,7 +184,7 @@ describe('NetworkHttp', () => {
         plugin.mosaic.maxMosaicDuration = '1';
         plugin.mosaic.maxMosaicsPerAccount = '1';
         plugin.mosaic.mosaicRentalFee = '1';
-        plugin.mosaic.mosaicRentalFeeSinkPublicKey = '1';
+        plugin.mosaic.mosaicRentalFeeSinkAddress = '1';
 
         plugin.multisig = new MultisigNetworkPropertiesDTO();
         plugin.multisig.maxCosignatoriesPerAccount = '1';
@@ -199,7 +199,7 @@ describe('NetworkHttp', () => {
         plugin.namespace.maxNamespaceDuration = '1';
         plugin.namespace.minNamespaceDuration = '1';
         plugin.namespace.namespaceGracePeriodDuration = '1';
-        plugin.namespace.namespaceRentalFeeSinkPublicKey = '1';
+        plugin.namespace.namespaceRentalFeeSinkAddress = '1';
         plugin.namespace.reservedRootNamespaceNames = '1';
         plugin.namespace.rootNamespaceRentalFeePerBlock = '1';
 
