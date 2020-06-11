@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { Convert as convert, IdGenerator as idGenerator, RawUInt64 as uint64 } from '../../../src/core/format';
+import { IdGenerator as idGenerator } from '../../../src/core/format';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
@@ -195,8 +195,6 @@ describe('id generator', () => {
                 const addressTest = Address.createFromRawAddress(row.address_PublicTest);
                 const addressMijin = Address.createFromRawAddress(row.address_Mijin);
                 const addressMijinTest = Address.createFromRawAddress(row.address_MijinTest);
-
-                const nonce = convert.numberToUint8Array(row.mosaicNonce, 4).reverse();
 
                 // Assert:
                 expect(
