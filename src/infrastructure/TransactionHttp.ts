@@ -212,7 +212,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                 criteria.offset,
                 criteria.group,
                 criteria.order,
-                criteria.transactionTypes?.map((type) => type.valueOf()),
+                criteria.type?.map((type) => type.valueOf()),
                 criteria.embedded,
             ),
             (body) => super.toPage(body.pagination, body.data, CreateTransactionFromDTO),

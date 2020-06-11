@@ -173,10 +173,10 @@ describe('MosaicHttp', () => {
         it('should call searchMosaics successfully', async () => {
             const streamer = new MosaicPaginationStreamer(mosaicRepository);
             const mosaicsStreamer = await streamer
-                .search({ ownerAddress: account.address, pageSize: 3 })
-                .pipe(take(3), toArray())
+                .search({ ownerAddress: account.address, pageSize: 100 })
+                .pipe(take(100), toArray())
                 .toPromise();
-            const mosaics = await mosaicRepository.search({ ownerAddress: account.address, pageSize: 3 }).toPromise();
+            const mosaics = await mosaicRepository.search({ ownerAddress: account.address, pageSize: 100 }).toPromise();
             expect(mosaicsStreamer.length).to.be.greaterThan(0);
             expect(mosaicsStreamer.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
             deepEqual(mosaics.data, mosaicsStreamer);

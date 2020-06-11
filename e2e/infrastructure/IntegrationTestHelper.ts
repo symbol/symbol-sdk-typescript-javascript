@@ -108,7 +108,9 @@ export class IntegrationTestHelper {
                                 this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
                                 this.multisigAccount = this.createAccount(parsedYaml.nemesis_addresses[3]);
                                 this.cosignAccount1 = this.createAccount(parsedYaml.nemesis_addresses[4]);
-                                this.cosignAccount4 = this.createAccount(parsedYaml.nemesis_addresses[5]);
+                                this.cosignAccount2 = this.createAccount(parsedYaml.nemesis_addresses[5]);
+                                this.cosignAccount3 = this.createAccount(parsedYaml.nemesis_addresses[6]);
+                                this.cosignAccount4 = this.createAccount(parsedYaml.nemesis_addresses[7]);
                                 this.harvestingAccount = this.createAccount(parsedYaml.nemesis_addresses_harvesting[0]);
                                 return resolve(this);
                             }

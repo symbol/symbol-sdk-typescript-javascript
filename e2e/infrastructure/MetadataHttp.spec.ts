@@ -107,7 +107,7 @@ describe('MetadataHttp', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
                 account.address,
-                UInt64.fromUint(5),
+                UInt64.fromUint(6),
                 23,
                 `Test account meta value`,
                 networkType,
@@ -119,6 +119,7 @@ describe('MetadataHttp', () => {
                 [accountMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             return helper.announce(signedTransaction);
@@ -130,7 +131,7 @@ describe('MetadataHttp', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.address,
-                UInt64.fromUint(5),
+                UInt64.fromUint(6),
                 mosaicId,
                 22,
                 `Test mosaic meta value`,
@@ -155,7 +156,7 @@ describe('MetadataHttp', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.address,
-                UInt64.fromUint(5),
+                UInt64.fromUint(6),
                 namespaceId,
                 25,
                 `Test namespace meta value`,
@@ -185,7 +186,7 @@ describe('MetadataHttp', () => {
         it('should return metadata given a NEM Address', async () => {
             const metadata = await metadataRepository.getAccountMetadata(accountAddress).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
-            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetId).to.be.undefined;
@@ -196,9 +197,9 @@ describe('MetadataHttp', () => {
 
     describe('getAccountMetadataByKey', () => {
         it('should return metadata given a NEM Address and metadata key', async () => {
-            const metadata = await metadataRepository.getAccountMetadataByKey(accountAddress, UInt64.fromUint(5).toHex()).toPromise();
+            const metadata = await metadataRepository.getAccountMetadataByKey(accountAddress, UInt64.fromUint(6).toHex()).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
-            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetId).to.be.undefined;
@@ -210,9 +211,9 @@ describe('MetadataHttp', () => {
     describe('getAccountMetadataByKeyAndSender', () => {
         it('should return metadata given a NEM Address and metadata key and sender public key', async () => {
             const metadata = await metadataRepository
-                .getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(5).toHex(), account.address)
+                .getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(6).toHex(), account.address)
                 .toPromise();
-            expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata.metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect(metadata.metadataEntry.targetId).to.be.undefined;
@@ -225,7 +226,7 @@ describe('MetadataHttp', () => {
         it('should return metadata given a mosaicId', async () => {
             const metadata = await metadataRepository.getMosaicMetadata(mosaicId).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
-            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
@@ -236,9 +237,9 @@ describe('MetadataHttp', () => {
 
     describe('getMosaicMetadataByKey', () => {
         it('should return metadata given a mosaicId and metadata key', async () => {
-            const metadata = await metadataRepository.getMosaicMetadataByKey(mosaicId, UInt64.fromUint(5).toHex()).toPromise();
+            const metadata = await metadataRepository.getMosaicMetadataByKey(mosaicId, UInt64.fromUint(6).toHex()).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
-            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
@@ -250,9 +251,9 @@ describe('MetadataHttp', () => {
     describe('getMosaicMetadataByKeyAndSender', () => {
         it('should return metadata given a mosaicId and metadata key and sender public key', async () => {
             const metadata = await metadataRepository
-                .getMosaicMetadataByKeyAndSender(mosaicId, UInt64.fromUint(5).toHex(), account.address)
+                .getMosaicMetadataByKeyAndSender(mosaicId, UInt64.fromUint(6).toHex(), account.address)
                 .toPromise();
-            expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata.metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect((metadata.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
@@ -265,7 +266,7 @@ describe('MetadataHttp', () => {
         it('should return metadata given a namespaceId', async () => {
             const metadata = await metadataRepository.getNamespaceMetadata(namespaceId).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
-            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
@@ -276,9 +277,9 @@ describe('MetadataHttp', () => {
 
     describe('getNamespaceMetadataByKey', () => {
         it('should return metadata given a namespaceId and metadata key', async () => {
-            const metadata = await metadataRepository.getNamespaceMetadataByKey(namespaceId, UInt64.fromUint(5).toHex()).toPromise();
+            const metadata = await metadataRepository.getNamespaceMetadataByKey(namespaceId, UInt64.fromUint(6).toHex()).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
-            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
@@ -290,9 +291,9 @@ describe('MetadataHttp', () => {
     describe('getNamespaceMetadataByKeyAndSender', () => {
         it('should return metadata given a namespaceId and metadata key and sender public key', async () => {
             const metadata = await metadataRepository
-                .getNamespaceMetadataByKeyAndSender(namespaceId, UInt64.fromUint(5).toHex(), account.address)
+                .getNamespaceMetadataByKeyAndSender(namespaceId, UInt64.fromUint(6).toHex(), account.address)
                 .toPromise();
-            expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
+            expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
             expect(metadata.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
             expect(metadata.metadataEntry.targetAddress).to.be.deep.equal(account.address);
             expect((metadata.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());

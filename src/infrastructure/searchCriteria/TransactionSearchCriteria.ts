@@ -26,11 +26,6 @@ import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-clien
  */
 export interface TransactionSearchCriteria extends SearchCriteria {
     /**
-     * Transaction identifier up to which transactions are returned. (optional)
-     */
-    id?: string;
-
-    /**
      * Filter by address involved in the transaction.
      *
      * An account's address is consider to be involved in the transaction when the account is the
@@ -65,7 +60,7 @@ export interface TransactionSearchCriteria extends SearchCriteria {
      * Filter by transaction type. To filter by multiple transaction type.  (optional, default to
      * new empty array)
      */
-    transactionTypes?: TransactionType[];
+    type?: TransactionType[];
 
     /**
      * When true, the endpoint also returns all the embedded aggregate transactions. When

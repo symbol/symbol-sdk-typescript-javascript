@@ -23,11 +23,11 @@ import {
     TransactionStatusDTO,
     TransactionStatusEnum,
     TransactionPage,
-    TransactionInfoExtendedDTO,
     TransactionMetaDTO,
     Pagination,
     TransferTransactionDTO,
     NetworkTypeEnum,
+    TransactionInfoDTO,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
@@ -131,7 +131,7 @@ describe('TransactionHttp', () => {
         paginationDto.totalEntries = 1;
         paginationDto.totalPages = 1;
 
-        const transactionInfoDto = new TransactionInfoExtendedDTO();
+        const transactionInfoDto = new TransactionInfoDTO();
         const metaDto = new TransactionMetaDTO();
         metaDto.hash = 'hash';
         metaDto.height = '1';

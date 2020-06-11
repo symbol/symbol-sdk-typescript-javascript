@@ -35,11 +35,10 @@ describe('TransactionSearchCriteria', () => {
             embedded: true,
             group: TransactionGroupSubsetEnum.Confirmed,
             height: UInt64.fromUint(1),
-            id: '12345',
             offset: '6789',
             recipientAddress: account.address,
             signerPublicKey: account.publicKey,
-            transactionTypes: [TransactionType.ACCOUNT_ADDRESS_RESTRICTION],
+            type: [TransactionType.ACCOUNT_ADDRESS_RESTRICTION],
         };
 
         expect(criteria.order?.valueOf()).to.be.equal('asc');
@@ -49,11 +48,10 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.embedded).to.be.equal(true);
         expect(criteria.group).to.be.equal(TransactionGroupSubsetEnum.Confirmed);
         expect(criteria.height?.toString()).to.be.equal('1');
-        expect(criteria.id).to.be.equal('12345');
         expect(criteria.offset).to.be.equal('6789');
         expect(criteria.recipientAddress?.plain()).to.be.equal(account.address.plain());
         expect(criteria.signerPublicKey).to.be.equal(account.publicKey);
-        deepEqual(criteria.transactionTypes, [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
+        deepEqual(criteria.type, [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
 
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         criteria = {
@@ -64,11 +62,10 @@ describe('TransactionSearchCriteria', () => {
             embedded: false,
             group: TransactionGroupSubsetEnum.Unconfirmed,
             height: UInt64.fromUint(2),
-            id: 'aaa',
             offset: 'bbb',
             recipientAddress: address,
             signerPublicKey: 'publicKey',
-            transactionTypes: [TransactionType.TRANSFER],
+            type: [TransactionType.TRANSFER],
         };
 
         expect(criteria.order?.valueOf()).to.be.equal('desc');
@@ -78,11 +75,10 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.embedded).to.be.equal(false);
         expect(criteria.group).to.be.equal(TransactionGroupSubsetEnum.Unconfirmed);
         expect(criteria.height?.toString()).to.be.equal('2');
-        expect(criteria.id).to.be.equal('aaa');
         expect(criteria.offset).to.be.equal('bbb');
         expect(criteria.recipientAddress?.plain()).to.be.equal(address.plain());
         expect(criteria.signerPublicKey).to.be.equal('publicKey');
-        deepEqual(criteria.transactionTypes, [TransactionType.TRANSFER]);
+        deepEqual(criteria.type, [TransactionType.TRANSFER]);
     });
 
     it('should create TransactionSearchCriteria - default', () => {
@@ -93,12 +89,11 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.embedded).to.be.undefined;
         expect(criteria.group).to.be.undefined;
         expect(criteria.height).to.be.undefined;
-        expect(criteria.id).to.be.undefined;
         expect(criteria.offset).to.be.undefined;
         expect(criteria.pageNumber).to.be.undefined;
         expect(criteria.pageSize).to.be.undefined;
         expect(criteria.recipientAddress).to.be.undefined;
         expect(criteria.signerPublicKey).to.be.undefined;
-        expect(criteria.transactionTypes).to.be.undefined;
+        expect(criteria.type).to.be.undefined;
     });
 });

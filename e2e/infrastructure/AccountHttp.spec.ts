@@ -177,21 +177,6 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('getMultisigAccountGraphInfo', () => {
-        it('should call getMultisigAccountGraphInfo successfully', async () => {
-            const multisigAccountGraphInfo = await multisigRepository
-                .getMultisigAccountGraphInfo(multisigAccount.publicAccount.address)
-                .toPromise();
-            expect(multisigAccountGraphInfo.multisigEntries.get(0)![0].accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
-        });
-    });
-    describe('getMultisigAccountInfo', () => {
-        it('should call getMultisigAccountInfo successfully', async () => {
-            const multisigAccountInfo = await multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).toPromise();
-            expect(multisigAccountInfo.accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
-        });
-    });
-
     describe('transactions', () => {
         it('should not return accounts when account does not exist', () => {
             return accountRepository
@@ -218,6 +203,21 @@ describe('AccountHttp', () => {
         });
     });
 
+    describe('getMultisigAccountGraphInfo', () => {
+        it('should call getMultisigAccountGraphInfo successfully', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            const multisigAccountGraphInfo = await multisigRepository
+                .getMultisigAccountGraphInfo(multisigAccount.publicAccount.address)
+                .toPromise();
+            expect(multisigAccountGraphInfo.multisigEntries.get(0)![0].accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
+        });
+    });
+    describe('getMultisigAccountInfo', () => {
+        it('should call getMultisigAccountInfo successfully', async () => {
+            const multisigAccountInfo = await multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).toPromise();
+            expect(multisigAccountInfo.accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
+        });
+    });
     /**
      * =========================
      * House Keeping
