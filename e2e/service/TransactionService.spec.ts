@@ -106,7 +106,7 @@ describe('TransactionService', () => {
 
         // Create a new Mosaic
         const nonce = MosaicNonce.createRandom();
-        newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+        newMosaicId = MosaicId.createFromNonce(nonce, account.address);
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
@@ -213,7 +213,7 @@ describe('TransactionService', () => {
     describe('Setup test MosaicId', () => {
         it('Announce MosaicDefinitionTransaction', () => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,

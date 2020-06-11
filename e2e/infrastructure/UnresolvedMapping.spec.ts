@@ -75,7 +75,7 @@ describe('Unresolved Mapping', () => {
     describe('MosaicDefinitionTransaction', () => {
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,

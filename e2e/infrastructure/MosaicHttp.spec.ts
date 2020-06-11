@@ -70,7 +70,7 @@ describe('MosaicHttp', () => {
             const nonce = MosaicNonce.createFromNumber(-1501238750);
             expect(nonce.toDTO()).to.be.equals(2793728546);
             expect(nonce.toHex()).to.be.equals('22EA84A6');
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,

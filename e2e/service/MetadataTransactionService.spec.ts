@@ -59,7 +59,7 @@ describe('MetadataTransactionService', () => {
     describe('MosaicDefinitionTransaction', () => {
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, targetAccount.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, targetAccount.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,

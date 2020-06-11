@@ -139,7 +139,7 @@ describe('TransactionHttp', () => {
     describe('MosaicDefinitionTransaction', () => {
         it('standalone', () => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -171,7 +171,7 @@ describe('TransactionHttp', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
-                MosaicId.createFromNonce(nonce, account.publicAccount),
+                MosaicId.createFromNonce(nonce, account.address),
                 MosaicFlags.create(true, true, true),
                 3,
                 UInt64.fromUint(0),
