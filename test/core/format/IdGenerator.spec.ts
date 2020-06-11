@@ -18,6 +18,7 @@ import { sha3_256 } from 'js-sha3';
 import { Convert as convert, IdGenerator as idGenerator, RawUInt64 as uint64 } from '../../../src/core/format';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 
 const constants = {
     nem_id: [0x375ffa4b, 0x84b3552d],
@@ -186,26 +187,20 @@ describe('id generator', () => {
             // Assert:
             expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.address)).to.deep.equal(basicMosaicInfo.id);
         });
-
-        // @dataProvider mosaicTestVector
-        it('generates correct mosaicId given nonce and address', () => {
-            mosaicTestVector.map((row) => {
-                const addressPublic = Address.createFromRawAddress(row.address_Public).encoded();
+        mosaicTestVector.forEach((row) => {
+            // @dataProvider mosaicTestVector
+            it('generates correct mosaicId given nonce and address', () => {
+                const addressPublic = Address.createFromRawAddress(row.address_Public);
                 const addressTest = Address.createFromRawAddress(row.address_PublicTest);
                 const addressMijin = Address.createFromRawAddress(row.address_Mijin);
                 const addressMijinTest = Address.createFromRawAddress(row.address_MijinTest);
-
-                const nonce = convert.numberToUint8Array(row.mosaicNonce, 4).reverse();
+                const nonce = MosaicNonce.createFromNumber(row.mosaicNonce);
 
                 // Assert:
-                expect(new MosaicId(idGenerator.generateMosaicId(nonce, addressPublic)).toHex(), 'Public').to.deep.equal(
-                    row.mosaicId_Public,
-                );
-                expect(new MosaicId(idGenerator.generateMosaicId(nonce, addressTest)).toHex(), 'PublicTest').to.deep.equal(
-                    row.mosaicId_PublicTest,
-                );
-                expect(new MosaicId(idGenerator.generateMosaicId(nonce, addressMijin)).toHex(), 'Mijin').to.deep.equal(row.mosaicId_Mijin);
-                expect(new MosaicId(idGenerator.generateMosaicId(nonce, addressMijinTest)).toHex(), 'MijinTest').to.deep.equal(
+                expect(MosaicId.createFromNonceAndAddress(nonce, addressPublic).toHex(), 'Public').to.deep.equal(row.mosaicId_Public);
+                expect(MosaicId.createFromNonceAndAddress(nonce, addressTest).toHex(), 'PublicTest').to.deep.equal(row.mosaicId_PublicTest);
+                expect(MosaicId.createFromNonceAndAddress(nonce, addressMijin).toHex(), 'Mijin').to.deep.equal(row.mosaicId_Mijin);
+                expect(MosaicId.createFromNonceAndAddress(nonce, addressMijinTest).toHex(), 'MijinTest').to.deep.equal(
                     row.mosaicId_MijinTest,
                 );
             });
