@@ -21,7 +21,7 @@ import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MetadataTransactionService', () => {
     const deadline = Deadline.create();
-    const key = UInt64.fromUint(123);
+    const key = UInt64.fromUint(Math.round(Math.random() * 10));
     const newValue = 'new test value';
 
     const helper = new IntegrationTestHelper();
@@ -195,6 +195,7 @@ describe('MetadataTransactionService', () => {
         });
 
         it('should create NamespaceMetadataTransaction', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
             const updateValue = newValue + 'delta';
@@ -225,7 +226,6 @@ describe('MetadataTransactionService', () => {
     describe('Announce transaction through service', () => {
         it('should create MosaicMetadataTransaction and announce', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
-
             const transaction = await metaDataService
                 .createMetadataTransaction(
                     deadline,
@@ -252,10 +252,10 @@ describe('MetadataTransactionService', () => {
     });
 
     describe('Announce transaction through service with delta size increase', () => {
-        it('should create MosaicMetadataTransaction and announce', () => {
+        it('should create MosaicMetadataTransaction and announce', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
             const metaDataService = new MetadataTransactionService(metadataRepository);
-
-            return metaDataService
+            const transaction = await metaDataService
                 .createMetadataTransaction(
                     deadline,
                     networkType,
@@ -267,26 +267,24 @@ describe('MetadataTransactionService', () => {
                     mosaicId,
                     helper.maxFee,
                 )
-                .toPromise()
-                .then((transaction: MosaicMetadataTransaction) => {
-                    const aggregateTransaction = AggregateTransaction.createComplete(
-                        Deadline.create(),
-                        [transaction.toAggregate(targetAccount.publicAccount)],
-                        networkType,
-                        [],
-                        helper.maxFee,
-                    );
-                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                    return helper.announce(signedTransaction);
-                });
+                .toPromise();
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [transaction.toAggregate(targetAccount.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+            return await helper.announce(signedTransaction);
         });
     });
 
     describe('Announce transaction through service with delta size decrease', () => {
         it('should create MosaicMetadataTransaction and announce', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
             const metaDataService = new MetadataTransactionService(metadataRepository);
-
-            return metaDataService
+            const transaction = await metaDataService
                 .createMetadataTransaction(
                     deadline,
                     networkType,
@@ -297,18 +295,16 @@ describe('MetadataTransactionService', () => {
                     targetAccount.address,
                     mosaicId,
                 )
-                .toPromise()
-                .then((transaction: MosaicMetadataTransaction) => {
-                    const aggregateTransaction = AggregateTransaction.createComplete(
-                        Deadline.create(),
-                        [transaction.toAggregate(targetAccount.publicAccount)],
-                        networkType,
-                        [],
-                        helper.maxFee,
-                    );
-                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
-                    return helper.announce(signedTransaction);
-                });
+                .toPromise();
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [transaction.toAggregate(targetAccount.publicAccount)],
+                networkType,
+                [],
+                helper.maxFee,
+            );
+            const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+            return await helper.announce(signedTransaction);
         });
     });
 });

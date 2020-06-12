@@ -209,7 +209,7 @@ describe('MetadataHttp', () => {
     });
 
     describe('getAccountMetadataByKeyAndSender', () => {
-        it('should return metadata given a NEM Address and metadata key and sender public key', async () => {
+        it('should return metadata given a NEM Address and metadata key and sender address', async () => {
             const metadata = await metadataRepository
                 .getAccountMetadataByKeyAndSender(accountAddress, UInt64.fromUint(6).toHex(), account.address)
                 .toPromise();

@@ -15,7 +15,7 @@
  */
 import { assert, expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
-import { filter } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -242,27 +242,36 @@ describe('Listener', () => {
             });
         });
     });
+
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsRemoved', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
-
             createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
+            helper.listener.aggregateBondedRemoved(cosignAccount1.address, signedAggregatedTx.hash).subscribe(() => {
+                done();
+            });
             helper.listener.confirmed(cosignAccount1.address).subscribe(() => {
-                helper.listener.aggregateBondedRemoved(cosignAccount1.address).subscribe(() => {
-                    done();
-                });
                 helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                     const criteria: TransactionSearchCriteria = {
                         address: cosignAccount1.address,
                         group: TransactionGroupSubsetEnum.Partial,
+                        embedded: true,
                     };
-                    transactionRepository.search(criteria).subscribe((transactions) => {
-                        console.log('Partial', transactions.data);
-                        const transactionToCosign = transactions.data[0] as AggregateTransaction;
-                        const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
-                        const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
-                        transactionRepository.announceAggregateBondedCosignature(cosignatureSignedTransaction);
-                    });
+                    transactionRepository
+                        .search(criteria)
+                        .pipe(
+                            mergeMap((page) => {
+                                console.log('Partial Search', page.data);
+                                return transactionRepository.getTransaction(page.data[0].transactionInfo?.hash!);
+                            }),
+                        )
+                        .subscribe((transactions) => {
+                            console.log('getTransaction', transactions);
+                            const transactionToCosign = transactions as AggregateTransaction;
+                            const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
+                            const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
+                            transactionRepository.announceAggregateBondedCosignature(cosignatureSignedTransaction);
+                        });
                 });
                 helper.listener.status(cosignAccount1.address).subscribe((error) => {
                     console.log('Error:', error);
@@ -347,6 +356,7 @@ describe('Listener', () => {
                 ],
                 networkType,
                 [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(
                 cosignAccount1,
