@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crypto } from '../../src/core/crypto';
-import { Convert } from '../../src/core/format';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -26,35 +22,21 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MultisigAccounts', () => {
     const helper = new IntegrationTestHelper();
-    let account: Account;
-    let account2: Account;
-    let account3: Account;
     let multisigAccount: Account;
     let cosignAccount1: Account;
     let cosignAccount2: Account;
     let cosignAccount3: Account;
-    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
-    let harvestingAccount: Account;
-    let transactionRepository: TransactionRepository;
-    let votingKey: string;
 
     before(() => {
         return helper.start().then(() => {
-            account = helper.account;
-            account2 = helper.account2;
-            account3 = helper.account3;
             multisigAccount = helper.multisigAccount;
             cosignAccount1 = helper.cosignAccount1;
             cosignAccount2 = helper.cosignAccount2;
             cosignAccount3 = helper.cosignAccount3;
-            harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
-            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
-            transactionRepository = helper.repositoryFactory.createTransactionRepository();
         });
     });
     before(() => {
@@ -67,9 +49,6 @@ describe('MultisigAccounts', () => {
 
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
-
-            console.log(`http://localhost:3000/account/${multisigAccount.address.plain()}`);
-            console.log(`http://localhost:3000/account/${multisigAccount.address.plain()}/multisig`);
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 2,
@@ -92,8 +71,6 @@ describe('MultisigAccounts', () => {
                 [cosignAccount1, cosignAccount2, cosignAccount3],
                 generationHash,
             );
-
-            console.log(signedTransaction.hash);
             return helper.announce(signedTransaction);
         });
     });
