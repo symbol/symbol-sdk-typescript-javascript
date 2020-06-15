@@ -26,7 +26,6 @@ import { MultisigAccountModificationTransaction } from '../../src/model/transact
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
-import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../../src/model/account/Address';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
@@ -34,6 +33,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
+import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -254,7 +254,7 @@ describe('Listener', () => {
                 helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                     const criteria: TransactionSearchCriteria = {
                         address: cosignAccount1.address,
-                        group: TransactionGroupSubsetEnum.Partial,
+                        group: TransactionSearchGroup.Partial,
                         embedded: true,
                     };
                     transactionRepository
@@ -262,7 +262,10 @@ describe('Listener', () => {
                         .pipe(
                             mergeMap((page) => {
                                 console.log('Partial Search', page.data);
-                                return transactionRepository.getTransaction(page.data[0].transactionInfo?.hash!);
+                                return transactionRepository.getTransaction(
+                                    page.data[0].transactionInfo?.hash!,
+                                    TransactionSearchGroup.Partial,
+                                );
                             }),
                         )
                         .subscribe((transactions) => {
@@ -299,7 +302,7 @@ describe('Listener', () => {
             helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                 const criteria: TransactionSearchCriteria = {
                     address: cosignAccount1.publicAccount.address,
-                    group: TransactionGroupSubsetEnum.Partial,
+                    group: TransactionSearchGroup.Partial,
                 };
                 transactionRepository.search(criteria).subscribe((transactions) => {
                     const transactionToCosign = transactions.data[0] as AggregateTransaction;

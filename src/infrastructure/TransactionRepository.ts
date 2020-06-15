@@ -19,9 +19,9 @@ import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSi
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
-import { TransactionStatus } from '../model/transaction/TransactionStatus';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Searcher } from './paginationStreamer/Searcher';
+import { TransactionSearchGroup } from './TransactionSearchGroup';
 
 /**
  * Transaction interface repository.
@@ -32,9 +32,10 @@ export interface TransactionRepository extends Searcher<Transaction, Transaction
     /**
      * Gets a transaction for a transactionId
      * @param transactionId - Transaction id or hash.
+     * @param transactionGroup - Transaction group.
      * @returns Observable<Transaction>
      */
-    getTransaction(transactionId: string): Observable<Transaction>;
+    getTransaction(transactionId: string, transactionGroup: TransactionSearchGroup): Observable<Transaction>;
 
     /**
      * Gets an array of transactions for different transaction ids
@@ -44,25 +45,12 @@ export interface TransactionRepository extends Searcher<Transaction, Transaction
     getTransactionsById(transactionIds: string[]): Observable<Transaction[]>;
 
     /**
-     * Gets a transaction status for a transaction hash
-     * @param transactionHash - Transaction hash.
-     * @returns Observable<TransactionStatus>
-     */
-    getTransactionStatus(transactionHash: string): Observable<TransactionStatus>;
-
-    /**
-     * Gets an array of transaction status for different transaction hashes
-     * @param transactionHashes - Array of transaction hash
-     * @returns Observable<TransactionStatus[]>
-     */
-    getTransactionsStatuses(transactionHashes: string[]): Observable<TransactionStatus[]>;
-
-    /**
      * Gets a transaction's effective paid fee
      * @param transactionId - Transaction id or hash.
+     * @param transactionGroup - Transaction group.
      * @returns Observable<number>
      */
-    getTransactionEffectiveFee(transactionId: string): Observable<number>;
+    getTransactionEffectiveFee(transactionId: string, transactionGroup: TransactionSearchGroup): Observable<number>;
 
     /**
      * Send a signed transaction

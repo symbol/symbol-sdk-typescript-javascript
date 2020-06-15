@@ -30,6 +30,7 @@ import { ReceiptRepository } from './ReceiptRepository';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionRepository } from './TransactionRepository';
+import { TransactionStatusRepository } from './TransactionStatusRepository';
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing
@@ -95,9 +96,14 @@ export interface RepositoryFactory {
     createNodeRepository(): NodeRepository;
 
     /**
-     * @returns a newly created {@link NodeRepository}
+     * @returns a newly created {@link TransactionRepository}
      */
     createTransactionRepository(): TransactionRepository;
+
+    /**
+     * @returns a newly created {@link TransactionStatusRepository}
+     */
+    createTransactionStatusRepository(): TransactionStatusRepository;
 
     /**
      * @returns a newly created {@link MetadataRepository}

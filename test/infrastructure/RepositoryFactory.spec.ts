@@ -23,6 +23,21 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeRepository } from '../../src/infrastructure/NodeRepository';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { AccountHttp } from '../../src/infrastructure/AccountHttp';
+import { BlockHttp } from '../../src/infrastructure/BlockHttp';
+import { ChainHttp } from '../../src/infrastructure/ChainHttp';
+import { Listener } from '../../src/infrastructure/Listener';
+import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
+import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
+import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
+import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
+import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
+import { NodeHttp } from '../../src/infrastructure/NodeHttp';
+import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
+import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
+import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -188,5 +203,28 @@ describe('RepositoryFactory', () => {
 
         listener = repositoryFactory.createListener();
         expect(listener.url).to.be.equal('ws://localhost:3000/ws');
+    });
+
+    it('Should create listener object using injected ws', () => {
+        const factory = new RepositoryFactoryHttp('url', {
+            networkType: NetworkType.MIJIN_TEST,
+            generationHash: 'testHash',
+        });
+
+        expect(factory.createAccountRepository() instanceof AccountHttp).to.be.true;
+        expect(factory.createBlockRepository() instanceof BlockHttp).to.be.true;
+        expect(factory.createChainRepository() instanceof ChainHttp).to.be.true;
+        expect(factory.createListener() instanceof Listener).to.be.true;
+        expect(factory.createMetadataRepository() instanceof MetadataHttp).to.be.true;
+        expect(factory.createMosaicRepository() instanceof MosaicHttp).to.be.true;
+        expect(factory.createMultisigRepository() instanceof MultisigHttp).to.be.true;
+        expect(factory.createNamespaceRepository() instanceof NamespaceHttp).to.be.true;
+        expect(factory.createNetworkRepository() instanceof NetworkHttp).to.be.true;
+        expect(factory.createNodeRepository() instanceof NodeHttp).to.be.true;
+        expect(factory.createReceiptRepository() instanceof ReceiptHttp).to.be.true;
+        expect(factory.createRestrictionAccountRepository() instanceof RestrictionAccountHttp).to.be.true;
+        expect(factory.createRestrictionMosaicRepository() instanceof RestrictionMosaicHttp).to.be.true;
+        expect(factory.createTransactionRepository() instanceof TransactionHttp).to.be.true;
+        expect(factory.createTransactionStatusRepository() instanceof TransactionStatusHttp).to.be.true;
     });
 });

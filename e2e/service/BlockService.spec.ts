@@ -26,6 +26,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
+import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
 
 describe('BlockService', () => {
     const helper = new IntegrationTestHelper();
@@ -87,7 +88,7 @@ describe('BlockService', () => {
 
     describe('Validate transansaction', () => {
         it('call block service', async () => {
-            const transaction = await transactionRepository.getTransaction(transactionHash).toPromise();
+            const transaction = await transactionRepository.getTransaction(transactionHash, TransactionSearchGroup.Confirmed).toPromise();
             const transactionInfo = transaction.transactionInfo;
             if (transactionInfo && transactionInfo.height !== undefined) {
                 const validationResult = await blockService.validateTransactionInBlock(transactionHash, transactionInfo.height).toPromise();

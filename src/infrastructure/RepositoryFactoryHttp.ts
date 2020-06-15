@@ -47,6 +47,8 @@ import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionHttp } from './TransactionHttp';
 import { TransactionRepository } from './TransactionRepository';
 import { RepositoryFactoryConfig } from './RepositoryFactoryConfig';
+import { TransactionStatusHttp } from './TransactionStatusHttp';
+import { TransactionStatusRepository } from './TransactionStatusRepository';
 
 /**
  * Receipt http repository.
@@ -129,6 +131,10 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     createTransactionRepository(): TransactionRepository {
         return new TransactionHttp(this.url);
+    }
+
+    createTransactionStatusRepository(): TransactionStatusRepository {
+        return new TransactionStatusHttp(this.url);
     }
 
     getGenerationHash(): Observable<string> {

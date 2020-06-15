@@ -32,6 +32,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
+import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
@@ -90,7 +91,7 @@ describe('MosaicHttp', () => {
 
             const savedTransaction = (await helper.repositoryFactory
                 .createTransactionRepository()
-                .getTransaction(signedTransaction.hash)
+                .getTransaction(signedTransaction.hash, TransactionSearchGroup.Confirmed)
                 .toPromise()) as MosaicDefinitionTransaction;
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(savedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(savedTransaction.nonce);
