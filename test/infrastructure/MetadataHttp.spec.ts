@@ -33,6 +33,14 @@ import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
+import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { NetworkType } from '../../src/model/network/NetworkType';
+import { UInt64 } from '../../src/model/UInt64';
+import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
+import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 
 describe('MetadataHttp', () => {
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
@@ -246,5 +254,156 @@ describe('MetadataHttp', () => {
         );
         const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, 'cccc', address).toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
+    });
+
+    it('Address meta no previous value', (done) => {
+        response.statusCode = 404;
+        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), '85BBEA6CC462B244', address.plain())).thenReturn(
+            Promise.reject({
+                response,
+                body: undefined,
+            }),
+        );
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+        metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Account,
+                address,
+                UInt64.fromHex('85BBEA6CC462B244'),
+                'test',
+                address,
+            )
+            .subscribe((transaction: AccountMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal('85BBEA6CC462B244');
+                done();
+            });
+    });
+
+    it('Mosaic meta no previous value', (done) => {
+        response.statusCode = 404;
+        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
+            Promise.reject({
+                response,
+                body: undefined,
+            }),
+        );
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+        metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Mosaic,
+                address,
+                UInt64.fromHex('85BBEA6CC462B244'),
+                'test',
+                address,
+                mosaicId,
+            )
+            .subscribe((transaction: MosaicMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal('85BBEA6CC462B244');
+                done();
+            });
+    });
+
+    it('Namespace meta no previous value', (done) => {
+        response.statusCode = 404;
+        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
+            Promise.reject({
+                response,
+                body: undefined,
+            }),
+        );
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+        metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Namespace,
+                address,
+                UInt64.fromHex('85BBEA6CC462B244'),
+                'test',
+                address,
+                namespaceId,
+            )
+            .subscribe((transaction: NamespaceMetadataTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal('85BBEA6CC462B244');
+                done();
+            });
+    });
+
+    it('Address meta no previous value Error', async () => {
+        response.statusCode = 409;
+        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), '85BBEA6CC462B244', address.plain())).thenReturn(
+            Promise.reject({
+                response,
+                body: undefined,
+            }),
+        );
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+        await metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Account,
+                address,
+                UInt64.fromHex('85BBEA6CC462B244'),
+                'test',
+                address,
+            )
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('Mosaic meta no previous value', async () => {
+        response.statusCode = 409;
+        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
+            Promise.reject({
+                response,
+                body: undefined,
+            }),
+        );
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+        await metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Mosaic,
+                address,
+                UInt64.fromHex('85BBEA6CC462B244'),
+                'test',
+                address,
+                mosaicId,
+            )
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('Namespace meta no previous value', async () => {
+        response.statusCode = 409;
+        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
+            Promise.reject({
+                response,
+                body: undefined,
+            }),
+        );
+        const metadataTransactionService = new MetadataTransactionService(metadataRepository);
+        await metadataTransactionService
+            .createMetadataTransaction(
+                Deadline.create(),
+                NetworkType.MIJIN_TEST,
+                MetadataType.Namespace,
+                address,
+                UInt64.fromHex('85BBEA6CC462B244'),
+                'test',
+                address,
+                namespaceId,
+            )
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
     });
 });

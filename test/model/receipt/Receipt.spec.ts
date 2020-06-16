@@ -34,6 +34,7 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
+import { Convert } from '../../../src/core/format/Convert';
 
 describe('Receipt', () => {
     let account: Account;
@@ -356,5 +357,17 @@ describe('Receipt', () => {
         const receipt = statement.transactionStatements[0];
         const hash = receipt.generateHash();
         expect(hash).to.be.equal('E73E67382162C38AED77D5D5D67F96AA590DC12FF13AE263AA50932896AC4801');
+    });
+
+    it('artifactExpiryReceipt - serialize', () => {
+        const receipt = new ArtifactExpiryReceipt(new NamespaceId([3646934825, 3576016193]), 1, 16718);
+        const byte = receipt.serialize();
+        expect(Convert.uint8ToHex(byte)).to.be.equal('01004E4129CF5FD941AD25D5');
+    });
+
+    it('artifactExpiryReceipt - serialize', () => {
+        const receipt = new ArtifactExpiryReceipt(new MosaicId([3646934825, 3576016193]), 1, 16717);
+        const byte = receipt.serialize();
+        expect(Convert.uint8ToHex(byte)).to.be.equal('01004D4129CF5FD941AD25D5');
     });
 });

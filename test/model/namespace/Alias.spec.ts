@@ -75,4 +75,19 @@ describe('Alias', () => {
         expect(alias1.equals(alias2)).to.be.equal(true);
         expect(alias1.equals(alias3)).to.be.equal(false);
     });
+
+    it('EmptyAlias.equals()', () => {
+        const alias1 = new MosaicAlias(mosaicAliasDTO.mosaicId);
+        const alias2 = new EmptyAlias();
+        const alias3 = new EmptyAlias();
+
+        expect(alias2.equals(alias3)).to.be.equal(true);
+        expect(alias2.equals(alias1)).to.be.equal(false);
+    });
+
+    it('EmptyAlias.serialize()', () => {
+        const alias3 = new EmptyAlias();
+
+        expect(alias3.serialize()).to.be.deep.equal(new Uint8Array(0));
+    });
 });

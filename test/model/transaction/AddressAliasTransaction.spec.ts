@@ -25,6 +25,7 @@ import { AddressAliasTransaction } from '../../../src/model/transaction/AddressA
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { AliasTransaction } from '../../../src/model/model';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -74,6 +75,29 @@ describe('AddressAliasTransaction', () => {
             address,
             NetworkType.MIJIN_TEST,
         );
+
+        expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
+        expect(addressAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
+        expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
+        expect(addressAliasTransaction.address.plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+
+        const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E19026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B201',
+        );
+    });
+
+    it('should createComplete an AddressAliasTransaction using abstract', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const addressAliasTransaction = AliasTransaction.createForAddress(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            address,
+            NetworkType.MIJIN_TEST,
+        ) as AddressAliasTransaction;
 
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(addressAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);

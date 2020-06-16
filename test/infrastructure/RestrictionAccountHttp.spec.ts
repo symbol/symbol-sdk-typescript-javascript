@@ -75,11 +75,12 @@ describe('RestrictionAccountHttp', () => {
             Promise.resolve({ response, body: [restrictionInfo] }),
         );
 
-        const restrictions = await restrictionAccountRepository.getAccountRestrictions(address).toPromise();
+        const restrictions = await restrictionAccountRepository.getAccountRestrictionsFromAccounts([address]).toPromise();
         expect(restrictions).to.be.not.null;
         expect(restrictions.length).to.be.greaterThan(0);
-        expect(restrictions[0].restrictionFlags).to.be.equals(AddressRestrictionFlag.AllowIncomingAddress);
-        expect((restrictions[0].values[0] as Address).plain()).to.be.equals(address.plain());
+        expect(restrictions[0].address.plain()).to.be.equals(address.plain());
+        expect(restrictions[0].restrictions[0].restrictionFlags).to.be.equals(AddressRestrictionFlag.AllowIncomingAddress);
+        expect((restrictions[0].restrictions[0].values[0] as Address).plain()).to.be.equals(address.plain());
     });
 
     it('getAccountRestrictions - Error', async () => {
