@@ -22,7 +22,7 @@ import { deepEqual } from 'assert';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { Address } from '../../src/model/account/Address';
-import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('TransactionSearchCriteria', () => {
     const account = TestingAccount;
@@ -34,7 +34,7 @@ describe('TransactionSearchCriteria', () => {
             pageSize: 1,
             address: account.address,
             embedded: true,
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
             height: UInt64.fromUint(1),
             offset: '6789',
             recipientAddress: account.address,
@@ -47,7 +47,7 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.pageSize).to.be.equal(1);
         expect(criteria.address?.plain()).to.be.equal(account.address.plain());
         expect(criteria.embedded).to.be.equal(true);
-        expect(criteria.group.toString()).to.be.equal(TransactionSearchGroup.Confirmed.toString());
+        expect(criteria.group.toString()).to.be.equal(TransactionGroup.Confirmed.toString());
         expect(criteria.height?.toString()).to.be.equal('1');
         expect(criteria.offset).to.be.equal('6789');
         expect(criteria.recipientAddress?.plain()).to.be.equal(account.address.plain());
@@ -61,7 +61,7 @@ describe('TransactionSearchCriteria', () => {
             pageSize: 2,
             address: address,
             embedded: false,
-            group: TransactionSearchGroup.Unconfirmed,
+            group: TransactionGroup.Unconfirmed,
             height: UInt64.fromUint(2),
             offset: 'bbb',
             recipientAddress: address,
@@ -74,7 +74,7 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.pageSize).to.be.equal(2);
         expect(criteria.address?.plain()).to.be.equal(address.plain());
         expect(criteria.embedded).to.be.equal(false);
-        expect(criteria.group.toString()).to.be.equal(TransactionSearchGroup.Unconfirmed.toString());
+        expect(criteria.group.toString()).to.be.equal(TransactionGroup.Unconfirmed.toString());
         expect(criteria.height?.toString()).to.be.equal('2');
         expect(criteria.offset).to.be.equal('bbb');
         expect(criteria.recipientAddress?.plain()).to.be.equal(address.plain());
@@ -83,12 +83,12 @@ describe('TransactionSearchCriteria', () => {
     });
 
     it('should create TransactionSearchCriteria - default', () => {
-        const criteria: TransactionSearchCriteria = { group: TransactionSearchGroup.Confirmed };
+        const criteria: TransactionSearchCriteria = { group: TransactionGroup.Confirmed };
 
         expect(criteria.order).to.be.undefined;
         expect(criteria.address).to.be.undefined;
         expect(criteria.embedded).to.be.undefined;
-        expect(criteria.group).to.be.equal(TransactionSearchGroup.Confirmed);
+        expect(criteria.group).to.be.equal(TransactionGroup.Confirmed);
         expect(criteria.height).to.be.undefined;
         expect(criteria.offset).to.be.undefined;
         expect(criteria.pageNumber).to.be.undefined;

@@ -18,7 +18,7 @@ import { SearchCriteria } from './SearchCriteria';
 import { Address } from '../../model/account/Address';
 import { UInt64 } from '../../model/UInt64';
 import { TransactionType } from '../../model/transaction/TransactionType';
-import { TransactionSearchGroup } from '../TransactionSearchGroup';
+import { TransactionGroup } from '../TransactionGroup';
 
 /**
  * Defines the params used to search transactions. With this criteria, you can sort and filter
@@ -28,7 +28,7 @@ export interface TransactionSearchCriteria extends SearchCriteria {
     /**
      * The group of transaction (optional, default is confirmed)
      */
-    group: TransactionSearchGroup;
+    group: TransactionGroup;
     /**
      * Filter by address involved in the transaction.
      *

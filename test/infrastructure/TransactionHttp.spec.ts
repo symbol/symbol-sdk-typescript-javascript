@@ -41,7 +41,7 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { UInt64 } from '../../src/model/UInt64';
 import { CosignatureSignedTransaction } from '../../src/model/transaction/CosignatureSignedTransaction';
 
@@ -161,7 +161,7 @@ describe('TransactionHttp', () => {
             ),
         ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
 
-        let transactions = await transactionHttp.search({ group: TransactionSearchGroup.Confirmed, address: account.address }).toPromise();
+        let transactions = await transactionHttp.search({ group: TransactionGroup.Confirmed, address: account.address }).toPromise();
 
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
@@ -176,7 +176,7 @@ describe('TransactionHttp', () => {
         expect(transactions.totalEntries).to.be.equal(1);
         expect(transactions.totalPages).to.be.equal(1);
 
-        transactions = await transactionHttp.search({ group: TransactionSearchGroup.Unconfirmed, address: account.address }).toPromise();
+        transactions = await transactionHttp.search({ group: TransactionGroup.Unconfirmed, address: account.address }).toPromise();
 
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
@@ -191,7 +191,7 @@ describe('TransactionHttp', () => {
         expect(transactions.totalEntries).to.be.equal(1);
         expect(transactions.totalPages).to.be.equal(1);
 
-        transactions = await transactionHttp.search({ group: TransactionSearchGroup.Partial, address: account.address }).toPromise();
+        transactions = await transactionHttp.search({ group: TransactionGroup.Partial, address: account.address }).toPromise();
 
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
@@ -239,7 +239,7 @@ describe('TransactionHttp', () => {
             Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
         );
 
-        let transaction = await transactionHttp.getTransaction(generationHash, TransactionSearchGroup.Confirmed).toPromise();
+        let transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Confirmed).toPromise();
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
@@ -248,7 +248,7 @@ describe('TransactionHttp', () => {
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
 
-        transaction = await transactionHttp.getTransaction(generationHash, TransactionSearchGroup.Partial).toPromise();
+        transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Partial).toPromise();
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
@@ -257,7 +257,7 @@ describe('TransactionHttp', () => {
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
 
-        transaction = await transactionHttp.getTransaction(generationHash, TransactionSearchGroup.Unconfirmed).toPromise();
+        transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Unconfirmed).toPromise();
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
@@ -354,23 +354,11 @@ describe('TransactionHttp', () => {
         when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(
             Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
         );
-
-        when(transactionRoutesApi.getPartialTransaction(generationHash)).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
-        );
-        when(transactionRoutesApi.getUnconfirmedTransaction(generationHash)).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
-        );
-
         when(blockRoutesApi.getBlockByHeight(deepEqual(UInt64.fromUint(1).toString()))).thenReturn(
             Promise.resolve({ response: instance(clientResponse), body: blockInfoDto }),
         );
 
-        let fees = await transactionHttp.getTransactionEffectiveFee(generationHash, TransactionSearchGroup.Confirmed).toPromise();
-        expect(fees).to.be.equal(483);
-        fees = await transactionHttp.getTransactionEffectiveFee(generationHash, TransactionSearchGroup.Unconfirmed).toPromise();
-        expect(fees).to.be.equal(483);
-        fees = await transactionHttp.getTransactionEffectiveFee(generationHash, TransactionSearchGroup.Partial).toPromise();
+        const fees = await transactionHttp.getTransactionEffectiveFee(generationHash).toPromise();
         expect(fees).to.be.equal(483);
     });
 

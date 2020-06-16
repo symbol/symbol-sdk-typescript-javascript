@@ -18,14 +18,14 @@ import { instance, mock } from 'ts-mockito';
 import { TransactionPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { TransactionRepository } from '../../../src/infrastructure/TransactionRepository';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
-import { TransactionSearchGroup } from '../../../src/infrastructure/TransactionSearchGroup';
+import { TransactionGroup } from '../../../src/infrastructure/TransactionGroup';
 
 describe('TransactionPaginationStreamer', () => {
     it('basicMultiPageTest', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
         });
         return tester.basicMultiPageTest();
     });
@@ -34,7 +34,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
         });
         return tester.basicSinglePageTest();
     });
@@ -43,7 +43,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
         });
         return tester.limitToTwoPages();
     });
@@ -52,7 +52,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
         });
         return tester.multipageWithLimit();
     });
@@ -61,7 +61,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
         });
         return tester.limitToThreePages();
     });
@@ -70,7 +70,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Confirmed,
+            group: TransactionGroup.Confirmed,
         });
         return tester.basicMultiPageTest();
     });
@@ -79,7 +79,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Unconfirmed,
+            group: TransactionGroup.Unconfirmed,
         });
         return tester.basicSinglePageTest();
     });
@@ -88,7 +88,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Unconfirmed,
+            group: TransactionGroup.Unconfirmed,
         });
         return tester.limitToTwoPages();
     });
@@ -97,7 +97,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Unconfirmed,
+            group: TransactionGroup.Unconfirmed,
         });
         return tester.multipageWithLimit();
     });
@@ -106,7 +106,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Unconfirmed,
+            group: TransactionGroup.Unconfirmed,
         });
         return tester.limitToThreePages();
     });
@@ -115,7 +115,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Partial,
+            group: TransactionGroup.Partial,
         });
         return tester.basicSinglePageTest();
     });
@@ -124,7 +124,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Partial,
+            group: TransactionGroup.Partial,
         });
         return tester.limitToTwoPages();
     });
@@ -133,7 +133,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Unconfirmed,
+            group: TransactionGroup.Unconfirmed,
         });
         return tester.multipageWithLimit();
     });
@@ -142,7 +142,7 @@ describe('TransactionPaginationStreamer', () => {
         const transactionRepositoryMock: TransactionRepository = mock();
         const streamer = new TransactionPaginationStreamer(instance(transactionRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), transactionRepositoryMock, {
-            group: TransactionSearchGroup.Partial,
+            group: TransactionGroup.Partial,
         });
         return tester.limitToThreePages();
     });

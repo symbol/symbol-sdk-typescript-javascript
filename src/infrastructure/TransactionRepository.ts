@@ -21,7 +21,7 @@ import { Transaction } from '../model/transaction/Transaction';
 import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Searcher } from './paginationStreamer/Searcher';
-import { TransactionSearchGroup } from './TransactionSearchGroup';
+import { TransactionGroup } from './TransactionGroup';
 
 /**
  * Transaction interface repository.
@@ -35,7 +35,7 @@ export interface TransactionRepository extends Searcher<Transaction, Transaction
      * @param transactionGroup - Transaction group.
      * @returns Observable<Transaction>
      */
-    getTransaction(transactionId: string, transactionGroup: TransactionSearchGroup): Observable<Transaction>;
+    getTransaction(transactionId: string, transactionGroup: TransactionGroup): Observable<Transaction>;
 
     /**
      * Gets an array of transactions for different transaction ids
@@ -47,10 +47,9 @@ export interface TransactionRepository extends Searcher<Transaction, Transaction
     /**
      * Gets a transaction's effective paid fee
      * @param transactionId - Transaction id or hash.
-     * @param transactionGroup - Transaction group.
      * @returns Observable<number>
      */
-    getTransactionEffectiveFee(transactionId: string, transactionGroup: TransactionSearchGroup): Observable<number>;
+    getTransactionEffectiveFee(transactionId: string): Observable<number>;
 
     /**
      * Send a signed transaction

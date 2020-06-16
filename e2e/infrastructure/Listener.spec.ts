@@ -33,7 +33,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
-import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -254,17 +254,14 @@ describe('Listener', () => {
                 helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                     const criteria: TransactionSearchCriteria = {
                         address: cosignAccount1.address,
-                        group: TransactionSearchGroup.Partial,
+                        group: TransactionGroup.Partial,
                         embedded: true,
                     };
                     transactionRepository
                         .search(criteria)
                         .pipe(
                             mergeMap((page) => {
-                                return transactionRepository.getTransaction(
-                                    page.data[0].transactionInfo?.hash!,
-                                    TransactionSearchGroup.Partial,
-                                );
+                                return transactionRepository.getTransaction(page.data[0].transactionInfo?.hash!, TransactionGroup.Partial);
                             }),
                         )
                         .subscribe((transactions) => {
@@ -300,7 +297,7 @@ describe('Listener', () => {
             helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                 const criteria: TransactionSearchCriteria = {
                     address: cosignAccount1.publicAccount.address,
-                    group: TransactionSearchGroup.Partial,
+                    group: TransactionGroup.Partial,
                 };
                 transactionRepository.search(criteria).subscribe((transactions) => {
                     const transactionToCosign = transactions.data[0] as AggregateTransaction;

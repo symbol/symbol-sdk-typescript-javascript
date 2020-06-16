@@ -74,7 +74,7 @@ import { deepEqual } from 'assert';
 import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
-import { TransactionSearchGroup } from '../../src/infrastructure/TransactionSearchGroup';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -1388,13 +1388,13 @@ describe('TransactionHttp', () => {
 
     describe('getTransaction', () => {
         it('should return transaction info given transactionHash', async () => {
-            const transaction = await transactionRepository.getTransaction(transactionHash, TransactionSearchGroup.Confirmed).toPromise();
+            const transaction = await transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed).toPromise();
             expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
             transactionId = transaction.transactionInfo?.id!;
         });
 
         it('should return transaction info given transactionId', async () => {
-            const transaction = await transactionRepository.getTransaction(transactionId, TransactionSearchGroup.Confirmed).toPromise();
+            const transaction = await transactionRepository.getTransaction(transactionId, TransactionGroup.Confirmed).toPromise();
             expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transaction.transactionInfo!.id).to.be.equal(transactionId);
         });
@@ -1482,9 +1482,7 @@ describe('TransactionHttp', () => {
 
     describe('getTransactionEffectiveFee', () => {
         it('should return effective paid fee given transactionHash', async () => {
-            const effectiveFee = await transactionRepository
-                .getTransactionEffectiveFee(transactionHash, TransactionSearchGroup.Confirmed)
-                .toPromise();
+            const effectiveFee = await transactionRepository.getTransactionEffectiveFee(transactionHash).toPromise();
             expect(effectiveFee).to.not.be.undefined;
             expect(effectiveFee).not.to.be.equal(0);
         });
@@ -1510,7 +1508,7 @@ describe('TransactionHttp', () => {
                 .search({ address: account.address, pageSize: 10 } as TransactionSearchCriteria)
                 .toPromise();
             const transactions = await streamer
-                .search({ group: TransactionSearchGroup.Confirmed, address: account.address, pageSize: 10 })
+                .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 })
                 .pipe(take(10), toArray())
                 .toPromise();
             expect(transactions.length).to.be.greaterThan(0);

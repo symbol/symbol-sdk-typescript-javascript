@@ -35,7 +35,7 @@ import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Page } from './Page';
-import { TransactionSearchGroup } from './TransactionSearchGroup';
+import { TransactionGroup } from './TransactionGroup';
 import http = require('http');
 
 /**
@@ -74,7 +74,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @param transactionGroup - Transaction group.
      * @returns Observable<Transaction>
      */
-    public getTransaction(transactionId: string, transactionGroup: TransactionSearchGroup): Observable<Transaction> {
+    public getTransaction(transactionId: string, transactionGroup: TransactionGroup): Observable<Transaction> {
         return observableFrom(this.getTransactionByGroup(transactionId, transactionGroup)).pipe(
             map(({ body }) => CreateTransactionFromDTO(body)),
             catchError((error) => throwError(this.errorHandling(error))),
@@ -147,11 +147,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * Gets a transaction's effective paid fee
      * @param transactionId - Transaction id or hash.
-     * @param transactionGroup - Transaction group.
      * @returns Observable<number>
      */
-    public getTransactionEffectiveFee(transactionId: string, transactionGroup: TransactionSearchGroup): Observable<number> {
-        return observableFrom(this.getTransactionByGroup(transactionId, transactionGroup)).pipe(
+    public getTransactionEffectiveFee(transactionId: string): Observable<number> {
+        return observableFrom(this.getTransactionByGroup(transactionId, TransactionGroup.Confirmed)).pipe(
             mergeMap(({ body }) => {
                 // parse transaction to take advantage of `size` getter overload
                 const transaction = CreateTransactionFromDTO(body);
@@ -195,17 +194,17 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     private getTransactionByGroup(
         transactionId: string,
-        transactionGroup: TransactionSearchGroup,
+        transactionGroup: TransactionGroup,
     ): Promise<{
         response: http.ClientResponse;
         body: TransactionInfoDTO;
     }> {
         switch (transactionGroup) {
-            case TransactionSearchGroup.Confirmed:
+            case TransactionGroup.Confirmed:
                 return this.transactionRoutesApi.getConfirmedTransaction(transactionId);
-            case TransactionSearchGroup.Unconfirmed:
+            case TransactionGroup.Unconfirmed:
                 return this.transactionRoutesApi.getUnconfirmedTransaction(transactionId);
-            case TransactionSearchGroup.Partial:
+            case TransactionGroup.Partial:
                 return this.transactionRoutesApi.getPartialTransaction(transactionId);
         }
     }
@@ -224,7 +223,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
         body: TransactionPage;
     }> {
         switch (criteria.group) {
-            case TransactionSearchGroup.Confirmed:
+            case TransactionGroup.Confirmed:
                 return this.transactionRoutesApi.searchConfirmedTransactions(
                     criteria.address?.plain(),
                     criteria.recipientAddress?.plain(),
@@ -237,7 +236,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.offset,
                     criteria.order,
                 );
-            case TransactionSearchGroup.Unconfirmed:
+            case TransactionGroup.Unconfirmed:
                 return this.transactionRoutesApi.searchUnconfirmedTransactions(
                     criteria.address?.plain(),
                     criteria.recipientAddress?.plain(),
@@ -250,7 +249,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.offset,
                     criteria.order,
                 );
-            case TransactionSearchGroup.Partial:
+            case TransactionGroup.Partial:
                 return this.transactionRoutesApi.searchPartialTransactions(
                     criteria.address?.plain(),
                     criteria.recipientAddress?.plain(),
