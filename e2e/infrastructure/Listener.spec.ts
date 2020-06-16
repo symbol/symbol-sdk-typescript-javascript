@@ -261,7 +261,6 @@ describe('Listener', () => {
                         .search(criteria)
                         .pipe(
                             mergeMap((page) => {
-                                console.log('Partial Search', page.data);
                                 return transactionRepository.getTransaction(
                                     page.data[0].transactionInfo?.hash!,
                                     TransactionSearchGroup.Partial,
@@ -269,7 +268,6 @@ describe('Listener', () => {
                             }),
                         )
                         .subscribe((transactions) => {
-                            console.log('getTransaction', transactions);
                             const transactionToCosign = transactions as AggregateTransaction;
                             const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
                             const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
