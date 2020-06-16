@@ -60,7 +60,7 @@ const extractUnresolvedAddress = (unresolvedAddress: any): UnresolvedAddress => 
  * @returns {ResolutionStatement}
  * @constructor
  */
-const createResolutionStatement = (statementDTO, resolutionType): ResolutionStatement => {
+const createResolutionStatement = (statementDTO, resolutionType: ResolutionType): ResolutionStatement => {
     switch (resolutionType) {
         case ResolutionType.Address:
             return new ResolutionStatement(
@@ -86,8 +86,6 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                     );
                 }),
             );
-        default:
-            throw new Error('Resolution type invalid');
     }
 };
 

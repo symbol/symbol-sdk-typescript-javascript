@@ -164,12 +164,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
                         // effective_fee = feeMultiplier x transaction::size
                         return blockDTO.block.feeMultiplier * transaction.size;
                     }),
-                    catchError((error) => throwError(this.errorHandling(error))),
                 );
             }),
-            catchError((err) => {
-                return throwError(err);
-            }),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 

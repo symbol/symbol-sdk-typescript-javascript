@@ -303,7 +303,7 @@ describe('TransactionHttp', () => {
         expect(transaction[0].transactionInfo?.hash).to.be.equal('hash');
     });
 
-    it('Test getTransactionsById method', async () => {
+    it('Test getEffectiveFees method', async () => {
         const transactionInfoDto = new TransactionInfoDTO();
         const metaDto = new TransactionMetaDTO();
         metaDto.hash = 'hash';
@@ -425,5 +425,109 @@ describe('TransactionHttp', () => {
         const announceResult = await transactionHttp.announceAggregateBondedCosignature(cosignTx).toPromise();
 
         expect(announceResult.message).to.be.equal(response.message);
+    });
+
+    it('getTransaction - Error', async () => {
+        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReject(new Error('Mocked Error'));
+        await transactionHttp
+            .getTransaction(generationHash, TransactionGroup.Confirmed)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('getTransactionById - Error', async () => {
+        when(transactionRoutesApi.getTransactionsById(deepEqual({ transactionIds: [generationHash] }))).thenReject(
+            new Error('Mocked Error'),
+        );
+        await transactionHttp
+            .getTransactionsById([generationHash])
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('announceAggregateBonded - Error', async () => {
+        const cosignTx = new CosignatureSignedTransaction('parentHash', 'signature', 'signerPubKey');
+        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignTx))).thenReject(new Error('Mocked Error'));
+        await transactionHttp
+            .announceAggregateBondedCosignature(cosignTx)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('announceAggregateBonded Cosignatures - Error', async () => {
+        const cosignTx = new CosignatureSignedTransaction('parentHash', 'signature', 'signerPubKey');
+
+        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignTx))).thenReject(new Error('Mocked Error'));
+        await transactionHttp
+            .announceAggregateBondedCosignature(cosignTx)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('Test getEffectiveFees method', async () => {
+        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReject(new Error('Mocked Error'));
+        await transactionHttp
+            .getTransactionEffectiveFee(generationHash)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('getEffectiveFees - Error', async () => {
+        when(blockRoutesApi.getBlockByHeight(deepEqual(UInt64.fromUint(1).toString()))).thenReject(new Error('Mocked Error'));
+        await transactionHttp
+            .getTransactionEffectiveFee(generationHash)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('announce - Error', async () => {
+        const response = new AnnounceTransactionInfoDTO();
+        response.message = 'done';
+
+        const tx = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            [],
+            PlainMessage.create('Hi'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTx = account.sign(tx, generationHash);
+
+        when(transactionRoutesApi.announceTransaction(deepEqual(signedTx))).thenReject(new Error('Mocked Error'));
+        await transactionHttp
+            .announce(signedTx)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('announce - Error', async () => {
+        const response = new AnnounceTransactionInfoDTO();
+        response.message = 'done';
+
+        const tx = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            [],
+            PlainMessage.create('Hi'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggTx = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [tx.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        const signedTx = account.sign(aggTx, generationHash);
+
+        when(transactionRoutesApi.announceTransaction(deepEqual(signedTx))).thenReturn(
+            Promise.resolve({ response: instance(clientResponse), body: response }),
+        );
+        try {
+            await transactionHttp.announce(signedTx).toPromise();
+        } catch (error) {
+            expect(error).not.to.be.undefined;
+        }
     });
 });

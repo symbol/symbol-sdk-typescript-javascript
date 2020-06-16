@@ -81,4 +81,20 @@ describe('TransactionStatusHttp', () => {
         expect(transactionStatus.code).to.be.equal('Failure_AccountLink_Inconsistent_Unlink_Data');
         expect(transactionStatus.group).to.be.equal('failed');
     });
+
+    it('getTransactionStatus - Error', async () => {
+        when(transactionStatusRoutesApi.getTransactionStatus('abc')).thenReject(new Error('Mocked Error'));
+        await transactionStatusHttp
+            .getTransactionStatus('abc')
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('getTransactionStatuss - Error', async () => {
+        when(transactionStatusRoutesApi.getTransactionStatuses(deepEqual({ hashes: ['abc'] }))).thenReject(new Error('Mocked Error'));
+        await transactionStatusHttp
+            .getTransactionStatuses(['abc'])
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
 });
