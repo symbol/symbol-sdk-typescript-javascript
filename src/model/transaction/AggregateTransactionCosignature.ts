@@ -21,15 +21,11 @@ import { UInt64 } from '../UInt64';
  */
 export class AggregateTransactionCosignature {
     /**
-     * @param version
      * @param signature
      * @param signer
+     * @param version
      */
     constructor(
-        /**
-         * Version
-         */
-        public readonly version: UInt64,
         /**
          * The signature of aggregate transaction done by the cosigner.
          */
@@ -38,6 +34,10 @@ export class AggregateTransactionCosignature {
          * The cosigner public account.
          */
         public readonly signer: PublicAccount,
+        /**
+         * Version
+         */
+        public readonly version = UInt64.fromUint(0),
     ) {}
 
     /**

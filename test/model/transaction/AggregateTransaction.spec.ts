@@ -557,7 +557,6 @@ describe('AggregateTransaction', () => {
         // add cosignature after creation
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         const cosignature = new AggregateTransactionCosignature(
-            UInt64.fromUint(0),
             signedTransaction.payload,
             PublicAccount.createFromPublicKey(signedTransaction.signerPublicKey, NetworkType.MIJIN_TEST),
         );

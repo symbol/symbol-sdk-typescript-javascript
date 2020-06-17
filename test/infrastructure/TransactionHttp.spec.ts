@@ -29,6 +29,7 @@ import {
     BlockMetaDTO,
     BlockInfoDTO,
     AnnounceTransactionInfoDTO,
+    Cosignature,
 } from 'symbol-openapi-typescript-node-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 
@@ -53,6 +54,12 @@ describe('TransactionHttp', () => {
     let transactionRoutesApi: TransactionRoutesApi;
     let transactionHttp: TransactionHttp;
     let blockRoutesApi: BlockRoutesApi;
+
+    const cosignature = new Cosignature();
+    cosignature.parentHash = 'parentHash';
+    cosignature.signerPublicKey = 'signerPubKey';
+    cosignature.signature = 'signature';
+    cosignature.version = '0';
 
     before(() => {
         transactionRoutesApi = mock();
@@ -419,7 +426,7 @@ describe('TransactionHttp', () => {
 
         const cosignTx = new CosignatureSignedTransaction('parentHash', 'signature', 'signerPubKey');
 
-        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignTx))).thenReturn(
+        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignature))).thenReturn(
             Promise.resolve({ response: instance(clientResponse), body: response }),
         );
         const announceResult = await transactionHttp.announceAggregateBondedCosignature(cosignTx).toPromise();
@@ -447,7 +454,7 @@ describe('TransactionHttp', () => {
 
     it('announceAggregateBonded - Error', async () => {
         const cosignTx = new CosignatureSignedTransaction('parentHash', 'signature', 'signerPubKey');
-        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignTx))).thenReject(new Error('Mocked Error'));
+        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignature))).thenReject(new Error('Mocked Error'));
         await transactionHttp
             .announceAggregateBondedCosignature(cosignTx)
             .toPromise()
@@ -457,7 +464,7 @@ describe('TransactionHttp', () => {
     it('announceAggregateBonded Cosignatures - Error', async () => {
         const cosignTx = new CosignatureSignedTransaction('parentHash', 'signature', 'signerPubKey');
 
-        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignTx))).thenReject(new Error('Mocked Error'));
+        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignature))).thenReject(new Error('Mocked Error'));
         await transactionHttp
             .announceAggregateBondedCosignature(cosignTx)
             .toPromise()

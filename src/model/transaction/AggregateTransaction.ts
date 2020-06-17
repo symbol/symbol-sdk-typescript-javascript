@@ -172,9 +172,9 @@ export class AggregateTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const consignatures = builder.getCosignatures().map((cosig) => {
             return new AggregateTransactionCosignature(
-                new UInt64(cosig.version),
                 Convert.uint8ToHex(cosig.signature.signature),
                 PublicAccount.createFromPublicKey(Convert.uint8ToHex(cosig.signerPublicKey.key), networkType),
+                new UInt64(cosig.version),
             );
         });
 
@@ -274,7 +274,7 @@ export class AggregateTransaction extends Transaction {
         const signedTransaction = this.signWith(initiatorAccount, generationHash);
         let signedPayload = signedTransaction.payload;
         cosignatureSignedTransactions.forEach((cosignedTransaction) => {
-            signedPayload += UInt64.fromUint(0).toHex() + cosignedTransaction.signerPublicKey + cosignedTransaction.signature;
+            signedPayload += cosignedTransaction.version.toHex() + cosignedTransaction.signerPublicKey + cosignedTransaction.signature;
         });
 
         // Calculate new size

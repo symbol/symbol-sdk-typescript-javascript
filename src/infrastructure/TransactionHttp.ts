@@ -23,6 +23,7 @@ import {
     TransactionRoutesApi,
     TransactionInfoDTO,
     TransactionPage,
+    Cosignature,
 } from 'symbol-openapi-typescript-node-client';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
@@ -138,7 +139,12 @@ export class TransactionHttp extends Http implements TransactionRepository {
     public announceAggregateBondedCosignature(
         cosignatureSignedTransaction: CosignatureSignedTransaction,
     ): Observable<TransactionAnnounceResponse> {
-        return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignatureSignedTransaction)).pipe(
+        const cosignature = new Cosignature();
+        cosignature.parentHash = cosignatureSignedTransaction.parentHash;
+        cosignature.signerPublicKey = cosignatureSignedTransaction.signerPublicKey;
+        cosignature.signature = cosignatureSignedTransaction.signature;
+        cosignature.version = cosignatureSignedTransaction.version.toString();
+        return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignature)).pipe(
             map(({ body }) => new TransactionAnnounceResponse(body.message)),
             catchError((error) => throwError(this.errorHandling(error))),
         );

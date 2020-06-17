@@ -1490,12 +1490,14 @@ describe('TransactionHttp', () => {
 
     describe('searchTransactions', () => {
         it('should return transaction info given address', async () => {
-            const transactions = await transactionRepository.search({ address: account.address } as TransactionSearchCriteria).toPromise();
+            const transactions = await transactionRepository
+                .search({ group: TransactionGroup.Confirmed, address: account.address } as TransactionSearchCriteria)
+                .toPromise();
             expect(transactions.data.length).to.be.greaterThan(0);
         });
         it('should return transaction info given height', async () => {
             const transactions = await transactionRepository
-                .search({ height: UInt64.fromUint(1) } as TransactionSearchCriteria)
+                .search({ group: TransactionGroup.Confirmed, height: UInt64.fromUint(1) } as TransactionSearchCriteria)
                 .toPromise();
             expect(transactions.data.length).to.be.greaterThan(0);
         });
@@ -1505,7 +1507,7 @@ describe('TransactionHttp', () => {
         it('should return transaction info given address', async () => {
             const streamer = new TransactionPaginationStreamer(transactionRepository);
             const transactionsNoStreamer = await transactionRepository
-                .search({ address: account.address, pageSize: 10 } as TransactionSearchCriteria)
+                .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 } as TransactionSearchCriteria)
                 .toPromise();
             const transactions = await streamer
                 .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 })

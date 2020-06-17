@@ -101,6 +101,7 @@ describe('CosignatureTransaction', () => {
                 '1179E72AF0CDF5AC1C0F7404AF6FC7268EE416204240DD3D5B11420D80215F19AA314FC86D6E03E0D',
         );
         expect(cosignatureSignedTransaction.signerPublicKey).to.be.equal(account.publicKey);
+        expect(cosignatureSignedTransaction.version.toString()).to.be.equal('0');
     });
 
     it('should sign a transaction with transaction payload', () => {
@@ -116,5 +117,6 @@ describe('CosignatureTransaction', () => {
 
         expect(signedTx.signerPublicKey).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6');
         expect(signedTx.signerPublicKey).to.be.equal(account.publicKey);
+        expect(signedTx.version.toString()).to.be.equal('0');
     });
 });
