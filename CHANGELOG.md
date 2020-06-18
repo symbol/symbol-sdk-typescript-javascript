@@ -45,7 +45,7 @@ Client Library | v0.9.2  | [symbol-openapi-typescript-node-client](https://www.n
     1. Search endpoints returns pagination payload (`Page<t>`) rather than raw arraes.
     2. For **AggregateTransaction**, transaction search endpoint only returns the aggregate wrapper transaction **WITHOUT** embedded transactions. `complete` aggregate payload can be get from `getTransaction` or `getTransactionByIds` endpoints.
 - Added SearchCriteria interfaces for the new search endpoints.
-- **group** filter in  in `TransactionSearchCriteria` to be mandatory due to rest endpoint changes.
+- **group** filter in `TransactionSearchCriteria` to be mandatory due to rest endpoint changes.
 - Added **streamer** for the 3 new search endpoints (block, mosaic, transaction) to improve pagination querying.
 - Added `size` in `BlockInfo` model.
 
