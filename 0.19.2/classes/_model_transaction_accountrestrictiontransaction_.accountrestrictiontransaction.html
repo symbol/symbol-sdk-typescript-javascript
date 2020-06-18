@@ -98,13 +98,13 @@
 					<a name="createaddressrestrictionmodificationtransaction" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>Address<wbr>Restriction<wbr>Modification<wbr>Transaction</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Address<wbr>Restriction<wbr>Modification<wbr>Transaction<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a>, restrictionFlags<span class="tsd-signature-symbol">: </span><a href="../enums/_model_restriction_addressrestrictionflag_.addressrestrictionflag.html" class="tsd-signature-type">AddressRestrictionFlag</a>, restrictionAdditions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span>, restrictionDeletions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, maxFee<span class="tsd-signature-symbol">?: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_accountaddressrestrictiontransaction_.accountaddressrestrictiontransaction.html" class="tsd-signature-type">AccountAddressRestrictionTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Address<wbr>Restriction<wbr>Modification<wbr>Transaction<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a>, restrictionFlags<span class="tsd-signature-symbol">: </span><a href="../enums/_model_restriction_addressrestrictionflag_.addressrestrictionflag.html" class="tsd-signature-type">AddressRestrictionFlag</a>, restrictionAdditions<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a><span class="tsd-signature-symbol">[]</span>, restrictionDeletions<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a><span class="tsd-signature-symbol">[]</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, maxFee<span class="tsd-signature-symbol">?: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_accountaddressrestrictiontransaction_.accountaddressrestrictiontransaction.html" class="tsd-signature-type">AccountAddressRestrictionTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/transaction/AccountRestrictionTransaction.ts#L45">model/transaction/AccountRestrictionTransaction.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/transaction/AccountRestrictionTransaction.ts#L44">model/transaction/AccountRestrictionTransaction.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -127,13 +127,13 @@
 									</div>
 								</li>
 								<li>
-									<h5>restrictionAdditions: <span class="tsd-signature-symbol">(</span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>restrictionAdditions: <a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Account restriction additions.</p>
 									</div>
 								</li>
 								<li>
-									<h5>restrictionDeletions: <span class="tsd-signature-symbol">(</span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>restrictionDeletions: <a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Account restriction deletions.</p>
 									</div>
@@ -171,13 +171,13 @@
 					<a name="createmosaicrestrictionmodificationtransaction" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>Mosaic<wbr>Restriction<wbr>Modification<wbr>Transaction</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Mosaic<wbr>Restriction<wbr>Modification<wbr>Transaction<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a>, restrictionFlags<span class="tsd-signature-symbol">: </span><a href="../enums/_model_restriction_mosaicrestrictionflag_.mosaicrestrictionflag.html" class="tsd-signature-type">MosaicRestrictionFlag</a>, restrictionAdditions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span>, restrictionDeletions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, maxFee<span class="tsd-signature-symbol">?: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_accountmosaicrestrictiontransaction_.accountmosaicrestrictiontransaction.html" class="tsd-signature-type">AccountMosaicRestrictionTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Mosaic<wbr>Restriction<wbr>Modification<wbr>Transaction<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a>, restrictionFlags<span class="tsd-signature-symbol">: </span><a href="../enums/_model_restriction_mosaicrestrictionflag_.mosaicrestrictionflag.html" class="tsd-signature-type">MosaicRestrictionFlag</a>, restrictionAdditions<span class="tsd-signature-symbol">: </span><a href="../modules/_model_mosaic_unresolvedmosaicid_.html#unresolvedmosaicid" class="tsd-signature-type">UnresolvedMosaicId</a><span class="tsd-signature-symbol">[]</span>, restrictionDeletions<span class="tsd-signature-symbol">: </span><a href="../modules/_model_mosaic_unresolvedmosaicid_.html#unresolvedmosaicid" class="tsd-signature-type">UnresolvedMosaicId</a><span class="tsd-signature-symbol">[]</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, maxFee<span class="tsd-signature-symbol">?: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_accountmosaicrestrictiontransaction_.accountmosaicrestrictiontransaction.html" class="tsd-signature-type">AccountMosaicRestrictionTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/transaction/AccountRestrictionTransaction.ts#L79">model/transaction/AccountRestrictionTransaction.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/transaction/AccountRestrictionTransaction.ts#L78">model/transaction/AccountRestrictionTransaction.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -200,13 +200,13 @@
 									</div>
 								</li>
 								<li>
-									<h5>restrictionAdditions: <span class="tsd-signature-symbol">(</span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>restrictionAdditions: <a href="../modules/_model_mosaic_unresolvedmosaicid_.html#unresolvedmosaicid" class="tsd-signature-type">UnresolvedMosaicId</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Account restriction additions.</p>
 									</div>
 								</li>
 								<li>
-									<h5>restrictionDeletions: <span class="tsd-signature-symbol">(</span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>restrictionDeletions: <a href="../modules/_model_mosaic_unresolvedmosaicid_.html#unresolvedmosaicid" class="tsd-signature-type">UnresolvedMosaicId</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Account restriction deletions.</p>
 									</div>
@@ -250,7 +250,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/transaction/AccountRestrictionTransaction.ts#L113">model/transaction/AccountRestrictionTransaction.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/transaction/AccountRestrictionTransaction.ts#L112">model/transaction/AccountRestrictionTransaction.ts:112</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

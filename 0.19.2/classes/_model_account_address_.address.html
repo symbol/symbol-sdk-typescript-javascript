@@ -98,6 +98,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_address_.address.html#encodeunresolvedaddress" class="tsd-kind-icon">encode<wbr>Unresolved<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_address_.address.html#encoded" class="tsd-kind-icon">encoded</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_address_.address.html#equals" class="tsd-kind-icon">equals</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_address_.address.html#plain" class="tsd-kind-icon">plain</a></li>
@@ -121,7 +122,7 @@
 					<div class="tsd-signature tsd-kind-icon">address<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L105">model/account/Address.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L108">model/account/Address.ts:108</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -136,7 +137,7 @@
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L109">model/account/Address.ts:109</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L112">model/account/Address.ts:112</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -148,6 +149,35 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="encodeunresolvedaddress" class="tsd-anchor"></a>
+					<h3>encode<wbr>Unresolved<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">encode<wbr>Unresolved<wbr>Address<span class="tsd-signature-symbol">(</span>networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L167">model/account/Address.ts:167</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Encoded address or namespace id. Note that namespace id get the hex reversed and
+									zero padded.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>networkType: <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="encoded" class="tsd-anchor"></a>
 					<h3>encoded</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -157,7 +187,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L124">model/account/Address.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L127">model/account/Address.ts:127</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -173,13 +203,13 @@
 					<a name="equals" class="tsd-anchor"></a>
 					<h3>equals</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">equals<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">equals<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L141">model/account/Address.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L144">model/account/Address.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -190,9 +220,9 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<h5>address: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Address</p>
+										<p>Address to compare</p>
 									</div>
 								</li>
 							</ul>
@@ -210,7 +240,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L116">model/account/Address.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L119">model/account/Address.ts:119</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -232,7 +262,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L132">model/account/Address.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L135">model/account/Address.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -254,7 +284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L148">model/account/Address.ts:148</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L154">model/account/Address.ts:154</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -276,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L66">model/account/Address.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L66">model/account/Address.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -307,7 +337,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L29">model/account/Address.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L29">model/account/Address.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -344,7 +374,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L41">model/account/Address.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L41">model/account/Address.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -376,7 +406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L88">model/account/Address.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L91">model/account/Address.ts:91</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -390,7 +420,7 @@
 									<h5>encoded: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>The encoded address string. Expected format: 9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C</p>
+											<p>The encoded address string. Expected format: 6823BB7C3C089D996585466380EDBDC19D4959184893E38C</p>
 										</div>
 									</div>
 								</li>
@@ -410,7 +440,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/account/Address.ts#L75">model/account/Address.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/account/Address.ts#L75">model/account/Address.ts:75</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -424,7 +454,7 @@
 									<h5>rawAddress: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>The raw address string. Expected format SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P</p>
+											<p>The raw address string. Expected format SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ</p>
 										</div>
 									</div>
 								</li>
@@ -459,6 +489,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_account_address_.address.html#networktype" class="tsd-kind-icon">network<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_address_.address.html#encodeunresolvedaddress" class="tsd-kind-icon">encode<wbr>Unresolved<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_model_account_address_.address.html#encoded" class="tsd-kind-icon">encoded</a>

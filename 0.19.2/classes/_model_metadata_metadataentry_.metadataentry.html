@@ -101,9 +101,9 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#compositehash" class="tsd-kind-icon">composite<wbr>Hash</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#metadatatype" class="tsd-kind-icon">metadata<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#scopedmetadatakey" class="tsd-kind-icon">scoped<wbr>Metadata<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#senderpublickey" class="tsd-kind-icon">sender<wbr>Public<wbr>Key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#sourceaddress" class="tsd-kind-icon">source<wbr>Address</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#targetaddress" class="tsd-kind-icon">target<wbr>Address</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#targetid" class="tsd-kind-icon">target<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#targetpublickey" class="tsd-kind-icon">target<wbr>Public<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_metadata_metadataentry_.metadataentry.html#value" class="tsd-kind-icon">value</a></li>
 							</ul>
 						</section>
@@ -116,13 +116,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Metadata<wbr>Entry<span class="tsd-signature-symbol">(</span>compositeHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, senderPublicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, targetPublicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, scopedMetadataKey<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, metadataType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_metadata_metadatatype_.metadatatype.html" class="tsd-signature-type">MetadataType</a>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, targetId<span class="tsd-signature-symbol">?: </span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_metadata_metadataentry_.metadataentry.html" class="tsd-signature-type">MetadataEntry</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Metadata<wbr>Entry<span class="tsd-signature-symbol">(</span>compositeHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, sourceAddress<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, targetAddress<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, scopedMetadataKey<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, metadataType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_metadata_metadatatype_.metadatatype.html" class="tsd-signature-type">MetadataType</a>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, targetId<span class="tsd-signature-symbol">?: </span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_metadata_metadataentry_.metadataentry.html" class="tsd-signature-type">MetadataEntry</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L26">model/metadata/MetadataEntry.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L27">model/metadata/MetadataEntry.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -141,18 +141,18 @@
 									</div>
 								</li>
 								<li>
-									<h5>senderPublicKey: <span class="tsd-signature-type">string</span></h5>
+									<h5>sourceAddress: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>The metadata sender&#39;s public key</p>
+											<p>The metadata source address (provider)</p>
 										</div>
 									</div>
 								</li>
 								<li>
-									<h5>targetPublicKey: <span class="tsd-signature-type">string</span></h5>
+									<h5>targetAddress: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>The metadata target public key</p>
+											<p>The metadata target address</p>
 										</div>
 									</div>
 								</li>
@@ -202,7 +202,7 @@
 					<div class="tsd-signature tsd-kind-icon">composite<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L41">model/metadata/MetadataEntry.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L42">model/metadata/MetadataEntry.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -217,7 +217,7 @@
 					<div class="tsd-signature tsd-kind-icon">metadata<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_metadata_metadatatype_.metadatatype.html" class="tsd-signature-type">MetadataType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L57">model/metadata/MetadataEntry.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L58">model/metadata/MetadataEntry.ts:58</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -232,7 +232,7 @@
 					<div class="tsd-signature tsd-kind-icon">scoped<wbr>Metadata<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L53">model/metadata/MetadataEntry.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L54">model/metadata/MetadataEntry.ts:54</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -242,17 +242,32 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="senderpublickey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> sender<wbr>Public<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">sender<wbr>Public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="sourceaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> source<wbr>Address</h3>
+					<div class="tsd-signature tsd-kind-icon">source<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L45">model/metadata/MetadataEntry.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L46">model/metadata/MetadataEntry.ts:46</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The metadata sender&#39;s public key</p>
+							<p>The metadata source address (provider)</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="targetaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> target<wbr>Address</h3>
+					<div class="tsd-signature tsd-kind-icon">target<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L50">model/metadata/MetadataEntry.ts:50</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The metadata target address</p>
 						</div>
 					</div>
 				</section>
@@ -262,7 +277,7 @@
 					<div class="tsd-signature tsd-kind-icon">target<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol"> | </span><a href="_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L65">model/metadata/MetadataEntry.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L66">model/metadata/MetadataEntry.ts:66</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -272,27 +287,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="targetpublickey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> target<wbr>Public<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">target<wbr>Public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L49">model/metadata/MetadataEntry.ts:49</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The metadata target public key</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="value" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> value</h3>
 					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/metadata/MetadataEntry.ts#L61">model/metadata/MetadataEntry.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/metadata/MetadataEntry.ts#L62">model/metadata/MetadataEntry.ts:62</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -334,13 +334,13 @@
 								<a href="_model_metadata_metadataentry_.metadataentry.html#scopedmetadatakey" class="tsd-kind-icon">scoped<wbr>Metadata<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_metadata_metadataentry_.metadataentry.html#senderpublickey" class="tsd-kind-icon">sender<wbr>Public<wbr>Key</a>
+								<a href="_model_metadata_metadataentry_.metadataentry.html#sourceaddress" class="tsd-kind-icon">source<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_metadata_metadataentry_.metadataentry.html#targetaddress" class="tsd-kind-icon">target<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_metadata_metadataentry_.metadataentry.html#targetid" class="tsd-kind-icon">target<wbr>Id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_metadata_metadataentry_.metadataentry.html#targetpublickey" class="tsd-kind-icon">target<wbr>Public<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_metadata_metadataentry_.metadataentry.html#value" class="tsd-kind-icon">value</a>

@@ -97,7 +97,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#beneficiarypublickey" class="tsd-kind-icon">beneficiary<wbr>Public<wbr>Key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#beneficiaryaddress" class="tsd-kind-icon">beneficiary<wbr>Address</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#blockreceiptshash" class="tsd-kind-icon">block<wbr>Receipts<wbr>Hash</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#blocktransactionshash" class="tsd-kind-icon">block<wbr>Transactions<wbr>Hash</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#difficulty" class="tsd-kind-icon">difficulty</a></li>
@@ -115,6 +115,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#recordid" class="tsd-kind-icon">record<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#signature" class="tsd-kind-icon">signature</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#signer" class="tsd-kind-icon">signer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#size" class="tsd-kind-icon">size</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#statehash" class="tsd-kind-icon">state<wbr>Hash</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#statehashsubcachemerkleroots" class="tsd-kind-icon">state<wbr>Hash<wbr>Sub<wbr>Cache<wbr>Merkle<wbr>Roots</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_blockinfo_.blockinfo.html#timestamp" class="tsd-kind-icon">timestamp</a></li>
@@ -132,13 +133,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Block<wbr>Info<span class="tsd-signature-symbol">(</span>recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, generationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, totalFee<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, stateHashSubCacheMerkleRoots<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, numTransactions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, signature<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, timestamp<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, difficulty<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, feeMultiplier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, previousBlockHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, blockTransactionsHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, blockReceiptsHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, stateHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, proofGamma<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, proofScalar<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, proofVerificationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, beneficiaryPublicKey<span class="tsd-signature-symbol">?: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, numStatements<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_blockchain_blockinfo_.blockinfo.html" class="tsd-signature-type">BlockInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Block<wbr>Info<span class="tsd-signature-symbol">(</span>recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, generationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, totalFee<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, stateHashSubCacheMerkleRoots<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, numTransactions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, signature<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, timestamp<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, difficulty<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, feeMultiplier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, previousBlockHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, blockTransactionsHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, blockReceiptsHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, stateHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, proofGamma<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, proofScalar<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, proofVerificationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, beneficiaryAddress<span class="tsd-signature-symbol">?: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, numStatements<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_blockchain_blockinfo_.blockinfo.html" class="tsd-signature-type">BlockInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L24">model/blockchain/BlockInfo.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L25">model/blockchain/BlockInfo.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -147,6 +148,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>recordId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>size: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
 									<h5>hash: <span class="tsd-signature-type">string</span></h5>
@@ -212,7 +216,7 @@
 									<h5>proofVerificationHash: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> beneficiaryPublicKey: <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> beneficiaryAddress: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> numStatements: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
@@ -230,17 +234,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="beneficiarypublickey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> beneficiary<wbr>Public<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">beneficiary<wbr>Public<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+					<a name="beneficiaryaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> beneficiary<wbr>Address</h3>
+					<div class="tsd-signature tsd-kind-icon">beneficiary<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L146">model/blockchain/BlockInfo.ts:146</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L152">model/blockchain/BlockInfo.ts:152</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The beneficiary public key.</p>
+							<p>The beneficiary address.</p>
 						</div>
 					</div>
 				</section>
@@ -250,7 +254,7 @@
 					<div class="tsd-signature tsd-kind-icon">block<wbr>Receipts<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L126">model/blockchain/BlockInfo.ts:126</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L132">model/blockchain/BlockInfo.ts:132</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -265,7 +269,7 @@
 					<div class="tsd-signature tsd-kind-icon">block<wbr>Transactions<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L122">model/blockchain/BlockInfo.ts:122</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L128">model/blockchain/BlockInfo.ts:128</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -280,7 +284,7 @@
 					<div class="tsd-signature tsd-kind-icon">difficulty<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L110">model/blockchain/BlockInfo.ts:110</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L116">model/blockchain/BlockInfo.ts:116</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -295,7 +299,7 @@
 					<div class="tsd-signature tsd-kind-icon">fee<wbr>Multiplier<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L114">model/blockchain/BlockInfo.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L120">model/blockchain/BlockInfo.ts:120</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -310,7 +314,7 @@
 					<div class="tsd-signature tsd-kind-icon">generation<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L63">model/blockchain/BlockInfo.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L69">model/blockchain/BlockInfo.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -325,7 +329,7 @@
 					<div class="tsd-signature tsd-kind-icon">hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L59">model/blockchain/BlockInfo.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L65">model/blockchain/BlockInfo.ts:65</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -340,7 +344,7 @@
 					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L102">model/blockchain/BlockInfo.ts:102</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L108">model/blockchain/BlockInfo.ts:108</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -356,7 +360,7 @@
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L89">model/blockchain/BlockInfo.ts:89</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L95">model/blockchain/BlockInfo.ts:95</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -371,7 +375,7 @@
 					<div class="tsd-signature tsd-kind-icon">num<wbr>Statements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L150">model/blockchain/BlockInfo.ts:150</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L156">model/blockchain/BlockInfo.ts:156</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -385,7 +389,7 @@
 					<div class="tsd-signature tsd-kind-icon">num<wbr>Transactions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L75">model/blockchain/BlockInfo.ts:75</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L81">model/blockchain/BlockInfo.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -400,7 +404,7 @@
 					<div class="tsd-signature tsd-kind-icon">previous<wbr>Block<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L118">model/blockchain/BlockInfo.ts:118</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L124">model/blockchain/BlockInfo.ts:124</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -415,7 +419,7 @@
 					<div class="tsd-signature tsd-kind-icon">proof<wbr>Gamma<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L134">model/blockchain/BlockInfo.ts:134</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L140">model/blockchain/BlockInfo.ts:140</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -430,7 +434,7 @@
 					<div class="tsd-signature tsd-kind-icon">proof<wbr>Scalar<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L138">model/blockchain/BlockInfo.ts:138</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L144">model/blockchain/BlockInfo.ts:144</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -445,7 +449,7 @@
 					<div class="tsd-signature tsd-kind-icon">proof<wbr>Verification<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L142">model/blockchain/BlockInfo.ts:142</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L148">model/blockchain/BlockInfo.ts:148</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -460,7 +464,7 @@
 					<div class="tsd-signature tsd-kind-icon">record<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L55">model/blockchain/BlockInfo.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L57">model/blockchain/BlockInfo.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -475,7 +479,7 @@
 					<div class="tsd-signature tsd-kind-icon">signature<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L81">model/blockchain/BlockInfo.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L87">model/blockchain/BlockInfo.ts:87</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -492,7 +496,7 @@
 					<div class="tsd-signature tsd-kind-icon">signer<span class="tsd-signature-symbol">:</span> <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L85">model/blockchain/BlockInfo.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L91">model/blockchain/BlockInfo.ts:91</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -502,12 +506,27 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="size" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> size</h3>
+					<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L61">model/blockchain/BlockInfo.ts:61</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Entity size in bytes.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="statehash" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> state<wbr>Hash</h3>
 					<div class="tsd-signature tsd-kind-icon">state<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L130">model/blockchain/BlockInfo.ts:130</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L136">model/blockchain/BlockInfo.ts:136</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -522,7 +541,7 @@
 					<div class="tsd-signature tsd-kind-icon">state<wbr>Hash<wbr>Sub<wbr>Cache<wbr>Merkle<wbr>Roots<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L71">model/blockchain/BlockInfo.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L77">model/blockchain/BlockInfo.ts:77</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -537,7 +556,7 @@
 					<div class="tsd-signature tsd-kind-icon">timestamp<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L106">model/blockchain/BlockInfo.ts:106</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L112">model/blockchain/BlockInfo.ts:112</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -552,7 +571,7 @@
 					<div class="tsd-signature tsd-kind-icon">total<wbr>Fee<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L67">model/blockchain/BlockInfo.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L73">model/blockchain/BlockInfo.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -567,7 +586,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L97">model/blockchain/BlockInfo.ts:97</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L103">model/blockchain/BlockInfo.ts:103</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -582,7 +601,7 @@
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fe4cff0/src/model/blockchain/BlockInfo.ts#L93">model/blockchain/BlockInfo.ts:93</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4165200/src/model/blockchain/BlockInfo.ts#L99">model/blockchain/BlockInfo.ts:99</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -615,7 +634,7 @@
 								<a href="_model_blockchain_blockinfo_.blockinfo.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_blockchain_blockinfo_.blockinfo.html#beneficiarypublickey" class="tsd-kind-icon">beneficiary<wbr>Public<wbr>Key</a>
+								<a href="_model_blockchain_blockinfo_.blockinfo.html#beneficiaryaddress" class="tsd-kind-icon">beneficiary<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_blockchain_blockinfo_.blockinfo.html#blockreceiptshash" class="tsd-kind-icon">block<wbr>Receipts<wbr>Hash</a>
@@ -667,6 +686,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_blockchain_blockinfo_.blockinfo.html#signer" class="tsd-kind-icon">signer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_blockchain_blockinfo_.blockinfo.html#size" class="tsd-kind-icon">size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_blockchain_blockinfo_.blockinfo.html#statehash" class="tsd-kind-icon">state<wbr>Hash</a>
