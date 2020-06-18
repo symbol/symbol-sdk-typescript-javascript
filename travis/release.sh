@@ -4,7 +4,6 @@ set -e
 if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
 
   REMOTE_NAME="origin"
-  POST_RELEASE_BRANCH="post-$RELEASE_BRANCH"
 
   git remote rm $REMOTE_NAME
 
