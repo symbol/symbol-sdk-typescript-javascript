@@ -10,7 +10,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.20.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.20 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.20 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.9.2  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Model property name changes:
@@ -55,7 +55,7 @@ Client Library | v0.9.2  | [symbol-openapi-typescript-node-client](https://www.n
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.19.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.19 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.19 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.11  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Replaced constructor parameter `config` with `url` in `Listener` class. The constructor is now **only using a complete websocket url (e.g. [http://localhost:3000/ws](http://localhost:3000/ws) or ws://localhost:3000/ws) but not rest-gateway url anymore (It will NOT append `/ws` suffix to the input url)**.
@@ -71,7 +71,7 @@ Client Library | v0.8.11  | [symbol-openapi-typescript-node-client](https://www.
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.19.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.19 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.19 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.11  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** `RemotePublicKey` has been renamed to `LinkedPublicKey` in `AccountKeyLinkTransaction`.
@@ -87,7 +87,7 @@ Client Library | v0.8.11  | [symbol-openapi-typescript-node-client](https://www.
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.19.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.18 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.18 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.10  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** `Transaction signing` is now using `GenerationHashSeed` from `NodeInfo` or `NetworkProperties`. GenerationHash on Nemesis block (block:1) is `NOT` used for signing purposes.
@@ -110,7 +110,7 @@ Client Library | v0.8.10  | [symbol-openapi-typescript-node-client](https://www.
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.18.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.11 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.9  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Stopped NodeJS v8 and v9 support. From this version (`v0.18.0`) onwards, Symbol-SDK will target on Node v10+.
@@ -133,7 +133,7 @@ Client Library | v0.8.9  | [symbol-openapi-typescript-node-client](https://www.n
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.17.4 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.11 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.9  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - Added `SimpleWallet.toDTO()` method which returns JSON serialized object.
@@ -151,7 +151,7 @@ Client Library | v0.8.9  | [symbol-openapi-typescript-node-client](https://www.n
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.17.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.11 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - Fixed `MosaicNonce` issue handling signed integer from rest payload.
@@ -163,7 +163,7 @@ Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.n
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.17.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.11 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Added `s-part` of transaction signature to transaction hash.
@@ -178,7 +178,7 @@ Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.n
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.17.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.11 | [catbuffer-typescript](]-typescript)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - Rebranded `nem2-sdk` to `symbol-sdk`. Please be noted the package name changes.
