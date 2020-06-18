@@ -23,12 +23,12 @@
     ],
     "contributors": [
         {
-            "name": "Aleix",
-            "email": "aleix@nemeurope.eu"
+            "name": "Steven Liu",
+            "email": "steven.liu@nem.software"
         },
         {
-            "name": "Guillem",
-            "email": "guillem@nemeurope.eu"
+            "name": "Fernando Boucquez",
+            "email": "fernando.boucquez@nem.software"
         }
     ],
     "bugs": "https://github.com/nemtech/symbol-sdk-typescript-javascript/issues",
