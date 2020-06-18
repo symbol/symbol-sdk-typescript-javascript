@@ -15,7 +15,10 @@
  */
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { Convert as convert, IdGenerator as idGenerator, RawUInt64 as uint64 } from '../../../src/core/format';
+import { IdGenerator as idGenerator } from '../../../src/core/format';
+import { Address } from '../../../src/model/account/Address';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 
 const constants = {
     nem_id: [0x375ffa4b, 0x84b3552d],
@@ -25,147 +28,114 @@ const constants = {
 
 const basicMosaicInfo = {
     nonce: [0x78, 0xe3, 0x6f, 0xb7],
-    publicId: [
-        0x4a,
-        0xff,
-        0x7b,
-        0x4b,
-        0xa8,
-        0xc1,
-        0xc2,
-        0x6a,
-        0x79,
-        0x17,
-        0x57,
-        0x59,
-        0x93,
-        0x34,
-        0x66,
-        0x27,
-        0xcb,
-        0x6c,
-        0x80,
-        0xde,
-        0x62,
-        0xcd,
-        0x92,
-        0xf7,
-        0xf9,
-        0xae,
-        0xdb,
-        0x70,
-        0x64,
-        0xa3,
-        0xde,
-        0x62,
-    ],
-    id: [0xc0afc518, 0x3ad842a8],
+    address: [144, 43, 151, 19, 142, 202, 193, 168, 140, 158, 106, 98, 111, 47, 199, 100, 233, 98, 104, 137, 71, 177, 230, 122],
+    id: [339608571, 538088181],
 };
 
-const mosaicTestVector = {
-    rows: [
-        {
-            publicKey: '4AFF7B4BA8C1C26A7917575993346627CB6C80DE62CD92F7F9AEDB7064A3DE62',
-            nonce: 'B76FE378',
-            expectedMosaicId: '3AD842A8C0AFC518',
-        },
-        {
-            publicKey: '3811EDF245F1D30171FF1474B24C4366FECA365A8457AAFA084F3DE4AEA0BA60',
-            nonce: '21832A2A',
-            expectedMosaicId: '24C54740A9F3893F',
-        },
-        {
-            publicKey: '3104D468D20491EC12C988C50CAD9282256052907415359201C46CBD7A0BCD75',
-            nonce: '2ADBB332',
-            expectedMosaicId: '43908F2DEEA04245',
-        },
-        {
-            publicKey: '6648E16513F351E9907B0EA34377E25F579BE640D4698B28E06585A21E94CFE2',
-            nonce: 'B9175E0F',
-            expectedMosaicId: '183172772BD29E78',
-        },
-        {
-            publicKey: '1C05C40D38463FE725CF0584A3A69E3B0D6B780196A88C50624E49B921EE1404',
-            nonce: 'F6077DDD',
-            expectedMosaicId: '423DB0B12F787422',
-        },
-        {
-            publicKey: '37926B3509987093C776C8EA3E7F978E3A78142B5C96B9434C3376177DC65EFD',
-            nonce: '08190C6D',
-            expectedMosaicId: '1F07D26B6CD352D5',
-        },
-        {
-            publicKey: 'FDC6B0D415D90536263431F05C46AC492D0BD9B3CFA1B79D5A35E0F371655C0C',
-            nonce: '81662AA5',
-            expectedMosaicId: '74511F54940729CB',
-        },
-        {
-            publicKey: '2D4EA99965477AEB3BC162C09C24C8DA4DABE408956C2F69642554EA48AAE1B2',
-            nonce: 'EA16BF58',
-            expectedMosaicId: '4C55843B6EB4A5BD',
-        },
-        {
-            publicKey: '68EB2F91E74D005A7C22D6132926AEF9BFD90A3ACA3C7F989E579A93EFF24D51',
-            nonce: 'E5F87A8B',
-            expectedMosaicId: '4D89DE2B6967666A',
-        },
-        {
-            publicKey: '3B082C0074F65D1E205643CDE72C6B0A3D0579C7ACC4D6A7E23A6EC46363B90F',
-            nonce: '1E6BB49F',
-            expectedMosaicId: '0A96B3A44615B62F',
-        },
-        {
-            publicKey: '81245CA233B729FAD1752662EADFD73C5033E3B918CE854E01F6EB51E98CD9F1',
-            nonce: 'B82965E3',
-            expectedMosaicId: '1D6D8E655A77C4E6',
-        },
-        {
-            publicKey: 'D3A2C1BFD5D48239001174BFF62A83A52BC9A535B8CDBDF289203146661D8AC4',
-            nonce: 'F37FB460',
-            expectedMosaicId: '268A3CC23ADCDA2D',
-        },
-        {
-            publicKey: '4C4CA89B7A31C42A7AB963B8AB9D85628BBB94735C999B2BD462001A002DBDF3',
-            nonce: 'FF6323B0',
-            expectedMosaicId: '51202B5C51F6A5A9',
-        },
-        {
-            publicKey: '2F95D9DCD4F18206A54FA95BD138DA1C038CA82546525A8FCC330185DA0647DC',
-            nonce: '99674492',
-            expectedMosaicId: '5CE4E38B09F1423D',
-        },
-        {
-            publicKey: 'A7892491F714B8A7469F763F695BDB0B3BF28D1CC6831D17E91F550A2D48BD12',
-            nonce: '55141880',
-            expectedMosaicId: '5EFD001B3350C9CB',
-        },
-        {
-            publicKey: '68BBDDF5C08F54278DA516F0E4A5CCF795C10E2DE26CAF127FF4357DA7ACF686',
-            nonce: '11FA5BAF',
-            expectedMosaicId: '179F0CDD6D2CCA7B',
-        },
-        {
-            publicKey: '014F6EF90792F814F6830D64017107534F5B718E2DD43C25ACAABBE347DEC81E',
-            nonce: '6CFBF7B3',
-            expectedMosaicId: '53095813DEB3D108',
-        },
-        {
-            publicKey: '95A6344597E0412C51B3559F58F564F9C2DE3101E5CC1DD8B115A93CE7040A71',
-            nonce: '905EADFE',
-            expectedMosaicId: '3551C4B12DDF067D',
-        },
-        {
-            publicKey: '0D7DDFEB652E8B65915EA734420A1233A233119BF1B0D41E1D5118CDD44447EE',
-            nonce: '61F5B671',
-            expectedMosaicId: '696E2FB0682D3199',
-        },
-        {
-            publicKey: 'FFD781A20B01D0C999AABC337B8BAE82D1E7929A9DD77CC1A71E4B99C0749684',
-            nonce: 'D8542F1A',
-            expectedMosaicId: '6C55E05D11D19FBD',
-        },
-    ],
-};
+/**
+ * @links https://raw.githubusercontent.com/nemtech/test-vectors/master/5.test-mosaic-id.json
+ */
+const mosaicTestVector = [
+    {
+        mosaicNonce: 2039925808,
+        address_Public: 'NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y',
+        address_PublicTest: 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q',
+        address_Mijin: 'MATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34YACRA',
+        address_MijinTest: 'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ',
+        mosaicId_Public: '044C577DBDD6DC71',
+        mosaicId_PublicTest: '1796754FB181EF1E',
+        mosaicId_Mijin: '7DCEDD54DAEDF7B7',
+        mosaicId_MijinTest: '5BCD295FC8801FE6',
+    },
+    {
+        mosaicNonce: 1477337076,
+        address_Public: 'NDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YCZOQQ',
+        address_PublicTest: 'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA',
+        address_Mijin: 'MDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22B27FI',
+        address_MijinTest: 'SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY',
+        mosaicId_Public: '7E45A001465DEEA0',
+        mosaicId_PublicTest: '5E55573E3EBBB596',
+        mosaicId_Mijin: '0D47486978FA4316',
+        mosaicId_MijinTest: '55595BF89461E7C1',
+    },
+    {
+        mosaicNonce: 1921674920,
+        address_Public: 'NCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRH6SYIQ',
+        address_PublicTest: 'TCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRE3VIBQ',
+        address_Mijin: 'MCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFDHL7I',
+        address_MijinTest: 'SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXQ',
+        mosaicId_Public: '28E680397FDD9336',
+        mosaicId_PublicTest: '2F05C98474E9B263',
+        mosaicId_Mijin: '51B440266AE7F5B4',
+        mosaicId_MijinTest: '5693742C8290F33E',
+    },
+    {
+        mosaicNonce: 737150288,
+        address_Public: 'NDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFDDCHA',
+        address_PublicTest: 'TDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEPHRSI',
+        address_Mijin: 'MDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFN3NKY',
+        address_MijinTest: 'SDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWH6N46A',
+        mosaicId_Public: '75FAE31C9E1CEE38',
+        mosaicId_PublicTest: '35C831D2A6D9702B',
+        mosaicId_Mijin: '0476D83DF29A0426',
+        mosaicId_MijinTest: '4F5597E18C0182BC',
+    },
+    {
+        mosaicNonce: 4118830514,
+        address_Public: 'NDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QAZ4BMQ',
+        address_PublicTest: 'TDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCY5ZUA',
+        address_Mijin: 'MDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCLCVEA',
+        address_MijinTest: 'SDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDVZG2I',
+        mosaicId_Public: '656748D5F82E87A1',
+        mosaicId_PublicTest: '1CB636C5A32F0293',
+        mosaicId_Mijin: '35C2901E25DCF921',
+        mosaicId_MijinTest: '18FF3D8F9FA932D4',
+    },
+    {
+        mosaicNonce: 2640226657,
+        address_Public: 'NAA6RO4ZAPEDGTCVADE3G4C7SWAE3DBQ4SCMOAI',
+        address_PublicTest: 'TAA6RO4ZAPEDGTCVADE3G4C7SWAE3DBQ4RTFBQY',
+        address_Mijin: 'MAA6RO4ZAPEDGTCVADE3G4C7SWAE3DBQ4TEKNHA',
+        address_MijinTest: 'SAA6RO4ZAPEDGTCVADE3G4C7SWAE3DBQ4RYAIEA',
+        mosaicId_Public: '3840F6C79934A159',
+        mosaicId_PublicTest: '5B0FFAA57C41D62E',
+        mosaicId_Mijin: '11BA1D842237D52B',
+        mosaicId_MijinTest: '0585182BF5BC7B57',
+    },
+    {
+        mosaicNonce: 1996615061,
+        address_Public: 'NBEOZ72O73OYXFDLID5KGBMP67MROHONPQHVKAI',
+        address_PublicTest: 'TBEOZ72O73OYXFDLID5KGBMP67MROHONPR72UPQ',
+        address_Mijin: 'MBEOZ72O73OYXFDLID5KGBMP67MROHONPTHVSXQ',
+        address_MijinTest: 'SBEOZ72O73OYXFDLID5KGBMP67MROHONPTACBLI',
+        mosaicId_Public: '5AA0FF3892EF3345',
+        mosaicId_PublicTest: '79BD9AF30668FBDF',
+        mosaicId_Mijin: '0F8D3270B8ADDF77',
+        mosaicId_MijinTest: '092E4A9D08A9C1C5',
+    },
+    {
+        mosaicNonce: 205824978,
+        address_Public: 'NAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRG2X5RI',
+        address_PublicTest: 'TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I',
+        address_Mijin: 'MAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRG7GL5A',
+        address_MijinTest: 'SAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRGLZY6A',
+        mosaicId_Public: '3AB75AF98A5E0365',
+        mosaicId_PublicTest: '3494FFAE1F6B2B4D',
+        mosaicId_Mijin: '3DF5D3B47E956692',
+        mosaicId_MijinTest: '4AA757991E36C79C',
+    },
+    {
+        mosaicNonce: 3310277026,
+        address_Public: 'NCOVTFVVDZGNURZFU4IJLJR37X5TXNWMTSEHR6I',
+        address_PublicTest: 'TCOVTFVVDZGNURZFU4IJLJR37X5TXNWMTTXN3DI',
+        address_Mijin: 'MCOVTFVVDZGNURZFU4IJLJR37X5TXNWMTTARXZQ',
+        address_MijinTest: 'SCOVTFVVDZGNURZFU4IJLJR37X5TXNWMTSJ6YWY',
+        mosaicId_Public: '213E6E2EC43285C4',
+        mosaicId_PublicTest: '659C0D4A03D119D2',
+        mosaicId_Mijin: '756AC167798FA3DF',
+        mosaicId_MijinTest: '164D3F56862E9520',
+    },
+];
 
 describe('id generator', () => {
     function generateNamespaceId(parentId, name): number[] {
@@ -215,19 +185,34 @@ describe('id generator', () => {
     describe('generate mosaic id', () => {
         it('generates correct well known id', () => {
             // Assert:
-            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.publicId)).to.deep.equal(basicMosaicInfo.id);
+            expect(idGenerator.generateMosaicId(basicMosaicInfo.nonce, basicMosaicInfo.address)).to.deep.equal(basicMosaicInfo.id);
         });
 
         // @dataProvider mosaicTestVector
-        it('generates correct mosaicId given nonce and public key', () => {
-            mosaicTestVector.rows.map((row) => {
-                const pubKey = convert.hexToUint8(row.publicKey);
-                const nonce = convert.hexToUint8(row.nonce).reverse(); // Little-Endianness!
-                const mosaicId = idGenerator.generateMosaicId(nonce, pubKey);
-                const expectedId = uint64.fromHex(row.expectedMosaicId);
+        it('generates correct mosaicId given nonce and address', () => {
+            mosaicTestVector.map((row) => {
+                const addressPublic = Address.createFromRawAddress(row.address_Public);
+                const addressTest = Address.createFromRawAddress(row.address_PublicTest);
+                const addressMijin = Address.createFromRawAddress(row.address_Mijin);
+                const addressMijinTest = Address.createFromRawAddress(row.address_MijinTest);
 
                 // Assert:
-                expect(mosaicId).to.deep.equal(expectedId);
+                expect(
+                    MosaicId.createFromNonce(MosaicNonce.createFromNumber(row.mosaicNonce), addressPublic).toHex(),
+                    'Public',
+                ).to.deep.equal(row.mosaicId_Public);
+                expect(
+                    MosaicId.createFromNonce(MosaicNonce.createFromNumber(row.mosaicNonce), addressTest).toHex(),
+                    'PublicTest',
+                ).to.deep.equal(row.mosaicId_PublicTest);
+                expect(
+                    MosaicId.createFromNonce(MosaicNonce.createFromNumber(row.mosaicNonce), addressMijin).toHex(),
+                    'Mijin',
+                ).to.deep.equal(row.mosaicId_Mijin);
+                expect(
+                    MosaicId.createFromNonce(MosaicNonce.createFromNumber(row.mosaicNonce), addressMijinTest).toHex(),
+                    'MijinTest',
+                ).to.deep.equal(row.mosaicId_MijinTest);
             });
         });
     });

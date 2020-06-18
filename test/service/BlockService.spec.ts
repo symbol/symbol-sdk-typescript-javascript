@@ -40,6 +40,7 @@ describe('BlockService', () => {
         if (isFake) {
             return new BlockInfo(
                 'id',
+                1,
                 'hash',
                 'generationHash',
                 UInt64.fromNumericString('0'),
@@ -66,6 +67,7 @@ describe('BlockService', () => {
         }
         return new BlockInfo(
             'id',
+            1,
             'hash',
             'generationHash',
             UInt64.fromNumericString('0'),

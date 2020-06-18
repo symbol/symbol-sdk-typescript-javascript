@@ -19,12 +19,14 @@ import { expect } from 'chai';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { BlockInfo } from '../../../src/model/blockchain/BlockInfo';
 import { UInt64 } from '../../../src/model/UInt64';
+import { Address } from '../../../src/model/account/Address';
 
 describe('BlockInfo', () => {
     it('should createComplete an BlockInfo object', () => {
         const blockDTO = {
             id: '12345',
             block: {
+                size: 1,
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
@@ -39,7 +41,7 @@ describe('BlockInfo', () => {
                     '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
                     'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                beneficiaryAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
                 timestamp: new UInt64([0, 0]),
                 type: 32768,
                 version: 1,
@@ -57,6 +59,7 @@ describe('BlockInfo', () => {
 
         const blockInfo = new BlockInfo(
             blockDTO.id,
+            blockDTO.block.size,
             blockDTO.meta.hash,
             blockDTO.meta.generationHash,
             blockDTO.meta.totalFee,
@@ -78,11 +81,12 @@ describe('BlockInfo', () => {
             blockDTO.block.proofGamma,
             blockDTO.block.proofScalar,
             blockDTO.block.proofVerificationHash,
-            PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, blockDTO.block.network),
+            Address.createFromEncoded(blockDTO.block.beneficiaryAddress),
             blockDTO.meta.numStatements,
         );
 
         expect(blockInfo.recordId).to.be.equal(blockDTO.id);
+        expect(blockInfo.size).to.be.equal(blockDTO.block.size);
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
         expect(blockInfo.generationHash).to.be.equal(blockDTO.meta.generationHash);
         deepEqual(blockInfo.totalFee, blockDTO.meta.totalFee);
@@ -100,7 +104,7 @@ describe('BlockInfo', () => {
         expect(blockInfo.blockTransactionsHash).to.be.equal(blockDTO.block.blockTransactionsHash);
         expect(blockInfo.blockReceiptsHash).to.be.equal(blockDTO.block.blockReceiptsHash);
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
-        expect((blockInfo.beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
+        expect(blockInfo.beneficiaryAddress?.plain()).to.be.equal(Address.createFromEncoded(blockDTO.block.beneficiaryAddress).plain());
         expect(blockInfo.numStatements).to.be.equal(blockDTO.meta.numStatements);
         expect(blockInfo.proofGamma).to.be.equal(blockDTO.block.proofGamma);
         expect(blockInfo.proofScalar).to.be.equal(blockDTO.block.proofScalar);

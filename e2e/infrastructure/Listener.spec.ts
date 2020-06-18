@@ -15,13 +15,10 @@
  */
 import { assert, expect } from 'chai';
 import { ChronoUnit } from 'js-joda';
-import { filter } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Address, CosignatureTransaction, LockFundsTransaction, Mosaic, SignedTransaction, UInt64 } from '../../src/model/model';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -29,7 +26,14 @@ import { MultisigAccountModificationTransaction } from '../../src/model/transact
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
-import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client';
+import { Address } from '../../src/model/account/Address';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
+import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -41,7 +45,6 @@ describe('Listener', () => {
     let cosignAccount3: Account;
     let generationHash: string;
     let networkType: NetworkType;
-    const NetworkCurrencyLocalId: NamespaceId = helper.networkCurrencyNamespaceId;
     let transactionRepository: TransactionRepository;
 
     before(() => {
@@ -92,7 +95,7 @@ describe('Listener', () => {
     const createHashLockTransactionAndAnnounce = (
         signedAggregatedTransaction: SignedTransaction,
         signer: Account,
-        mosaicId: MosaicId | NamespaceId,
+        mosaicId: UnresolvedMosaicId,
     ): void => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
@@ -182,7 +185,7 @@ describe('Listener', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 cosignAccount1.address,
-                [new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility)))],
+                [helper.createNetworkCurrency(10, true)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -199,7 +202,7 @@ describe('Listener', () => {
                 Deadline.create(),
                 2,
                 1,
-                [cosignAccount1.publicAccount, cosignAccount2.publicAccount, cosignAccount3.publicAccount],
+                [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
                 [],
                 networkType,
                 helper.maxFee,
@@ -225,7 +228,7 @@ describe('Listener', () => {
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, NetworkCurrencyLocalId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrencyNamespaceId);
             helper.listener.aggregateBondedAdded(account.address).subscribe(() => {
                 done();
             });
@@ -239,26 +242,34 @@ describe('Listener', () => {
             });
         });
     });
+
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsRemoved', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
-
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, NetworkCurrencyLocalId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
+            helper.listener.aggregateBondedRemoved(cosignAccount1.address, signedAggregatedTx.hash).subscribe(() => {
+                done();
+            });
             helper.listener.confirmed(cosignAccount1.address).subscribe(() => {
-                helper.listener.aggregateBondedRemoved(cosignAccount1.address).subscribe(() => {
-                    done();
-                });
                 helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                     const criteria: TransactionSearchCriteria = {
-                        address: cosignAccount1.publicAccount.address,
-                        group: TransactionGroupSubsetEnum.Partial,
+                        address: cosignAccount1.address,
+                        group: TransactionGroup.Partial,
+                        embedded: true,
                     };
-                    transactionRepository.search(criteria).subscribe((transactions) => {
-                        const transactionToCosign = transactions[0];
-                        const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
-                        const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
-                        transactionRepository.announceAggregateBondedCosignature(cosignatureSignedTransaction);
-                    });
+                    transactionRepository
+                        .search(criteria)
+                        .pipe(
+                            mergeMap((page) => {
+                                return transactionRepository.getTransaction(page.data[0].transactionInfo?.hash!, TransactionGroup.Partial);
+                            }),
+                        )
+                        .subscribe((transactions) => {
+                            const transactionToCosign = transactions as AggregateTransaction;
+                            const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
+                            const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
+                            transactionRepository.announceAggregateBondedCosignature(cosignatureSignedTransaction);
+                        });
                 });
                 helper.listener.status(cosignAccount1.address).subscribe((error) => {
                     console.log('Error:', error);
@@ -279,17 +290,17 @@ describe('Listener', () => {
         it('cosignatureAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
 
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, NetworkCurrencyLocalId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
             helper.listener.cosignatureAdded(cosignAccount1.address).subscribe(() => {
                 done();
             });
             helper.listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
                 const criteria: TransactionSearchCriteria = {
                     address: cosignAccount1.publicAccount.address,
-                    group: TransactionGroupSubsetEnum.Partial,
+                    group: TransactionGroup.Partial,
                 };
                 transactionRepository.search(criteria).subscribe((transactions) => {
-                    const transactionToCosign = transactions[0];
+                    const transactionToCosign = transactions.data[0] as AggregateTransaction;
                     const cosignatureTransaction = CosignatureTransaction.create(transactionToCosign);
                     const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
                     transactionRepository.announceAggregateBondedCosignature(cosignatureSignedTransaction);
@@ -313,7 +324,7 @@ describe('Listener', () => {
                 -1,
                 0,
                 [],
-                [cosignAccount1.publicAccount],
+                [cosignAccount1.address],
                 networkType,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
@@ -321,7 +332,7 @@ describe('Listener', () => {
                 0,
                 0,
                 [],
-                [cosignAccount2.publicAccount],
+                [cosignAccount2.address],
                 networkType,
             );
 
@@ -330,7 +341,7 @@ describe('Listener', () => {
                 -1,
                 -1,
                 [],
-                [cosignAccount3.publicAccount],
+                [cosignAccount3.address],
                 networkType,
             );
 
@@ -343,6 +354,7 @@ describe('Listener', () => {
                 ],
                 networkType,
                 [],
+                helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(
                 cosignAccount1,

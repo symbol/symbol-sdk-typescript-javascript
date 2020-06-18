@@ -44,6 +44,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 export class SecretLockTransaction extends Transaction {
     /**
@@ -67,7 +68,7 @@ export class SecretLockTransaction extends Transaction {
         duration: UInt64,
         hashAlgorithm: LockHashAlgorithm,
         secret: string,
-        recipientAddress: Address | NamespaceId,
+        recipientAddress: UnresolvedAddress,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
@@ -126,7 +127,7 @@ export class SecretLockTransaction extends Transaction {
         /**
          * The unresolved recipientAddress of the funds.
          */
-        public readonly recipientAddress: Address | NamespaceId,
+        public readonly recipientAddress: UnresolvedAddress,
         signature?: string,
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,
@@ -182,7 +183,7 @@ export class SecretLockTransaction extends Transaction {
         const byteAmount = 8;
         const byteDuration = 8;
         const byteAlgorithm = 1;
-        const byteRecipient = 25;
+        const byteRecipient = 24;
 
         // convert secret to uint8
         const byteSecret = convert.hexToUint8(this.secret).length;
@@ -219,7 +220,7 @@ export class SecretLockTransaction extends Transaction {
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()), new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
         );
         return transactionBuilder.serialize();
     }
@@ -238,7 +239,7 @@ export class SecretLockTransaction extends Transaction {
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()), new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
         );
     }
 
@@ -276,8 +277,8 @@ export class SecretLockTransaction extends Transaction {
     public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
             super.isSigned(address) ||
-            (this.recipientAddress as Address).equals(address) ||
-            alias.find((name) => (this.recipientAddress as NamespaceId).equals(name)) !== undefined
+            this.recipientAddress.equals(address) ||
+            alias.find((name) => this.recipientAddress.equals(name)) !== undefined
         );
     }
 }

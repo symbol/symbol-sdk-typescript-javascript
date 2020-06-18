@@ -25,6 +25,7 @@ import { AddressAliasTransaction } from '../../../src/model/transaction/AddressA
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { AliasTransaction } from '../../../src/model/model';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -35,7 +36,7 @@ describe('AddressAliasTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -50,7 +51,7 @@ describe('AddressAliasTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -66,7 +67,7 @@ describe('AddressAliasTransaction', () => {
 
     it('should createComplete an AddressAliasTransaction object and sign it', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -78,19 +79,42 @@ describe('AddressAliasTransaction', () => {
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(addressAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
-        expect(addressAliasTransaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(addressAliasTransaction.address.plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
 
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '2AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E14201',
+            '2AD8FC018D9A49E19026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B201',
+        );
+    });
+
+    it('should createComplete an AddressAliasTransaction using abstract', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const addressAliasTransaction = AliasTransaction.createForAddress(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            address,
+            NetworkType.MIJIN_TEST,
+        ) as AddressAliasTransaction;
+
+        expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
+        expect(addressAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
+        expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
+        expect(addressAliasTransaction.address.plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+
+        const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E19026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B201',
         );
     });
 
     describe('size', () => {
-        it('should return 162 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
+        it('should return 161 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
-            const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+            const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
                 AliasAction.Link,
@@ -99,13 +123,13 @@ describe('AddressAliasTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
-            expect(addressAliasTransaction.size).to.be.equal(162);
+            expect(addressAliasTransaction.size).to.be.equal(161);
         });
     });
 
     it('Test set maxFee using multiplier', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -113,18 +137,18 @@ describe('AddressAliasTransaction', () => {
             address,
             NetworkType.MIJIN_TEST,
         ).setMaxFee(2);
-        expect(addressAliasTransaction.maxFee.compact()).to.be.equal(324);
+        expect(addressAliasTransaction.maxFee.compact()).to.be.equal(322);
     });
 
     it('Notify Account', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const tx = AddressAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, address, NetworkType.MIJIN_TEST);
 
         let canNotify = tx.shouldNotifyAccount(address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

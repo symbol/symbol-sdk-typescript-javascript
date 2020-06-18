@@ -32,8 +32,8 @@ describe('Metadata', () => {
     it('should createComplete an Metadata object', () => {
         const metadataEntryDTO = {
             compositeHash: hash,
-            senderPublicKey: account.publicKey,
-            targetPublicKey: account.publicKey,
+            sourceAddress: account.address,
+            targetAddress: account.address,
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: undefined,
             metadataType: 0,
@@ -50,8 +50,8 @@ describe('Metadata', () => {
             metadataDTO.meta.id,
             new MetadataEntry(
                 metadataDTO.metadataEntry.compositeHash,
-                metadataDTO.metadataEntry.senderPublicKey,
-                metadataDTO.metadataEntry.targetPublicKey,
+                metadataDTO.metadataEntry.sourceAddress,
+                metadataDTO.metadataEntry.targetAddress,
                 UInt64.fromHex(metadataDTO.metadataEntry.scopedMetadataKey),
                 metadataDTO.metadataEntry.metadataType,
                 metadataDTO.metadataEntry.value,
@@ -59,9 +59,9 @@ describe('Metadata', () => {
         );
 
         deepEqual(metadata.id, '9999');
-        deepEqual(metadata.metadataEntry.senderPublicKey, account.publicKey);
+        deepEqual(metadata.metadataEntry.sourceAddress, account.address);
         deepEqual(metadata.metadataEntry.compositeHash, hash);
-        deepEqual(metadata.metadataEntry.targetPublicKey, account.publicKey);
+        deepEqual(metadata.metadataEntry.targetAddress, account.address);
         deepEqual(metadata.metadataEntry.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual(metadata.metadataEntry.targetId, undefined);
         deepEqual(metadata.metadataEntry.metadataType, MetadataType.Account);

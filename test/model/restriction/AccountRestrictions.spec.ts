@@ -20,19 +20,19 @@ import { Address } from '../../../src/model/account/Address';
 import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
 import { AccountRestrictions } from '../../../src/model/restriction/AccountRestrictions';
-import { AddressRestrictionFlag } from '../../../src/model/model';
+import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
 
 describe('AccountRestrictions', () => {
     it('should createComplete an AccountRestrictions object', () => {
         const accountRestrictionsDTO = {
-            address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
+            address: Address.createFromEncoded('6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF'),
             restrictions: [
                 {
                     restrictionFlags: AddressRestrictionFlag.AllowIncomingAddress,
                     values: [
                         {
                             modificationAction: AccountRestrictionModificationAction.Add,
-                            value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
+                            value: 'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ',
                         },
                     ],
                 },

@@ -18,8 +18,10 @@ import { expect } from 'chai';
 import { UnresolvedMapping } from '../../../src/core/utils/UnresolvedMapping';
 import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
-import { Address, MosaicId, NamespaceId } from '../../../src/model/model';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { Address } from '../../../src/model/account/Address';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 
 describe('Statement', () => {
     let account: Account;
@@ -42,7 +44,7 @@ describe('Statement', () => {
                         {
                             version: 1,
                             type: 8515,
-                            targetPublicKey: 'B2708D49C46F8AB5CDBD7A09C959EEA12E4A782592F3D1D3D17D54622E655D7F',
+                            targetAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
                             mosaicId: '504677C3281108DB',
                             amount: '0',
                         },
@@ -54,14 +56,14 @@ describe('Statement', () => {
             {
                 statement: {
                     height: '1473',
-                    unresolved: '9156258DE356F030A500000000000000000000000000000000',
+                    unresolved: '9156258DE356F030A5000000000000000000000000000000',
                     resolutionEntries: [
                         {
                             source: {
                                 primaryId: 1,
                                 secondaryId: 0,
                             },
-                            resolved: '90AB9480887275E559F3BCA87E6158AA7AFF339BE85E77A0F3',
+                            resolved: account.address.encoded(),
                         },
                     ],
                 },
@@ -108,8 +110,8 @@ describe('Statement', () => {
     });
 
     it('should get resolved address from receipt', () => {
-        const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
-        const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
+        const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A5000000000000000000000000000000');
+        const statement = CreateStatementFromDTO(statementDTO);
         const resolved = statement.resolveAddress(unresolvedAddress as NamespaceId, '1473', 0);
 
         expect(resolved instanceof Address).to.be.true;
@@ -123,14 +125,14 @@ describe('Statement', () => {
                 {
                     statement: {
                         height: '1473',
-                        unresolved: '9156258DE356F030A500000000000000000000000000000000',
+                        unresolved: '9156258DE356F030A5000000000000000000000000000000',
                         resolutionEntries: [
                             {
                                 source: {
                                     primaryId: 1,
                                     secondaryId: 0,
                                 },
-                                resolved: '90AB9480887275E559F3BCA87E6158AA7AFF339BE85E77A0F3',
+                                resolved: account.address.encoded(),
                             },
                         ],
                     },
@@ -138,8 +140,8 @@ describe('Statement', () => {
             ],
             mosaicResolutionStatements: [],
         };
-        const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A500000000000000000000000000000000');
-        const statement = CreateStatementFromDTO(statementWithoutHarvesting, NetworkType.MIJIN_TEST);
+        const unresolvedAddress = UnresolvedMapping.toUnresolvedAddress('9156258DE356F030A5000000000000000000000000000000');
+        const statement = CreateStatementFromDTO(statementWithoutHarvesting);
         const resolved = statement.resolveAddress(unresolvedAddress as NamespaceId, '1473', 0);
 
         expect(resolved instanceof Address).to.be.true;
@@ -148,7 +150,7 @@ describe('Statement', () => {
 
     it('should get resolved mosaic from receipt', () => {
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
-        const statement = CreateStatementFromDTO(statementDTO, NetworkType.MIJIN_TEST);
+        const statement = CreateStatementFromDTO(statementDTO);
         const resolved = statement.resolveMosaicId(unresolvedMosaic as NamespaceId, '1473', 0);
 
         expect(resolved instanceof MosaicId).to.be.true;
@@ -193,7 +195,7 @@ describe('Statement', () => {
             ],
         };
         const unresolvedMosaic = UnresolvedMapping.toUnresolvedMosaic('E81F622A5B11A340');
-        const statement = CreateStatementFromDTO(statementWithoutHarvesting, NetworkType.MIJIN_TEST);
+        const statement = CreateStatementFromDTO(statementWithoutHarvesting);
         const resolved = statement.resolveMosaicId(unresolvedMosaic as NamespaceId, '1473', 0);
 
         expect(resolved instanceof MosaicId).to.be.true;

@@ -34,7 +34,7 @@ import { Address } from '../../src/model/account/Address';
 import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client/dist/model/accountKeyDTO';
 
 describe('AccountHttp', () => {
-    const address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
+    const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
 
     const mosaic = new Mosaic();
     mosaic.amount = '777';

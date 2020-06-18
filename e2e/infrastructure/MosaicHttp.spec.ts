@@ -32,6 +32,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
@@ -70,7 +71,7 @@ describe('MosaicHttp', () => {
             const nonce = MosaicNonce.createFromNumber(-1501238750);
             expect(nonce.toDTO()).to.be.equals(2793728546);
             expect(nonce.toHex()).to.be.equals('22EA84A6');
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -90,7 +91,7 @@ describe('MosaicHttp', () => {
 
             const savedTransaction = (await helper.repositoryFactory
                 .createTransactionRepository()
-                .getTransaction(signedTransaction.hash)
+                .getTransaction(signedTransaction.hash, TransactionGroup.Confirmed)
                 .toPromise()) as MosaicDefinitionTransaction;
             expect(mosaicDefinitionTransaction.nonce.toHex()).to.be.equal(savedTransaction.nonce.toHex());
             expect(mosaicDefinitionTransaction.nonce).to.deep.equal(savedTransaction.nonce);
@@ -137,7 +138,7 @@ describe('MosaicHttp', () => {
     describe('getMosaic', () => {
         it('should return mosaic given mosaicId', async () => {
             const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
-            expect(mosaicInfo.height.lower).not.to.be.null;
+            expect(mosaicInfo.startHeight.lower).not.to.be.null;
             expect(mosaicInfo.divisibility).to.be.equal(3);
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
             expect(mosaicInfo.isTransferable()).to.be.equal(true);
@@ -147,7 +148,7 @@ describe('MosaicHttp', () => {
     describe('getMosaics', () => {
         it('should return mosaics given array of mosaicIds', async () => {
             const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
-            expect(mosaicInfos[0].height.lower).not.to.be.null;
+            expect(mosaicInfos[0].startHeight.lower).not.to.be.null;
             expect(mosaicInfos[0].divisibility).to.be.equal(3);
             expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
             expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
@@ -173,10 +174,10 @@ describe('MosaicHttp', () => {
         it('should call searchMosaics successfully', async () => {
             const streamer = new MosaicPaginationStreamer(mosaicRepository);
             const mosaicsStreamer = await streamer
-                .search({ ownerAddress: account.address, pageSize: 3 })
-                .pipe(take(3), toArray())
+                .search({ ownerAddress: account.address, pageSize: 100 })
+                .pipe(take(100), toArray())
                 .toPromise();
-            const mosaics = await mosaicRepository.search({ ownerAddress: account.address, pageSize: 3 }).toPromise();
+            const mosaics = await mosaicRepository.search({ ownerAddress: account.address, pageSize: 100 }).toPromise();
             expect(mosaicsStreamer.length).to.be.greaterThan(0);
             expect(mosaicsStreamer.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
             deepEqual(mosaics.data, mosaicsStreamer);

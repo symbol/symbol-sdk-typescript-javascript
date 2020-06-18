@@ -23,7 +23,7 @@ export class NamespaceNetworkProperties {
      * @param maxNamespaceDuration - Maximum namespace duration.
      * @param namespaceGracePeriodDuration - Grace period during which time only the previous owner can renew an expired namespace.
      * @param reservedRootNamespaceNames - Reserved root namespaces that cannot be claimed.
-     * @param namespaceRentalFeeSinkPublicKey - Public key of the namespace rental fee sink account.
+     * @param namespaceRentalFeeSinkAddress - Public key of the namespace rental fee sink address.
      * @param rootNamespaceRentalFeePerBlock - Root namespace rental fee per block.
      * @param childNamespaceRentalFee - Child namespace rental fee.
      */
@@ -35,7 +35,7 @@ export class NamespaceNetworkProperties {
         public readonly maxNamespaceDuration?: string,
         public readonly namespaceGracePeriodDuration?: string,
         public readonly reservedRootNamespaceNames?: string,
-        public readonly namespaceRentalFeeSinkPublicKey?: string,
+        public readonly namespaceRentalFeeSinkAddress?: string,
         public readonly rootNamespaceRentalFeePerBlock?: string,
         public readonly childNamespaceRentalFee?: string,
     ) {}

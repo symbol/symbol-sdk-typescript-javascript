@@ -106,7 +106,7 @@ describe('TransactionService', () => {
 
         // Create a new Mosaic
         const nonce = MosaicNonce.createRandom();
-        newMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+        newMosaicId = MosaicId.createFromNonce(nonce, account.address);
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
@@ -114,6 +114,15 @@ describe('TransactionService', () => {
             MosaicFlags.create(true, true, false),
             3,
             UInt64.fromUint(0),
+            networkType,
+            helper.maxFee,
+        );
+
+        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            newMosaicId,
+            MosaicSupplyChangeAction.Increase,
+            UInt64.fromUint(200000),
             networkType,
             helper.maxFee,
         );
@@ -131,7 +140,7 @@ describe('TransactionService', () => {
         // Use new mosaicAlias in metadata
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(5),
             mosaicAlias,
             10,
@@ -145,6 +154,7 @@ describe('TransactionService', () => {
                 transferTransaction.toAggregate(account.publicAccount),
                 mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
                 mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicSupplyChangeTransaction.toAggregate(account.publicAccount),
                 mosaicAliasTransactionRelink.toAggregate(account.publicAccount),
                 mosaicMetadataTransaction.toAggregate(account.publicAccount),
             ],
@@ -213,7 +223,7 @@ describe('TransactionService', () => {
     describe('Setup test MosaicId', () => {
         it('Announce MosaicDefinitionTransaction', () => {
             const nonce = MosaicNonce.createRandom();
-            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -306,7 +316,7 @@ describe('TransactionService', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account3.address,
-                [new Mosaic(mosaicAlias, UInt64.fromUint(200))],
+                [new Mosaic(mosaicAlias, UInt64.fromUint(1))],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -384,6 +394,7 @@ describe('TransactionService', () => {
                             expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
                             expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
                         } else if (tx instanceof AggregateTransaction) {
+                            console.log(tx.innerTransactions);
                             expect(tx.innerTransactions.length).to.be.equal(5);
                             // Assert Transfer
                             expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(

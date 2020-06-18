@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { UInt64 } from '../UInt64';
+
 /**
  * Co-signature signed transaction.
  */
@@ -22,6 +24,7 @@ export class CosignatureSignedTransaction {
      * @param parentHash
      * @param signature
      * @param signerPublicKey
+     * @param version
      */
     constructor(
         /**
@@ -36,5 +39,9 @@ export class CosignatureSignedTransaction {
          * The signer publicKey of the transaction.
          */
         public readonly signerPublicKey: string,
+        /**
+         * Version
+         */
+        public readonly version = UInt64.fromUint(0),
     ) {}
 }

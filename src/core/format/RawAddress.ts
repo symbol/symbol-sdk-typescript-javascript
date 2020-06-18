@@ -25,10 +25,10 @@ export class RawAddress {
     static readonly constants = {
         sizes: {
             ripemd160: 20,
-            addressDecoded: 25,
-            addressEncoded: 40,
+            addressDecoded: 24,
+            addressEncoded: 39,
             key: 32,
-            checksum: 4,
+            checksum: 3,
         },
     };
     /**
@@ -40,8 +40,7 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressEncoded !== encoded.length) {
             throw Error(`${encoded} does not represent a valid encoded address`);
         }
-
-        return Base32.Base32Decode(encoded);
+        return Base32.Base32Decode(`${encoded}A`).subarray(0, RawAddress.constants.sizes.addressDecoded);
     };
 
     /**
@@ -51,11 +50,11 @@ export class RawAddress {
      * @returns {Uint8Array} The padded notation of the alias
      */
     public static aliasToRecipient = (namespaceId: Uint8Array, networkType: NetworkType): Uint8Array => {
-        // 0x91 | namespaceId on 8 bytes | 16 bytes 0-pad = 25 bytes
-        const padded = new Uint8Array(1 + 8 + 16);
+        // 0x91 | namespaceId on 8 bytes | 15 bytes 0-pad = 24 bytes
+        const padded = new Uint8Array(1 + 8 + 15);
         padded.set([networkType.valueOf() | 0x01], 0);
         padded.set(namespaceId.reverse(), 1);
-        padded.set(Convert.hexToUint8('00'.repeat(16)), 9);
+        padded.set(Convert.hexToUint8('00'.repeat(15)), 9);
         return padded;
     };
 
@@ -68,7 +67,9 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             throw Error(`${Convert.uint8ToHex(decoded)} does not represent a valid decoded address`);
         }
-        return Base32.Base32Encode(decoded);
+        const padded = new Uint8Array(RawAddress.constants.sizes.addressDecoded + 1);
+        padded.set(decoded);
+        return Base32.Base32Encode(padded).slice(0, -1);
     };
 
     /**

@@ -23,11 +23,16 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { Account } from '../../src/model/account/Account';
 import { AccountNames } from '../../src/model/account/AccountNames';
 import { Address } from '../../src/model/account/Address';
-import { Deadline, NamespaceId, NamespaceName, PlainMessage, Transaction, TransferTransaction, PublicAccount } from '../../src/model/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { UInt64 } from '../../src/model/UInt64';
 import { NewBlock } from '../../src/model/blockchain/NewBlock';
+import { Transaction } from '../../src/model/transaction/Transaction';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { NamespaceName } from '../../src/model/namespace/NamespaceName';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { Deadline } from '../../src/model/transaction/Deadline';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
@@ -58,7 +63,7 @@ describe('Listener', () => {
 
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -100,7 +105,7 @@ describe('Listener', () => {
 
     describe('onConfirmed', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -448,7 +453,7 @@ describe('Listener', () => {
                         '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
                         'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
                     signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    beneficiaryAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
                     timestamp: '0',
                     type: 32768,
                     version: 1,
@@ -490,7 +495,7 @@ describe('Listener', () => {
             expect(reportedStatus[0].blockTransactionsHash).to.be.equal(blockDTO.block.transactionsHash);
             expect(reportedStatus[0].blockReceiptsHash).to.be.equal(blockDTO.block.receiptsHash);
             expect(reportedStatus[0].stateHash).to.be.equal(blockDTO.block.stateHash);
-            expect((reportedStatus[0].beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
+            expect(reportedStatus[0].beneficiaryAddress?.encoded()).to.be.equal(blockDTO.block.beneficiaryAddress);
             expect(reportedStatus[0].proofGamma).to.be.equal(blockDTO.block.proofGamma);
             expect(reportedStatus[0].proofScalar).to.be.equal(blockDTO.block.proofScalar);
             expect(reportedStatus[0].proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);

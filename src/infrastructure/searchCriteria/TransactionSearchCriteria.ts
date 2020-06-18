@@ -18,7 +18,7 @@ import { SearchCriteria } from './SearchCriteria';
 import { Address } from '../../model/account/Address';
 import { UInt64 } from '../../model/UInt64';
 import { TransactionType } from '../../model/transaction/TransactionType';
-import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-client/dist/model/transactionGroupSubsetEnum';
+import { TransactionGroup } from '../TransactionGroup';
 
 /**
  * Defines the params used to search transactions. With this criteria, you can sort and filter
@@ -26,10 +26,9 @@ import { TransactionGroupSubsetEnum } from 'symbol-openapi-typescript-node-clien
  */
 export interface TransactionSearchCriteria extends SearchCriteria {
     /**
-     * Transaction identifier up to which transactions are returned. (optional)
+     * The group of transaction (optional, default is confirmed)
      */
-    id?: string;
-
+    group: TransactionGroup;
     /**
      * Filter by address involved in the transaction.
      *
@@ -57,15 +56,10 @@ export interface TransactionSearchCriteria extends SearchCriteria {
     height?: UInt64;
 
     /**
-     * The group of transaction (optional, default is confirmed)
-     */
-    group?: TransactionGroupSubsetEnum;
-
-    /**
      * Filter by transaction type. To filter by multiple transaction type.  (optional, default to
      * new empty array)
      */
-    transactionTypes?: TransactionType[];
+    type?: TransactionType[];
 
     /**
      * When true, the endpoint also returns all the embedded aggregate transactions. When

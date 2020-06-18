@@ -17,21 +17,27 @@
 import { ClientResponse } from 'http';
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { BlockInfoDTO, BlockRoutesApi, TransactionRoutesApi, TransactionStatusDTO } from 'symbol-openapi-typescript-node-client';
+import {
+    BlockInfoDTO,
+    BlockRoutesApi,
+    TransactionRoutesApi,
+    TransactionInfoDTO,
+    TransactionPage,
+    Cosignature,
+} from 'symbol-openapi-typescript-node-client';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
-import { Deadline } from '../model/transaction/Deadline';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
 import { TransactionInfo } from '../model/transaction/TransactionInfo';
-import { TransactionStatus } from '../model/transaction/TransactionStatus';
 import { TransactionType } from '../model/transaction/TransactionType';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Page } from './Page';
+import { TransactionGroup } from './TransactionGroup';
+import http = require('http');
 
 /**
  * Transaction http repository.
@@ -66,10 +72,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * Gets a transaction for a transactionId
      * @param transactionId - Transaction id or hash.
+     * @param transactionGroup - Transaction group.
      * @returns Observable<Transaction>
      */
-    public getTransaction(transactionId: string): Observable<Transaction> {
-        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
+    public getTransaction(transactionId: string, transactionGroup: TransactionGroup): Observable<Transaction> {
+        return observableFrom(this.getTransactionByGroup(transactionId, transactionGroup)).pipe(
             map(({ body }) => CreateTransactionFromDTO(body)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
@@ -90,33 +97,6 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     return CreateTransactionFromDTO(transactionDTO);
                 }),
             ),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Gets a transaction status for a transaction hash
-     * @param transactionHash - Transaction hash.
-     * @returns Observable<TransactionStatus>
-     */
-    public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
-        return observableFrom(this.transactionRoutesApi.getTransactionStatus(transactionHash)).pipe(
-            map(({ body }) => this.toTransactionStatus(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Gets an array of transaction status for different transaction hashes
-     * @param transactionHashes - Array of transaction hash
-     * @returns Observable<TransactionStatus[]>
-     */
-    public getTransactionsStatuses(transactionHashes: string[]): Observable<TransactionStatus[]> {
-        const transactionHashesBody = {
-            hashes: transactionHashes,
-        };
-        return observableFrom(this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
-            map(({ body }) => body.map(this.toTransactionStatus)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }
@@ -159,7 +139,12 @@ export class TransactionHttp extends Http implements TransactionRepository {
     public announceAggregateBondedCosignature(
         cosignatureSignedTransaction: CosignatureSignedTransaction,
     ): Observable<TransactionAnnounceResponse> {
-        return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignatureSignedTransaction)).pipe(
+        const cosignature = new Cosignature();
+        cosignature.parentHash = cosignatureSignedTransaction.parentHash;
+        cosignature.signerPublicKey = cosignatureSignedTransaction.signerPublicKey;
+        cosignature.signature = cosignatureSignedTransaction.signature;
+        cosignature.version = cosignatureSignedTransaction.version.toString();
+        return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignature)).pipe(
             map(({ body }) => new TransactionAnnounceResponse(body.message)),
             catchError((error) => throwError(this.errorHandling(error))),
         );
@@ -171,7 +156,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<number>
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
-        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
+        return observableFrom(this.getTransactionByGroup(transactionId, TransactionGroup.Confirmed)).pipe(
             mergeMap(({ body }) => {
                 // parse transaction to take advantage of `size` getter overload
                 const transaction = CreateTransactionFromDTO(body);
@@ -185,12 +170,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
                         // effective_fee = feeMultiplier x transaction::size
                         return blockDTO.block.feeMultiplier * transaction.size;
                     }),
-                    catchError((error) => throwError(this.errorHandling(error))),
                 );
             }),
-            catchError((err) => {
-                return throwError(err);
-            }),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -201,38 +183,88 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns {Observable<Page<Transaction>>}
      */
     public search(criteria: TransactionSearchCriteria): Observable<Page<Transaction>> {
-        return this.call(
-            this.transactionRoutesApi.searchTransactions(
-                criteria.address?.plain(),
-                criteria.recipientAddress?.plain(),
-                criteria.signerPublicKey,
-                criteria.height?.toString(),
-                criteria.pageSize,
-                criteria.pageNumber,
-                criteria.offset,
-                criteria.group,
-                criteria.order,
-                criteria.transactionTypes?.map((type) => type.valueOf()),
-                criteria.embedded,
-            ),
-            (body) => super.toPage(body.pagination, body.data, CreateTransactionFromDTO),
+        return this.call(this.searchTransactionByGroup(criteria), (body) =>
+            super.toPage(body.pagination, body.data, CreateTransactionFromDTO),
         );
     }
 
     /**
-     * This method maps a TransactionStatusDTO from rest to the SDK's TransactionStatus model object.
-     *
      * @internal
-     * @param {TransactionStatusDTO} dto the TransactionStatusDTO object from rest.
-     * @returns {TransactionStatus} a TransactionStatus model
+     * Gets a transaction info
+     * @param transactionId - Transaction id or hash.
+     * @param transactionGroup - Transaction group.
+     * @returns Promise<{response: http.ClientResponse; body: TransactionInfoDTO;}>
      */
-    private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
-        return new TransactionStatus(
-            dto.group,
-            dto.hash,
-            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
-            dto.code,
-            dto.height ? UInt64.fromNumericString(dto.height) : undefined,
-        );
+    private getTransactionByGroup(
+        transactionId: string,
+        transactionGroup: TransactionGroup,
+    ): Promise<{
+        response: http.ClientResponse;
+        body: TransactionInfoDTO;
+    }> {
+        switch (transactionGroup) {
+            case TransactionGroup.Confirmed:
+                return this.transactionRoutesApi.getConfirmedTransaction(transactionId);
+            case TransactionGroup.Unconfirmed:
+                return this.transactionRoutesApi.getUnconfirmedTransaction(transactionId);
+            case TransactionGroup.Partial:
+                return this.transactionRoutesApi.getPartialTransaction(transactionId);
+        }
+    }
+
+    /**
+     * @internal
+     * Gets a transaction search result
+     * @param transactionId - Transaction id or hash.
+     * @param transactionGroup - Transaction group.
+     * @returns Promise<{response: http.ClientResponse; body: TransactionInfoDTO;}>
+     */
+    private searchTransactionByGroup(
+        criteria: TransactionSearchCriteria,
+    ): Promise<{
+        response: http.ClientResponse;
+        body: TransactionPage;
+    }> {
+        switch (criteria.group) {
+            case TransactionGroup.Confirmed:
+                return this.transactionRoutesApi.searchConfirmedTransactions(
+                    criteria.address?.plain(),
+                    criteria.recipientAddress?.plain(),
+                    criteria.signerPublicKey,
+                    criteria.height?.toString(),
+                    criteria.type?.map((type) => type.valueOf()),
+                    criteria.embedded,
+                    criteria.pageSize,
+                    criteria.pageNumber,
+                    criteria.offset,
+                    criteria.order,
+                );
+            case TransactionGroup.Unconfirmed:
+                return this.transactionRoutesApi.searchUnconfirmedTransactions(
+                    criteria.address?.plain(),
+                    criteria.recipientAddress?.plain(),
+                    criteria.signerPublicKey,
+                    criteria.height?.toString(),
+                    criteria.type?.map((type) => type.valueOf()),
+                    criteria.embedded,
+                    criteria.pageSize,
+                    criteria.pageNumber,
+                    criteria.offset,
+                    criteria.order,
+                );
+            case TransactionGroup.Partial:
+                return this.transactionRoutesApi.searchPartialTransactions(
+                    criteria.address?.plain(),
+                    criteria.recipientAddress?.plain(),
+                    criteria.signerPublicKey,
+                    criteria.height?.toString(),
+                    criteria.type?.map((type) => type.valueOf()),
+                    criteria.embedded,
+                    criteria.pageSize,
+                    criteria.pageNumber,
+                    criteria.offset,
+                    criteria.order,
+                );
+        }
     }
 }

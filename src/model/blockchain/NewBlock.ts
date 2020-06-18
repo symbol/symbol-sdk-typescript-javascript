@@ -17,6 +17,7 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
+import { Address } from '../account/Address';
 
 /**
  * The block info structure describes basic information of a new gernated block (Websocket payload).
@@ -41,7 +42,7 @@ export class NewBlock {
      * @param blockTransactionsHash
      * @param blockReceiptsHash
      * @param blockStateHash
-     * @param beneficiaryPublicKey
+     * @param beneficiaryAddress
      */
     constructor(
         /**
@@ -120,8 +121,8 @@ export class NewBlock {
          */
         public readonly proofVerificationHash: string,
         /**
-         * The beneficiary public key.
+         * The beneficiary address.
          */
-        public readonly beneficiaryPublicKey?: PublicAccount,
+        public readonly beneficiaryAddress?: Address,
     ) {}
 }

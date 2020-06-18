@@ -22,6 +22,7 @@ import {
     MultisigAccountModificationTransactionBuilder,
     SignatureDto,
     TimestampDto,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -34,6 +35,9 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -47,8 +51,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param minApprovalDelta - The min approval relative change.
      * @param minRemovalDelta - The min removal relative change.
-     * @param publicKeyAdditions - Cosignatory public key additions.
-     * @param publicKeyDeletions - Cosignatory public key deletions.
+     * @param addressAdditions - Cosignatory address additions.
+     * @param addressDeletions - Cosignatory address deletions.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
@@ -59,8 +63,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
         deadline: Deadline,
         minApprovalDelta: number,
         minRemovalDelta: number,
-        publicKeyAdditions: PublicAccount[],
-        publicKeyDeletions: PublicAccount[],
+        addressAdditions: UnresolvedAddress[],
+        addressDeletions: UnresolvedAddress[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
@@ -73,8 +77,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
             maxFee,
             minApprovalDelta,
             minRemovalDelta,
-            publicKeyAdditions,
-            publicKeyDeletions,
+            addressAdditions,
+            addressDeletions,
             signature,
             signer,
         );
@@ -87,8 +91,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @param maxFee
      * @param minApprovalDelta
      * @param minRemovalDelta
-     * @param publicKeyAdditions
-     * @param publicKeyDeletions
+     * @param addressAdditions
+     * @param addressDeletions
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -109,13 +113,13 @@ export class MultisigAccountModificationTransaction extends Transaction {
          */
         public readonly minRemovalDelta: number,
         /**
-         * The Cosignatory public key additions.
+         * The Cosignatory address additions.
          */
-        public readonly publicKeyAdditions: PublicAccount[],
+        public readonly addressAdditions: UnresolvedAddress[],
         /**
-         * The Cosignatory public key deletion.
+         * The Cosignatory address deletion.
          */
-        public readonly publicKeyDeletions: PublicAccount[],
+        public readonly addressDeletions: UnresolvedAddress[],
         signature?: string,
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,
@@ -142,11 +146,11 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 : Deadline.createFromDTO((builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),
-            builder.getPublicKeyAdditions().map((addition) => {
-                return PublicAccount.createFromPublicKey(Convert.uint8ToHex(addition.getKey()), networkType);
+            builder.getAddressAdditions().map((addition) => {
+                return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(addition.unresolvedAddress));
             }),
-            builder.getPublicKeyDeletions().map((deletion) => {
-                return PublicAccount.createFromPublicKey(Convert.uint8ToHex(deletion.getKey()), networkType);
+            builder.getAddressDeletions().map((deletion) => {
+                return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
@@ -170,8 +174,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const byteApprovalDelta = 1;
         const byteAdditionCount = 1;
         const byteDeletionCount = 1;
-        const bytePublicKeyAdditions = 32 * this.publicKeyAdditions.length;
-        const bytePublicKeyDeletions = 32 * this.publicKeyDeletions.length;
+        const byteAddressAdditions = 24 * this.addressAdditions.length;
+        const byteAddressyDeletions = 24 * this.addressDeletions.length;
         const byteReserved1 = 4;
 
         return (
@@ -180,8 +184,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
             byteApprovalDelta +
             byteAdditionCount +
             byteDeletionCount +
-            bytePublicKeyAdditions +
-            bytePublicKeyDeletions +
+            byteAddressAdditions +
+            byteAddressyDeletions +
             byteReserved1
         );
     }
@@ -204,11 +208,11 @@ export class MultisigAccountModificationTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             this.minRemovalDelta,
             this.minApprovalDelta,
-            this.publicKeyAdditions.map((addition) => {
-                return new KeyDto(Convert.hexToUint8(addition.publicKey));
+            this.addressAdditions.map((addition) => {
+                return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),
-            this.publicKeyDeletions.map((deletion) => {
-                return new KeyDto(Convert.hexToUint8(deletion.publicKey));
+            this.addressDeletions.map((deletion) => {
+                return new UnresolvedAddressDto(deletion.encodeUnresolvedAddress(this.networkType));
             }),
         );
         return transactionBuilder.serialize();
@@ -226,11 +230,11 @@ export class MultisigAccountModificationTransaction extends Transaction {
             TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf(),
             this.minRemovalDelta,
             this.minApprovalDelta,
-            this.publicKeyAdditions.map((addition) => {
-                return new KeyDto(Convert.hexToUint8(addition.publicKey));
+            this.addressAdditions.map((addition) => {
+                return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),
-            this.publicKeyDeletions.map((deletion) => {
-                return new KeyDto(Convert.hexToUint8(deletion.publicKey));
+            this.addressDeletions.map((deletion) => {
+                return new UnresolvedAddressDto(deletion.encodeUnresolvedAddress(this.networkType));
             }),
         );
     }
@@ -247,13 +251,14 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
+     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address): boolean {
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
             super.isSigned(address) ||
-            this.publicKeyAdditions.find((_: PublicAccount) => _.address.equals(address)) !== undefined ||
-            this.publicKeyDeletions.find((_: PublicAccount) => _.address.equals(address)) !== undefined
+            this.addressAdditions.find((_) => _.equals(address) || alias.find((a) => _.equals(a)) !== undefined) !== undefined ||
+            this.addressDeletions.find((_) => _.equals(address) || alias.find((a) => _.equals(a)) !== undefined) !== undefined
         );
     }
 }

@@ -81,7 +81,7 @@ describe('AggregateTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -101,7 +101,7 @@ describe('AggregateTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -122,7 +122,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -138,7 +138,7 @@ describe('AggregateTransaction', () => {
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         expect(signedTransaction.payload.substring(0, 8)).to.be.equal('08010000');
         expect(signedTransaction.payload.substring(424, signedTransaction.payload.length)).to.be.equal(
-            '019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765000000',
+            '019054419026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20D0000000000000000746573742D6D657373616765000000',
         );
     });
 
@@ -225,14 +225,8 @@ describe('AggregateTransaction', () => {
             2,
             1,
             [
-                PublicAccount.createFromPublicKey(
-                    'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-                    NetworkType.MIJIN_TEST,
-                ),
-                PublicAccount.createFromPublicKey(
-                    'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-                    NetworkType.MIJIN_TEST,
-                ),
+                Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST),
+                Address.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4', NetworkType.MIJIN_TEST),
             ],
             [],
             NetworkType.MIJIN_TEST,
@@ -246,18 +240,17 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('20010000');
-        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('78000000000000007800000000000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('10010000');
+        expect(signedTransaction.payload.substring(320, 352)).to.be.equal('68000000000000006800000000000000');
         expect(signedTransaction.payload.substring(424, signedTransaction.payload.length)).to.be.equal(
-            '019055410102020000000000B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6' +
-                'EC24B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+            '019055410102020000000000909FC4844A5206CFA44603EFA1FFC76FE9B0564D967FFE0D906B4CB49ECF224FC4F0F4FCA2F6034305B3A47B0BB90303',
         );
     });
 
     it('should createComplete an AggregateTransaction object with different cosignatories', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -274,18 +267,18 @@ describe('AggregateTransaction', () => {
             generationHash,
         );
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('68010000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('70010000');
         expect(signedTransaction.payload.substring(320, 352)).to.be.equal('60000000000000005D00000000000000');
         expect(signedTransaction.payload.substring(424, 424 + 162)).to.be.equal(
-            '019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573' +
-                '742D6D657373616765000000F9D6329A1A927F5D8918D3D313524CF179DE126AF8F0E83F0FBF2782B5',
+            '019054419026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20D0000000000000000746573742D6D657373616' +
+                '7650000000000000000000000F9D6329A1A927F5D8918D3D313524CF179DE126AF8',
         );
     });
 
     it('should createBonded an AggregateTransaction object with TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -304,7 +297,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(320, 352)).to.be.equal('60000000000000005D00000000000000');
         expect(signedTransaction.payload.substring(220, 224)).to.be.equal('4142');
         expect(signedTransaction.payload.substring(424, signedTransaction.payload.length)).to.be.equal(
-            '019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765000000',
+            '019054419026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20D0000000000000000746573742D6D657373616765000000',
         );
     });
 
@@ -320,6 +313,7 @@ describe('AggregateTransaction', () => {
             transaction: {
                 cosignatures: [
                     {
+                        version: '0',
                         signature:
                             '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                             'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
@@ -411,7 +405,7 @@ describe('AggregateTransaction', () => {
     it('should throw exception when adding an aggregated transaction as inner transaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -577,7 +571,7 @@ describe('AggregateTransaction', () => {
         it('should return 268 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(),
-                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
                 NetworkType.MIJIN_TEST,
@@ -686,7 +680,7 @@ describe('AggregateTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -707,12 +701,12 @@ describe('AggregateTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        let canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), [
+        let canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), [
             unresolvedAddress,
         ]);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

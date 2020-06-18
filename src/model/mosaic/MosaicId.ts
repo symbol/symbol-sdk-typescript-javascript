@@ -15,9 +15,9 @@
  */
 import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import { PublicAccount } from '../account/PublicAccount';
 import { Id } from '../Id';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
+import { Address } from '../account/Address';
 
 /**
  * The mosaic id structure describes mosaic id
@@ -34,11 +34,11 @@ export class MosaicId {
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
      *
      * @param   nonce   {MosaicNonce}
-     * @param   owner   {Account}
+     * @param   ownerAddress   {Address}
      * @return  {MosaicId}
      */
-    public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
-        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(owner.publicKey));
+    public static createFromNonce(nonce: MosaicNonce, ownerAddress: Address): MosaicId {
+        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(ownerAddress.encoded()));
         return new MosaicId(mosaicId);
     }
 

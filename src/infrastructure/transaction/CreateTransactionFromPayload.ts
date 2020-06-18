@@ -16,7 +16,6 @@
 
 import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typescript';
 import { Convert as convert } from '../../core/format';
-import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
@@ -42,6 +41,7 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
 import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
+import { InnerTransaction } from '../../model/transaction/InnerTransaction';
 
 /**
  * @internal

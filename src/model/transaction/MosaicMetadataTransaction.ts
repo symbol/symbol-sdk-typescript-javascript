@@ -23,12 +23,12 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
@@ -40,6 +40,8 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * Announce an mosaic metadata transaction to associate a key-value state to an account.
@@ -48,7 +50,7 @@ export class MosaicMetadataTransaction extends Transaction {
     /**
      * Create a mosaic meta data transaction object
      * @param deadline - transaction deadline
-     * @param targetPublicKey - Public key of the target account.
+     * @param targetAddress - target account address.
      * @param scopedMetadataKey - Metadata key scoped to source, target and type.
      * @param targetMosaicId - Target unresolved mosaic identifier.
      * @param valueSizeDelta - Change in value size in bytes.
@@ -63,9 +65,9 @@ export class MosaicMetadataTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        targetPublicKey: string,
+        targetAddress: UnresolvedAddress,
         scopedMetadataKey: UInt64,
-        targetMosaicId: MosaicId | NamespaceId,
+        targetMosaicId: UnresolvedMosaicId,
         valueSizeDelta: number,
         value: string,
         networkType: NetworkType,
@@ -78,7 +80,7 @@ export class MosaicMetadataTransaction extends Transaction {
             TransactionVersion.MOSAIC_METADATA,
             deadline,
             maxFee,
-            targetPublicKey,
+            targetAddress,
             scopedMetadataKey,
             targetMosaicId,
             valueSizeDelta,
@@ -93,7 +95,7 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param targetPublicKey
+     * @param targetAddress
      * @param scopedMetadataKey
      * @param targetMosaicId
      * @param valueSizeDelta
@@ -108,9 +110,9 @@ export class MosaicMetadataTransaction extends Transaction {
         deadline: Deadline,
         maxFee: UInt64,
         /**
-         * Public key of the target account.
+         * target account address.
          */
-        public readonly targetPublicKey: string,
+        public readonly targetAddress: UnresolvedAddress,
         /**
          * Metadata key scoped to source, target and type.
          */
@@ -118,7 +120,7 @@ export class MosaicMetadataTransaction extends Transaction {
         /**
          * Target mosaic identifier.
          */
-        public readonly targetMosaicId: MosaicId | NamespaceId,
+        public readonly targetMosaicId: UnresolvedMosaicId,
         /**
          * Change in value size in bytes.
          */
@@ -150,7 +152,7 @@ export class MosaicMetadataTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = MosaicMetadataTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getTargetPublicKey().key),
+            UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             new UInt64(builder.getScopedMetadataKey()),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getTargetMosaicId().unresolvedMosaicId).toHex()),
             builder.getValueSizeDelta(),
@@ -173,13 +175,13 @@ export class MosaicMetadataTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const targetPublicKey = 32;
+        const targetAddress = 24;
         const byteScopedMetadataKey = 8;
         const byteTargetMosaicId = 8;
         const byteValueSizeDelta = 2;
         const valueSize = 2;
 
-        return byteSize + targetPublicKey + byteScopedMetadataKey + byteTargetMosaicId + byteValueSizeDelta + valueSize + this.value.length;
+        return byteSize + targetAddress + byteScopedMetadataKey + byteTargetMosaicId + byteValueSizeDelta + valueSize + this.value.length;
     }
 
     /**
@@ -198,7 +200,7 @@ export class MosaicMetadataTransaction extends Transaction {
             TransactionType.MOSAIC_METADATA.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
+            new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
             this.scopedMetadataKey.toDTO(),
             new UnresolvedMosaicIdDto(this.targetMosaicId.id.toDTO()),
             this.valueSizeDelta,
@@ -217,7 +219,7 @@ export class MosaicMetadataTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_METADATA.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.targetPublicKey)),
+            new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
             this.scopedMetadataKey.toDTO(),
             new UnresolvedMosaicIdDto(this.targetMosaicId.id.toDTO()),
             this.valueSizeDelta,
@@ -247,9 +249,14 @@ export class MosaicMetadataTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
+     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address): boolean {
-        return super.isSigned(address) || Address.createFromPublicKey(this.targetPublicKey, this.networkType).equals(address);
+    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        return (
+            super.isSigned(address) ||
+            this.targetAddress.equals(address) ||
+            alias.find((name) => this.targetAddress.equals(name)) !== undefined
+        );
     }
 }

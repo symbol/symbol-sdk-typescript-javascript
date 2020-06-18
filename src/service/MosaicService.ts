@@ -19,11 +19,11 @@ import { map, mergeMap, toArray } from 'rxjs/operators';
 import { AccountRepository } from '../infrastructure/AccountRepository';
 import { MosaicRepository } from '../infrastructure/MosaicRepository';
 import { Address } from '../model/account/Address';
-import { MosaicInfo } from '../model/model';
 import { Mosaic } from '../model/mosaic/Mosaic';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAmountView } from './MosaicAmountView';
 import { MosaicView } from './MosaicView';
+import { MosaicInfo } from '../model/mosaic/MosaicInfo';
 
 /**
  * Mosaic service

@@ -28,9 +28,7 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicSupplyChangeAction } from '../mosaic/MosaicSupplyChangeAction';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
@@ -41,6 +39,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -61,7 +60,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        mosaicId: MosaicId | NamespaceId,
+        mosaicId: UnresolvedMosaicId,
         action: MosaicSupplyChangeAction,
         delta: UInt64,
         networkType: NetworkType,
@@ -102,7 +101,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         /**
          * The unresolved mosaic id.
          */
-        public readonly mosaicId: MosaicId | NamespaceId,
+        public readonly mosaicId: UnresolvedMosaicId,
         /**
          * The supply type.
          */

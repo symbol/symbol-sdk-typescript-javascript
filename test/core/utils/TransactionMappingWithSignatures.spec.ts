@@ -21,7 +21,6 @@ import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -79,7 +78,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -95,7 +94,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
-        expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
@@ -171,7 +170,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -190,7 +189,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
-        expect(transaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transaction.address.plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -339,7 +338,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -354,7 +353,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         expect(transaction.message.payload).to.be.equal('test-message');
         expect(transaction.mosaics.length).to.be.equal(1);
-        expect(transaction.recipientToString()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transaction.recipientToString()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -368,7 +367,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -439,7 +438,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(),
             2,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
+            [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
             [],
             NetworkType.MIJIN_TEST,
             undefined,
@@ -453,8 +452,12 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         expect(transaction.minApprovalDelta).to.be.equal(2);
         expect(transaction.minRemovalDelta).to.be.equal(1);
-        expect(transaction.publicKeyAdditions[0].publicKey).to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
-        expect(transaction.publicKeyDeletions.length).to.be.equal(0);
+        expect(
+            transaction.addressAdditions[0].equals(
+                Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST),
+            ),
+        ).to.be.true;
+        expect(transaction.addressDeletions.length).to.be.equal(0);
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -469,7 +472,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -526,7 +529,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -534,7 +537,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
@@ -543,7 +546,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
@@ -613,7 +616,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -956,7 +959,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AddressMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -970,7 +973,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
-        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.targetAddress.equals(account.address)).to.be.true;
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
@@ -988,7 +991,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
@@ -1004,7 +1007,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
-        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.targetAddress.equals(account.address)).to.be.true;
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
@@ -1023,7 +1026,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
@@ -1039,7 +1042,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
-        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.targetAddress.equals(account.address)).to.be.true;
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
@@ -1058,7 +1061,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should throw error with invalid type', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,

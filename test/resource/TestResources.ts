@@ -3,7 +3,7 @@ export const getDummyNetworkProperties = (): any => {
       "network": {
         "identifier": "public-test",
         "nodeEqualityStrategy": "public-key",
-        "publicKey": "86E8FDE6F3FE540ADC1B3A78DFA9B9E735736FC520E0D9C9CD4ADD3255CD9605",
+        "nemesisSignerPublicKey": "86E8FDE6F3FE540ADC1B3A78DFA9B9E735736FC520E0D9C9CD4ADD3255CD9605",
         "generationHashSeed": "E759C7C56FD20021C8F0CC7FF5F108A2FEBA3312F6EC6D6A702DF87657FEC55C",
         "epochAdjustment": "1573430400s"
       },
@@ -30,7 +30,7 @@ export const getDummyNetworkProperties = (): any => {
         "minVoterBalance": "50'000",
         "harvestBeneficiaryPercentage": "10",
         "harvestNetworkPercentage": "5",
-        "harvestNetworkFeeSinkPublicKey": "FF5563F1C5824EE0CD868799FBE8744B46D5549973FDA499939C952D951494E4",
+        "harvestNetworkFeeSinkAddress": "TDGY4DD2U4YQQGERFMDQYHPYS6M7LHIF6XUCJ4Q",
         "blockPruneInterval": "360",
         "maxTransactionsPerBlock": "6'000"
       },
@@ -61,7 +61,7 @@ export const getDummyNetworkProperties = (): any => {
           "maxMosaicsPerAccount": "1'000",
           "maxMosaicDuration": "3650d",
           "maxMosaicDivisibility": "6",
-          "mosaicRentalFeeSinkPublicKey": "53E140B5947F104CABC2D6FE8BAEDBC30EF9A0609C717D9613DE593EC2A266D3",
+          "mosaicRentalFeeSinkAddress": "TDGY4DD2U4YQQGERFMDQYHPYS6M7LHIF6XUCJ4Q",
           "mosaicRentalFee": "500"
         },
         "multisig": {
@@ -77,7 +77,7 @@ export const getDummyNetworkProperties = (): any => {
           "maxNamespaceDuration": "365d",
           "namespaceGracePeriodDuration": "30d",
           "reservedRootNamespaceNames": "xem, nem, user, account, org, com, biz, net, edu, mil, gov, info",
-          "namespaceRentalFeeSinkPublicKey": "3E82E1C1E4A75ADAA3CBA8C101C3CD31D9817A2EB966EB3B511FB2ED45B8E262",
+          "namespaceRentalFeeSinkAddress": "TDGY4DD2U4YQQGERFMDQYHPYS6M7LHIF6XUCJ4Q",
           "rootNamespaceRentalFeePerBlock": "1",
           "childNamespaceRentalFee": "100"
         },

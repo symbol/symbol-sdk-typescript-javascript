@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-import { PublicAccount } from './PublicAccount';
+import { Address } from './Address';
 
 /**
  * The multisig account graph info structure describes the information of all the mutlisig levels an account is involved in.
  */
 export class MultisigAccountInfo {
     /**
-     * @param account
+     * @param accountAddress
      * @param minApproval
      * @param minRemoval
-     * @param cosignatories
-     * @param multisigAccounts
+     * @param cosignatoryAddresses
+     * @param multisigAddresses
      */
     constructor(
         /**
-         * The account multisig public account.
+         * The account multisig address.
          */
-        public readonly account: PublicAccount,
+        public readonly accountAddress: Address,
         /**
          * The number of signatures needed to approve a transaction.
          */
@@ -43,11 +43,11 @@ export class MultisigAccountInfo {
         /**
          * The multisig account cosignatories.
          */
-        public readonly cosignatories: PublicAccount[],
+        public readonly cosignatoryAddresses: Address[],
         /**
          * The multisig accounts this account is cosigner of.
          */
-        public readonly multisigAccounts: PublicAccount[],
+        public readonly multisigAddresses: Address[],
     ) {}
 
     /**
@@ -60,19 +60,19 @@ export class MultisigAccountInfo {
 
     /**
      * Checks if an account is cosignatory of the multisig account.
-     * @param account
+     * @param address
      * @returns {boolean}
      */
-    public hasCosigner(account: PublicAccount): boolean {
-        return this.cosignatories.find((cosigner) => cosigner.equals(account)) !== undefined;
+    public hasCosigner(address: Address): boolean {
+        return this.cosignatoryAddresses.find((cosigner) => cosigner.equals(address)) !== undefined;
     }
 
     /**
      * Checks if the multisig account is cosignatory of an account.
-     * @param account
+     * @param address
      * @returns {boolean}
      */
-    public isCosignerOfMultisigAccount(account: PublicAccount): boolean {
-        return this.multisigAccounts.find((multisigAccount) => multisigAccount.equals(account)) !== undefined;
+    public isCosignerOfMultisigAccount(address: Address): boolean {
+        return this.multisigAddresses.find((multisig) => multisig.equals(address)) !== undefined;
     }
 }

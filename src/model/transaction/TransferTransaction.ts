@@ -48,6 +48,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -70,7 +71,7 @@ export class TransferTransaction extends Transaction {
      */
     public static create(
         deadline: Deadline,
-        recipientAddress: Address | NamespaceId,
+        recipientAddress: UnresolvedAddress,
         mosaics: Mosaic[],
         message: Message,
         networkType: NetworkType,
@@ -111,7 +112,7 @@ export class TransferTransaction extends Transaction {
         /**
          * The address of the recipient address.
          */
-        public readonly recipientAddress: Address | NamespaceId,
+        public readonly recipientAddress: UnresolvedAddress,
         /**
          * The array of Mosaic objects.
          */
@@ -230,10 +231,11 @@ export class TransferTransaction extends Transaction {
         const byteSize = super.size;
 
         // recipient and number of mosaics are static byte size
-        const byteRecipientAddress = 25;
+        const byteRecipientAddress = 24;
         const byteMosaicsCount = 1;
         const byteMessageSize = 2;
         const byteTransferTransactionBody_Reserved1 = 4;
+        const byteTransferTransactionBody_Reserved2 = 1;
 
         // read message payload size
         const bytePayload = this.getMessageBuffer().length;
@@ -245,7 +247,8 @@ export class TransferTransaction extends Transaction {
             byteSize +
             byteMosaicsCount +
             byteRecipientAddress +
-            +byteTransferTransactionBody_Reserved1 +
+            byteTransferTransactionBody_Reserved1 +
+            byteTransferTransactionBody_Reserved2 +
             byteMessageSize +
             bytePayload +
             byteMosaics
@@ -268,7 +271,7 @@ export class TransferTransaction extends Transaction {
             TransactionType.TRANSFER.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()), new AmountDto(mosaic.amount.toDTO()));
             }),
@@ -287,7 +290,7 @@ export class TransferTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.TRANSFER.valueOf(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()), new AmountDto(mosaic.amount.toDTO()));
             }),
@@ -326,8 +329,8 @@ export class TransferTransaction extends Transaction {
     public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
             super.isSigned(address) ||
-            (this.recipientAddress as Address).equals(address) ||
-            alias.find((name) => (this.recipientAddress as NamespaceId).equals(name)) !== undefined
+            this.recipientAddress.equals(address) ||
+            alias.find((name) => this.recipientAddress.equals(name)) !== undefined
         );
     }
 }

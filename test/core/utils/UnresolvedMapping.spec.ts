@@ -29,7 +29,7 @@ describe('UnresolvedMapping', () => {
     before(() => {
         mosaicId = new MosaicId('11F4B1B3AC033DB5');
         namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
-        address = Address.createFromRawAddress('MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX');
+        address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
     });
 
     describe('toUnresolvedMosaic', () => {
@@ -83,14 +83,14 @@ describe('UnresolvedMapping', () => {
             const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId, NetworkType.MIJIN_TEST);
             expect(buffer instanceof Uint8Array).to.be.true;
             expect(buffer[0]).to.be.equal(NetworkType.MIJIN_TEST | 1);
-            expect(Convert.uint8ToHex(buffer)).to.be.equal('91C51FB4C93FCA509500000000000000000000000000000000');
+            expect(Convert.uint8ToHex(buffer)).to.be.equal('91C51FB4C93FCA5095000000000000000000000000000000');
         });
 
         it('can map hex string to NamespaceId using MAIN_NET', () => {
             const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId, NetworkType.MAIN_NET);
             expect(buffer instanceof Uint8Array).to.be.true;
             expect(buffer[0]).to.be.equal(NetworkType.MAIN_NET | 1);
-            expect(Convert.uint8ToHex(buffer)).to.be.equal('69C51FB4C93FCA509500000000000000000000000000000000');
+            expect(Convert.uint8ToHex(buffer)).to.be.equal('69C51FB4C93FCA5095000000000000000000000000000000');
         });
     });
 });

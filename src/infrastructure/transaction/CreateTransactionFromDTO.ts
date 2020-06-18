@@ -135,15 +135,9 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
         return undefined;
     }
     if (meta.aggregateHash || meta.aggregateId) {
-        return new AggregateTransactionInfo(
-            UInt64.fromNumericString(meta.height),
-            meta.index,
-            id || meta.id,
-            meta.aggregateHash,
-            meta.aggregateId,
-        );
+        return new AggregateTransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id, meta.aggregateHash, meta.aggregateId);
     }
-    return new TransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id || meta.id, meta.hash, meta.merkleComponentHash);
+    return new TransactionInfo(UInt64.fromNumericString(meta.height), meta.index, id, meta.hash, meta.merkleComponentHash);
 };
 /**
  * @internal
@@ -225,12 +219,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
-            transactionDTO.publicKeyAdditions
-                ? transactionDTO.publicKeyAdditions.map((addition) => PublicAccount.createFromPublicKey(addition, transactionDTO.network))
-                : [],
-            transactionDTO.publicKeyDeletions
-                ? transactionDTO.publicKeyDeletions.map((deletion) => PublicAccount.createFromPublicKey(deletion, transactionDTO.network))
-                : [],
+            transactionDTO.addressAdditions ? transactionDTO.addressAdditions.map((addition) => extractRecipient(addition)) : [],
+            transactionDTO.addressDeletions ? transactionDTO.addressDeletions.map((deletion) => extractRecipient(deletion)) : [],
             transactionDTO.signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
@@ -422,7 +412,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.targetPublicKey,
+            extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
@@ -438,7 +428,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.targetPublicKey,
+            extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.targetMosaicId),
             transactionDTO.valueSizeDelta,
@@ -455,7 +445,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.version,
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            transactionDTO.targetPublicKey,
+            extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
@@ -544,6 +534,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                       return new AggregateTransactionCosignature(
                           aggregateCosignatureDTO.signature,
                           PublicAccount.createFromPublicKey(aggregateCosignatureDTO.signerPublicKey, transactionDTO.transaction.network),
+                          UInt64.fromNumericString(aggregateCosignatureDTO.version),
                       );
                   })
                 : [],

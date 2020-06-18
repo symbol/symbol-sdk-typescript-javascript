@@ -41,6 +41,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 export class SecretProofTransaction extends Transaction {
     /**
@@ -61,7 +62,7 @@ export class SecretProofTransaction extends Transaction {
         deadline: Deadline,
         hashAlgorithm: LockHashAlgorithm,
         secret: string,
-        recipientAddress: Address | NamespaceId,
+        recipientAddress: UnresolvedAddress,
         proof: string,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
@@ -102,7 +103,7 @@ export class SecretProofTransaction extends Transaction {
         maxFee: UInt64,
         public readonly hashAlgorithm: LockHashAlgorithm,
         public readonly secret: string,
-        public readonly recipientAddress: Address | NamespaceId,
+        public readonly recipientAddress: UnresolvedAddress,
         public readonly proof: string,
         signature?: string,
         signer?: PublicAccount,
@@ -153,7 +154,7 @@ export class SecretProofTransaction extends Transaction {
         // hash algorithm and proof size static byte size
         const byteAlgorithm = 1;
         const byteProofSize = 2;
-        const byteRecipient = 25;
+        const byteRecipient = 24;
 
         // convert secret and proof to uint8
         const byteSecret = convert.hexToUint8(this.secret).length;
@@ -198,7 +199,7 @@ export class SecretProofTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             new Hash256Dto(this.getSecretByte()),
             this.hashAlgorithm.valueOf(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
@@ -216,7 +217,7 @@ export class SecretProofTransaction extends Transaction {
             TransactionType.SECRET_PROOF.valueOf(),
             new Hash256Dto(this.getSecretByte()),
             this.hashAlgorithm.valueOf(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
             this.getProofByte(),
         );
     }
@@ -249,8 +250,8 @@ export class SecretProofTransaction extends Transaction {
     public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
         return (
             super.isSigned(address) ||
-            (this.recipientAddress as Address).equals(address) ||
-            alias.find((name) => (this.recipientAddress as NamespaceId).equals(name)) !== undefined
+            this.recipientAddress.equals(address) ||
+            alias.find((name) => this.recipientAddress.equals(name)) !== undefined
         );
     }
 }

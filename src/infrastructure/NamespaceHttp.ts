@@ -19,7 +19,6 @@ import { NamespaceDTO, NamespaceInfoDTO, NamespaceRoutesApi } from 'symbol-opena
 import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
-import { PublicAccount } from '../model/account/PublicAccount';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import { AddressAlias } from '../model/namespace/AddressAlias';
@@ -117,11 +116,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<NamespaceInfo>
      */
     public getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo> {
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                this.call(this.namespaceRoutesApi.getNamespace(namespaceId.toHex()), (body) => this.toNamespaceInfo(body, networkType)),
-            ),
-        );
+        return this.call(this.namespaceRoutesApi.getNamespace(namespaceId.toHex()), (body) => this.toNamespaceInfo(body));
     }
 
     /**
@@ -131,18 +126,14 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<NamespaceInfo[]>
      */
     public getNamespacesFromAccount(address: Address, queryParams?: QueryParams): Observable<NamespaceInfo[]> {
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                this.call(
-                    this.namespaceRoutesApi.getNamespacesFromAccount(
-                        address.plain(),
-                        this.queryParams(queryParams).pageSize,
-                        this.queryParams(queryParams).id,
-                        this.queryParams(queryParams).ordering,
-                    ),
-                    (body) => body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO, networkType)),
-                ),
+        return this.call(
+            this.namespaceRoutesApi.getNamespacesFromAccount(
+                address.plain(),
+                this.queryParams(queryParams).pageSize,
+                this.queryParams(queryParams).id,
+                this.queryParams(queryParams).ordering,
             ),
+            (body) => body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO)),
         );
     }
 
@@ -156,12 +147,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         const publicKeysBody = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                this.call(this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody), (body) =>
-                    body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO, networkType)),
-                ),
-            ),
+        return this.call(this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody), (body) =>
+            body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO)),
         );
     }
 
@@ -245,9 +232,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     /**
      * It maps from a NamespaceInfoDTO to NamespaceInfo
      * @param dto the dto
-     * @param networkType the network type
      */
-    private toNamespaceInfo(dto: NamespaceInfoDTO, networkType: NetworkType): NamespaceInfo {
+    private toNamespaceInfo(dto: NamespaceInfoDTO): NamespaceInfo {
         return new NamespaceInfo(
             dto.meta.active,
             dto.meta.index,
@@ -256,7 +242,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             dto.namespace.depth,
             this.extractLevels(dto.namespace),
             NamespaceId.createFromEncoded(dto.namespace.parentId),
-            PublicAccount.createFromPublicKey(dto.namespace.ownerPublicKey, networkType),
+            Address.createFromEncoded(dto.namespace.ownerAddress),
             UInt64.fromNumericString(dto.namespace.startHeight),
             UInt64.fromNumericString(dto.namespace.endHeight),
             this.extractAlias(dto.namespace),

@@ -84,11 +84,11 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * Returns the account metadata given an account id and a key
      * @param address - Account address to be created from PublicKey or RawAddress
      * @param key - Metadata key
-     * @param publicKey - Sender public key
+     * @param sourceAddress - Sender address
      * @returns Observable<Metadata>
      */
-    getAccountMetadataByKeyAndSender(address: Address, key: string, publicKey: string): Observable<Metadata> {
-        return this.call(this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, publicKey), (body) =>
+    getAccountMetadataByKeyAndSender(address: Address, key: string, sourceAddress: Address): Observable<Metadata> {
+        return this.call(this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, sourceAddress.plain()), (body) =>
             this.buildMetadata(body),
         );
     }
@@ -127,11 +127,14 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * Returns the mosaic metadata given a mosaic id and metadata key.
      * @param mosaicId - Mosaic identifier.
      * @param key - Metadata key.
-     * @param publicKey - Sender public key
+     * @param sourceAddress - Sender address
      * @returns Observable<Metadata>
      */
-    getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, publicKey: string): Observable<Metadata> {
-        return this.call(this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, publicKey), this.buildMetadata);
+    getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, sourceAddress: Address): Observable<Metadata> {
+        return this.call(
+            this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, sourceAddress.plain()),
+            this.buildMetadata,
+        );
     }
 
     /**
@@ -168,12 +171,12 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * Returns the namespace metadata given a mosaic id and metadata key.
      * @param namespaceId - Namespace identifier.
      * @param key - Metadata key.
-     * @param publicKey - Sender public key
+     * @param sourceAddress - Sender address
      * @returns Observable<Metadata>
      */
-    public getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, publicKey: string): Observable<Metadata> {
+    public getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, sourceAddress: Address): Observable<Metadata> {
         return this.call(
-            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, publicKey),
+            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, sourceAddress.plain()),
             this.buildMetadata,
         );
     }
@@ -201,8 +204,8 @@ export class MetadataHttp extends Http implements MetadataRepository {
             metadata.id,
             new MetadataEntry(
                 metadataEntry.compositeHash,
-                metadataEntry.senderPublicKey,
-                metadataEntry.targetPublicKey,
+                Address.createFromEncoded(metadataEntry.sourceAddress),
+                Address.createFromEncoded(metadataEntry.targetAddress),
                 UInt64.fromHex(metadataEntry.scopedMetadataKey),
                 metadataEntry.metadataType.valueOf(),
                 Convert.decodeHex(metadataEntry.value),

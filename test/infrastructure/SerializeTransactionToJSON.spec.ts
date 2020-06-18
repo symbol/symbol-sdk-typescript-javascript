@@ -19,7 +19,6 @@ import { sha3_256 } from 'js-sha3';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -52,7 +51,9 @@ import { Crypto } from '../../src/core/crypto';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/model';
+import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -76,7 +77,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -128,7 +129,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             AliasAction.Link,
@@ -215,7 +216,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -230,7 +231,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -271,7 +272,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             2,
             1,
-            [PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
+            [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
             [],
             NetworkType.MIJIN_TEST,
         );
@@ -286,7 +287,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -308,7 +309,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,

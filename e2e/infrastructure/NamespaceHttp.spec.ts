@@ -93,14 +93,14 @@ describe('NamespaceHttp', () => {
     describe('getNamespacesFromAccount', () => {
         it('should return namespace data given publicKeyNemesis', async () => {
             const namespaces = await namespaceRepository.getNamespacesFromAccount(account.address).toPromise();
-            deepEqual(namespaces[0].owner, account.publicAccount);
+            deepEqual(namespaces[0].ownerAddress, account.address);
         });
     });
 
     describe('getNamespacesFromAccounts', () => {
         it('should return namespaces data given publicKeyNemesis', async () => {
             const namespaces = await namespaceRepository.getNamespacesFromAccounts([account.address]).toPromise();
-            deepEqual(namespaces[0].owner, account.publicAccount);
+            deepEqual(namespaces[0].ownerAddress, account.address);
         });
     });
 

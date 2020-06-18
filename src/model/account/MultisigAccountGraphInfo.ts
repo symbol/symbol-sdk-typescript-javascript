@@ -21,12 +21,12 @@ import { MultisigAccountInfo } from './MultisigAccountInfo';
  */
 export class MultisigAccountGraphInfo {
     /**
-     * @param multisigAccounts
+     * @param multisigEntries
      */
     constructor(
         /**
          * The multisig accounts.
          */
-        public readonly multisigAccounts: Map<number, MultisigAccountInfo[]>,
+        public readonly multisigEntries: Map<number, MultisigAccountInfo[]>,
     ) {}
 }

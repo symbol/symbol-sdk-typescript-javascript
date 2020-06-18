@@ -46,7 +46,7 @@ describe('TransactionService', () => {
     const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
     const transferTransaction = TransferTransaction.create(
         Deadline.create(1, ChronoUnit.HOURS),
-        Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+        Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
         [],
         PlainMessage.create('test-message'),
         NetworkType.MIJIN_TEST,

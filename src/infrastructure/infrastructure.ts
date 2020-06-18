@@ -56,3 +56,5 @@ export * from './paginationStreamer/MosaicPaginationStreamer';
 export * from './paginationStreamer/PaginationStreamer';
 export * from './paginationStreamer/Searcher';
 export * from './paginationStreamer/TransactionPaginationStreamer';
+export * from './TransactionStatusHttp';
+export * from './TransactionStatusRepository';

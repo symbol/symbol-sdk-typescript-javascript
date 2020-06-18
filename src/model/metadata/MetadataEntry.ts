@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { MetadataType } from './MetadataType';
+import { Address } from '../account/Address';
+import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * A mosaic describes an instance of a mosaic definition.
@@ -27,12 +28,12 @@ export class MetadataEntry {
     /**
      * Constructor
      * @param {string} compositeHash - The composite hash
-     * @param {string} senderPublicKey - The metadata sender's public key
-     * @param {string} targetPublicKey - The metadata target public key
+     * @param {string} sourceAddress - The metadata source address (provider)
+     * @param {string} targetAddress - The metadata target address
      * @param {UInt64} scopedMetadataKey - The key scoped to source, target and type
      * @param {MetadatType} metadataType - The metadata type (Account | Mosaic | Namespace)
      * @param {string} value - The metadata value
-     * @param {MosaicId | NamespaceId | undefined} targetId - The target mosaic or namespace identifier
+     * @param {UnresolvedMosaicId | undefined} targetId - The target mosaic or namespace identifier
      */
     constructor(
         /**
@@ -40,13 +41,13 @@ export class MetadataEntry {
          */
         public readonly compositeHash: string,
         /**
-         * The metadata sender's public key
+         * The metadata source address (provider)
          */
-        public readonly senderPublicKey: string,
+        public readonly sourceAddress: Address,
         /**
-         * The metadata target public key
+         * The metadata target address
          */
-        public readonly targetPublicKey: string,
+        public readonly targetAddress: Address,
         /**
          * The key scoped to source, target and type
          */

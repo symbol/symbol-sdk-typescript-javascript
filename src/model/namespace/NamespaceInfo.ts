@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PublicAccount } from '../account/PublicAccount';
 import { UInt64 } from '../UInt64';
 import { Alias } from './Alias';
 import { NamespaceId } from './NamespaceId';
+import { Address } from '../account/Address';
 
 /**
  * Object containing information of a namespace.
@@ -31,7 +31,7 @@ export class NamespaceInfo {
      * @param depth
      * @param levels
      * @param parentId
-     * @param owner
+     * @param ownerAddress
      * @param startHeight
      * @param endHeight
      */
@@ -65,9 +65,9 @@ export class NamespaceInfo {
          */
         private readonly parentId: NamespaceId,
         /**
-         * The owner of the namespace.
+         * The namespace owner's address.
          */
-        public readonly owner: PublicAccount,
+        public readonly ownerAddress: Address,
         /**
          * The height at which the ownership begins.
          */

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import { AmountDto, BalanceChangeReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
+import { AmountDto, BalanceChangeReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format/Convert';
-import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
+import { Address } from '../account/Address';
+import { AddressDto } from 'catbuffer-typescript';
 
 /**
  * Balance Change: A mosaic credit or debit was triggered.
@@ -29,7 +30,7 @@ import { ReceiptVersion } from './ReceiptVersion';
 export class BalanceChangeReceipt extends Receipt {
     /**
      * Balance change expiry receipt
-     * @param targetPublicAccount - The target account public account.
+     * @param targetAddress - The target account address.
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
      * @param version - The receipt version
@@ -38,9 +39,9 @@ export class BalanceChangeReceipt extends Receipt {
      */
     constructor(
         /**
-         * The target targetPublicKey public account.
+         * The target account address.
          */
-        public readonly targetPublicAccount: PublicAccount,
+        public readonly targetAddress: Address,
         /**
          * The mosaic id.
          */
@@ -66,7 +67,7 @@ export class BalanceChangeReceipt extends Receipt {
             ReceiptVersion.BALANCE_CHANGE,
             this.type.valueOf(),
             new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
-            new KeyDto(Convert.hexToUint8(this.targetPublicAccount.publicKey)),
+            new AddressDto(Convert.hexToUint8(this.targetAddress.encoded())),
         ).serialize();
     }
 }

@@ -29,8 +29,8 @@ describe('Alias', () => {
     let address2;
 
     before(() => {
-        address = Address.createFromRawAddress('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
-        address2 = Address.createFromRawAddress('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP');
+        address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        address2 = Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY');
         mosaicAliasDTO = {
             type: AliasType.Mosaic,
             mosaicId: new MosaicId([481110499, 231112638]),
@@ -74,5 +74,20 @@ describe('Alias', () => {
 
         expect(alias1.equals(alias2)).to.be.equal(true);
         expect(alias1.equals(alias3)).to.be.equal(false);
+    });
+
+    it('EmptyAlias.equals()', () => {
+        const alias1 = new MosaicAlias(mosaicAliasDTO.mosaicId);
+        const alias2 = new EmptyAlias();
+        const alias3 = new EmptyAlias();
+
+        expect(alias2.equals(alias3)).to.be.equal(true);
+        expect(alias2.equals(alias1)).to.be.equal(false);
+    });
+
+    it('EmptyAlias.serialize()', () => {
+        const alias3 = new EmptyAlias();
+
+        expect(alias3.serialize()).to.be.deep.equal(new Uint8Array(0));
     });
 });

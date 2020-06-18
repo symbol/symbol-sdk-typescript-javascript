@@ -19,7 +19,6 @@ import { expect } from 'chai';
 import { CreateReceiptFromDTO, CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -35,6 +34,7 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
+import { Convert } from '../../../src/core/format/Convert';
 
 describe('Receipt', () => {
     let account: Account;
@@ -42,7 +42,6 @@ describe('Receipt', () => {
     let addressResolutionStatementsDTO;
     let mosaicResolutionStatementsDTO;
     let statementDTO;
-    const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
         account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
@@ -58,7 +57,7 @@ describe('Receipt', () => {
                         {
                             version: 1,
                             type: 8515,
-                            targetPublicKey: account.publicKey,
+                            targetAddress: account.address.encoded(),
                             mosaicId: '85BBEA6CC462B244',
                             amount: '1000',
                         },
@@ -70,14 +69,14 @@ describe('Receipt', () => {
             {
                 statement: {
                     height: '1488',
-                    unresolved: '9103B60AAF2762688300000000000000000000000000000000',
+                    unresolved: '9103B60AAF27626883000000000000000000000000000000',
                     resolutionEntries: [
                         {
                             source: {
                                 primaryId: 4,
                                 secondaryId: 0,
                             },
-                            resolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                            resolved: '917E7E29A01014C2F3000000000000000000000000000000',
                         },
                     ],
                 },
@@ -85,14 +84,14 @@ describe('Receipt', () => {
             {
                 statement: {
                     height: '1488',
-                    unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                    unresolved: '917E7E29A01014C2F3000000000000000000000000000000',
                     resolutionEntries: [
                         {
                             source: {
                                 primaryId: 2,
                                 secondaryId: 0,
                             },
-                            resolved: '9103B60AAF2762688300000000000000000000000000000000',
+                            resolved: '9103B60AAF27626883000000000000000000000000000000',
                         },
                     ],
                 },
@@ -142,13 +141,13 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 4685,
-            senderPublicKey: account.publicKey,
-            recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
+            senderAddress: account.address.encoded(),
+            recipientAddress: '9103B60AAF27626883000000000000000000000000000000',
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
         };
         const receipt = new BalanceTransferReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
+            Address.createFromEncoded(receiptDTO.senderAddress),
             Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
             UInt64.fromNumericString(receiptDTO.amount),
@@ -156,25 +155,26 @@ describe('Receipt', () => {
             receiptDTO.type,
         );
 
+        deepEqual(receipt.senderAddress.encoded(), receiptDTO.senderAddress);
         deepEqual(receipt.amount.toString(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Levy);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
-        deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
+        deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF27626883000000000000000000000000000000'));
     });
 
     it('should createComplete a balance transfer receipt - Mosaic Rental Fee', () => {
         const receiptDTO = {
             version: 1,
             type: 4685,
-            senderPublicKey: account.publicKey,
-            recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
+            senderAddress: account.address.encoded(),
+            recipientAddress: '9103B60AAF27626883000000000000000000000000000000',
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
         };
 
         const receipt = new BalanceTransferReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
+            Address.createFromEncoded(receiptDTO.senderAddress),
             Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
             UInt64.fromNumericString(receiptDTO.amount),
@@ -182,8 +182,9 @@ describe('Receipt', () => {
             receiptDTO.type,
         );
 
+        deepEqual(receipt.senderAddress.encoded(), receiptDTO.senderAddress);
         deepEqual(receipt.amount.toString(), receiptDTO.amount);
-        deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
+        deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF27626883000000000000000000000000000000'));
         deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Rental_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
@@ -193,20 +194,20 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 8515,
-            targetPublicKey: account.publicKey,
+            targetAddress: account.address.encoded(),
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
         };
 
         const receipt = new BalanceChangeReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, netWorkType),
+            Address.createFromEncoded(receiptDTO.targetAddress),
             new MosaicId(receiptDTO.mosaicId),
             UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.targetPublicKey);
+        deepEqual(receipt.targetAddress.encoded(), receiptDTO.targetAddress);
         deepEqual(receipt.amount.toString(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Harvest_Fee);
@@ -217,20 +218,20 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 12616,
-            targetPublicKey: account.publicKey,
+            targetAddress: account.address.encoded(),
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
         };
 
         const receipt = new BalanceChangeReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, netWorkType),
+            Address.createFromEncoded(receiptDTO.targetAddress),
             new MosaicId(receiptDTO.mosaicId),
             UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.targetPublicKey);
+        deepEqual(receipt.targetAddress.encoded(), receiptDTO.targetAddress);
         deepEqual(receipt.amount.toString(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toHex().toUpperCase(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.LockHash_Created);
@@ -269,11 +270,11 @@ describe('Receipt', () => {
         const statement = new TransactionStatement(
             statementDto.statement.height,
             new ReceiptSource(statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
-            statementDto.statement.receipts.map((receipt) => CreateReceiptFromDTO(receipt, netWorkType)),
+            statementDto.statement.receipts.map((receipt) => CreateReceiptFromDTO(receipt)),
         );
         deepEqual(statement.source.primaryId, statementDto.statement.source.primaryId);
         deepEqual(statement.source.secondaryId, statementDto.statement.source.secondaryId);
-        deepEqual((statement.receipts[0] as BalanceChangeReceipt).targetPublicAccount.publicKey, account.publicKey);
+        deepEqual((statement.receipts[0] as BalanceChangeReceipt).targetAddress, account.address);
     });
 
     it('should createComplete resolution statement - mosaic', () => {
@@ -308,11 +309,11 @@ describe('Receipt', () => {
         );
         deepEqual(
             (statement.unresolved as Address).plain(),
-            Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain(),
+            Address.createFromEncoded('9103B60AAF27626883000000000000000000000000000000').plain(),
         );
         deepEqual(
             (statement.resolutionEntries[0].resolved as Address).plain(),
-            Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain(),
+            Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000').plain(),
         );
     });
 
@@ -338,23 +339,35 @@ describe('Receipt', () => {
     });
 
     it('should generate hash for MosaicResolutionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const statement = CreateStatementFromDTO(statementDTO);
         const receipt = statement.mosaicResolutionStatements[0];
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('DE29FB6356530E5D1FBEE0A84202520C155D882C46EA74456752D6C75F0707B3');
     });
 
     it('should generate hash for AddressResolutionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const statement = CreateStatementFromDTO(statementDTO);
         const receipt = statement.addressResolutionStatements[0];
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
-        expect(hash).to.be.equal('EFE3D51BF14E861E6E219D1ADB5715D132D6AB7481B29726104933E517F7FBCC');
+        expect(hash).to.be.equal('AA9B667C37C8A19902F3E1098FCEE681318455551CC2FBE9B81E8FA47007CA79');
     });
 
     it('should generate hash for TransactionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const statement = CreateStatementFromDTO(statementDTO);
         const receipt = statement.transactionStatements[0];
         const hash = receipt.generateHash();
-        expect(hash).to.be.equal('D84F5C2E4CBFC645FFAEC92A32AEEB22969C3C48296CF77BCD86BE79A300D0CF');
+        expect(hash).to.be.equal('E73E67382162C38AED77D5D5D67F96AA590DC12FF13AE263AA50932896AC4801');
+    });
+
+    it('artifactExpiryReceipt - serialize', () => {
+        const receipt = new ArtifactExpiryReceipt(new NamespaceId([3646934825, 3576016193]), 1, 16718);
+        const byte = receipt.serialize();
+        expect(Convert.uint8ToHex(byte)).to.be.equal('01004E4129CF5FD941AD25D5');
+    });
+
+    it('artifactExpiryReceipt - serialize', () => {
+        const receipt = new ArtifactExpiryReceipt(new MosaicId([3646934825, 3576016193]), 1, 16717);
+        const byte = receipt.serialize();
+        expect(Convert.uint8ToHex(byte)).to.be.equal('01004D4129CF5FD941AD25D5');
     });
 });

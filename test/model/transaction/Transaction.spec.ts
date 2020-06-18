@@ -224,7 +224,7 @@ describe('Transaction', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(),
-                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [],
                 PlainMessage.create('test-message'),
                 NetworkType.MIJIN_TEST,
@@ -232,7 +232,7 @@ describe('Transaction', () => {
             const serialized = transaction.serialize();
 
             expect(serialized.substring(256, serialized.length)).to.be.equal(
-                '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D657373616765',
+                '9026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20D0000000000000000746573742D6D657373616765',
             );
         });
     });
@@ -391,7 +391,7 @@ describe('Transaction', () => {
     it('is signed', () => {
         let tx = TransferTransaction.create(
             Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -401,6 +401,6 @@ describe('Transaction', () => {
         const signed = tx.signWith(account, '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6');
         tx = TransactionMapping.createFromPayload(signed.payload) as Transaction;
         expect((tx as Transaction).isSigned(account.address)).to.be.true;
-        expect((tx as Transaction).isSigned(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYZC'))).to.be.false;
+        expect((tx as Transaction).isSigned(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'))).to.be.false;
     });
 });

@@ -15,7 +15,7 @@
  */
 
 import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
@@ -80,13 +80,9 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @returns Observable<Statement>
      */
     public getBlockReceipts(height: UInt64): Observable<Statement> {
-        return this.networkTypeObservable.pipe(
-            mergeMap((networkType) =>
-                observableFrom(this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
-                    map(({ body }) => CreateStatementFromDTO(body, networkType)),
-                    catchError((error) => throwError(this.errorHandling(error))),
-                ),
-            ),
+        return observableFrom(this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
+            map(({ body }) => CreateStatementFromDTO(body)),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 }

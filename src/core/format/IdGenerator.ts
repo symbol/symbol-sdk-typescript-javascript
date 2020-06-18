@@ -18,15 +18,15 @@ import * as utilities from './Utilities';
 
 export class IdGenerator {
     /**
-     * Generates a mosaic id given a nonce and a public id.
+     * Generates a mosaic id given a nonce and a address.
      * @param {object} nonce The mosaic nonce.
-     * @param {object} ownerPublicId The public id.
+     * @param {object} ownerAddress The address.
      * @returns {module:coders/uint64~uint64} The mosaic id.
      */
-    public static generateMosaicId = (nonce: any, ownerPublicId: any): number[] => {
+    public static generateMosaicId = (nonce: any, ownerAddress: any): number[] => {
         const hash = sha3_256.create();
         hash.update(nonce);
-        hash.update(ownerPublicId);
+        hash.update(ownerAddress);
         const result = new Uint32Array(hash.arrayBuffer());
         return [result[0], result[1] & 0x7fffffff];
     };

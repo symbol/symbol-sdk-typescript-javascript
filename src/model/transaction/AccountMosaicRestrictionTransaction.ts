@@ -28,8 +28,6 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { PublicAccount } from '../account/PublicAccount';
-import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
@@ -41,6 +39,7 @@ import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
 import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class AccountMosaicRestrictionTransaction extends Transaction {
     /**
@@ -58,8 +57,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
     public static create(
         deadline: Deadline,
         restrictionFlags: MosaicRestrictionFlag,
-        restrictionAdditions: (MosaicId | NamespaceId)[],
-        restrictionDeletions: (MosaicId | NamespaceId)[],
+        restrictionAdditions: UnresolvedMosaicId[],
+        restrictionDeletions: UnresolvedMosaicId[],
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
@@ -96,8 +95,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         deadline: Deadline,
         maxFee: UInt64,
         public readonly restrictionFlags: MosaicRestrictionFlag,
-        public readonly restrictionAdditions: (MosaicId | NamespaceId)[],
-        public readonly restrictionDeletions: (MosaicId | NamespaceId)[],
+        public readonly restrictionAdditions: UnresolvedMosaicId[],
+        public readonly restrictionDeletions: UnresolvedMosaicId[],
         signature?: string,
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,

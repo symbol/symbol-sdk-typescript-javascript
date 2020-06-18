@@ -18,9 +18,10 @@ import { deepEqual } from 'assert';
 import { Account } from '../../../src/model/account/Account';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
-import { MosaicId, NamespaceId } from '../../../src/model/model';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('MetadataEntry', () => {
     let account: Account;
@@ -32,8 +33,8 @@ describe('MetadataEntry', () => {
     it('should createComplete an Account Metadata object', () => {
         const metadataEntryDTO = {
             compositeHash: hash,
-            senderPublicKey: account.publicKey,
-            targetPublicKey: account.publicKey,
+            sourceAddress: account.address,
+            targetAddress: account.address,
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: undefined,
             metadataType: 0,
@@ -42,16 +43,16 @@ describe('MetadataEntry', () => {
 
         const metadata = new MetadataEntry(
             metadataEntryDTO.compositeHash,
-            metadataEntryDTO.senderPublicKey,
-            metadataEntryDTO.targetPublicKey,
+            metadataEntryDTO.sourceAddress,
+            metadataEntryDTO.targetAddress,
             UInt64.fromHex(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
         );
 
-        deepEqual(metadata.senderPublicKey, account.publicKey);
+        deepEqual(metadata.sourceAddress, account.address);
         deepEqual(metadata.compositeHash, hash);
-        deepEqual(metadata.targetPublicKey, account.publicKey);
+        deepEqual(metadata.targetAddress, account.address);
         deepEqual(metadata.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual(metadata.targetId, undefined);
         deepEqual(metadata.metadataType, MetadataType.Account);
@@ -61,8 +62,8 @@ describe('MetadataEntry', () => {
     it('should createComplete an Mosaic Metadata object', () => {
         const metadataEntryDTO = {
             compositeHash: hash,
-            senderPublicKey: account.publicKey,
-            targetPublicKey: account.publicKey,
+            sourceAddress: account.address,
+            targetAddress: account.address,
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: '85BBEA6CC462B244',
             metadataType: 1,
@@ -72,17 +73,17 @@ describe('MetadataEntry', () => {
 
         const metadata = new MetadataEntry(
             metadataEntryDTO.compositeHash,
-            metadataEntryDTO.senderPublicKey,
-            metadataEntryDTO.targetPublicKey,
+            metadataEntryDTO.sourceAddress,
+            metadataEntryDTO.targetAddress,
             UInt64.fromHex(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
             new MosaicId(metadataEntryDTO.targetId),
         );
 
-        deepEqual(metadata.senderPublicKey, account.publicKey);
+        deepEqual(metadata.sourceAddress, account.address);
         deepEqual(metadata.compositeHash, hash);
-        deepEqual(metadata.targetPublicKey, account.publicKey);
+        deepEqual(metadata.targetAddress, account.address);
         deepEqual(metadata.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual((metadata.targetId as MosaicId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Mosaic);
@@ -92,8 +93,8 @@ describe('MetadataEntry', () => {
     it('should createComplete an Namespace Metadata object', () => {
         const metadataEntryDTO = {
             compositeHash: hash,
-            senderPublicKey: account.publicKey,
-            targetPublicKey: account.publicKey,
+            sourceAddress: account.address,
+            targetAddress: account.address,
             scopedMetadataKey: '85BBEA6CC462B244',
             targetId: '85BBEA6CC462B244',
             metadataType: 2,
@@ -102,17 +103,17 @@ describe('MetadataEntry', () => {
 
         const metadata = new MetadataEntry(
             metadataEntryDTO.compositeHash,
-            metadataEntryDTO.senderPublicKey,
-            metadataEntryDTO.targetPublicKey,
+            metadataEntryDTO.sourceAddress,
+            metadataEntryDTO.targetAddress,
             UInt64.fromHex(metadataEntryDTO.scopedMetadataKey),
             metadataEntryDTO.metadataType,
             metadataEntryDTO.value,
             NamespaceId.createFromEncoded(metadataEntryDTO.targetId),
         );
 
-        deepEqual(metadata.senderPublicKey, account.publicKey);
+        deepEqual(metadata.sourceAddress, account.address);
         deepEqual(metadata.compositeHash, hash);
-        deepEqual(metadata.targetPublicKey, account.publicKey);
+        deepEqual(metadata.targetAddress, account.address);
         deepEqual(metadata.scopedMetadataKey, UInt64.fromHex('85BBEA6CC462B244'));
         deepEqual((metadata.targetId as NamespaceId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Namespace);

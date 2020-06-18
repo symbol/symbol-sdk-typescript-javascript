@@ -31,7 +31,7 @@ describe('MosaicRestrictions', () => {
             compositeHash: hash,
             entryType: 0,
             mosaicId: '85BBEA6CC462B244',
-            targetAddress: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+            targetAddress: '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
             restrictions: [
                 {
                     key: 'testKey',
@@ -54,7 +54,7 @@ describe('MosaicRestrictions', () => {
         expect(mosaicAddressRestriction.compositeHash).to.be.equal(hash);
         expect(mosaicAddressRestriction.entryType).to.be.equal(MosaicRestrictionEntryType.ADDRESS);
         expect(mosaicAddressRestriction.targetAddress.plain()).to.be.equal(
-            Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142').plain(),
+            Address.createFromEncoded('6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF').plain(),
         );
         expect(mosaicAddressRestriction.restrictions.size).to.be.equal(1);
         expect(mosaicAddressRestriction.restrictions.get('testKey')).to.not.be.equal(undefined);

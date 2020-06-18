@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, KeyDto, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
+import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format/Convert';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
@@ -32,7 +29,7 @@ import { ReceiptVersion } from './ReceiptVersion';
 export class BalanceTransferReceipt extends Receipt {
     /**
      * Balance transfer expiry receipt
-     * @param sender - The public account of the sender.
+     * @param senderAddress - The sender address.
      * @param recipientAddress - The mosaic recipient address.
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
@@ -42,13 +39,13 @@ export class BalanceTransferReceipt extends Receipt {
      */
     constructor(
         /**
-         * The public account of the sender.
+         * The sender address.
          */
-        public readonly sender: PublicAccount,
+        public readonly senderAddress: Address,
         /**
          * The mosaic recipient address.
          */
-        public readonly recipientAddress: Address | NamespaceId,
+        public readonly recipientAddress: Address,
         /**
          * The mosaic id.
          */
@@ -74,17 +71,8 @@ export class BalanceTransferReceipt extends Receipt {
             ReceiptVersion.BALANCE_TRANSFER,
             this.type.valueOf(),
             new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
-            new KeyDto(Convert.hexToUint8(this.sender.publicKey)),
-            new AddressDto(this.getRecipientBytes()),
+            new AddressDto(Convert.hexToUint8(this.senderAddress.encoded())),
+            new AddressDto(Convert.hexToUint8(this.recipientAddress.encoded())),
         ).serialize();
-    }
-
-    /**
-     * @internal
-     * Generate buffer for recipientAddress
-     * @return {Uint8Array}
-     */
-    private getRecipientBytes(): Uint8Array {
-        return UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.sender.address.networkType);
     }
 }

@@ -41,8 +41,8 @@ export class Address {
     public static createFromRawAddress(rawAddress: string): Address {
         let networkType: NetworkType;
         const addressTrimAndUpperCase: string = rawAddress.trim().toUpperCase().replace(/-/g, '');
-        if (addressTrimAndUpperCase.length !== 40) {
-            throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 40 characters long');
+        if (addressTrimAndUpperCase.length !== 39) {
+            throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 39 characters long');
         }
         if (addressTrimAndUpperCase.charAt(0) === 'S') {
             networkType = NetworkType.MIJIN_TEST;
@@ -69,10 +69,13 @@ export class Address {
 
     /**
      * Determines the validity of an raw address string.
-     * @param {string} rawAddress The raw address string. Expected format SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P
+     * @param {string} rawAddress The raw address string. Expected format SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
     public static isValidRawAddress = (rawAddress: string): boolean => {
+        if (!['A', 'I', 'Q', 'Y'].includes(rawAddress.slice(-1).toUpperCase())) {
+            return false;
+        }
         try {
             return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress));
         } catch (err) {
@@ -82,7 +85,7 @@ export class Address {
 
     /**
      * Determines the validity of an encoded address string.
-     * @param {string} encoded The encoded address string. Expected format: 9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C
+     * @param {string} encoded The encoded address string. Expected format: 6823BB7C3C089D996585466380EDBDC19D4959184893E38C
      * @returns {boolean} true if the encoded address string is valid, false otherwise.
      */
     public static isValidEncodedAddress = (encoded: string): boolean => {
@@ -135,11 +138,14 @@ export class Address {
 
     /**
      * Compares addresses for equality
-     * @param address - Address
+     * @param address - Address to compare
      * @returns {boolean}
      */
-    public equals(address: Address): boolean {
-        return this.plain() === address.plain() && this.networkType === address.networkType;
+    public equals(address: any): boolean {
+        if (address instanceof Address) {
+            return this.plain() === address.plain() && this.networkType === address.networkType;
+        }
+        return false;
     }
 
     /**
@@ -150,5 +156,15 @@ export class Address {
             address: this.address,
             networkType: this.networkType,
         };
+    }
+
+    /**
+     * Encoded address or namespace id. Note that namespace id get the hex reversed and
+     * zero padded.
+     * @returns {Uint8Array}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public encodeUnresolvedAddress(networkType: NetworkType): Uint8Array {
+        return Convert.hexToUint8(this.encoded());
     }
 }

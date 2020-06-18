@@ -28,6 +28,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 import { deepEqual } from 'assert';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
+import { AliasTransaction } from '../../../src/model/transaction/AliasTransaction';
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;
@@ -77,6 +78,30 @@ describe('MosaicAliasTransaction', () => {
             mosaicId,
             NetworkType.MIJIN_TEST,
         );
+
+        expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
+        expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
+        expect(mosaicAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
+        expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
+        expect(mosaicAliasTransaction.mosaicId.id.higher).to.be.equal(3405110546);
+
+        const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '2AD8FC018D9A49E14CCCD78612DDF5CA01',
+        );
+    });
+
+    it('should createComplete an MosaicAliasTransaction using abstract', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = AliasTransaction.createForMosaic(
+            Deadline.create(),
+            AliasAction.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        ) as MosaicAliasTransaction;
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);

@@ -20,7 +20,6 @@ import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
-import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NetworkType } from '../model/network/NetworkType';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
@@ -30,6 +29,8 @@ import { MosaicAddressRestrictionTransaction } from '../model/transaction/Mosaic
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
+import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
 
 /**
  * MosaicRestrictionTransactionService service
@@ -62,11 +63,11 @@ export class MosaicRestrictionTransactionService {
     public createMosaicGlobalRestrictionTransaction(
         deadline: Deadline,
         networkType: NetworkType,
-        mosaicId: MosaicId | NamespaceId,
+        mosaicId: UnresolvedMosaicId,
         restrictionKey: UInt64,
         restrictionValue: string,
         restrictionType: MosaicRestrictionType,
-        referenceMosaicId: MosaicId | NamespaceId = new MosaicId(UInt64.fromUint(0).toDTO()),
+        referenceMosaicId: UnresolvedMosaicId = new MosaicId(UInt64.fromUint(0).toDTO()),
         maxFee: UInt64 = new UInt64([0, 0]),
     ): Observable<Transaction> {
         this.validateInput(restrictionValue);
@@ -109,9 +110,9 @@ export class MosaicRestrictionTransactionService {
     public createMosaicAddressRestrictionTransaction(
         deadline: Deadline,
         networkType: NetworkType,
-        mosaicId: MosaicId | NamespaceId,
+        mosaicId: UnresolvedMosaicId,
         restrictionKey: UInt64,
-        targetAddress: Address | NamespaceId,
+        targetAddress: UnresolvedAddress,
         restrictionValue: string,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): Observable<Transaction> {
@@ -206,7 +207,7 @@ export class MosaicRestrictionTransactionService {
      * @param unresolvedMosaicId unresolved mosaicId
      * @returns {MosaicId}
      */
-    private getResolvedMosaicId(unresolvedMosaicId: MosaicId | NamespaceId): Observable<MosaicId> {
+    private getResolvedMosaicId(unresolvedMosaicId: UnresolvedMosaicId): Observable<MosaicId> {
         if (unresolvedMosaicId instanceof MosaicId) {
             return of(unresolvedMosaicId);
         }
@@ -230,7 +231,7 @@ export class MosaicRestrictionTransactionService {
      * @param unresolvedAddress unresolved address
      * @returns {Address}
      */
-    private getResolvedAddress(unresolvedAddress: Address | NamespaceId): Observable<Address> {
+    private getResolvedAddress(unresolvedAddress: UnresolvedAddress): Observable<Address> {
         if (unresolvedAddress instanceof Address) {
             return of(unresolvedAddress);
         }

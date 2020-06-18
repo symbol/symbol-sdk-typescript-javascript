@@ -153,7 +153,7 @@ export class AddressAliasTransaction extends Transaction {
         // set static byte size fields
         const byteActionType = 1;
         const byteNamespaceId = 8;
-        const byteAddress = 25;
+        const byteAddress = 24;
 
         return byteSize + byteActionType + byteNamespaceId + byteAddress;
     }

@@ -26,6 +26,7 @@ import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTr
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { deepEqual } from 'assert';
 import { Address } from '../../../src/model/account/Address';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('AccountMetadataTransaction', () => {
     let account: Account;
@@ -37,7 +38,7 @@ describe('AccountMetadataTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -51,7 +52,7 @@ describe('AccountMetadataTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -66,7 +67,7 @@ describe('AccountMetadataTransaction', () => {
     it('should create and sign an AccountMetadataTransaction object', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -76,15 +77,15 @@ describe('AccountMetadataTransaction', () => {
         const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6E80300000000000001000A0000000000000000000000',
+            '90D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA4E80300000000000001000A0000000000000000000000',
         );
     });
 
     describe('size', () => {
-        it('should return 182 for AccountMetadataTransaction byte size', () => {
+        it('should return 174 for AccountMetadataTransaction byte size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
-                account.publicKey,
+                account.address,
                 UInt64.fromUint(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -92,7 +93,7 @@ describe('AccountMetadataTransaction', () => {
             );
 
             expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
-            expect(accountMetadataTransaction.size).to.be.equal(182);
+            expect(accountMetadataTransaction.size).to.be.equal(174);
 
             const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
             expect(signedTransaction.hash).not.to.be.undefined;
@@ -102,7 +103,7 @@ describe('AccountMetadataTransaction', () => {
     it('should create EmbeddedTransactionBuilder', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -121,7 +122,7 @@ describe('AccountMetadataTransaction', () => {
     it('should resolve alias', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
@@ -137,20 +138,42 @@ describe('AccountMetadataTransaction', () => {
     it('Notify Account', () => {
         const tx = AccountMetadataTransaction.create(
             Deadline.create(),
-            account.publicKey,
+            account.address,
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
-        let canNotify = tx.shouldNotifyAccount(account.address);
+        let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKB'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
+    });
+
+    it('Notify Account with alias', () => {
+        const alias = new NamespaceId('test');
+        const wrongAlias = new NamespaceId('wrong');
+        const tx = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.address,
+            UInt64.fromUint(1000),
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
+        expect(canNotify).to.be.true;
+
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), [wrongAlias]);
+        expect(canNotify).to.be.false;
+
+        Object.assign(tx, { signer: account.publicAccount });
+        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
     });
 });

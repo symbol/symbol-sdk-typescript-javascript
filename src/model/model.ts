@@ -30,6 +30,7 @@ export * from './account/AccountNames';
 export * from './account/AccountInfoResolvedMosaic';
 export * from './account/AccountKeyType';
 export * from './account/AccountKey';
+export * from './account/UnresolvedAddress';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
@@ -56,6 +57,7 @@ export * from './mosaic/NetworkCurrencyPublic';
 export * from './mosaic/NetworkHarvestLocal';
 export * from './mosaic/MosaicNames';
 export * from './mosaic/ResolvedMosaic';
+export * from './mosaic/UnresolvedMosaicId';
 
 // Mosaic
 export * from './metadata/Metadata';
