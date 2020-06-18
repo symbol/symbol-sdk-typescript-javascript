@@ -403,6 +403,8 @@ describe('SerializeTransactionToJSON', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             votingKey,
+            UInt64.fromUint(1),
+            UInt64.fromUint(3),
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
@@ -410,6 +412,8 @@ describe('SerializeTransactionToJSON', () => {
         const json = votingKeyLinkTransaction.toJSON();
 
         expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
+        expect(json.transaction.startPoint).to.be.equal('1');
+        expect(json.transaction.endPoint.toString()).to.be.equal('3');
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 });

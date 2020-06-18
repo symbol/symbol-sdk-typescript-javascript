@@ -737,6 +737,8 @@ describe('TransactionHttp', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
                 Deadline.create(),
                 votingKey,
+                UInt64.fromUint(1),
+                UInt64.fromUint(3),
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
@@ -755,6 +757,8 @@ describe('TransactionHttp', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
                 Deadline.create(),
                 votingKey,
+                UInt64.fromUint(1),
+                UInt64.fromUint(3),
                 LinkAction.Unlink,
                 networkType,
                 helper.maxFee,
