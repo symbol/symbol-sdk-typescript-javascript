@@ -9,45 +9,13 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Gorilla.1(0.9.6.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.20.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+SDK Core| v0.20.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
 Catbuffer | v0.0.20 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.9.2  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
-- **[BREAKING CHANGE]** Model property name changes:
-    1. **MetadataEntry**: senderPublicKey: string => sourceAddress: Address; targetPublicKey: string => targetAddress: Address
-    2. **MultisigAccountGraphInfo**: multisigAccounts => multisigEntries
-    3. **MultisigAccountInfo**: account: PublicAccount => accountAddress: Address; cosignatories: PublicAccount[] => cosignatoryAddresses: Address; multisigAccounts: PublicAccount[] => multisigAddresses: Address[]
-    4. **BlockInfo / NewBlock**: beneficiaryPublicKey: PublicAccount | undefined => beneficiaryAddress: Address | undefined
-    5. **MosaicId**: owner: PublicAccount => ownerAddress: Address
-    6. **MosaicInfo**: owner: PublicAccount => ownerAddress: Address; height => startHeight.
-    7. **NamespaceInfo**: owner: PublicAccount => ownerAddress: Address
-    8. **ChainProperties**: harvestNetworkFeeSinkPublicKey => harvestNetworkFeeSinkAddress
-    9. **MosaicNetworkProperties**: mosaicRentalFeeSinkPublicKey => mosaicRentalFeeSinkAddress
-    10. **NamespaceNetworkProperties**: namespaceRentalFeeSinkPublicKey => namespaceRentalFeeSinkAddress
-    11. **NetworkProperties**: publicKey => nemesisSignerPublicKey
-    12. **BalanceChangeReceipt**: targetPublicAccount: PublicAccount => targetAddress: Address
-    13. **BalanceTransferReceipt**: sender: PublicAccount => senderAddress: Address
-- **[BREAKING CHANGE]** Transaction property name changes:
-    1. **AccountMetadataTransaction**: targetPublicKey: string => targetAddress: UnresolvedAddress
-    2. **MosaicMetadataTransaction**: targetPublicKey: string => targetAddress: UnresolvedAddress
-    3. **NamespaceMetadataTransaction**: targetPublicKey: string => targetAddress: UnresolvedAddress
-    4. **MultisigAccountModificationTransaction**: publicKeyAdditions: PublicAccount[] => addressAdditions: UnresolvedAddress[]; publicKeyDeletions: PublicAccount[] => addressDeletions: UnresolvedAddress[]
-    5. **AggregateTransactionService**: cosignatories: string[] => cosignatories: Address[]
-- **[BREAKING CHANGE]** **Address** format changed from 25 bytes to 24 bytes. See new address test vector [here](https://github.com/nemtech/test-vectors/blob/master/1.test-address.json).
-- **[BREAKING CHANGE]** MosaicId creation (from Nonce) changed from using **PublicKey** to **Address**. See new mosaicId test vector [here](https://github.com/nemtech/test-vectors/blob/master/5.test-mosaic-id.json).
-- **[BREAKING CHANGE]** Added 8 bytes (uint64) **version** field in `CosignatureSignedTransaction` and `AggregateTransactionCosignature` with default value `0`.
-- **[BREAKING CHANGE]** Removed all transaction get endpoints from **AccountHttp** and **BlockHttp**.
-- **[BREAKING CHANGE]** Added `TransactionGroup (required)` parameter in `getTransaction` endpoint in `TransactionHttp`.
-- Added `Search` endpoints to TransactionHttp, BlockHttp, and MosaicHttp.
-
-    **Note:**
-
-    1. Search endpoints returns pagination payload (`Page<t>`) rather than raw arraes.
-    2. For **AggregateTransaction**, transaction search endpoint only returns the aggregate wrapper transaction **WITHOUT** embedded transactions. `complete` aggregate payload can be get from `getTransaction` or `getTransactionByIds` endpoints.
-- Added SearchCriteria interfaces for the new search endpoints.
-- **group** filter in `TransactionSearchCriteria` to be mandatory due to rest endpoint changes.
-- Added **streamer** for the 3 new search endpoints (block, mosaic, transaction) to improve pagination querying.
-- Added `size` in `BlockInfo` model.
+- Fixed missing `TransactionGroup` export issue.
+- Added contributors..
+- Fixed issues in travis scripts.
 
 ## [0.19.2] - 26-May-2020
 
@@ -561,6 +529,7 @@ Client Library | v0.7.20-alpha.6  | [nem2-sdk-openapi-typescript-node-client](ht
 
 - Initial code release.
 
+[0.20.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.0...v0.20.1
 [0.20.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.2...v0.20.0
 [0.19.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.1...v0.19.2
 [0.19.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.0...v0.19.1
