@@ -36,7 +36,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
-describe('TransactionService', () => {
+describe('TransactionService - AggregateBonded', () => {
     const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
