@@ -1,21 +1,67 @@
 # CHANGELOG
+
 All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.20.0] - 18-Jun-2020
+
+**Milestone**: Gorilla.1(0.9.6.1)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.20.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.20 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.9.2  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
+
+- **[BREAKING CHANGE]** Model property name changes:
+    1. **MetadataEntry**: senderPublicKey: string => sourceAddress: Address; targetPublicKey: string => targetAddress: Address
+    2. **MultisigAccountGraphInfo**: multisigAccounts => multisigEntries
+    3. **MultisigAccountInfo**: account: PublicAccount => accountAddress: Address; cosignatories: PublicAccount[] => cosignatoryAddresses: Address; multisigAccounts: PublicAccount[] => multisigAddresses: Address[]
+    4. **BlockInfo / NewBlock**: beneficiaryPublicKey: PublicAccount | undefined => beneficiaryAddress: Address | undefined
+    5. **MosaicId**: owner: PublicAccount => ownerAddress: Address
+    6. **MosaicInfo**: owner: PublicAccount => ownerAddress: Address; height => startHeight.
+    7. **NamespaceInfo**: owner: PublicAccount => ownerAddress: Address
+    8. **ChainProperties**: harvestNetworkFeeSinkPublicKey => harvestNetworkFeeSinkAddress
+    9. **MosaicNetworkProperties**: mosaicRentalFeeSinkPublicKey => mosaicRentalFeeSinkAddress
+    10. **NamespaceNetworkProperties**: namespaceRentalFeeSinkPublicKey => namespaceRentalFeeSinkAddress
+    11. **NetworkProperties**: publicKey => nemesisSignerPublicKey
+    12. **BalanceChangeReceipt**: targetPublicAccount: PublicAccount => targetAddress: Address
+    13. **BalanceTransferReceipt**: sender: PublicAccount => senderAddress: Address
+- **[BREAKING CHANGE]** Transaction property name changes:
+    1. **AccountMetadataTransaction**: targetPublicKey: string => targetAddress: UnresolvedAddress
+    2. **MosaicMetadataTransaction**: targetPublicKey: string => targetAddress: UnresolvedAddress
+    3. **NamespaceMetadataTransaction**: targetPublicKey: string => targetAddress: UnresolvedAddress
+    4. **MultisigAccountModificationTransaction**: publicKeyAdditions: PublicAccount[] => addressAdditions: UnresolvedAddress[]; publicKeyDeletions: PublicAccount[] => addressDeletions: UnresolvedAddress[]
+    5. **AggregateTransactionService**: cosignatories: string[] => cosignatories: Address[]
+- **[BREAKING CHANGE]** **Address** format changed from 25 bytes to 24 bytes. See new address test vector [here](https://github.com/nemtech/test-vectors/blob/master/1.test-address.json).
+- **[BREAKING CHANGE]** MosaicId creation (from Nonce) changed from using **PublicKey** to **Address**. See new mosaicId test vector [here](https://github.com/nemtech/test-vectors/blob/master/5.test-mosaic-id.json).
+- **[BREAKING CHANGE]** Added 8 bytes (uint64) **version** field in `CosignatureSignedTransaction` and `AggregateTransactionCosignature` with default value `0`.
+- **[BREAKING CHANGE]** Removed all transaction get endpoints from **AccountHttp** and **BlockHttp**.
+- **[BREAKING CHANGE]** Added `TransactionGroup (required)` parameter in `getTransaction` endpoint in `TransactionHttp`.
+- Added `Search` endpoints to TransactionHttp, BlockHttp, and MosaicHttp.
+
+    **Note:**
+
+    1. Search endpoints returns pagination payload (`Page<t>`) rather than raw arraes.
+    2. For **AggregateTransaction**, transaction search endpoint only returns the aggregate wrapper transaction **WITHOUT** embedded transactions. `complete` aggregate payload can be get from `getTransaction` or `getTransactionByIds` endpoints.
+- Added SearchCriteria interfaces for the new search endpoints.
+- **group** filter in `TransactionSearchCriteria` to be mandatory due to rest endpoint changes.
+- Added **streamer** for the 3 new search endpoints (block, mosaic, transaction) to improve pagination querying.
+- Added `size` in `BlockInfo` model.
 
 ## [0.19.2] - 26-May-2020
 
 **Milestone**: Gorilla.1(0.9.5.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.19.2 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.19 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.11  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.19.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.19 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.11  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
-- **[BREAKING CHANGE]** Replaced constructor parameter `config` with `url` in `Listener` class. The constructor is now **only using a complete websocket url (e.g. http://localhost:3000/ws or ws://localhost:3000/ws) but not rest-gateway url anymore (It will NOT append `/ws` suffix to the input url)**.
+- **[BREAKING CHANGE]** Replaced constructor parameter `config` with `url` in `Listener` class. The constructor is now **only using a complete websocket url (e.g. [http://localhost:3000/ws](http://localhost:3000/ws) or ws://localhost:3000/ws) but not rest-gateway url anymore (It will NOT append `/ws` suffix to the input url)**.
 - **[BREAKING CHANGE]** `RepositoryFactory`: Optional constructor parameters has been moved into `RepositoryFactoryConfig` interface (optional).
 - **[BREAKING CHANGE]** Added `websocketInjected` (optional) parameter to the `RepositoryFactoryConfig` interface. `RepositoryFactory.createListener()` can now take injected websocket instance to create `Listener` object.
-- **[BREAKING CHANGE]** Added `websocketUrl` (optional) parameter to the `RepositoryFactoryConfig` interface. it allows custom websocket url to be used to create the `Listener` object. By default (not provided), the factory will use rest-gateway url with '/ws' suffix appended (e.g. http://localhost:3000/ws)
+- **[BREAKING CHANGE]** Added `websocketUrl` (optional) parameter to the `RepositoryFactoryConfig` interface. it allows custom websocket url to be used to create the `Listener` object. By default (not provided), the factory will use rest-gateway url with '/ws' suffix appended (e.g. [http://localhost:3000/ws](http://localhost:3000/ws)
 - **[BREAKING CHANGE]** `Listener.newBlock` channel is now returning new object `NewBlock` rather than sharing with `BlockInfo` used by rest-gateway payload.
 - Added `stateHashSubCacheMerkleRoots` to `BlockInfo`.
 
@@ -24,9 +70,9 @@ Client Library | v0.8.11  | https://www.npmjs.com/package/symbol-openapi-typescr
 **Milestone**: Gorilla.1(0.9.5.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.19.1 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.19 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.11  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.19.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.19 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.11  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** `RemotePublicKey` has been renamed to `LinkedPublicKey` in `AccountKeyLinkTransaction`.
 - **[BREAKING CHANGE]** `AccountRestrictionFlags` has been split into 3 separate flags: `AddressRestrictionFlag`, `MosaicRestrictionFlag` and `OperationRestrictionFlag` for better compile time and runtime validation.
@@ -40,9 +86,9 @@ Client Library | v0.8.11  | https://www.npmjs.com/package/symbol-openapi-typescr
 **Milestone**: Gorilla.1(0.9.5.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.19.0 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.18 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.10  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.19.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.18 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.10  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** `Transaction signing` is now using `GenerationHashSeed` from `NodeInfo` or `NetworkProperties`. GenerationHash on Nemesis block (block:1) is `NOT` used for signing purposes.
 - **[BREAKING CHANGE]** Renamed `AccountLinkTransaction` to `AccountKeyLinkTransaction`.
@@ -63,9 +109,9 @@ Client Library | v0.8.10  | https://www.npmjs.com/package/symbol-openapi-typescr
 **Milestone**: Fushicho.4(RC3 0.9.3.2)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.18.0 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.9  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.18.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.9  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Stopped NodeJS v8 and v9 support. From this version (`v0.18.0`) onwards, Symbol-SDK will target on Node v10+.
 - **[BREAKING CHANGE]** Removed `Keccac_256` from `LockHashAlgorithm` (enum index changed).
@@ -86,9 +132,9 @@ Client Library | v0.8.9  | https://www.npmjs.com/package/symbol-openapi-typescri
 **Milestone**: Fushicho.4(RC3 0.9.3.2)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.17.4 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.9  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.17.4 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.9  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - Added `SimpleWallet.toDTO()` method which returns JSON serialized object.
 - Applied latest Symbol OpenAPI generated code (`v0.8.9`).
@@ -104,9 +150,9 @@ Client Library | v0.8.9  | https://www.npmjs.com/package/symbol-openapi-typescri
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.17.3 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.17.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - Fixed `MosaicNonce` issue handling signed integer from rest payload.
 - **[BREAKING CHANGE]** Updated `NodeTime` model to use `UInt64`.
@@ -116,9 +162,9 @@ Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescri
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.17.2 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.17.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Added `s-part` of transaction signature to transaction hash.
 - Added `numStatements` to `blockInfo` model.
@@ -131,9 +177,9 @@ Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescri
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.17.1 | https://www.npmjs.com/package/symbol-sdk
-Catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer-typescript
-Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescript-node-client
+SDK Core| v0.17.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.11 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.8.5  | [symbol-openapi-typescript-node-client](https://www.npmjs.com/package/symbol-openapi-typescript-node-client)
 
 - Rebranded `nem2-sdk` to `symbol-sdk`. Please be noted the package name changes.
 - **[BREAKING CHANGE]** Changed `QueryParameters` and `TransactionFilter` to use deconstructed argument (JSON object) in the constructor.
@@ -145,9 +191,9 @@ Client Library | v0.8.5  | https://www.npmjs.com/package/symbol-openapi-typescri
 **Milestone**: Fushicho.4(RC3 0.9.3.1)
  Package  | Version  | Link
 ---|---|---
-SDK Core | v0.17.0 | https://www.npmjs.com/package/nem2-sdk
-catbuffer | v0.0.11 | https://www.npmjs.com/package/catbuffer
-Client Library | v0.8.4  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+SDK Core | v0.17.0 | [nem2-sdk](https://www.npmjs.com/package/nem2-sdk)
+catbuffer | v0.0.11 | [catbuffer](https://www.npmjs.com/package/catbuffer)
+Client Library | v0.8.4  | [nem2-sdk-openapi-typescript-node-client](https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client)
 
 - **[BREAKING CHANGE]** Changed hashing algorithm to cope catapult-server changes. All Key derivation and signing are now using `SHA512`. Removed `SignSchema` so `NetworkType` is no longer bonded to the schema anymore (sha3 / keccak). This change will affect all existing keypairs / address (derived from public key) and  transaction signatures.
 - **[BREAKING CHANGE]** Added new `TransactionFilter` parameter to `AccountHttp` which is now support filtering with list of transaction type.
@@ -165,9 +211,9 @@ Client Library | v0.8.4  | https://www.npmjs.com/package/nem2-sdk-openapi-typesc
 **Milestone**: Fushicho.4(RC3)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.16.5 | https://www.npmjs.com/package/nem2-sdk
-catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
-Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+SDK Core| v0.16.5 | [nem2-sdk](https://www.npmjs.com/package/nem2-sdk)
+catbuffer Library| v0.0.11 | [catbuffer](https://www.npmjs.com/package/catbuffer)
+Client Library | v0.7.20-beta.7  | [nem2-sdk-openapi-typescript-node-client](https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client)
 
 - Fixed circular reference issue after removed `InnerTransaction` class.
 
@@ -176,9 +222,9 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openap
 **Milestone**: Fushicho.4(RC3)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.16.4 | https://www.npmjs.com/package/nem2-sdk
-catbuffer Library| v0.0.11 | https://www.npmjs.com/package/catbuffer
-Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+SDK Core| v0.16.4 | [nem2-sdk](https://www.npmjs.com/package/nem2-sdk)
+catbuffer Library| v0.0.11 | [catbuffer](https://www.npmjs.com/package/catbuffer)
+Client Library | v0.7.20-beta.7  | [nem2-sdk-openapi-typescript-node-client](https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client)
 
 - Core 0.9.2.1 compatible. Changed hash algorithm for shared key derivation to `HKDF-HMAC-Sha256`.
 - Removed `senderPrivateKey` in `Persistent Delegation Request Transaction`. Instead, it uses an `ephemeral key pair` and the `EphemeralPublicKey` is now attached in the `PersistentDelegationMessage` payload.
@@ -194,9 +240,9 @@ Client Library | v0.7.20-beta.7  | https://www.npmjs.com/package/nem2-sdk-openap
 **Milestone**: Fushicho.3
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.16.3 | https://www.npmjs.com/package/nem2-sdk
-catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
-Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+SDK Core| v0.16.3 | [nem2-sdk](https://www.npmjs.com/package/nem2-sdk)
+catbuffer Library| v0.0.7 | [catbuffer](https://www.npmjs.com/package/catbuffer)
+Client Library | v0.7.20-beta.6  | [nem2-sdk-openapi-typescript-node-client](https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client)
 
 - Fixed http client (OpenAPI client package) does not support ES6 issue.
 
@@ -205,9 +251,9 @@ Client Library | v0.7.20-beta.6  | https://www.npmjs.com/package/nem2-sdk-openap
 **Milestone**: Fushicho.3
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.16.2 | https://www.npmjs.com/package/nem2-sdk
-catbuffer Library| v0.0.7 | https://www.npmjs.com/package/catbuffer
-Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client
+SDK Core| v0.16.2 | [nem2-sdk](https://www.npmjs.com/package/nem2-sdk)
+catbuffer Library| v0.0.7 | [catbuffer](https://www.npmjs.com/package/catbuffer)
+Client Library | v0.7.20-alpha.6  | [nem2-sdk-openapi-typescript-node-client](https://www.npmjs.com/package/nem2-sdk-openapi-typescript-node-client)
 
 - Refactored to replace generated codes by public library package for both `catbuffer` and `OpenAPI Http Client`.
 - Added unresolved (mosaicId, address) support in `MosaicRestrictionTransaction`.
@@ -515,6 +561,7 @@ Client Library | v0.7.20-alpha.6  | https://www.npmjs.com/package/nem2-sdk-opena
 
 - Initial code release.
 
+[0.20.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.2...v0.20.0
 [0.19.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.1...v0.19.2
 [0.19.1]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.0...v0.19.1
 [0.19.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.18.0...v0.19.0
