@@ -269,6 +269,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const votingKeyLinkTx = transaction as VotingKeyLinkTransaction;
             return {
                 linkedPublicKey: votingKeyLinkTx.linkedPublicKey,
+                startPoint: votingKeyLinkTx.startPoint.toString(),
+                endPoint: votingKeyLinkTx.endPoint.toString(),
                 linkAction: votingKeyLinkTx.linkAction,
             };
         default:
