@@ -29,6 +29,14 @@
         {
             "name": "Fernando Boucquez",
             "email": "fernando.boucquez@nem.software"
+        },
+        {
+            "name": "Aleix",
+            "email": "aleix@nemeurope.eu"
+        },
+        {
+            "name": "Guillem",
+            "email": "guillem@nemeurope.eu"
         }
     ],
     "bugs": "https://github.com/nemtech/symbol-sdk-typescript-javascript/issues",
