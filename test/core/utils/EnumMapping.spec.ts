@@ -41,6 +41,12 @@ describe('Order', () => {
         const value2: Order = DtoMapping.mapEnum(value1);
         expect(value2).eq(undefined);
     });
+    it('openAPI sanity check', () => {
+        for (const item in Order) {
+            const value: OrderModel = DtoMapping.mapEnum(item);
+            expect(value).not.to.be.undefined;
+        }
+    });
 });
 
 describe('BlockOrderBy', () => {
@@ -64,6 +70,12 @@ describe('BlockOrderBy', () => {
         const value2: BlockOrderByEnum = DtoMapping.mapEnum(value1);
         expect(value2).eq(undefined);
     });
+    it('openAPI sanity check', () => {
+        for (const item in BlockOrderByEnum) {
+            const value: BlockOrderBy = DtoMapping.mapEnum(item);
+            expect(value).not.to.be.undefined;
+        }
+    });
 });
 
 describe('MerklePosition', () => {
@@ -86,5 +98,11 @@ describe('MerklePosition', () => {
         const value1: MerklePosition | undefined = undefined;
         const value2: PositionEnum = DtoMapping.mapEnum(value1);
         expect(value2).eq(undefined);
+    });
+    it('openAPI sanity check', () => {
+        for (const item in PositionEnum) {
+            const value: MerklePosition = DtoMapping.mapEnum(item);
+            expect(value).not.to.be.undefined;
+        }
     });
 });
