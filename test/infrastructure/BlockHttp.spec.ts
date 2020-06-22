@@ -36,6 +36,7 @@ import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { UInt64 } from '../../src/model/UInt64';
 import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
 
 describe('BlockHttp', () => {
     const blockDTO = new BlockDTO();
@@ -149,6 +150,6 @@ describe('BlockHttp', () => {
         );
         const merkleProofInfo = await blockRepository.getMerkleTransaction(UInt64.fromUint(2), 'abc').toPromise();
         expect(merkleProofInfo).to.be.not.null;
-        expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(PositionEnum.Left, 'bbb')]);
+        expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(MerklePosition.Left, 'bbb')]);
     });
 });

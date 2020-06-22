@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
+import { Order } from './Order';
 
 export interface SearchCriteria {
     /**

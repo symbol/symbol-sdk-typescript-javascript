@@ -27,6 +27,7 @@ import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 import { Page } from './Page';
 import { MosaicRoutesApi, MosaicIds, MosaicInfoDTO } from 'symbol-openapi-typescript-node-client';
 import { Address } from '../model/account/Address';
+import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**
  * Mosaic http repository.
@@ -92,7 +93,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         criteria.pageSize,
                         criteria.pageNumber,
                         criteria.offset,
-                        criteria.order,
+                        DtoMapping.mapEnum(criteria.order),
                     ),
                     (body) => super.toPage(body.pagination, body.data, this.toMosaicInfo, networkType),
                 ),

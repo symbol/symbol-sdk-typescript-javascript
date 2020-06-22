@@ -70,4 +70,12 @@ export class DtoMapping {
     public static assign<T>(object: T, attributes: any): T {
         return Object.assign({ __proto__: Object.getPrototypeOf(object) }, object, attributes);
     }
+
+    /**
+     * Map one enum type to another by value
+     * @param value enum value to be mapped
+     */
+    public static mapEnum<E1, E2>(value: E1 | undefined): E2 {
+        return (value as unknown) as E2;
+    }
 }
