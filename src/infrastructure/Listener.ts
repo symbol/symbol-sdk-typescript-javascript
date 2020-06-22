@@ -27,7 +27,7 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
 import { IListener } from './IListener';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
-import { BlockInfoDTO } from 'symbol-openapi-typescript-node-client/dist/model/blockInfoDTO';
+import { BlockInfoDTO } from 'symbol-openapi-typescript-node-client';
 import { NewBlock } from '../model/blockchain/NewBlock';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { UInt64 } from '../model/UInt64';

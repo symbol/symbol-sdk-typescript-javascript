@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { MerklePosition } from './MerklePosition';
-
 /**
- * The block merkle path item
+ * Indicates how to sort the results:  * ``asc`` - ascending * ``desc`` - descending
  */
-export class MerklePathItem {
-    /**
-     * @param position
-     * @param hash
-     */
-    constructor(
-        /**
-         * The position
-         */
-        public readonly position?: MerklePosition,
-        /**
-         * The hash
-         */
-        public readonly hash?: string,
-    ) {}
+export enum Order {
+    Asc = 'asc',
+    Desc = 'desc',
 }

@@ -25,6 +25,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import { ReceiptRepository } from './ReceiptRepository';
+import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**
  * Receipt http repository.
@@ -39,12 +40,6 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
     private readonly receiptRoutesApi: ReceiptRoutesApi;
 
     /**
-     * @internal
-     * network type for the mappings.
-     */
-    private readonly networkTypeObservable: Observable<NetworkType>;
-
-    /**
      * Constructor
      * @param url
      * @param networkType
@@ -52,7 +47,6 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
     constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
         super(url);
         this.receiptRoutesApi = new ReceiptRoutesApi(url);
-        this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
         this.receiptRoutesApi.useQuerystring = true;
     }
 
@@ -68,7 +62,12 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      */
     public getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo> {
         return observableFrom(this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash)).pipe(
-            map(({ body }) => new MerkleProofInfo(body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash)))),
+            map(
+                ({ body }) =>
+                    new MerkleProofInfo(
+                        body.merklePath!.map((payload) => new MerklePathItem(DtoMapping.mapEnum(payload.position), payload.hash)),
+                    ),
+            ),
             catchError((error) => throwError(this.errorHandling(error))),
         );
     }

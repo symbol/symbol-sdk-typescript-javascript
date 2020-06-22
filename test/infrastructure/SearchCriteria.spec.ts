@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { SearchCriteria } from '../../src/infrastructure/searchCriteria/SearchCriteria';
-import { Order } from 'symbol-openapi-typescript-node-client';
+import { Order } from '../../src/infrastructure/searchCriteria/Order';
 
 describe('SearchCriteria', () => {
     it('should create SearchCriteria', () => {

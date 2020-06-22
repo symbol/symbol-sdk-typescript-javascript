@@ -59,3 +59,5 @@ export * from './paginationStreamer/TransactionPaginationStreamer';
 export * from './TransactionStatusHttp';
 export * from './TransactionStatusRepository';
 export * from './TransactionGroup';
+export * from './searchCriteria/BlockOrderBy';
+export * from './searchCriteria/Order';

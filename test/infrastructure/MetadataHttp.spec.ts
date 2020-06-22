@@ -32,7 +32,7 @@ import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
+import { Order } from 'symbol-openapi-typescript-node-client';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { NetworkType } from '../../src/model/network/NetworkType';
