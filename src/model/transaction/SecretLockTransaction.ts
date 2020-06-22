@@ -216,11 +216,11 @@ export class SecretLockTransaction extends Transaction {
             TransactionType.SECRET_LOCK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
             new Hash256Dto(this.getSecretByte()),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()), new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
-            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
         );
         return transactionBuilder.serialize();
     }
@@ -235,11 +235,11 @@ export class SecretLockTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.SECRET_LOCK.valueOf(),
+            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
             new Hash256Dto(this.getSecretByte()),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()), new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
-            new UnresolvedAddressDto(this.recipientAddress.encodeUnresolvedAddress(this.networkType)),
         );
     }
 
