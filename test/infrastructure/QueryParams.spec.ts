@@ -16,7 +16,7 @@
 
 import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { expect } from 'chai';
-import { Order } from 'symbol-openapi-typescript-node-client/dist/model/order';
+import { Order } from '../../src/infrastructure/searchCriteria/Order';
 
 describe('QueryParams', () => {
     it('should create QueryParams', () => {

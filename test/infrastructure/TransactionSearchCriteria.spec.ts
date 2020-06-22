@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Order } from 'symbol-openapi-typescript-node-client';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TestingAccount } from '../conf/conf.spec';
 import { deepEqual } from 'assert';
@@ -23,6 +22,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { Address } from '../../src/model/account/Address';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { Order } from '../../src/infrastructure/searchCriteria/Order';
 
 describe('TransactionSearchCriteria', () => {
     const account = TestingAccount;

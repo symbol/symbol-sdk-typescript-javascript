@@ -15,7 +15,7 @@
  */
 
 import { SearchCriteria } from './SearchCriteria';
-import { BlockOrderByEnum } from 'symbol-openapi-typescript-node-client/dist/model/blockOrderByEnum';
+import { BlockOrderBy } from './BlockOrderBy';
 
 /**
  * Defines the params used to search blocks. With this criteria, you can sort and filter
@@ -35,5 +35,5 @@ export interface BlockSearchCriteria extends SearchCriteria {
     /**
      * Order by block id or height. (optional)
      */
-    orderBy?: BlockOrderByEnum;
+    orderBy?: BlockOrderBy;
 }

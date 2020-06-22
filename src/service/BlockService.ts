@@ -17,13 +17,13 @@
 import { sha3_256 } from 'js-sha3';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { PositionEnum } from 'symbol-openapi-typescript-node-client/dist/model/positionEnum';
 import { BlockRepository } from '../infrastructure/BlockRepository';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { UInt64 } from '../model/UInt64';
 import { IBlockService } from './interfaces/IBlockService';
+import { MerklePosition } from '../model/blockchain/MerklePosition';
 
 /**
  * Block Service
@@ -82,7 +82,7 @@ export class BlockService implements IBlockService {
         const rootToCompare = merklePathItem.reduce((proofHash, pathItem) => {
             const hasher = sha3_256.create();
             // Left
-            if (pathItem.position !== undefined && pathItem.position === PositionEnum.Left) {
+            if (pathItem.position !== undefined && pathItem.position === MerklePosition.Left) {
                 return hasher.update(Buffer.from(pathItem.hash + proofHash, 'hex')).hex();
             } else {
                 // Right

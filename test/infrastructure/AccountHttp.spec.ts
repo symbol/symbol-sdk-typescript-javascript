@@ -31,7 +31,7 @@ import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
-import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client/dist/model/accountKeyDTO';
+import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client';
 
 describe('AccountHttp', () => {
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');

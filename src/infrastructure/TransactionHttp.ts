@@ -38,6 +38,7 @@ import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCri
 import { Page } from './Page';
 import { TransactionGroup } from './TransactionGroup';
 import http = require('http');
+import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**
  * Transaction http repository.
@@ -237,7 +238,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.pageSize,
                     criteria.pageNumber,
                     criteria.offset,
-                    criteria.order,
+                    DtoMapping.mapEnum(criteria.order),
                 );
             case TransactionGroup.Unconfirmed:
                 return this.transactionRoutesApi.searchUnconfirmedTransactions(
@@ -250,7 +251,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.pageSize,
                     criteria.pageNumber,
                     criteria.offset,
-                    criteria.order,
+                    DtoMapping.mapEnum(criteria.order),
                 );
             case TransactionGroup.Partial:
                 return this.transactionRoutesApi.searchPartialTransactions(
@@ -263,7 +264,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.pageSize,
                     criteria.pageNumber,
                     criteria.offset,
-                    criteria.order,
+                    DtoMapping.mapEnum(criteria.order),
                 );
         }
     }

@@ -26,6 +26,7 @@ import { Http } from './Http';
 import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 import { Page } from './Page';
 import { Address } from '../model/account/Address';
+import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**
  * Blockchain http repository.
@@ -71,8 +72,8 @@ export class BlockHttp extends Http implements BlockRepository {
                 criteria.pageSize,
                 criteria.pageNumber,
                 criteria.offset,
-                criteria.order,
-                criteria.orderBy,
+                DtoMapping.mapEnum(criteria.order),
+                DtoMapping.mapEnum(criteria.orderBy),
             ),
             (body) => super.toPage(body.pagination, body.data, this.toBlockInfo),
         );
@@ -129,7 +130,10 @@ export class BlockHttp extends Http implements BlockRepository {
     public getMerkleTransaction(height: UInt64, hash: string): Observable<MerkleProofInfo> {
         return this.call(
             this.blockRoutesApi.getMerkleTransaction(height.toString(), hash),
-            (body) => new MerkleProofInfo(body.merklePath!.map((payload) => new MerklePathItem(payload.position, payload.hash))),
+            (body) =>
+                new MerkleProofInfo(
+                    body.merklePath!.map((payload) => new MerklePathItem(DtoMapping.mapEnum(payload.position), payload.hash)),
+                ),
         );
     }
 }
