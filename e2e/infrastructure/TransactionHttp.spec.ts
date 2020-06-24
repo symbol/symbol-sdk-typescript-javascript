@@ -1495,11 +1495,37 @@ describe('TransactionHttp', () => {
                 .toPromise();
             expect(transactions.data.length).to.be.greaterThan(0);
         });
-        it('should return transaction info given height', async () => {
+        it('should return transaction info given height all types', async () => {
             const transactions = await transactionRepository
                 .search({ group: TransactionGroup.Confirmed, height: UInt64.fromUint(1) } as TransactionSearchCriteria)
                 .toPromise();
-            expect(transactions.data.length).to.be.greaterThan(0);
+
+            const mosaicDefinitions = transactions.data.filter((t) => t.type == TransactionType.MOSAIC_DEFINITION).length;
+            const namespaceRegistration = transactions.data.filter((t) => t.type == TransactionType.NAMESPACE_REGISTRATION).length;
+            const others = transactions.data.filter(
+                (t) => t.type !== TransactionType.NAMESPACE_REGISTRATION && t.type !== TransactionType.MOSAIC_DEFINITION,
+            ).length;
+            expect(mosaicDefinitions).to.be.greaterThan(0);
+            expect(namespaceRegistration).to.be.greaterThan(0);
+            expect(others).to.be.greaterThan(0);
+        });
+
+        it('should return transaction info given height and namesapce, mosaic types', async () => {
+            const transactions = await transactionRepository
+                .search({
+                    group: TransactionGroup.Confirmed,
+                    height: UInt64.fromUint(1),
+                    type: [TransactionType.MOSAIC_DEFINITION, TransactionType.NAMESPACE_REGISTRATION],
+                } as TransactionSearchCriteria)
+                .toPromise();
+            const mosaicDefinitions = transactions.data.filter((t) => t.type == TransactionType.MOSAIC_DEFINITION).length;
+            const namespaceRegistration = transactions.data.filter((t) => t.type == TransactionType.NAMESPACE_REGISTRATION).length;
+            const others = transactions.data.filter(
+                (t) => t.type !== TransactionType.NAMESPACE_REGISTRATION && t.type !== TransactionType.MOSAIC_DEFINITION,
+            ).length;
+            expect(mosaicDefinitions).to.be.greaterThan(0);
+            expect(namespaceRegistration).to.be.greaterThan(0);
+            expect(others).to.eq(0);
         });
     });
 

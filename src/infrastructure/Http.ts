@@ -16,7 +16,7 @@
 
 import { from as observableFrom, Observable, of, of as observableOf, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
-import { Configuration, NodeRoutesApi, Pagination } from 'symbol-openapi-typescript-fetch-client';
+import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
 import { NetworkType } from '../model/network/NetworkType';
 import { Page } from './Page';
 import { QueryParams } from './QueryParams';
@@ -103,8 +103,8 @@ export abstract class Http {
         };
     }
 
-    protected config(): Configuration {
-        return new Configuration({ basePath: this.url, fetchApi: this.fetchApi });
+    public config(): Configuration {
+        return new Configuration({ basePath: this.url, fetchApi: this.fetchApi, queryParamsStringify: querystring });
     }
 
     /**

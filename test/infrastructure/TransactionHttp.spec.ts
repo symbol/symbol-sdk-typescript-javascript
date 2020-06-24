@@ -21,6 +21,7 @@ import {
     BlockMetaDTO,
     BlockRoutesApi,
     Cosignature,
+    HTTPQuery,
     NetworkTypeEnum,
     Pagination,
     TransactionInfoDTO,
@@ -506,5 +507,11 @@ describe('TransactionHttp', () => {
         } catch (error) {
             expect(error).not.to.be.undefined;
         }
+    });
+
+    it('Test fetch querystring', async () => {
+        const params: HTTPQuery = { type: [TransactionType.NAMESPACE_REGISTRATION.valueOf(), TransactionType.TRANSFER.valueOf()] };
+        const query = transactionHttp.config().queryParamsStringify(params);
+        expect(query).eq('type=16718&type=16724');
     });
 });
