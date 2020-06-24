@@ -16,22 +16,22 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    AccountRestrictionsDTO,
-    AccountRestrictionFlagsEnum,
-    AccountRestrictionsInfoDTO,
     AccountRestrictionDTO,
+    AccountRestrictionFlagsEnum,
+    AccountRestrictionsDTO,
+    AccountRestrictionsInfoDTO,
+    MerklePathItemDTO,
+    MerkleProofInfoDTO,
+    PositionEnum,
     ReceiptRoutesApi,
     StatementsDTO,
-    MerkleProofInfoDTO,
-    MerklePathItemDTO,
-    PositionEnum,
-} from 'symbol-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
+import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { UInt64 } from '../../src/model/model';
+import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('ReceiptHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -46,9 +46,9 @@ describe('ReceiptHttp', () => {
         receiptRoutesApi: instance(receiptRoutesApi),
     });
 
-    const restrictionInfo = new AccountRestrictionsInfoDTO();
-    const restrictionsDto = new AccountRestrictionsDTO();
-    const restriction = new AccountRestrictionDTO();
+    const restrictionInfo = {} as AccountRestrictionsInfoDTO;
+    const restrictionsDto = {} as AccountRestrictionsDTO;
+    const restriction = {} as AccountRestrictionDTO;
     restriction.restrictionFlags = AccountRestrictionFlagsEnum.NUMBER_1;
     restriction.values = [address.encoded()];
     restrictionsDto.restrictions = [restriction];
@@ -62,12 +62,12 @@ describe('ReceiptHttp', () => {
     });
 
     it('getBlockReceipt', async () => {
-        const statementDto = new StatementsDTO();
+        const statementDto = {} as StatementsDTO;
         statementDto.addressResolutionStatements = [];
         statementDto.transactionStatements = [];
         statementDto.mosaicResolutionStatements = [];
 
-        when(receiptRoutesApi.getBlockReceipts('1')).thenReturn(Promise.resolve({ response, body: statementDto }));
+        when(receiptRoutesApi.getBlockReceipts('1')).thenReturn(Promise.resolve(statementDto));
 
         const statement = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
         expect(statement).to.be.not.null;
@@ -77,13 +77,13 @@ describe('ReceiptHttp', () => {
     });
 
     it('getMerkleReceipts', async () => {
-        const merkleProofInfoDto = new MerkleProofInfoDTO();
-        const merklePathDto = new MerklePathItemDTO();
+        const merkleProofInfoDto = {} as MerkleProofInfoDTO;
+        const merklePathDto = {} as MerklePathItemDTO;
         merklePathDto.hash = 'merkleHash';
         merklePathDto.position = PositionEnum.Left;
         merkleProofInfoDto.merklePath = [merklePathDto];
 
-        when(receiptRoutesApi.getMerkleReceipts('1', 'Hash')).thenReturn(Promise.resolve({ response, body: merkleProofInfoDto }));
+        when(receiptRoutesApi.getMerkleReceipts('1', 'Hash')).thenReturn(Promise.resolve(merkleProofInfoDto));
 
         const proof = await receiptRepository.getMerkleReceipts(UInt64.fromUint(1), 'Hash').toPromise();
         expect(proof).to.be.not.null;

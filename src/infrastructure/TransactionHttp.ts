@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import {
     BlockInfoDTO,
     BlockRoutesApi,
-    TransactionRoutesApi,
     TransactionInfoDTO,
     TransactionPage,
-    Cosignature,
-} from 'symbol-openapi-typescript-node-client';
+    TransactionRoutesApi,
+} from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
@@ -32,13 +31,11 @@ import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnn
 import { TransactionInfo } from '../model/transaction/TransactionInfo';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { Http } from './Http';
-import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
-import { TransactionRepository } from './TransactionRepository';
-import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Page } from './Page';
+import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
+import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionGroup } from './TransactionGroup';
-import http = require('http');
-import { DtoMapping } from '../core/utils/DtoMapping';
+import { TransactionRepository } from './TransactionRepository';
 
 /**
  * Transaction http repository.
@@ -60,14 +57,13 @@ export class TransactionHttp extends Http implements TransactionRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.transactionRoutesApi = new TransactionRoutesApi(url);
-        this.blockRoutesApi = new BlockRoutesApi(url);
-        this.transactionRoutesApi.useQuerystring = true;
-        this.blockRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.transactionRoutesApi = new TransactionRoutesApi(this.config());
+        this.blockRoutesApi = new BlockRoutesApi(this.config());
     }
 
     /**
@@ -77,10 +73,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<Transaction>
      */
     public getTransaction(transactionId: string, transactionGroup: TransactionGroup): Observable<Transaction> {
-        return observableFrom(this.getTransactionByGroup(transactionId, transactionGroup)).pipe(
-            map(({ body }) => CreateTransactionFromDTO(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
+        return this.call(this.getTransactionByGroup(transactionId, transactionGroup), (body) => CreateTransactionFromDTO(body));
     }
 
     /**
@@ -92,13 +85,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
         const transactionIdsBody = {
             transactionIds,
         };
-        return observableFrom(this.transactionRoutesApi.getTransactionsById(transactionIdsBody)).pipe(
-            map(({ body }) =>
-                body.map((transactionDTO) => {
-                    return CreateTransactionFromDTO(transactionDTO);
-                }),
-            ),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(this.transactionRoutesApi.getTransactionsById(transactionIdsBody), (body) =>
+            body.map((transactionDTO) => {
+                return CreateTransactionFromDTO(transactionDTO);
+            }),
         );
     }
 
@@ -111,9 +101,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
         if (signedTransaction.type === TransactionType.AGGREGATE_BONDED) {
             throw new Error("Announcing aggregate bonded transaction should use 'announceAggregateBonded'");
         }
-        return observableFrom(this.transactionRoutesApi.announceTransaction(signedTransaction)).pipe(
-            map(({ body }) => new TransactionAnnounceResponse(body.message)),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(
+            this.transactionRoutesApi.announceTransaction(signedTransaction),
+            (body) => new TransactionAnnounceResponse(body.message),
         );
     }
 
@@ -126,9 +116,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
             throw new Error('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
         }
-        return observableFrom(this.transactionRoutesApi.announcePartialTransaction(signedTransaction)).pipe(
-            map(({ body }) => new TransactionAnnounceResponse(body.message)),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(
+            this.transactionRoutesApi.announcePartialTransaction(signedTransaction),
+            (body) => new TransactionAnnounceResponse(body.message),
         );
     }
 
@@ -140,14 +130,15 @@ export class TransactionHttp extends Http implements TransactionRepository {
     public announceAggregateBondedCosignature(
         cosignatureSignedTransaction: CosignatureSignedTransaction,
     ): Observable<TransactionAnnounceResponse> {
-        const cosignature = new Cosignature();
-        cosignature.parentHash = cosignatureSignedTransaction.parentHash;
-        cosignature.signerPublicKey = cosignatureSignedTransaction.signerPublicKey;
-        cosignature.signature = cosignatureSignedTransaction.signature;
-        cosignature.version = cosignatureSignedTransaction.version.toString();
-        return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignature)).pipe(
-            map(({ body }) => new TransactionAnnounceResponse(body.message)),
-            catchError((error) => throwError(this.errorHandling(error))),
+        const cosignature = {
+            parentHash: cosignatureSignedTransaction.parentHash,
+            signerPublicKey: cosignatureSignedTransaction.signerPublicKey,
+            signature: cosignatureSignedTransaction.signature,
+            version: cosignatureSignedTransaction.version.toString(),
+        };
+        return this.call(
+            this.transactionRoutesApi.announceCosignatureTransaction(cosignature),
+            (body) => new TransactionAnnounceResponse(body.message),
         );
     }
 
@@ -157,23 +148,18 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<number>
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
-        return observableFrom(this.getTransactionByGroup(transactionId, TransactionGroup.Confirmed)).pipe(
-            mergeMap(({ body }) => {
-                // parse transaction to take advantage of `size` getter overload
-                const transaction = CreateTransactionFromDTO(body);
-                const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
-
+        return this.call(this.getTransactionByGroup(transactionId, TransactionGroup.Confirmed), CreateTransactionFromDTO).pipe(
+            mergeMap((transaction) => {
                 // now read block details
-                return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.toString())).pipe(
-                    map((blockResponse: { response: ClientResponse; body: BlockInfoDTO }) => {
-                        const blockDTO = blockResponse.body;
+                return this.call(
+                    this.blockRoutesApi.getBlockByHeight((transaction.transactionInfo as TransactionInfo).height.toString()),
+                    (blockDTO: BlockInfoDTO) => {
                         // @see https://nemtech.github.io/concepts/transaction.html#fees
                         // effective_fee = feeMultiplier x transaction::size
                         return blockDTO.block.feeMultiplier * transaction.size;
-                    }),
+                    },
                 );
             }),
-            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -196,13 +182,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @param transactionGroup - Transaction group.
      * @returns Promise<{response: http.ClientResponse; body: TransactionInfoDTO;}>
      */
-    private getTransactionByGroup(
-        transactionId: string,
-        transactionGroup: TransactionGroup,
-    ): Promise<{
-        response: http.ClientResponse;
-        body: TransactionInfoDTO;
-    }> {
+    private getTransactionByGroup(transactionId: string, transactionGroup: TransactionGroup): Promise<TransactionInfoDTO> {
         switch (transactionGroup) {
             case TransactionGroup.Confirmed:
                 return this.transactionRoutesApi.getConfirmedTransaction(transactionId);
@@ -216,16 +196,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * @internal
      * Gets a transaction search result
-     * @param transactionId - Transaction id or hash.
-     * @param transactionGroup - Transaction group.
+     * @param criteria - the criteria.
      * @returns Promise<{response: http.ClientResponse; body: TransactionInfoDTO;}>
      */
-    private searchTransactionByGroup(
-        criteria: TransactionSearchCriteria,
-    ): Promise<{
-        response: http.ClientResponse;
-        body: TransactionPage;
-    }> {
+    private searchTransactionByGroup(criteria: TransactionSearchCriteria): Promise<TransactionPage> {
         switch (criteria.group) {
             case TransactionGroup.Confirmed:
                 return this.transactionRoutesApi.searchConfirmedTransactions(

@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
@@ -42,12 +42,12 @@ export class MetadataHttp extends Http implements MetadataRepository {
 
     /**
      * Constructor
-     * @param url the url.
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.metadataRoutesApi = new MetadataRoutesApi(url);
-        this.metadataRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.metadataRoutesApi = new MetadataRoutesApi(this.config());
     }
 
     /**

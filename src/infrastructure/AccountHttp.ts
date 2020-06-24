@@ -15,8 +15,9 @@
  */
 
 import { Observable } from 'rxjs';
-import { AccountIds, AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { AccountInfo } from '../model/account/AccountInfo';
+import { AccountKey } from '../model/account/AccountKey';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import { Address } from '../model/account/Address';
 import { Mosaic } from '../model/mosaic/Mosaic';
@@ -24,7 +25,7 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
-import { AccountKey } from '../model/account/AccountKey';
+
 /**
  * Account http repository.
  *
@@ -39,12 +40,12 @@ export class AccountHttp extends Http implements AccountRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.accountRoutesApi = new AccountRoutesApi(url);
-        this.accountRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.accountRoutesApi = new AccountRoutesApi(this.config());
     }
 
     /**
@@ -62,8 +63,9 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo[]>
      */
     public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        const accountIds = new AccountIds();
-        accountIds.addresses = addresses.map((address) => address.plain());
+        const accountIds = {
+            addresses: addresses.map((address) => address.plain()),
+        };
         return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(this.toAccountInfo));
     }
 

@@ -16,6 +16,7 @@
 
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
+import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
@@ -28,32 +29,31 @@ import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLoca
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
 import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { LockHashAlgorithm } from '../../src/model/transaction/LockHashAlgorithm';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
+import { LockHashAlgorithm } from '../../src/model/transaction/LockHashAlgorithm';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
-import { TestingAccount } from '../conf/conf.spec';
-import { Crypto } from '../../src/core/crypto';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
-import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
+import { UInt64 } from '../../src/model/UInt64';
+import { TestingAccount } from '../conf/conf.spec';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;

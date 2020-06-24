@@ -16,11 +16,11 @@
 
 import { Observable } from 'rxjs';
 import { Address } from '../model/account/Address';
+import { NewBlock } from '../model/blockchain/NewBlock';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
-import { NewBlock } from '../model/blockchain/NewBlock';
 
 /**
  * Listener service

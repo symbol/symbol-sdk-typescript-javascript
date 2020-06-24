@@ -15,8 +15,8 @@
  */
 
 import { instance, mock } from 'ts-mockito';
-import { BlockPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
 import { BlockRepository } from '../../../src/infrastructure/BlockRepository';
+import { BlockPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('BlockPaginationStreamer', () => {

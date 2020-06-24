@@ -15,7 +15,7 @@
  */
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { NamespaceDTO, NamespaceInfoDTO, NamespaceRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NamespaceDTO, NamespaceInfoDTO, NamespaceRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
@@ -55,14 +55,14 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
 
     /**
      * Constructor
-     * @param url
-     * @param networkType
+     * @param url Base catapult-rest url
+     * @param networkType the network type.
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
-        super(url);
-        this.namespaceRoutesApi = new NamespaceRoutesApi(url);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>, fetchApi?: any) {
+        super(url, fetchApi);
+        this.namespaceRoutesApi = new NamespaceRoutesApi(this.config());
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
-        this.namespaceRoutesApi.useQuerystring = true;
     }
 
     /**
@@ -131,7 +131,6 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                 address.plain(),
                 this.queryParams(queryParams).pageSize,
                 this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering,
             ),
             (body) => body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO)),
         );

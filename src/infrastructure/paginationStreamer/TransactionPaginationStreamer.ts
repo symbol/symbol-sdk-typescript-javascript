@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { PaginationStreamer } from './PaginationStreamer';
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionSearchCriteria } from '../searchCriteria/TransactionSearchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
 import { Searcher } from './Searcher';
 
 /**

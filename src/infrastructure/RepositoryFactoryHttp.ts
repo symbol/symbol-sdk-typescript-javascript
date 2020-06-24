@@ -40,16 +40,16 @@ import { NodeRepository } from './NodeRepository';
 import { ReceiptHttp } from './ReceiptHttp';
 import { ReceiptRepository } from './ReceiptRepository';
 import { RepositoryFactory } from './RepositoryFactory';
+import { RepositoryFactoryConfig } from './RepositoryFactoryConfig';
 import { RestrictionAccountHttp } from './RestrictionAccountHttp';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicHttp } from './RestrictionMosaicHttp';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionHttp } from './TransactionHttp';
 import { TransactionRepository } from './TransactionRepository';
-import { RepositoryFactoryConfig } from './RepositoryFactoryConfig';
 import { TransactionStatusHttp } from './TransactionStatusHttp';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
-
+import fetch from 'node-fetch';
 /**
  * Receipt http repository.
  *
@@ -60,6 +60,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly generationHash: Observable<string>;
     private readonly websocketUrl: string;
     private readonly websocketInjected?: any;
+    private readonly fetchApi?: any;
 
     /**
      * Constructor
@@ -68,6 +69,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      */
     constructor(url: string, configs?: RepositoryFactoryConfig) {
         this.url = url;
+        this.fetchApi = configs?.fetchApi || (typeof window !== 'undefined' && window.fetch) || fetch;
         this.networkType = configs?.networkType
             ? observableOf(configs.networkType)
             : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
@@ -82,59 +84,59 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createAccountRepository(): AccountRepository {
-        return new AccountHttp(this.url);
+        return new AccountHttp(this.url, this.fetchApi);
     }
 
     createBlockRepository(): BlockRepository {
-        return new BlockHttp(this.url);
+        return new BlockHttp(this.url, this.fetchApi);
     }
 
     createChainRepository(): ChainRepository {
-        return new ChainHttp(this.url);
+        return new ChainHttp(this.url, this.fetchApi);
     }
 
     createMetadataRepository(): MetadataRepository {
-        return new MetadataHttp(this.url);
+        return new MetadataHttp(this.url, this.fetchApi);
     }
 
     createMosaicRepository(): MosaicRepository {
-        return new MosaicHttp(this.url, this.networkType);
+        return new MosaicHttp(this.url, this.networkType, this.fetchApi);
     }
 
     createMultisigRepository(): MultisigRepository {
-        return new MultisigHttp(this.url);
+        return new MultisigHttp(this.url, this.fetchApi);
     }
 
     createNamespaceRepository(): NamespaceRepository {
-        return new NamespaceHttp(this.url, this.networkType);
+        return new NamespaceHttp(this.url, this.networkType, this.fetchApi);
     }
 
     createNetworkRepository(): NetworkRepository {
-        return new NetworkHttp(this.url);
+        return new NetworkHttp(this.url, this.fetchApi);
     }
 
     createNodeRepository(): NodeRepository {
-        return new NodeHttp(this.url);
+        return new NodeHttp(this.url, this.fetchApi);
     }
 
     createReceiptRepository(): ReceiptRepository {
-        return new ReceiptHttp(this.url, this.networkType);
+        return new ReceiptHttp(this.url, this.fetchApi);
     }
 
     createRestrictionAccountRepository(): RestrictionAccountRepository {
-        return new RestrictionAccountHttp(this.url);
+        return new RestrictionAccountHttp(this.url, this.fetchApi);
     }
 
     createRestrictionMosaicRepository(): RestrictionMosaicRepository {
-        return new RestrictionMosaicHttp(this.url);
+        return new RestrictionMosaicHttp(this.url, this.fetchApi);
     }
 
     createTransactionRepository(): TransactionRepository {
-        return new TransactionHttp(this.url);
+        return new TransactionHttp(this.url, this.fetchApi);
     }
 
     createTransactionStatusRepository(): TransactionStatusRepository {
-        return new TransactionStatusHttp(this.url);
+        return new TransactionStatusHttp(this.url, this.fetchApi);
     }
 
     getGenerationHash(): Observable<string> {

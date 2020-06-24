@@ -32,14 +32,14 @@ import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSup
 import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
 import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
-import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
 
 /**
  * @internal

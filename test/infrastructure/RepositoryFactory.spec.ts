@@ -17,12 +17,6 @@ import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { instance, mock, when } from 'ts-mockito';
-import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { NodeRepository } from '../../src/infrastructure/NodeRepository';
-import { NodeInfo } from '../../src/model/node/NodeInfo';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
@@ -31,13 +25,19 @@ import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
 import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
+import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
+import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
+import { NodeRepository } from '../../src/infrastructure/NodeRepository';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
+import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
 import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
+import { NetworkType } from '../../src/model/network/NetworkType';
+import { NodeInfo } from '../../src/model/node/NodeInfo';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {

@@ -15,42 +15,37 @@
  */
 
 import { expect } from 'chai';
-import http = require('http');
 import {
     TransactionGroupEnum,
     TransactionStatusDTO,
     TransactionStatusEnum,
     TransactionStatusRoutesApi,
-} from 'symbol-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
-
-import { NIS2_URL } from '../conf/conf.spec';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
 
+import { NIS2_URL } from '../conf/conf.spec';
+
 describe('TransactionStatusHttp', () => {
-    let clientResponse: http.ClientResponse;
     let transactionStatusRoutesApi: TransactionStatusRoutesApi;
     let transactionStatusHttp: TransactionStatusHttp;
 
     before(() => {
         transactionStatusRoutesApi = mock();
-        clientResponse = mock();
         transactionStatusHttp = new TransactionStatusHttp(NIS2_URL);
         (transactionStatusHttp as object)['transactionStatusRoutesApi'] = instance(transactionStatusRoutesApi);
     });
 
     it('Test getTransactionStatus method', async () => {
         const hash = 'abc';
-        const transactionStatusDTO = new TransactionStatusDTO();
+        const transactionStatusDTO = {} as TransactionStatusDTO;
         transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionGroupEnum.Failed;
         transactionStatusDTO.height = '567';
 
-        when(transactionStatusRoutesApi.getTransactionStatus(deepEqual(hash))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionStatusDTO }),
-        );
+        when(transactionStatusRoutesApi.getTransactionStatus(deepEqual(hash))).thenReturn(Promise.resolve(transactionStatusDTO));
 
         const transactionStatus = await transactionStatusHttp.getTransactionStatus(hash).toPromise();
 
@@ -62,14 +57,14 @@ describe('TransactionStatusHttp', () => {
 
     it('Test getTransactionsStatuses method', async () => {
         const hash = 'abc';
-        const transactionStatusDTO = new TransactionStatusDTO();
+        const transactionStatusDTO = {} as TransactionStatusDTO;
         transactionStatusDTO.code = TransactionStatusEnum.FailureAccountLinkInconsistentUnlinkData;
         transactionStatusDTO.deadline = '1234';
         transactionStatusDTO.hash = hash;
         transactionStatusDTO.group = TransactionGroupEnum.Failed;
         transactionStatusDTO.height = '567';
         when(transactionStatusRoutesApi.getTransactionStatuses(deepEqual({ hashes: [hash] }))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: [transactionStatusDTO] }),
+            Promise.resolve([transactionStatusDTO]),
         );
 
         const transactionStatuses = await transactionStatusHttp.getTransactionStatuses([hash]).toPromise();

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import * as http from 'http';
 import {
     MetadataDTO,
     MetadataEntriesDTO,
     MetadataEntryDTO,
     MetadataRoutesApi,
     MetadataTypeEnum,
-} from 'symbol-openapi-typescript-node-client';
+    Order,
+} from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
@@ -32,25 +32,24 @@ import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { Order } from 'symbol-openapi-typescript-node-client';
-import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
-import { Deadline } from '../../src/model/transaction/Deadline';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { UInt64 } from '../../src/model/UInt64';
 import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { UInt64 } from '../../src/model/UInt64';
+import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 
 describe('MetadataHttp', () => {
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');
 
-    const metadataDTOMosaic = new MetadataDTO();
+    const metadataDTOMosaic = {} as MetadataDTO;
     metadataDTOMosaic.id = 'aaa';
 
-    const metadataEntryDtoMosaic = new MetadataEntryDTO();
+    const metadataEntryDtoMosaic = {} as MetadataEntryDTO;
     metadataEntryDtoMosaic.compositeHash = '1';
     metadataEntryDtoMosaic.metadataType = MetadataTypeEnum.NUMBER_1;
     metadataEntryDtoMosaic.scopedMetadataKey = '123451234512345A';
@@ -60,10 +59,10 @@ describe('MetadataHttp', () => {
     metadataEntryDtoMosaic.targetId = '941299B2B7E1291C' as any;
     metadataDTOMosaic.metadataEntry = metadataEntryDtoMosaic;
 
-    const metadataDTOAddress = new MetadataDTO();
+    const metadataDTOAddress = {} as MetadataDTO;
     metadataDTOAddress.id = 'bbb';
 
-    const metadataEntryDtoAddress = new MetadataEntryDTO();
+    const metadataEntryDtoAddress = {} as MetadataEntryDTO;
     metadataEntryDtoAddress.compositeHash = '2';
     metadataEntryDtoAddress.metadataType = MetadataTypeEnum.NUMBER_0;
     metadataEntryDtoAddress.scopedMetadataKey = '123451234512345B';
@@ -73,10 +72,10 @@ describe('MetadataHttp', () => {
     metadataEntryDtoAddress.targetId = '941299B2B7E1291D' as any;
     metadataDTOAddress.metadataEntry = metadataEntryDtoAddress;
 
-    const metadataDTONamespace = new MetadataDTO();
+    const metadataDTONamespace = {} as MetadataDTO;
     metadataDTONamespace.id = 'ccc';
 
-    const metadataEntryDtoNamespace = new MetadataEntryDTO();
+    const metadataEntryDtoNamespace = {} as MetadataEntryDTO;
     metadataEntryDtoNamespace.compositeHash = '3';
     metadataEntryDtoNamespace.metadataType = MetadataTypeEnum.NUMBER_2;
     metadataEntryDtoNamespace.scopedMetadataKey = '123451234512345C';
@@ -86,17 +85,20 @@ describe('MetadataHttp', () => {
     metadataEntryDtoNamespace.targetId = '941299B2B7E1291E' as any;
     metadataDTONamespace.metadataEntry = metadataEntryDtoNamespace;
 
-    const metadataEntriesDTO = new MetadataEntriesDTO();
+    const metadataEntriesDTO = {} as MetadataEntriesDTO;
     metadataEntriesDTO.metadataEntries = [metadataDTOMosaic, metadataDTOAddress, metadataDTONamespace];
 
     const url = 'http://someHost';
-    const response: http.IncomingMessage = mock();
+    const notFoundResponse = {
+        status: 404,
+        statusText: 'Not Found',
+        json: (): Promise<any> => Promise.reject({ theBodyError: 'internal error' }),
+    };
     const metadataRoutesApi: MetadataRoutesApi = mock();
     const metadataRepository: MetadataRepository = DtoMapping.assign(new MetadataHttp(url), {
         metadataRoutesApi: instance(metadataRoutesApi),
     });
     before(() => {
-        reset(response);
         reset(metadataRoutesApi);
     });
 
@@ -119,12 +121,7 @@ describe('MetadataHttp', () => {
     }
 
     it('getAccountMetadata', async () => {
-        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, Order.Desc, 'a')).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataEntriesDTO,
-            }),
-        );
+        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, Order.Desc, 'a')).thenReturn(Promise.resolve(metadataEntriesDTO));
         const metadatas = await metadataRepository
             .getAccountMetadata(
                 address,
@@ -141,12 +138,7 @@ describe('MetadataHttp', () => {
     });
 
     it('getAccountMetadataByKey', async () => {
-        when(metadataRoutesApi.getAccountMetadataByKey(address.plain(), 'aaa')).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataEntriesDTO,
-            }),
-        );
+        when(metadataRoutesApi.getAccountMetadataByKey(address.plain(), 'aaa')).thenReturn(Promise.resolve(metadataEntriesDTO));
         const metadatas = await metadataRepository.getAccountMetadataByKey(address, 'aaa').toPromise();
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -155,22 +147,14 @@ describe('MetadataHttp', () => {
 
     it('getAccountMetadataByKeyAndSender', async () => {
         when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), 'aaa', address.plain())).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataDTOMosaic,
-            }),
+            Promise.resolve(metadataDTOMosaic),
         );
         const metadata = await metadataRepository.getAccountMetadataByKeyAndSender(address, 'aaa', address).toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
     });
 
     it('getMosaicMetadata', async () => {
-        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', Order.Desc)).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataEntriesDTO,
-            }),
-        );
+        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', Order.Desc)).thenReturn(Promise.resolve(metadataEntriesDTO));
         const metadatas = await metadataRepository
             .getMosaicMetadata(
                 mosaicId,
@@ -187,12 +171,7 @@ describe('MetadataHttp', () => {
     });
 
     it('getMosaicMetadataByKey', async () => {
-        when(metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), 'aaa')).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataEntriesDTO,
-            }),
-        );
+        when(metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), 'aaa')).thenReturn(Promise.resolve(metadataEntriesDTO));
         const metadatas = await metadataRepository.getMosaicMetadataByKey(mosaicId, 'aaa').toPromise();
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -201,10 +180,7 @@ describe('MetadataHttp', () => {
 
     it('getMosaicMetadataByKeyAndSender', async () => {
         when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), 'aaa', address.plain())).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataDTOMosaic,
-            }),
+            Promise.resolve(metadataDTOMosaic),
         );
         const metadata = await metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, 'aaa', address).toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
@@ -212,10 +188,7 @@ describe('MetadataHttp', () => {
 
     it('getNamespaceMetadata', async () => {
         when(metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(), 2, 'a', Order.Desc)).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataEntriesDTO,
-            }),
+            Promise.resolve(metadataEntriesDTO),
         );
         const metadatas = await metadataRepository
             .getNamespaceMetadata(
@@ -233,12 +206,7 @@ describe('MetadataHttp', () => {
     });
 
     it('getNamespaceMetadataByKey', async () => {
-        when(metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), 'bbb')).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataEntriesDTO,
-            }),
-        );
+        when(metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), 'bbb')).thenReturn(Promise.resolve(metadataEntriesDTO));
         const metadatas = await metadataRepository.getNamespaceMetadataByKey(namespaceId, 'bbb').toPromise();
         assertMetadataInfo(metadatas[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas[1], metadataDTOAddress);
@@ -247,22 +215,15 @@ describe('MetadataHttp', () => {
 
     it('getNamespaceMetadataByKeyAndSender', async () => {
         when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), 'cccc', address.plain())).thenReturn(
-            Promise.resolve({
-                response,
-                body: metadataDTOMosaic,
-            }),
+            Promise.resolve(metadataDTOMosaic),
         );
         const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, 'cccc', address).toPromise();
         assertMetadataInfo(metadata, metadataDTOMosaic);
     });
 
     it('Address meta no previous value', (done) => {
-        response.statusCode = 404;
         when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject({
-                response,
-                body: undefined,
-            }),
+            Promise.reject(notFoundResponse),
         );
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
@@ -283,12 +244,8 @@ describe('MetadataHttp', () => {
     });
 
     it('Mosaic meta no previous value', (done) => {
-        response.statusCode = 404;
         when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject({
-                response,
-                body: undefined,
-            }),
+            Promise.reject(notFoundResponse),
         );
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
@@ -310,12 +267,8 @@ describe('MetadataHttp', () => {
     });
 
     it('Namespace meta no previous value', (done) => {
-        response.statusCode = 404;
         when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject({
-                response,
-                body: undefined,
-            }),
+            Promise.reject(notFoundResponse),
         );
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
@@ -337,12 +290,8 @@ describe('MetadataHttp', () => {
     });
 
     it('Address meta no previous value Error', async () => {
-        response.statusCode = 409;
         when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject({
-                response,
-                body: undefined,
-            }),
+            Promise.reject(notFoundResponse),
         );
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
@@ -360,12 +309,8 @@ describe('MetadataHttp', () => {
     });
 
     it('Mosaic meta no previous value', async () => {
-        response.statusCode = 409;
         when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject({
-                response,
-                body: undefined,
-            }),
+            Promise.reject(notFoundResponse),
         );
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
@@ -384,12 +329,8 @@ describe('MetadataHttp', () => {
     });
 
     it('Namespace meta no previous value', async () => {
-        response.statusCode = 409;
         when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject({
-                response,
-                body: undefined,
-            }),
+            Promise.reject(notFoundResponse),
         );
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService

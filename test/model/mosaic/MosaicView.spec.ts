@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';

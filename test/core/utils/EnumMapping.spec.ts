@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Order, PositionEnum, BlockOrderByEnum } from 'symbol-openapi-typescript-node-client';
+import { Order, PositionEnum, BlockOrderByEnum } from 'symbol-openapi-typescript-fetch-client';
 import { Order as OrderModel } from '../../../src/infrastructure/searchCriteria/Order';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
 import { BlockOrderBy } from '../../../src/infrastructure/searchCriteria/BlockOrderBy';

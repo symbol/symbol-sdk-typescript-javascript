@@ -15,12 +15,12 @@
  */
 
 import { concat } from 'rxjs';
-import { SearchCriteria } from '../searchCriteria/SearchCriteria';
-import { Searcher } from './Searcher';
 import { Observable } from 'rxjs/internal/Observable';
 import { defer } from 'rxjs/internal/observable/defer';
-import { flatMap } from 'rxjs/operators';
 import { from } from 'rxjs/internal/observable/from';
+import { flatMap } from 'rxjs/operators';
+import { SearchCriteria } from '../searchCriteria/SearchCriteria';
+import { Searcher } from './Searcher';
 
 /**
  * Utility helper that stream pages of searches into an Observable.

@@ -16,23 +16,23 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    RestrictionMosaicRoutesApi,
     MosaicAddressRestrictionDTO,
-    MosaicAddressRestrictionEntryWrapperDTO,
     MosaicAddressRestrictionEntryDTO,
-    MosaicRestrictionEntryTypeEnum,
+    MosaicAddressRestrictionEntryWrapperDTO,
     MosaicGlobalRestrictionDTO,
     MosaicGlobalRestrictionEntryDTO,
-    MosaicGlobalRestrictionEntryWrapperDTO,
     MosaicGlobalRestrictionEntryRestrictionDTO,
+    MosaicGlobalRestrictionEntryWrapperDTO,
+    MosaicRestrictionEntryTypeEnum,
     MosaicRestrictionTypeEnum,
-} from 'symbol-openapi-typescript-node-client';
-import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
+    RestrictionMosaicRoutesApi,
+} from 'symbol-openapi-typescript-fetch-client';
+import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
+import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('RestrictionMosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -48,9 +48,9 @@ describe('RestrictionMosaicHttp', () => {
         restrictionMosaicRoutesApi: instance(restrictionMosaicRoutesApi),
     });
 
-    const mosaicAddressRestrictionDto = new MosaicAddressRestrictionDTO();
-    const mosaicAddressRestrictionEntryWrapperDto = new MosaicAddressRestrictionEntryWrapperDTO();
-    const mosaicAddressRestrictionEntryDto = new MosaicAddressRestrictionEntryDTO();
+    const mosaicAddressRestrictionDto = {} as MosaicAddressRestrictionDTO;
+    const mosaicAddressRestrictionEntryWrapperDto = {} as MosaicAddressRestrictionEntryWrapperDTO;
+    const mosaicAddressRestrictionEntryDto = {} as MosaicAddressRestrictionEntryDTO;
 
     mosaicAddressRestrictionEntryDto.key = 'key';
     mosaicAddressRestrictionEntryDto.value = 'value';
@@ -63,10 +63,10 @@ describe('RestrictionMosaicHttp', () => {
 
     mosaicAddressRestrictionDto.mosaicRestrictionEntry = mosaicAddressRestrictionEntryWrapperDto;
 
-    const mosaicGlobalRestrictionDto = new MosaicGlobalRestrictionDTO();
-    const mosaicGlobalRestrictionEntryWrapperDto = new MosaicGlobalRestrictionEntryWrapperDTO();
-    const mosaicGlobalRestrictionEntryDto = new MosaicGlobalRestrictionEntryDTO();
-    const mosaicGlobalRestrictionEntryRestrictionDto = new MosaicGlobalRestrictionEntryRestrictionDTO();
+    const mosaicGlobalRestrictionDto = {} as MosaicGlobalRestrictionDTO;
+    const mosaicGlobalRestrictionEntryWrapperDto = {} as MosaicGlobalRestrictionEntryWrapperDTO;
+    const mosaicGlobalRestrictionEntryDto = {} as MosaicGlobalRestrictionEntryDTO;
+    const mosaicGlobalRestrictionEntryRestrictionDto = {} as MosaicGlobalRestrictionEntryRestrictionDTO;
     mosaicGlobalRestrictionEntryRestrictionDto.referenceMosaicId = mosaicId.toHex();
     mosaicGlobalRestrictionEntryRestrictionDto.restrictionType = MosaicRestrictionTypeEnum.NUMBER_0;
     mosaicGlobalRestrictionEntryRestrictionDto.restrictionValue = 'value';
@@ -87,7 +87,7 @@ describe('RestrictionMosaicHttp', () => {
 
     it('getMosaicAddressRestriction', async () => {
         when(restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).thenReturn(
-            Promise.resolve({ response, body: mosaicAddressRestrictionDto }),
+            Promise.resolve(mosaicAddressRestrictionDto),
         );
 
         const restrictions = await restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, address).toPromise();
@@ -102,7 +102,7 @@ describe('RestrictionMosaicHttp', () => {
     it('getMosaicAddressRestrictions', async () => {
         when(
             restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), deepEqual({ addresses: [address.plain()] })),
-        ).thenReturn(Promise.resolve({ response, body: [mosaicAddressRestrictionDto] }));
+        ).thenReturn(Promise.resolve([mosaicAddressRestrictionDto]));
 
         const restrictions = await restrictionMosaicRepository.getMosaicAddressRestrictions(mosaicId, [address]).toPromise();
         expect(restrictions).to.be.not.null;
@@ -115,7 +115,7 @@ describe('RestrictionMosaicHttp', () => {
 
     it('getMosaicGlobalRestriction', async () => {
         when(restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).thenReturn(
-            Promise.resolve({ response, body: mosaicGlobalRestrictionDto }),
+            Promise.resolve(mosaicGlobalRestrictionDto),
         );
 
         const restrictions = await restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).toPromise();
@@ -128,7 +128,7 @@ describe('RestrictionMosaicHttp', () => {
 
     it('getMosaicGlobalRestrictions', async () => {
         when(restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(deepEqual({ mosaicIds: [mosaicId.toHex()] }))).thenReturn(
-            Promise.resolve({ response, body: [mosaicGlobalRestrictionDto] }),
+            Promise.resolve([mosaicGlobalRestrictionDto]),
         );
 
         const restrictions = await restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).toPromise();

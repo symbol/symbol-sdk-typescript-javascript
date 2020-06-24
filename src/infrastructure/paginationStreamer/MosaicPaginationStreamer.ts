@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PaginationStreamer } from './PaginationStreamer';
-import { Searcher } from './Searcher';
 import { MosaicInfo } from '../../model/mosaic/MosaicInfo';
 import { MosaicSearchCriteria } from '../searchCriteria/MosaicSearchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
+import { Searcher } from './Searcher';
 
 /**
  * A helper object that streams {@link MosaicInfo} using the search.

@@ -15,16 +15,23 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { Mosaic, MosaicRoutesApi, MosaicInfoDTO, MosaicDTO, MosaicIds, MosaicPage } from 'symbol-openapi-typescript-node-client';
-import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
+import {
+    Mosaic,
+    MosaicDTO,
+    MosaicIds,
+    MosaicInfoDTO,
+    MosaicPage,
+    MosaicRoutesApi,
+    Pagination,
+} from 'symbol-openapi-typescript-fetch-client';
+import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
-import { NetworkType } from '../../src/model/network/NetworkType';
+import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
+import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { Pagination } from 'symbol-openapi-typescript-node-client';
+import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('MosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -33,11 +40,11 @@ describe('MosaicHttp', () => {
     );
     const address = publicAccount.address;
     const mosaicId = new MosaicId('941299B2B7E1291C');
-    const mosaic = new Mosaic();
+    const mosaic = {} as Mosaic;
     mosaic.amount = '777';
     mosaic.id = mosaicId.toHex();
 
-    const mosaicDto = new MosaicDTO();
+    const mosaicDto = {} as MosaicDTO;
     mosaicDto.divisibility = 6;
     mosaicDto.duration = '10';
     mosaicDto.flags = 1;
@@ -47,7 +54,7 @@ describe('MosaicHttp', () => {
     mosaicDto.startHeight = '1';
     mosaicDto.supply = '100';
 
-    const mosaicInfoDto = new MosaicInfoDTO();
+    const mosaicInfoDto = {} as MosaicInfoDTO;
     mosaicInfoDto.mosaic = mosaicDto;
 
     const url = 'http://someHost';
@@ -75,32 +82,32 @@ describe('MosaicHttp', () => {
     }
 
     it('getMosaic', async () => {
-        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReturn(Promise.resolve({ response, body: mosaicInfoDto }));
+        when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReturn(Promise.resolve(mosaicInfoDto));
         const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
         assertMosaicInfo(mosaicInfo);
     });
 
     it('getMosaics', async () => {
-        const mosaicIds = new MosaicIds();
+        const mosaicIds = {} as MosaicIds;
         mosaicIds.mosaicIds = [mosaicId.toHex()];
-        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReturn(Promise.resolve({ response, body: [mosaicInfoDto] }));
+        when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReturn(Promise.resolve([mosaicInfoDto]));
         const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
         assertMosaicInfo(mosaicInfos[0]);
     });
 
     it('searchMosaics', async () => {
-        const pagination = new Pagination();
+        const pagination = {} as Pagination;
         pagination.pageNumber = 1;
         pagination.pageSize = 1;
         pagination.totalEntries = 1;
         pagination.totalPages = 1;
 
-        const body = new MosaicPage();
+        const body = {} as MosaicPage;
         body.data = [mosaicInfoDto];
         body.pagination = pagination;
 
         when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenReturn(
-            Promise.resolve({ response, body }),
+            Promise.resolve(body),
         );
         const mosaicsInfo = await mosaicRepository.search({ ownerAddress: address }).toPromise();
         assertMosaicInfo(mosaicsInfo.data[0]);
@@ -115,7 +122,7 @@ describe('MosaicHttp', () => {
     });
 
     it('getMosaics - Error', async () => {
-        const mosaicIds = new MosaicIds();
+        const mosaicIds = {} as MosaicIds;
         mosaicIds.mosaicIds = [mosaicId.toHex()];
         when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReject(new Error('Mocked Error'));
         await mosaicRepository

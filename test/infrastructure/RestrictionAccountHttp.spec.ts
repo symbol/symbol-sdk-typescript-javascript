@@ -16,18 +16,18 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    AccountRestrictionsDTO,
-    AccountRestrictionFlagsEnum,
-    AccountRestrictionsInfoDTO,
     AccountRestrictionDTO,
-} from 'symbol-openapi-typescript-node-client';
-import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
+    AccountRestrictionFlagsEnum,
+    AccountRestrictionsDTO,
+    AccountRestrictionsInfoDTO,
+    RestrictionAccountRoutesApi,
+} from 'symbol-openapi-typescript-fetch-client';
+import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-node-client';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
 import { Address } from '../../src/model/account/Address';
+import { PublicAccount } from '../../src/model/account/PublicAccount';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
 
 describe('RestrictionAccountHttp', () => {
@@ -43,9 +43,9 @@ describe('RestrictionAccountHttp', () => {
         restrictionAccountRoutesApi: instance(restrictionAccountRoutesApi),
     });
 
-    const restrictionInfo = new AccountRestrictionsInfoDTO();
-    const restrictionsDto = new AccountRestrictionsDTO();
-    const restriction = new AccountRestrictionDTO();
+    const restrictionInfo = {} as AccountRestrictionsInfoDTO;
+    const restrictionsDto = {} as AccountRestrictionsDTO;
+    const restriction = {} as AccountRestrictionDTO;
     restriction.restrictionFlags = AccountRestrictionFlagsEnum.NUMBER_1;
     restriction.values = [address.encoded()];
     restrictionsDto.restrictions = [restriction];
@@ -59,9 +59,7 @@ describe('RestrictionAccountHttp', () => {
     });
 
     it('getAccountRestrictions', async () => {
-        when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReturn(
-            Promise.resolve({ response, body: restrictionInfo }),
-        );
+        when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReturn(Promise.resolve(restrictionInfo));
 
         const restrictions = await restrictionAccountRepository.getAccountRestrictions(address).toPromise();
         expect(restrictions).to.be.not.null;
@@ -72,7 +70,7 @@ describe('RestrictionAccountHttp', () => {
 
     it('getAccountRestrictionsFromAccounts', async () => {
         when(restrictionAccountRoutesApi.getAccountRestrictionsFromAccounts(deepEqual({ addresses: [address.plain()] }))).thenReturn(
-            Promise.resolve({ response, body: [restrictionInfo] }),
+            Promise.resolve([restrictionInfo]),
         );
 
         const restrictions = await restrictionAccountRepository.getAccountRestrictionsFromAccounts([address]).toPromise();

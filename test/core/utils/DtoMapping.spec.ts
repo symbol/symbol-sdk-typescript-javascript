@@ -22,7 +22,7 @@ import {
     AccountRestrictionsDTO,
     AccountRestrictionDTO,
     AccountRestrictionFlagsEnum,
-} from 'symbol-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
 
 describe('DtoMapping', () => {
@@ -34,9 +34,9 @@ describe('DtoMapping', () => {
     const mosaicId = new MosaicId('11F4B1B3AC033DB5');
 
     it('extractRestrictionInfo - Operation', () => {
-        const restrictionInfo = new AccountRestrictionsInfoDTO();
-        const restrictionsDto = new AccountRestrictionsDTO();
-        const restriction = new AccountRestrictionDTO();
+        const restrictionInfo = {} as AccountRestrictionsInfoDTO;
+        const restrictionsDto = {} as AccountRestrictionsDTO;
+        const restriction = {} as AccountRestrictionDTO;
         restriction.restrictionFlags = AccountRestrictionFlagsEnum.NUMBER_16388;
         restriction.values = [16724];
         restrictionsDto.restrictions = [restriction];
@@ -50,9 +50,9 @@ describe('DtoMapping', () => {
 
     it('extractRestrictionInfo - Mosaic', () => {
         const address = publicAccount.address;
-        const restrictionInfo = new AccountRestrictionsInfoDTO();
-        const restrictionsDto = new AccountRestrictionsDTO();
-        const restriction = new AccountRestrictionDTO();
+        const restrictionInfo = {} as AccountRestrictionsInfoDTO;
+        const restrictionsDto = {} as AccountRestrictionsDTO;
+        const restriction = {} as AccountRestrictionDTO;
         restriction.restrictionFlags = AccountRestrictionFlagsEnum.NUMBER_2;
         restriction.values = [mosaicId.toHex()];
         restrictionsDto.restrictions = [restriction];

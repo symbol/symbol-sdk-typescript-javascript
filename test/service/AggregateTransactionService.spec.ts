@@ -33,7 +33,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { NetworkConfigurationDTO, PluginsPropertiesDTO, AggregateNetworkPropertiesDTO } from 'symbol-openapi-typescript-node-client';
+import { NetworkConfigurationDTO, PluginsPropertiesDTO, AggregateNetworkPropertiesDTO } from 'symbol-openapi-typescript-fetch-client';
 
 /**
  * For multi level multisig scenario visit: https://github.com/nemtech/symbol-docs/issues/10
@@ -138,9 +138,9 @@ describe('AggregateTransactionService', () => {
     }
 
     function getNetworkProperties(input: string): NetworkConfigurationDTO {
-        const body = new NetworkConfigurationDTO();
-        const plugin = new PluginsPropertiesDTO();
-        plugin.aggregate = new AggregateNetworkPropertiesDTO();
+        const body = {} as NetworkConfigurationDTO;
+        const plugin = {} as PluginsPropertiesDTO;
+        plugin.aggregate = {} as AggregateNetworkPropertiesDTO;
         plugin.aggregate.maxCosignaturesPerAggregate = input;
         body.plugins = plugin;
         return body;

@@ -27,7 +27,7 @@ import {
     ServerDTO,
     ServerInfoDTO,
     StorageInfoDTO,
-} from 'symbol-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
@@ -45,12 +45,12 @@ describe('NodeHttp', () => {
     });
 
     it('getNodeHealth', async () => {
-        const body = new NodeHealthInfoDTO();
-        body.status = new NodeHealthDTO();
+        const body = {} as NodeHealthInfoDTO;
+        body.status = {} as NodeHealthDTO;
         body.status.apiNode = NodeStatusEnum.Down;
         body.status.db = NodeStatusEnum.Up;
 
-        when(nodeRoutesApi.getNodeHealth()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getNodeHealth()).thenReturn(Promise.resolve(body));
 
         const nodeHealth = await nodeRepository.getNodeHealth().toPromise();
         expect(nodeHealth).to.be.not.null;
@@ -59,12 +59,12 @@ describe('NodeHttp', () => {
     });
 
     it('getServerInfo', async () => {
-        const body = new ServerInfoDTO();
-        body.serverInfo = new ServerDTO();
+        const body = {} as ServerInfoDTO;
+        body.serverInfo = {} as ServerDTO;
         body.serverInfo.restVersion = 'Some Rest Version';
         body.serverInfo.sdkVersion = 'Some SDK Version';
 
-        when(nodeRoutesApi.getServerInfo()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getServerInfo()).thenReturn(Promise.resolve(body));
 
         const serverInfo = await nodeRepository.getServerInfo().toPromise();
         expect(serverInfo).to.be.not.null;
@@ -73,7 +73,7 @@ describe('NodeHttp', () => {
     });
 
     it('getNodeInfo', async () => {
-        const body = new NodeInfoDTO();
+        const body = {} as NodeInfoDTO;
         body.networkIdentifier = NetworkType.TEST_NET;
         body.friendlyName = 'Some Friendly name';
         body.networkGenerationHashSeed = 'Some Gen Hash';
@@ -83,7 +83,7 @@ describe('NodeHttp', () => {
         body.roles = RolesTypeEnum.NUMBER_1;
         body.version = 4567;
 
-        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
 
         const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
         expect(nodeInfo).to.be.not.null;
@@ -91,7 +91,7 @@ describe('NodeHttp', () => {
     });
 
     it('getNodePeers', async () => {
-        const body = new NodeInfoDTO();
+        const body = {} as NodeInfoDTO;
         body.networkIdentifier = NetworkType.TEST_NET;
         body.friendlyName = 'Some Friendly name';
         body.networkGenerationHashSeed = 'Some Gen Hash';
@@ -101,7 +101,7 @@ describe('NodeHttp', () => {
         body.roles = RolesTypeEnum.NUMBER_1;
         body.version = 4567;
 
-        when(nodeRoutesApi.getNodePeers()).thenReturn(Promise.resolve({ response, body: [body] }));
+        when(nodeRoutesApi.getNodePeers()).thenReturn(Promise.resolve([body]));
 
         const nodeInfoList = await nodeRepository.getNodePeers().toPromise();
         const nodeInfo = nodeInfoList[0];
@@ -110,12 +110,12 @@ describe('NodeHttp', () => {
     });
 
     it('getNodeTime', async () => {
-        const body = new NodeTimeDTO();
-        body.communicationTimestamps = new CommunicationTimestampsDTO();
+        const body = {} as NodeTimeDTO;
+        body.communicationTimestamps = {} as CommunicationTimestampsDTO;
         body.communicationTimestamps.receiveTimestamp = '1111';
         body.communicationTimestamps.sendTimestamp = '2222';
 
-        when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve(body));
 
         const nodeTime = await nodeRepository.getNodeTime().toPromise();
         expect(nodeTime).to.be.not.null;
@@ -126,11 +126,11 @@ describe('NodeHttp', () => {
     });
 
     it('getNodeTim When No Timestamp', async () => {
-        const body = new NodeTimeDTO();
-        body.communicationTimestamps = new CommunicationTimestampsDTO();
+        const body = {} as NodeTimeDTO;
+        body.communicationTimestamps = {} as CommunicationTimestampsDTO;
         body.communicationTimestamps.receiveTimestamp = '1111';
 
-        when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve(body));
 
         try {
             await nodeRepository.getNodeTime().toPromise();
@@ -140,18 +140,18 @@ describe('NodeHttp', () => {
     });
 
     it('getStorageInfo', async () => {
-        const body = new StorageInfoDTO();
+        const body = {} as StorageInfoDTO;
         body.numAccounts = 1;
         body.numBlocks = 2;
         body.numTransactions = 3;
 
-        when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.resolve(body));
 
         const storageInfo = await nodeRepository.getStorageInfo().toPromise();
         expect(storageInfo).to.deep.equals(body);
     });
 
-    it('getStorageInfo on Exception', async () => {
+    it('getStorageInfo on Exception on response body text', async () => {
         when(nodeRoutesApi.getNodeStorage()).thenReturn(
             Promise.reject({
                 response: { statusCode: 500, statusMessage: 'Some Error', body: 'The Body' },
@@ -160,9 +160,33 @@ describe('NodeHttp', () => {
         try {
             await nodeRepository.getStorageInfo().toPromise();
         } catch (e) {
+            expect(e.message).to.deep.equals('{"statusCode":500,"statusMessage":"Some Error","body":"The Body"}');
+        }
+    });
+
+    it('getStorageInfo on Exception on response body object', async () => {
+        when(nodeRoutesApi.getNodeStorage()).thenReturn(
+            Promise.reject({
+                response: { statusCode: 500, statusMessage: 'Some Error', body: { someResponse: 'the body' } },
+            }),
+        );
+        try {
+            await nodeRepository.getStorageInfo().toPromise();
+        } catch (e) {
             expect(e.message).to.deep.equals(
-                '{"statusCode":500,"errorDetails":{"statusCode":500,"statusMessage":"Some Error"},"body":"The Body"}',
+                '{"statusCode":500,"statusMessage":"Some Error","body":"{\\"someResponse\\":\\"the body\\"}"}',
             );
+        }
+    });
+
+    it('getStorageInfo on Exception on fetch response text function', async () => {
+        when(nodeRoutesApi.getNodeStorage()).thenReturn(
+            Promise.reject({ status: 500, statusText: 'Some Error', text: () => Promise.resolve('Some body text') }),
+        );
+        try {
+            await nodeRepository.getStorageInfo().toPromise();
+        } catch (e) {
+            expect(e.message).to.deep.equals('{"statusCode":500,"statusMessage":"Some Error","body":"Some body text"}');
         }
     });
 });

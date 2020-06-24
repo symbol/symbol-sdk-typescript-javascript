@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as http from 'http';
-import { MultisigAccountGraphInfoDTO, MultisigAccountInfoDTO, MultisigDTO, MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
+import {
+    MultisigAccountGraphInfoDTO,
+    MultisigAccountInfoDTO,
+    MultisigDTO,
+    MultisigRoutesApi,
+} from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
@@ -23,14 +29,13 @@ import { MultisigRepository } from '../../src/infrastructure/MultisigRepository'
 import { Account } from '../../src/model/account/Account';
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { deepEqual } from 'assert';
 
 describe('MultisigHttp', () => {
     const networkType = NetworkType.MIJIN_TEST;
     const account = Account.generateNewAccount(networkType);
     const address = account.address;
-    const accountInfoDto = new MultisigAccountInfoDTO();
-    const multisigDTO = new MultisigDTO();
+    const accountInfoDto = {} as MultisigAccountInfoDTO;
+    const multisigDTO = {} as MultisigDTO;
 
     const account1 = Account.generateNewAccount(networkType);
     const account2 = Account.generateNewAccount(networkType);
@@ -69,20 +74,20 @@ describe('MultisigHttp', () => {
     }
 
     it('getMultisigAccountInfo', async () => {
-        when(multisigRoutesApi.getAccountMultisig(address.plain())).thenReturn(Promise.resolve({ response, body: accountInfoDto }));
+        when(multisigRoutesApi.getAccountMultisig(address.plain())).thenReturn(Promise.resolve(accountInfoDto));
         const accountInfo = await accountRepository.getMultisigAccountInfo(address).toPromise();
         assertMultisigInfo(accountInfo);
     });
 
     it('getMultisigAccountGraphInfo', async () => {
-        const body = new MultisigAccountGraphInfoDTO();
+        const body = {} as MultisigAccountGraphInfoDTO;
         body.level = 10;
         body.multisigEntries = [accountInfoDto, accountInfoDto, accountInfoDto];
 
-        const body2 = new MultisigAccountGraphInfoDTO();
+        const body2 = {} as MultisigAccountGraphInfoDTO;
         body2.level = 20;
         body2.multisigEntries = [accountInfoDto, accountInfoDto];
-        when(multisigRoutesApi.getAccountMultisigGraph(address.plain())).thenReturn(Promise.resolve({ response, body: [body, body2] }));
+        when(multisigRoutesApi.getAccountMultisigGraph(address.plain())).thenReturn(Promise.resolve([body, body2]));
         const graphInfo = await accountRepository.getMultisigAccountGraphInfo(address).toPromise();
         expect(graphInfo.multisigEntries.size).to.be.eq(2);
         const list10: MultisigAccountInfo[] = graphInfo.multisigEntries.get(10) as MultisigAccountInfo[];

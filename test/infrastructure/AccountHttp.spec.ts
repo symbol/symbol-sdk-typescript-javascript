@@ -19,11 +19,12 @@ import {
     AccountDTO,
     AccountIds,
     AccountInfoDTO,
+    AccountKeyDTO,
     AccountRoutesApi,
     AccountTypeEnum,
     ActivityBucketDTO,
     Mosaic,
-} from 'symbol-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
@@ -31,29 +32,28 @@ import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
-import { AccountKeyDTO } from 'symbol-openapi-typescript-node-client';
 
 describe('AccountHttp', () => {
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
 
-    const mosaic = new Mosaic();
+    const mosaic = {} as Mosaic;
     mosaic.amount = '777';
     mosaic.id = '941299B2B7E1291C';
 
-    const activityBucketDTO = new ActivityBucketDTO();
+    const activityBucketDTO = {} as ActivityBucketDTO;
     activityBucketDTO.beneficiaryCount = 1;
     activityBucketDTO.rawScore = '2';
     activityBucketDTO.startHeight = '3';
     activityBucketDTO.totalFeesPaid = '4';
 
-    const accountDTO = new AccountDTO();
+    const accountDTO = {} as AccountDTO;
     accountDTO.accountType = AccountTypeEnum.NUMBER_1;
     accountDTO.address = address.encoded();
     accountDTO.addressHeight = '111';
     accountDTO.importance = '222';
     accountDTO.importanceHeight = '333';
     accountDTO.publicKeyHeight = '444';
-    const accountKeyDto = new AccountKeyDTO();
+    const accountKeyDto = {} as AccountKeyDTO;
     accountKeyDto.key = 'abc';
     accountKeyDto.keyType = 1;
     accountDTO.supplementalAccountKeys = [accountKeyDto];
@@ -62,7 +62,7 @@ describe('AccountHttp', () => {
     accountDTO.mosaics = [mosaic];
     accountDTO.activityBuckets = [activityBucketDTO];
 
-    const accountInfoDto = new AccountInfoDTO();
+    const accountInfoDto = {} as AccountInfoDTO;
     accountInfoDto.account = accountDTO;
 
     const url = 'http://someHost';
@@ -101,15 +101,15 @@ describe('AccountHttp', () => {
     }
 
     it('getAccountInfo', async () => {
-        when(accountRoutesApi.getAccountInfo(address.plain())).thenReturn(Promise.resolve({ response, body: accountInfoDto }));
+        when(accountRoutesApi.getAccountInfo(address.plain())).thenReturn(Promise.resolve(accountInfoDto));
         const accountInfo = await accountRepository.getAccountInfo(address).toPromise();
         assertAccountInfo(accountInfo);
     });
 
     it('getAccountsInfo', async () => {
-        const accountIds = new AccountIds();
+        const accountIds = {} as AccountIds;
         accountIds.addresses = [address.plain()];
-        when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve({ response, body: [accountInfoDto] }));
+        when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve([accountInfoDto]));
         const accountInfos = await accountRepository.getAccountsInfo([address]).toPromise();
         assertAccountInfo(accountInfos[0]);
     });

@@ -16,9 +16,9 @@
 
 import { instance, mock } from 'ts-mockito';
 import { TransactionPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
+import { TransactionGroup } from '../../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../../src/infrastructure/TransactionRepository';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
-import { TransactionGroup } from '../../../src/infrastructure/TransactionGroup';
 
 describe('TransactionPaginationStreamer', () => {
     it('basicMultiPageTest', () => {

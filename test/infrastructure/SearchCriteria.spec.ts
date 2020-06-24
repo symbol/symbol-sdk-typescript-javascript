@@ -15,8 +15,8 @@
  */
 
 import { expect } from 'chai';
-import { SearchCriteria } from '../../src/infrastructure/searchCriteria/SearchCriteria';
 import { Order } from '../../src/infrastructure/searchCriteria/Order';
+import { SearchCriteria } from '../../src/infrastructure/searchCriteria/SearchCriteria';
 
 describe('SearchCriteria', () => {
     it('should create SearchCriteria', () => {

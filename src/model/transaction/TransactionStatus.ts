@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TransactionGroupEnum, TransactionStatusEnum } from 'symbol-openapi-typescript-node-client';
+import { TransactionGroupEnum, TransactionStatusEnum } from 'symbol-openapi-typescript-fetch-client';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 
