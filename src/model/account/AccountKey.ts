@@ -25,9 +25,9 @@ export class AccountKey {
      */
     constructor(
         /**
-         * Account key key flags
+         * Account key key
          */
-        public readonly accountKeyFlags: AccountKeyTypeFlags,
+        public readonly keyType: AccountKeyTypeFlags,
         /**
          * Key
          */

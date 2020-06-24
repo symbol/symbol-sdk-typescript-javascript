@@ -53,7 +53,7 @@ export class AccountInfo {
         /**
          * Account keys
          */
-        public readonly supplementalAccountKeys: AccountKey[],
+        public readonly supplementalPublicKeys: AccountKey[],
         /**
          * Account activity bucket
          */

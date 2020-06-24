@@ -56,7 +56,7 @@ describe('AccountHttp', () => {
     const accountKeyDto = {} as AccountKeyDTO;
     accountKeyDto.key = 'abc';
     accountKeyDto.keyType = 1;
-    accountDTO.supplementalAccountKeys = [accountKeyDto];
+    accountDTO.supplementalPublicKeys = [accountKeyDto];
     accountDTO.publicKey = 'AAA';
     accountDTO.activityBuckets = [];
     accountDTO.mosaics = [mosaic];
@@ -85,9 +85,9 @@ describe('AccountHttp', () => {
         expect(accountInfo.importanceHeight.toString()).to.be.equals(accountDTO.importanceHeight);
         expect(accountInfo.publicKeyHeight.toString()).to.be.equals(accountDTO.publicKeyHeight);
         expect(accountInfo.publicKey).to.be.equals(accountDTO.publicKey);
-        expect(accountInfo.supplementalAccountKeys[0].key).to.be.equals(accountDTO.supplementalAccountKeys[0].key);
-        expect(accountInfo.supplementalAccountKeys[0].accountKeyFlags.valueOf()).to.be.equals(
-            accountDTO.supplementalAccountKeys[0].keyType.valueOf(),
+        expect(accountInfo.supplementalPublicKeys[0].key).to.be.equals(accountDTO.supplementalPublicKeys[0].key);
+        expect(accountInfo.supplementalPublicKeys[0].keyType.valueOf()).to.be.equals(
+            accountDTO.supplementalPublicKeys[0].keyType.valueOf(),
         );
         expect(accountInfo.mosaics.length).to.be.equals(1);
         expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);

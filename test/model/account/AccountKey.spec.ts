@@ -23,22 +23,22 @@ describe('AccountKey', () => {
     it('should createComplete an AccountKey object', () => {
         let accountKey = new AccountKey(AccountKeyTypeFlags.Unset, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.Unset.valueOf());
+        deepEqual(accountKey.keyType.valueOf(), AccountKeyTypeFlags.Unset.valueOf());
 
         accountKey = new AccountKey(AccountKeyTypeFlags.Linked, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.Linked.valueOf());
+        deepEqual(accountKey.keyType.valueOf(), AccountKeyTypeFlags.Linked.valueOf());
 
         accountKey = new AccountKey(AccountKeyTypeFlags.Node, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.Node.valueOf());
+        deepEqual(accountKey.keyType.valueOf(), AccountKeyTypeFlags.Node.valueOf());
 
         accountKey = new AccountKey(AccountKeyTypeFlags.VRF, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.VRF.valueOf());
+        deepEqual(accountKey.keyType.valueOf(), AccountKeyTypeFlags.VRF.valueOf());
 
         accountKey = new AccountKey(AccountKeyTypeFlags.All, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.All.valueOf());
+        deepEqual(accountKey.keyType.valueOf(), AccountKeyTypeFlags.All.valueOf());
     });
 });
