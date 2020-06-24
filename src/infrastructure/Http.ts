@@ -20,12 +20,7 @@ import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-op
 import { NetworkType } from '../model/network/NetworkType';
 import { Page } from './Page';
 import { QueryParams } from './QueryParams';
-
-export interface RepositoryCallError {
-    readonly statusCode: number;
-    readonly statusMessage: string;
-    readonly body: string;
-}
+import { RepositoryCallError } from './RepositoryCallError';
 
 /**
  * Http extended by all http services
