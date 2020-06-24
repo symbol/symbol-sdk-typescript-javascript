@@ -15,7 +15,9 @@
  */
 
 import { Observable } from 'rxjs';
-import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
+import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
@@ -23,10 +25,8 @@ import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
-import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 import { Page } from './Page';
-import { Address } from '../model/account/Address';
-import { DtoMapping } from '../core/utils/DtoMapping';
+import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 
 /**
  * Blockchain http repository.
@@ -42,12 +42,12 @@ export class BlockHttp extends Http implements BlockRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.blockRoutesApi = new BlockRoutesApi(url);
-        this.blockRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.blockRoutesApi = new BlockRoutesApi(this.config());
     }
 
     /**

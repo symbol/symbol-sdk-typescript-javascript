@@ -13,38 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as http from 'http';
 import {
+    NetworkConfigurationDTO,
     NetworkRoutesApi,
     NetworkTypeDTO,
+    NodeIdentityEqualityStrategy,
     NodeInfoDTO,
     NodeRoutesApi,
+    RolesTypeEnum,
     TransactionFeesDTO,
-    RentalFeesDTO,
-    NetworkConfigurationDTO,
-    NetworkPropertiesDTO,
-    NodeIdentityEqualityStrategy,
-    ChainPropertiesDTO,
-    PluginsPropertiesDTO,
-    AccountKeyLinkNetworkPropertiesDTO,
-    AggregateNetworkPropertiesDTO,
-    HashLockNetworkPropertiesDTO,
-    SecretLockNetworkPropertiesDTO,
-    MetadataNetworkPropertiesDTO,
-    MosaicNetworkPropertiesDTO,
-    MultisigNetworkPropertiesDTO,
-    NamespaceNetworkPropertiesDTO,
-    AccountRestrictionNetworkPropertiesDTO,
-    MosaicRestrictionNetworkPropertiesDTO,
-    TransferNetworkPropertiesDTO,
-} from 'symbol-openapi-typescript-node-client';
+} from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { deepEqual } from 'assert';
 import * as testResources from '../resource/TestResources';
 
 describe('NetworkHttp', () => {
@@ -66,13 +52,14 @@ describe('NetworkHttp', () => {
     });
 
     it('getTransactionFees', async () => {
-        const body = new TransactionFeesDTO();
-        body.averageFeeMultiplier = 1;
-        body.highestFeeMultiplier = 2;
-        body.lowestFeeMultiplier = 3;
-        body.medianFeeMultiplier = 4;
+        const body: TransactionFeesDTO = {
+            averageFeeMultiplier: 1,
+            highestFeeMultiplier: 2,
+            lowestFeeMultiplier: 3,
+            medianFeeMultiplier: 4,
+        };
 
-        when(networkRoutesApi.getTransactionFees()).thenReturn(Promise.resolve({ response, body }));
+        when(networkRoutesApi.getTransactionFees()).thenReturn(Promise.resolve(body));
 
         const networkFees = await networkRepository.getTransactionFees().toPromise();
         expect(networkFees).to.be.not.null;
@@ -83,12 +70,13 @@ describe('NetworkHttp', () => {
     });
 
     it('getRentalFees', async () => {
-        const body = new RentalFeesDTO();
-        body.effectiveChildNamespaceRentalFee = '1';
-        body.effectiveMosaicRentalFee = '2';
-        body.effectiveRootNamespaceRentalFeePerBlock = '3';
+        const body = {
+            effectiveChildNamespaceRentalFee: '1',
+            effectiveMosaicRentalFee: '2',
+            effectiveRootNamespaceRentalFeePerBlock: '3',
+        };
 
-        when(networkRoutesApi.getRentalFees()).thenReturn(Promise.resolve({ response, body }));
+        when(networkRoutesApi.getRentalFees()).thenReturn(Promise.resolve(body));
 
         const rentalFees = await networkRepository.getRentalFees().toPromise();
         expect(rentalFees).to.be.not.null;
@@ -98,21 +86,30 @@ describe('NetworkHttp', () => {
     });
 
     it('getNetworkType', async () => {
-        const body = new NodeInfoDTO();
-        body.networkIdentifier = NetworkType.MIJIN_TEST;
+        const body: NodeInfoDTO = {
+            networkIdentifier: NetworkType.MIJIN_TEST,
+            friendlyName: '',
+            host: '',
+            networkGenerationHashSeed: '',
+            port: 123,
+            publicKey: '',
+            version: 456,
+            roles: RolesTypeEnum.NUMBER_1,
+        };
 
-        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve({ response, body }));
+        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
 
         const networkType = await networkRepository.getNetworkType().toPromise();
         expect(networkType).to.be.equals(NetworkType.MIJIN_TEST);
     });
 
     it('getNetworkName', async () => {
-        const body = new NetworkTypeDTO();
-        body.name = 'Some Name';
-        body.description = 'Some Description';
+        const body: NetworkTypeDTO = {
+            name: 'Some Name',
+            description: 'Some Description',
+        };
 
-        when(networkRoutesApi.getNetworkType()).thenReturn(Promise.resolve({ response, body }));
+        when(networkRoutesApi.getNetworkType()).thenReturn(Promise.resolve(body));
 
         const networkName = await networkRepository.getNetworkName().toPromise();
         expect(networkName.description).to.be.equals(body.description);
@@ -120,103 +117,101 @@ describe('NetworkHttp', () => {
     });
 
     it('getNetworkProperties', async () => {
-        const body = new NetworkConfigurationDTO();
+        const body: NetworkConfigurationDTO = {
+            network: {
+                identifier: 'public-test',
+                nodeEqualityStrategy: NodeIdentityEqualityStrategy.PublicKey,
+                nemesisSignerPublicKey: 'E3F04CA92250B49679EBEF98FAC87C1CECAC7E7491ECBB2307DF1AD65BED57FD',
+                generationHashSeed: 'AE6488282F9C09457F017BE5EE26387B21EB15CF32D6DA1E9846C25E00828329',
+                epochAdjustment: '1573430400s',
+            },
+            chain: {
+                enableVerifiableState: true,
+                enableVerifiableReceipts: true,
+                currencyMosaicId: "0x62EF'46FD'6555'A1B9",
+                harvestingMosaicId: "0x567D'9154'316B'C2AF",
+                blockFinalizationInterval: 'abc',
+                blockGenerationTargetTime: '15s',
+                blockTimeSmoothingFactor: '3000',
+                importanceGrouping: '1433',
+                importanceActivityPercentage: '5',
+                maxRollbackBlocks: '1433',
+                maxDifficultyBlocks: '60',
+                defaultDynamicFeeMultiplier: "1'000",
+                maxTransactionLifetime: '24h',
+                maxBlockFutureTime: '500ms',
+                initialCurrencyAtomicUnits: "8'998'999'998'000'000",
+                maxMosaicAtomicUnits: "9'000'000'000'000'000",
+                totalChainImportance: "15'000'000",
+                minHarvesterBalance: '500',
+                minVoterBalance: '500',
+                maxHarvesterBalance: "50'000'000'000'000",
+                harvestBeneficiaryPercentage: '10',
+                harvestNetworkPercentage: '5',
+                harvestNetworkFeeSinkAddress: 'FF5563F1C5824EE0CD868799FBE8744B46D5549973FDA499939C952D951494E4',
+                blockPruneInterval: '360',
+                maxTransactionsPerBlock: "6'000",
+            },
+            plugins: {
+                accountlink: {
+                    dummy: 'to trigger plugin load',
+                },
+                aggregate: {
+                    maxTransactionsPerAggregate: "1'000",
+                    maxCosignaturesPerAggregate: '25',
+                    enableStrictCosignatureCheck: false,
+                    enableBondedAggregateSupport: true,
+                    maxBondedTransactionLifetime: '48h',
+                },
+                lockhash: {
+                    lockedFundsPerAggregate: "10'000'000",
+                    maxHashLockDuration: '2d',
+                },
+                locksecret: {
+                    maxSecretLockDuration: '30d',
+                    minProofSize: '1',
+                    maxProofSize: '1000',
+                },
+                metadata: {
+                    maxValueSize: '1024',
+                },
+                mosaic: {
+                    maxMosaicsPerAccount: "1'000",
+                    maxMosaicDuration: '3650d',
+                    maxMosaicDivisibility: '6',
+                    mosaicRentalFeeSinkAddress: '53E140B5947F104CABC2D6FE8BAEDBC30EF9A0609C717D9613DE593EC2A266D3',
+                    mosaicRentalFee: '500',
+                },
+                multisig: {
+                    maxMultisigDepth: '3',
+                    maxCosignatoriesPerAccount: '25',
+                    maxCosignedAccountsPerAccount: '25',
+                },
+                namespace: {
+                    maxNameSize: '64',
+                    maxChildNamespaces: '256',
+                    maxNamespaceDepth: '3',
+                    minNamespaceDuration: '1m',
+                    maxNamespaceDuration: '365d',
+                    namespaceGracePeriodDuration: '30d',
+                    reservedRootNamespaceNames: 'xem, nem, user, account, org, com, biz, net, edu, mil, gov, info',
+                    namespaceRentalFeeSinkAddress: '3E82E1C1E4A75ADAA3CBA8C101C3CD31D9817A2EB966EB3B511FB2ED45B8E262',
+                    rootNamespaceRentalFeePerBlock: '1',
+                    childNamespaceRentalFee: '100',
+                },
+                restrictionaccount: {
+                    maxAccountRestrictionValues: '512',
+                },
+                restrictionmosaic: {
+                    maxMosaicRestrictionValues: '20',
+                },
+                transfer: {
+                    maxMessageSize: '1024',
+                },
+            },
+        };
 
-        const network = new NetworkPropertiesDTO();
-        network.identifier = 'id';
-        network.nodeEqualityStrategy = NodeIdentityEqualityStrategy.Host;
-        network.nemesisSignerPublicKey = 'pubKey';
-        network.generationHashSeed = 'genHash';
-        network.epochAdjustment = '123456';
-
-        const chain = new ChainPropertiesDTO();
-        chain.blockGenerationTargetTime = '1';
-        chain.blockPruneInterval = '1';
-        chain.blockTimeSmoothingFactor = '1';
-        chain.currencyMosaicId = '1111111111111111';
-        chain.defaultDynamicFeeMultiplier = '1';
-        chain.enableVerifiableReceipts = true;
-        chain.enableVerifiableState = true;
-        chain.harvestBeneficiaryPercentage = '1';
-        chain.harvestingMosaicId = '2222222222222222';
-        chain.importanceActivityPercentage = '1';
-        chain.importanceGrouping = '1';
-        chain.initialCurrencyAtomicUnits = '1';
-        chain.maxBlockFutureTime = '1';
-        chain.maxDifficultyBlocks = '1';
-        chain.maxHarvesterBalance = '1';
-        chain.maxMosaicAtomicUnits = '1';
-        chain.maxRollbackBlocks = '1';
-        chain.maxTransactionLifetime = '1';
-        chain.maxTransactionsPerBlock = '1';
-        chain.minHarvesterBalance = '1';
-        chain.totalChainImportance = '1';
-        chain.harvestNetworkPercentage = '1';
-        chain.harvestNetworkFeeSinkAddress = 'key';
-        chain.blockFinalizationInterval = '1';
-        chain.minVoterBalance = '1';
-
-        const plugin = new PluginsPropertiesDTO();
-        plugin.accountlink = new AccountKeyLinkNetworkPropertiesDTO();
-        plugin.accountlink.dummy = 'dummy';
-
-        plugin.aggregate = new AggregateNetworkPropertiesDTO();
-        plugin.aggregate.enableBondedAggregateSupport = true;
-        plugin.aggregate.enableStrictCosignatureCheck = true;
-        plugin.aggregate.maxBondedTransactionLifetime = '1';
-        plugin.aggregate.maxCosignaturesPerAggregate = '1';
-        plugin.aggregate.maxTransactionsPerAggregate = '1';
-
-        plugin.lockhash = new HashLockNetworkPropertiesDTO();
-        plugin.lockhash.lockedFundsPerAggregate = '1';
-        plugin.lockhash.maxHashLockDuration = '1';
-
-        plugin.locksecret = new SecretLockNetworkPropertiesDTO();
-        plugin.locksecret.maxProofSize = '1';
-        plugin.locksecret.maxSecretLockDuration = '1';
-        plugin.locksecret.minProofSize = '1';
-
-        plugin.metadata = new MetadataNetworkPropertiesDTO();
-        plugin.metadata.maxValueSize = '1';
-
-        plugin.mosaic = new MosaicNetworkPropertiesDTO();
-        plugin.mosaic.maxMosaicDivisibility = '1';
-        plugin.mosaic.maxMosaicDuration = '1';
-        plugin.mosaic.maxMosaicsPerAccount = '1';
-        plugin.mosaic.mosaicRentalFee = '1';
-        plugin.mosaic.mosaicRentalFeeSinkAddress = '1';
-
-        plugin.multisig = new MultisigNetworkPropertiesDTO();
-        plugin.multisig.maxCosignatoriesPerAccount = '1';
-        plugin.multisig.maxCosignedAccountsPerAccount = '1';
-        plugin.multisig.maxMultisigDepth = '1';
-
-        plugin.namespace = new NamespaceNetworkPropertiesDTO();
-        plugin.namespace.childNamespaceRentalFee = '1';
-        plugin.namespace.maxChildNamespaces = '1';
-        plugin.namespace.maxNameSize = '1';
-        plugin.namespace.maxNamespaceDepth = '1';
-        plugin.namespace.maxNamespaceDuration = '1';
-        plugin.namespace.minNamespaceDuration = '1';
-        plugin.namespace.namespaceGracePeriodDuration = '1';
-        plugin.namespace.namespaceRentalFeeSinkAddress = '1';
-        plugin.namespace.reservedRootNamespaceNames = '1';
-        plugin.namespace.rootNamespaceRentalFeePerBlock = '1';
-
-        plugin.restrictionaccount = new AccountRestrictionNetworkPropertiesDTO();
-        plugin.restrictionaccount.maxAccountRestrictionValues = '1';
-
-        plugin.restrictionmosaic = new MosaicRestrictionNetworkPropertiesDTO();
-        plugin.restrictionmosaic.maxMosaicRestrictionValues = '1';
-
-        plugin.transfer = new TransferNetworkPropertiesDTO();
-        plugin.transfer.maxMessageSize = '1';
-
-        body.chain = chain;
-        body.network = network;
-        body.plugins = plugin;
-
-        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve({ response, body }));
+        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve(body));
 
         const networkProperties = await networkRepository.getNetworkProperties().toPromise();
         deepEqual(networkProperties.network, body.network);
@@ -226,7 +221,7 @@ describe('NetworkHttp', () => {
 
     it('getNetworkProperties - using rest json payload', async () => {
         const body = testResources.getDummyNetworkProperties();
-        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve({ response, body }));
+        when(networkRoutesApi.getNetworkProperties()).thenReturn(Promise.resolve(body));
         const networkProperties = await networkRepository.getNetworkProperties().toPromise();
         deepEqual(networkProperties.network, body.network);
         deepEqual(networkProperties.chain, body.chain);

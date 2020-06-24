@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { expect } from 'chai';
+import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Order } from '../../src/infrastructure/searchCriteria/Order';
 
 describe('QueryParams', () => {

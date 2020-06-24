@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { StorageInfo } from '../model/blockchain/StorageInfo';
 import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
@@ -39,12 +39,12 @@ export class NodeHttp extends Http implements NodeRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.nodeRoutesApi = new NodeRoutesApi(url);
-        this.nodeRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.nodeRoutesApi = new NodeRoutesApi(this.config());
     }
 
     /**

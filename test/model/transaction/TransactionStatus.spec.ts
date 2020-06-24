@@ -16,8 +16,8 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { TransactionStatusEnum } from 'symbol-openapi-typescript-node-client';
-import { TransactionGroupEnum } from 'symbol-openapi-typescript-node-client';
+import { TransactionStatusEnum } from 'symbol-openapi-typescript-fetch-client';
+import { TransactionGroupEnum } from 'symbol-openapi-typescript-fetch-client';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransactionStatus } from '../../../src/model/transaction/TransactionStatus';
 import { UInt64 } from '../../../src/model/UInt64';

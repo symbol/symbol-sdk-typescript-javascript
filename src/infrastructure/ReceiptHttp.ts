@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { ReceiptRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import { ReceiptRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { NetworkType } from '../model/network/NetworkType';
 import { Statement } from '../model/receipt/Statement';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import { ReceiptRepository } from './ReceiptRepository';
-import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**
  * Receipt http repository.
@@ -41,13 +39,12 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
 
     /**
      * Constructor
-     * @param url
-     * @param networkType
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
-        super(url);
-        this.receiptRoutesApi = new ReceiptRoutesApi(url);
-        this.receiptRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.receiptRoutesApi = new ReceiptRoutesApi(this.config());
     }
 
     /**
@@ -61,14 +58,12 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @return Observable<MerkleProofInfo>
      */
     public getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash)).pipe(
-            map(
-                ({ body }) =>
-                    new MerkleProofInfo(
-                        body.merklePath!.map((payload) => new MerklePathItem(DtoMapping.mapEnum(payload.position), payload.hash)),
-                    ),
-            ),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(
+            this.receiptRoutesApi.getMerkleReceipts(height.toString(), hash),
+            (body) =>
+                new MerkleProofInfo(
+                    body.merklePath!.map((payload) => new MerklePathItem(DtoMapping.mapEnum(payload.position), payload.hash)),
+                ),
         );
     }
 
@@ -79,9 +74,6 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
      * @returns Observable<Statement>
      */
     public getBlockReceipts(height: UInt64): Observable<Statement> {
-        return observableFrom(this.receiptRoutesApi.getBlockReceipts(height.toString())).pipe(
-            map(({ body }) => CreateStatementFromDTO(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
+        return this.call(this.receiptRoutesApi.getBlockReceipts(height.toString()), (body) => CreateStatementFromDTO(body));
     }
 }

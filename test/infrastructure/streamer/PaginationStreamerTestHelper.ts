@@ -1,12 +1,12 @@
-import { SearchCriteria } from '../../../src/infrastructure/searchCriteria/SearchCriteria';
+import { expect } from 'chai';
+import { of } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { take, toArray } from 'rxjs/operators';
+import { deepEqual, instance, verify, when } from 'ts-mockito';
+import { Page } from '../../../src/infrastructure/Page';
 import { PaginationStreamer } from '../../../src/infrastructure/paginationStreamer/PaginationStreamer';
 import { Searcher } from '../../../src/infrastructure/paginationStreamer/Searcher';
-import { Observable } from 'rxjs/internal/Observable';
-import { Page } from '../../../src/infrastructure/Page';
-import { of } from 'rxjs';
-import { when, deepEqual, verify, instance } from 'ts-mockito';
-import { expect } from 'chai';
-import { take, toArray } from 'rxjs/operators';
+import { SearchCriteria } from '../../../src/infrastructure/searchCriteria/SearchCriteria';
 
 export class PaginationStreamerTestHelper<E, C extends SearchCriteria> {
     constructor(

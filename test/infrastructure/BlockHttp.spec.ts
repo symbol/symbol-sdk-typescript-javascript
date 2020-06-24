@@ -19,27 +19,27 @@ import {
     BlockDTO,
     BlockInfoDTO,
     BlockMetaDTO,
+    BlockPage,
     BlockRoutesApi,
     MerklePathItemDTO,
     MerkleProofInfoDTO,
     NetworkTypeEnum,
-    PositionEnum,
     Pagination,
-    BlockPage,
-} from 'symbol-openapi-typescript-node-client';
-import { instance, mock, reset, when, deepEqual } from 'ts-mockito';
+    PositionEnum,
+} from 'symbol-openapi-typescript-fetch-client';
+import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
+import { Address } from '../../src/model/account/Address';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
-import { UInt64 } from '../../src/model/UInt64';
-import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/network/NetworkType';
 import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
+import { NetworkType } from '../../src/model/network/NetworkType';
+import { UInt64 } from '../../src/model/UInt64';
 
 describe('BlockHttp', () => {
-    const blockDTO = new BlockDTO();
+    const blockDTO = {} as BlockDTO;
     blockDTO.version = 1;
     blockDTO.network = NetworkTypeEnum.NUMBER_152;
     blockDTO.difficulty = '2';
@@ -54,7 +54,7 @@ describe('BlockHttp', () => {
         NetworkType.MIJIN_TEST,
     ).encoded();
 
-    const blockMetaDTO = new BlockMetaDTO();
+    const blockMetaDTO = {} as BlockMetaDTO;
     blockMetaDTO.generationHash = 'abc';
     blockMetaDTO.hash = 'aHash';
     blockMetaDTO.numStatements = 10;
@@ -62,7 +62,7 @@ describe('BlockHttp', () => {
     blockMetaDTO.totalFee = '30';
     blockMetaDTO.stateHashSubCacheMerkleRoots = ['a', 'b', 'c'];
 
-    const blockInfoDto = new BlockInfoDTO();
+    const blockInfoDto = {} as BlockInfoDTO;
     blockInfoDto.block = blockDTO;
     blockInfoDto.meta = blockMetaDTO;
 
@@ -100,19 +100,19 @@ describe('BlockHttp', () => {
     }
 
     it('getBlockInfo', async () => {
-        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve({ response, body: blockInfoDto }));
+        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve(blockInfoDto));
         const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
         assertBlockInfo(blockInfo);
     });
 
     it('searchBlocks', async () => {
-        const pagination = new Pagination();
+        const pagination = {} as Pagination;
         pagination.pageNumber = 1;
         pagination.pageSize = 1;
         pagination.totalEntries = 1;
         pagination.totalPages = 1;
 
-        const body = new BlockPage();
+        const body = {} as BlockPage;
         body.data = [blockInfoDto];
         body.pagination = pagination;
         when(
@@ -125,29 +125,19 @@ describe('BlockHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(
-            Promise.resolve({
-                response,
-                body,
-            }),
-        );
+        ).thenReturn(Promise.resolve(body));
         const blockInfos = await blockRepository.search({ signerPublicKey: blockDTO.signerPublicKey }).toPromise();
         assertBlockInfo(blockInfos.data[0]);
     });
 
     it('getMerkleTransaction', async () => {
-        const merkleProofInfoDTO = new MerkleProofInfoDTO();
-        const merklePathItemDTO = new MerklePathItemDTO();
+        const merkleProofInfoDTO = {} as MerkleProofInfoDTO;
+        const merklePathItemDTO = {} as MerklePathItemDTO;
         merklePathItemDTO.hash = 'bbb';
         merklePathItemDTO.position = PositionEnum.Left;
         merkleProofInfoDTO.merklePath = [merklePathItemDTO];
 
-        when(blockRoutesApi.getMerkleTransaction('2', 'abc')).thenReturn(
-            Promise.resolve({
-                response,
-                body: merkleProofInfoDTO,
-            }),
-        );
+        when(blockRoutesApi.getMerkleTransaction('2', 'abc')).thenReturn(Promise.resolve(merkleProofInfoDTO));
         const merkleProofInfo = await blockRepository.getMerkleTransaction(UInt64.fromUint(2), 'abc').toPromise();
         expect(merkleProofInfo).to.be.not.null;
         expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(MerklePosition.Left, 'bbb')]);

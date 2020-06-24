@@ -18,6 +18,7 @@ import { expect } from 'chai';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { RepositoryCallError } from '../../src/infrastructure/RepositoryCallError';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -187,9 +188,9 @@ describe('AccountHttp', () => {
                         return Promise.reject('should fail!');
                     },
                     (err) => {
-                        const error = JSON.parse(err.message);
+                        const error: RepositoryCallError = JSON.parse(err.message);
                         expect(error.statusCode).to.be.eq(404);
-                        expect(error.errorDetails.statusMessage).to.be.eq('Not Found');
+                        expect(error.statusMessage).to.be.eq('Not Found');
                         return Promise.resolve();
                     },
                 );

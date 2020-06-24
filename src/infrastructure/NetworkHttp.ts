@@ -16,7 +16,7 @@
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NetworkConfigurationDTO, NetworkRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { NetworkConfigurationDTO, NetworkRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { AccountLinkNetworkProperties } from '../model/network/AccountLinkNetworkProperties';
 import { AccountRestrictionNetworkProperties } from '../model/network/AccountRestrictionNetworkProperties';
 import { AggregateNetworkProperties } from '../model/network/AggregateNetworkProperties';
@@ -37,10 +37,10 @@ import { SecretLockNetworkProperties } from '../model/network/SecretLockNetworkP
 import { TransactionFees } from '../model/network/TransactionFees';
 import { TransferNetworkProperties } from '../model/network/TransferNetworkProperties';
 import { NodeInfo } from '../model/node/NodeInfo';
+import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NetworkRepository } from './NetworkRepository';
 import { NodeHttp } from './NodeHttp';
-import { UInt64 } from '../model/UInt64';
 
 /**
  * Network http repository.
@@ -57,13 +57,13 @@ export class NetworkHttp extends Http implements NetworkRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.nodeHttp = new NodeHttp(url);
-        this.networkRoutesApi = new NetworkRoutesApi(url);
-        this.networkRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.nodeHttp = new NodeHttp(url, fetchApi);
+        this.networkRoutesApi = new NetworkRoutesApi(this.config());
     }
 
     /**

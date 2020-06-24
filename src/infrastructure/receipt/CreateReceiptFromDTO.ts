@@ -16,7 +16,9 @@
 
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
+import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
 import { MosaicId } from '../../model/mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../../model/mosaic/UnresolvedMosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
@@ -31,8 +33,6 @@ import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import { UInt64 } from '../../model/UInt64';
-import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../../model/mosaic/UnresolvedMosaicId';
 
 /**
  * @interal

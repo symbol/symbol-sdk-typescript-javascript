@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { TransactionStatusRoutesApi, TransactionStatusDTO } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import { TransactionStatusDTO, TransactionStatusRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Deadline } from '../model/transaction/Deadline';
 import { TransactionStatus } from '../model/transaction/TransactionStatus';
 import { UInt64 } from '../model/UInt64';
@@ -37,11 +36,12 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.transactionStatusRoutesApi = new TransactionStatusRoutesApi(url);
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.transactionStatusRoutesApi = new TransactionStatusRoutesApi(this.config());
     }
 
     /**
@@ -50,10 +50,7 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
      * @returns Observable<TransactionStatus>
      */
     public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
-        return observableFrom(this.transactionStatusRoutesApi.getTransactionStatus(transactionHash)).pipe(
-            map(({ body }) => this.toTransactionStatus(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
+        return this.call(this.transactionStatusRoutesApi.getTransactionStatus(transactionHash), (body) => this.toTransactionStatus(body));
     }
 
     /**
@@ -65,9 +62,8 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
         const transactionHashesBody = {
             hashes: transactionHashes,
         };
-        return observableFrom(this.transactionStatusRoutesApi.getTransactionStatuses(transactionHashesBody)).pipe(
-            map(({ body }) => body.map(this.toTransactionStatus)),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(this.transactionStatusRoutesApi.getTransactionStatuses(transactionHashesBody), (body) =>
+            body.map(this.toTransactionStatus),
         );
     }
 

@@ -33,4 +33,11 @@ export interface RepositoryFactoryConfig {
      * optional injected websocket instance when using listeners in client.
      */
     websocketInjected?: any;
+
+    /**
+     * optional fetch function to be used when performing rest requests. The default value is:
+     *  1) window.fetch if running on a browser
+     *  2) or node-fetch if running on server (window.fetch not found)
+     */
+    fetchApi?: any;
 }

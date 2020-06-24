@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { MosaicAddressRestrictionDTO, MosaicGlobalRestrictionDTO, RestrictionMosaicRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import {
+    MosaicAddressRestrictionDTO,
+    MosaicGlobalRestrictionDTO,
+    RestrictionMosaicRoutesApi,
+} from 'symbol-openapi-typescript-fetch-client';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
@@ -38,13 +41,12 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
 
     /**
      * Constructor
-     * @param url
-     * @param networkType
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(url);
-        this.restrictionMosaicRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.restrictionMosaicRoutesApi = new RestrictionMosaicRoutesApi(this.config());
     }
 
     /**
@@ -55,9 +57,8 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @returns Observable<MosaicAddressRestriction>
      */
     getMosaicAddressRestriction(mosaicId: MosaicId, address: Address): Observable<MosaicAddressRestriction> {
-        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
-            map(({ body }) => this.toMosaicAddressRestriction(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(this.restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain()), (body) =>
+            this.toMosaicAddressRestriction(body),
         );
     }
 
@@ -72,9 +73,35 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds)).pipe(
-            map(({ body }) => body.map(this.toMosaicAddressRestriction)),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(this.restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), accountIds), (body) =>
+            body.map(this.toMosaicAddressRestriction),
+        );
+    }
+
+    /**
+     * Get mosaic global restriction.
+     * @summary Get mosaic global restrictions for a given mosaic identifier.
+     * @param mosaicId Mosaic identifier.
+     * @returns Observable<MosaicGlobalRestriction>
+     */
+    getMosaicGlobalRestriction(mosaicId: MosaicId): Observable<MosaicGlobalRestriction> {
+        return this.call(this.restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex()), (body) =>
+            this.toMosaicGlobalRestriction(body),
+        );
+    }
+
+    /**
+     * Get mosaic global restrictions.
+     * @summary Get mosaic global restrictions for a given list of mosaics.
+     * @param mosaicIds List of mosaic identifier.
+     * @returns Observable<MosaicGlobalRestriction[]>
+     */
+    getMosaicGlobalRestrictions(mosaicIds: MosaicId[]): Observable<MosaicGlobalRestriction[]> {
+        const mosaicIdsBody = {
+            mosaicIds: mosaicIds.map((id) => id.toHex()),
+        };
+        return this.call(this.restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody), (body) =>
+            body.map(this.toMosaicGlobalRestriction),
         );
     }
 
@@ -96,35 +123,6 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
             new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
             Address.createFromEncoded(dto.mosaicRestrictionEntry.targetAddress),
             restrictionItems,
-        );
-    }
-
-    /**
-     * Get mosaic global restriction.
-     * @summary Get mosaic global restrictions for a given mosaic identifier.
-     * @param mosaicId Mosaic identifier.
-     * @returns Observable<MosaicGlobalRestriction>
-     */
-    getMosaicGlobalRestriction(mosaicId: MosaicId): Observable<MosaicGlobalRestriction> {
-        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
-            map(({ body }) => this.toMosaicGlobalRestriction(body)),
-            catchError((error) => throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Get mosaic global restrictions.
-     * @summary Get mosaic global restrictions for a given list of mosaics.
-     * @param mosaicIds List of mosaic identifier.
-     * @returns Observable<MosaicGlobalRestriction[]>
-     */
-    getMosaicGlobalRestrictions(mosaicIds: MosaicId[]): Observable<MosaicGlobalRestriction[]> {
-        const mosaicIdsBody = {
-            mosaicIds: mosaicIds.map((id) => id.toHex()),
-        };
-        return observableFrom(this.restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(mosaicIdsBody)).pipe(
-            map(({ body }) => body.map(this.toMosaicGlobalRestriction)),
-            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 

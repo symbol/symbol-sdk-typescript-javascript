@@ -16,21 +16,21 @@
 
 import { Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { filter, flatMap, map, share } from 'rxjs/operators';
+import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { NewBlock } from '../model/blockchain/NewBlock';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
+import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
-import { BlockInfoDTO } from 'symbol-openapi-typescript-node-client';
-import { NewBlock } from '../model/blockchain/NewBlock';
-import { PublicAccount } from '../model/account/PublicAccount';
-import { UInt64 } from '../model/UInt64';
 
 export enum ListenerChannelName {
     block = 'block',

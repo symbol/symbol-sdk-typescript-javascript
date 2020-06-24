@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { from as observableFrom, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { Observable } from 'rxjs';
+import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { AccountRestriction } from '../model/restriction/AccountRestriction';
@@ -34,14 +33,15 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * @internal
      */
     private restrictionAccountRoutesApi: RestrictionAccountRoutesApi;
+
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.restrictionAccountRoutesApi = new RestrictionAccountRoutesApi(url);
-        this.restrictionAccountRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.restrictionAccountRoutesApi = new RestrictionAccountRoutesApi(this.config());
     }
 
     /**
@@ -50,9 +50,9 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * @returns Observable<AccountRestrictions[]>
      */
     public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
-        return observableFrom(this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain())).pipe(
-            map(({ body }) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(
+            this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain()),
+            (body) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions,
         );
     }
 
@@ -65,13 +65,10 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(this.restrictionAccountRoutesApi.getAccountRestrictionsFromAccounts(accountIds)).pipe(
-            map(({ body }) =>
-                body.map((restriction) => {
-                    return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
-                }),
-            ),
-            catchError((error) => throwError(this.errorHandling(error))),
+        return this.call(this.restrictionAccountRoutesApi.getAccountRestrictionsFromAccounts(accountIds), (body) =>
+            body.map((restriction) => {
+                return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
+            }),
         );
     }
 }

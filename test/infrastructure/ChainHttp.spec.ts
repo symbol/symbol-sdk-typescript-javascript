@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { ChainRoutesApi, ChainScoreDTO, HeightInfoDTO } from 'symbol-openapi-typescript-node-client';
+import { ChainRoutesApi, ChainScoreDTO, HeightInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
@@ -35,19 +35,19 @@ describe('ChainHttp', () => {
     });
 
     it('getBlockchainHeight', async () => {
-        const heightInfoDTO = new HeightInfoDTO();
+        const heightInfoDTO = {} as HeightInfoDTO;
         heightInfoDTO.height = '3';
-        when(chainRoutesApi.getChainHeight()).thenReturn(Promise.resolve({ response, body: heightInfoDTO }));
+        when(chainRoutesApi.getChainHeight()).thenReturn(Promise.resolve(heightInfoDTO));
         const heightInfo = await chainRepository.getBlockchainHeight().toPromise();
         expect(heightInfo).to.be.not.null;
         expect(heightInfo.toString()).to.be.equals('3');
     });
 
     it('getChainScore', async () => {
-        const chainScoreDTO = new ChainScoreDTO();
+        const chainScoreDTO = {} as ChainScoreDTO;
         chainScoreDTO.scoreLow = '2';
         chainScoreDTO.scoreHigh = '3';
-        when(chainRoutesApi.getChainScore()).thenReturn(Promise.resolve({ response, body: chainScoreDTO }));
+        when(chainRoutesApi.getChainScore()).thenReturn(Promise.resolve(chainScoreDTO));
         const chainScore = await chainRepository.getChainScore().toPromise();
         expect(chainScore).to.be.not.null;
         expect(chainScore.scoreLow.toString()).to.be.equals('2');

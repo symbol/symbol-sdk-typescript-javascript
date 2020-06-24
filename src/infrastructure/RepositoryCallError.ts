@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-import { MosaicInfo } from '../../model/mosaic/MosaicInfo';
-import { MosaicSearchCriteria } from '../searchCriteria/MosaicSearchCriteria';
-import { PaginationStreamer } from './PaginationStreamer';
-import { Searcher } from './Searcher';
-
 /**
- * A helper object that streams {@link MosaicInfo} using the search.
+ * When the repository raises an error, the Error's message would be a json string of this format:
  */
-export class MosaicPaginationStreamer extends PaginationStreamer<MosaicInfo, MosaicSearchCriteria> {
+export interface RepositoryCallError {
     /**
-     * Constructor
-     *
-     * @param searcher the mosaic repository that will perform the searches
+     * The http status code if know, other wise 0.
      */
-    constructor(searcher: Searcher<MosaicInfo, MosaicSearchCriteria>) {
-        super(searcher);
-    }
+    readonly statusCode: number;
+
+    /**
+     * The status message if known;
+     */
+    readonly statusMessage: string;
+
+    /**
+     * The rest response body as text.
+     */
+    readonly body: string;
 }

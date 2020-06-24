@@ -15,8 +15,8 @@
  */
 
 import { instance, mock } from 'ts-mockito';
-import { MosaicPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
 import { MosaicRepository } from '../../../src/infrastructure/MosaicRepository';
+import { MosaicPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('MosaicPaginationStreamer', () => {

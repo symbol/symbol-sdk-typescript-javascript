@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { ChainRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { ChainRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { BlockchainScore } from '../model/blockchain/BlockchainScore';
 import { UInt64 } from '../model/UInt64';
 import { ChainRepository } from './ChainRepository';
@@ -35,12 +35,12 @@ export class ChainHttp extends Http implements ChainRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.chainRoutesApi = new ChainRoutesApi(url);
-        this.chainRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.chainRoutesApi = new ChainRoutesApi(this.config());
     }
 
     /**

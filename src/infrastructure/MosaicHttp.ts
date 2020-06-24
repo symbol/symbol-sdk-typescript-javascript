@@ -16,6 +16,9 @@
 
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { MosaicInfoDTO, MosaicRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
+import { Address } from '../model/account/Address';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
@@ -23,11 +26,8 @@ import { NetworkType } from '../model/network/NetworkType';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MosaicRepository } from './MosaicRepository';
-import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 import { Page } from './Page';
-import { MosaicRoutesApi, MosaicIds, MosaicInfoDTO } from 'symbol-openapi-typescript-node-client';
-import { Address } from '../model/account/Address';
-import { DtoMapping } from '../core/utils/DtoMapping';
+import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 
 /**
  * Mosaic http repository.
@@ -46,16 +46,17 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * network type for the mappings.
      */
     private readonly networkTypeObservable: Observable<NetworkType>;
+
     /**
      * Constructor
-     * @param url
-     * @param networkType
+     * @param url Base catapult-rest url
+     * @param networkType the network type.
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>) {
-        super(url);
-        this.mosaicRoutesApi = new MosaicRoutesApi(url);
+    constructor(url: string, networkType?: NetworkType | Observable<NetworkType>, fetchApi?: any) {
+        super(url, fetchApi);
+        this.mosaicRoutesApi = new MosaicRoutesApi(this.config());
         this.networkTypeObservable = this.createNetworkTypeObservable(networkType);
-        this.mosaicRoutesApi.useQuerystring = true;
     }
 
     /**
@@ -73,9 +74,12 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo[]>
      */
     public getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]> {
-        const ids = new MosaicIds();
-        ids.mosaicIds = mosaicIds.map((id) => id.toHex());
-        return this.call(this.mosaicRoutesApi.getMosaics(ids), (body) => body.map((b) => this.toMosaicInfo(b)));
+        return this.call(
+            this.mosaicRoutesApi.getMosaics({
+                mosaicIds: mosaicIds.map((id) => id.toHex()),
+            }),
+            (body) => body.map((b) => this.toMosaicInfo(b)),
+        );
     }
 
     /**

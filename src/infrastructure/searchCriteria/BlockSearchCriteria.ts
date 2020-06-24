@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
 import { BlockOrderBy } from './BlockOrderBy';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search blocks. With this criteria, you can sort and filter

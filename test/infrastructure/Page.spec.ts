@@ -16,12 +16,12 @@
 
 import { expect } from 'chai';
 import { Page } from '../../src/infrastructure/infrastructure';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { NetworkType } from '../../src/model/network/NetworkType';
+import { Deadline } from '../../src/model/transaction/Deadline';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TestingAccount } from '../conf/conf.spec';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('Page', () => {
     it('should create Page', () => {

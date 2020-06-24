@@ -46,6 +46,7 @@ import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSup
 import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
 import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
+import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
 import { SignedTransaction } from '../../model/transaction/SignedTransaction';
@@ -53,10 +54,9 @@ import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionInfo } from '../../model/transaction/TransactionInfo';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { UInt64 } from '../../model/UInt64';
-import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
-import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
+import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import { UInt64 } from '../../model/UInt64';
 
 /**
  * Extract recipientAddress value from encoded hexadecimal notation.

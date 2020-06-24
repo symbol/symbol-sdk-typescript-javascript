@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
 import { Address } from '../../model/account/Address';
-import { UInt64 } from '../../model/UInt64';
 import { TransactionType } from '../../model/transaction/TransactionType';
+import { UInt64 } from '../../model/UInt64';
 import { TransactionGroup } from '../TransactionGroup';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search transactions. With this criteria, you can sort and filter

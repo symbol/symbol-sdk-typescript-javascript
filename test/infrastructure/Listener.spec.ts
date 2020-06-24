@@ -23,16 +23,16 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { Account } from '../../src/model/account/Account';
 import { AccountNames } from '../../src/model/account/AccountNames';
 import { Address } from '../../src/model/account/Address';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
-import { UInt64 } from '../../src/model/UInt64';
 import { NewBlock } from '../../src/model/blockchain/NewBlock';
-import { Transaction } from '../../src/model/transaction/Transaction';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NamespaceName } from '../../src/model/namespace/NamespaceName';
+import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { Transaction } from '../../src/model/transaction/Transaction';
+import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(

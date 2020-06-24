@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from '../searchCriteria/SearchCriteria';
 import { Observable } from 'rxjs/internal/Observable';
 import { Page } from '../Page';
+import { SearchCriteria } from '../searchCriteria/SearchCriteria';
 
 /**
  *  Objects of this interface know how to search symbol objects based on a criteria returning a page of these objects.

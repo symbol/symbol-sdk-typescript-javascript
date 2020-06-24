@@ -14,26 +14,70 @@
  * limitations under the License.
  */
 
-import * as http from 'http';
-import { from as observableFrom, Observable, of as observableOf, throwError } from 'rxjs';
-import { catchError, map, shareReplay } from 'rxjs/operators';
-import { NodeRoutesApi, Pagination } from 'symbol-openapi-typescript-node-client';
+import { from as observableFrom, Observable, of, of as observableOf, throwError } from 'rxjs';
+import { catchError, flatMap, map } from 'rxjs/operators';
+import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
 import { NetworkType } from '../model/network/NetworkType';
-import { QueryParams } from './QueryParams';
 import { Page } from './Page';
+import { QueryParams } from './QueryParams';
+import { RepositoryCallError } from './RepositoryCallError';
 
 /**
  * Http extended by all http services
  */
 export abstract class Http {
-    protected readonly url: string;
-
     /**
      * Constructor
      * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        this.url = url;
+    protected constructor(protected readonly url: string, protected readonly fetchApi?: any) {}
+
+    public static errorHandling(error: any): Observable<never> {
+        if (error instanceof Error) {
+            return throwError(error);
+        }
+        const statusCode: number = parseInt(error?.status || error?.statusCode || error?.response?.statusCode || 0);
+        const statusMessage: string = (
+            error?.statusText ||
+            error?.statusMessage ||
+            error?.response?.statusMessage ||
+            'Unknown Error'
+        ).toString();
+
+        const toString = (body: any): string => {
+            if (!body) {
+                return '';
+            }
+            if (typeof body === 'string' || body instanceof String) {
+                return body.toString();
+            }
+            return JSON.stringify(body);
+        };
+
+        const getBody = (error: any): Observable<string> => {
+            const body = error?.response?.body;
+            if (body) {
+                return of(toString(body));
+            }
+            if (error.text) {
+                return observableFrom(error.text()).pipe(
+                    map(toString),
+                    catchError(() => of('')),
+                );
+            }
+            return of('');
+        };
+        return getBody(error).pipe(
+            flatMap((body: string) => {
+                const formattedError: RepositoryCallError = {
+                    statusCode,
+                    statusMessage,
+                    body,
+                };
+                return throwError(new Error(JSON.stringify(formattedError)));
+            }),
+        );
     }
 
     createNetworkTypeObservable(networkType?: NetworkType | Observable<NetworkType>): Observable<NetworkType> {
@@ -42,12 +86,7 @@ export abstract class Http {
         } else if (networkType) {
             return observableOf(networkType as NetworkType);
         } else {
-            return observableFrom(new NodeRoutesApi(this.url).getNodeInfo())
-                .pipe(
-                    map(({ body }) => body.networkIdentifier),
-                    catchError((error) => throwError(this.errorHandling(error))),
-                )
-                .pipe(shareReplay(1));
+            return this.call(new NodeRoutesApi(this.config()).getNodeInfo(), (body) => body.networkIdentifier);
         }
     }
 
@@ -59,25 +98,8 @@ export abstract class Http {
         };
     }
 
-    errorHandling(error: any): Error {
-        if (error.response && error.response.statusCode && error.response.body) {
-            const formattedError = {
-                statusCode: error.response.statusCode,
-                errorDetails: {
-                    statusCode: error.response.statusCode,
-                    statusMessage: error.response.statusMessage,
-                },
-                body: error.response.body,
-            };
-            return new Error(JSON.stringify(formattedError));
-        }
-        if (error.code && error.address && error.code === 'ECONNREFUSED') {
-            return new Error(`Cannot reach node: ${error.address}:${error.port}`);
-        }
-        if (error instanceof Error) {
-            return error;
-        }
-        return new Error(error);
+    public config(): Configuration {
+        return new Configuration({ basePath: this.url, fetchApi: this.fetchApi, queryParamsStringify: querystring });
     }
 
     /**
@@ -85,13 +107,10 @@ export abstract class Http {
      * @param remoteCall the remote call
      * @param mapper the mapper from dto to the model object.
      */
-    protected call<D, M>(
-        remoteCall: Promise<{ response: http.IncomingMessage; body: D }>,
-        mapper: (value: D, index: number) => M,
-    ): Observable<M> {
+    protected call<D, M>(remoteCall: Promise<D>, mapper: (value: D) => M): Observable<M> {
         return observableFrom(remoteCall).pipe(
-            map(({ body }, index) => mapper(body, index)),
-            catchError((error) => throwError(this.errorHandling(error))),
+            map((body) => mapper(body)),
+            catchError(Http.errorHandling),
         );
     }
 

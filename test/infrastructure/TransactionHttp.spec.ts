@@ -15,47 +15,45 @@
  */
 
 import { expect } from 'chai';
-import http = require('http');
 import {
-    BlockRoutesApi,
-    TransactionRoutesApi,
-    TransactionPage,
-    TransactionMetaDTO,
-    Pagination,
-    TransferTransactionDTO,
-    NetworkTypeEnum,
-    TransactionInfoDTO,
     BlockDTO,
-    BlockMetaDTO,
     BlockInfoDTO,
-    AnnounceTransactionInfoDTO,
+    BlockMetaDTO,
+    BlockRoutesApi,
     Cosignature,
-} from 'symbol-openapi-typescript-node-client';
+    HTTPQuery,
+    NetworkTypeEnum,
+    Pagination,
+    TransactionInfoDTO,
+    TransactionMetaDTO,
+    TransactionPage,
+    TransactionRoutesApi,
+    TransferTransactionDTO,
+} from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { UInt64 } from '../../src/model/UInt64';
 import { CosignatureSignedTransaction } from '../../src/model/transaction/CosignatureSignedTransaction';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { TransactionType } from '../../src/model/transaction/TransactionType';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { NIS2_URL, TestingAccount } from '../conf/conf.spec';
 
 describe('TransactionHttp', () => {
     const account = TestingAccount;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
-    let clientResponse: http.ClientResponse;
     let transactionRoutesApi: TransactionRoutesApi;
     let transactionHttp: TransactionHttp;
     let blockRoutesApi: BlockRoutesApi;
 
-    const cosignature = new Cosignature();
+    const cosignature = {} as Cosignature;
     cosignature.parentHash = 'parentHash';
     cosignature.signerPublicKey = 'signerPubKey';
     cosignature.signature = 'signature';
@@ -64,7 +62,6 @@ describe('TransactionHttp', () => {
     before(() => {
         transactionRoutesApi = mock();
         blockRoutesApi = mock();
-        clientResponse = mock();
         transactionHttp = new TransactionHttp(NIS2_URL);
         (transactionHttp as object)['transactionRoutesApi'] = instance(transactionRoutesApi);
         (transactionHttp as object)['blockRoutesApi'] = instance(blockRoutesApi);
@@ -93,21 +90,21 @@ describe('TransactionHttp', () => {
     });
 
     it('Test searchTransaction method', async () => {
-        const page = new TransactionPage();
-        const paginationDto = new Pagination();
+        const page = {} as TransactionPage;
+        const paginationDto = {} as Pagination;
         paginationDto.pageNumber = 1;
         paginationDto.pageSize = 1;
         paginationDto.totalEntries = 1;
         paginationDto.totalPages = 1;
 
-        const transactionInfoDto = new TransactionInfoDTO();
-        const metaDto = new TransactionMetaDTO();
+        const transactionInfoDto = {} as TransactionInfoDTO;
+        const metaDto = {} as TransactionMetaDTO;
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
-        const transactionDto = new TransferTransactionDTO();
+        const transactionDto = {} as TransferTransactionDTO;
         transactionDto.deadline = '1';
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
@@ -136,7 +133,7 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
+        ).thenReturn(Promise.resolve(page));
 
         when(
             transactionRoutesApi.searchPartialTransactions(
@@ -151,7 +148,7 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
+        ).thenReturn(Promise.resolve(page));
 
         when(
             transactionRoutesApi.searchUnconfirmedTransactions(
@@ -166,7 +163,7 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.resolve({ response: instance(clientResponse), body: page }));
+        ).thenReturn(Promise.resolve(page));
 
         let transactions = await transactionHttp.search({ group: TransactionGroup.Confirmed, address: account.address }).toPromise();
 
@@ -215,14 +212,14 @@ describe('TransactionHttp', () => {
     });
 
     it('Test getTransaction method', async () => {
-        const transactionInfoDto = new TransactionInfoDTO();
-        const metaDto = new TransactionMetaDTO();
+        const transactionInfoDto = {} as TransactionInfoDTO;
+        const metaDto = {} as TransactionMetaDTO;
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
-        const transactionDto = new TransferTransactionDTO();
+        const transactionDto = {} as TransferTransactionDTO;
         transactionDto.deadline = '1';
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
@@ -235,16 +232,10 @@ describe('TransactionHttp', () => {
         transactionInfoDto.meta = metaDto;
         transactionInfoDto.transaction = transactionDto;
 
-        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
-        );
+        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
 
-        when(transactionRoutesApi.getPartialTransaction(generationHash)).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
-        );
-        when(transactionRoutesApi.getUnconfirmedTransaction(generationHash)).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
-        );
+        when(transactionRoutesApi.getPartialTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
+        when(transactionRoutesApi.getUnconfirmedTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
 
         let transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Confirmed).toPromise();
 
@@ -275,14 +266,14 @@ describe('TransactionHttp', () => {
     });
 
     it('Test getTransactionsById method', async () => {
-        const transactionInfoDto = new TransactionInfoDTO();
-        const metaDto = new TransactionMetaDTO();
+        const transactionInfoDto = {} as TransactionInfoDTO;
+        const metaDto = {} as TransactionMetaDTO;
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
-        const transactionDto = new TransferTransactionDTO();
+        const transactionDto = {} as TransferTransactionDTO;
         transactionDto.deadline = '1';
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
@@ -296,7 +287,7 @@ describe('TransactionHttp', () => {
         transactionInfoDto.transaction = transactionDto;
 
         when(transactionRoutesApi.getTransactionsById(deepEqual({ transactionIds: [generationHash] }))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: [transactionInfoDto] }),
+            Promise.resolve([transactionInfoDto]),
         );
 
         const transaction = await transactionHttp.getTransactionsById([generationHash]).toPromise();
@@ -311,14 +302,14 @@ describe('TransactionHttp', () => {
     });
 
     it('Test getEffectiveFees method', async () => {
-        const transactionInfoDto = new TransactionInfoDTO();
-        const metaDto = new TransactionMetaDTO();
+        const transactionInfoDto = {} as TransactionInfoDTO;
+        const metaDto = {} as TransactionMetaDTO;
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
-        const transactionDto = new TransferTransactionDTO();
+        const transactionDto = {} as TransferTransactionDTO;
         transactionDto.deadline = '1';
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
@@ -331,7 +322,7 @@ describe('TransactionHttp', () => {
         transactionInfoDto.meta = metaDto;
         transactionInfoDto.transaction = transactionDto;
 
-        const blockDTO = new BlockDTO();
+        const blockDTO = {} as BlockDTO;
         blockDTO.version = 1;
         blockDTO.network = NetworkTypeEnum.NUMBER_152;
         blockDTO.difficulty = '2';
@@ -346,7 +337,7 @@ describe('TransactionHttp', () => {
             NetworkType.MIJIN_TEST,
         ).encoded();
 
-        const blockMetaDTO = new BlockMetaDTO();
+        const blockMetaDTO = {} as BlockMetaDTO;
         blockMetaDTO.generationHash = 'abc';
         blockMetaDTO.hash = 'aHash';
         blockMetaDTO.numStatements = 10;
@@ -354,25 +345,19 @@ describe('TransactionHttp', () => {
         blockMetaDTO.totalFee = '30';
         blockMetaDTO.stateHashSubCacheMerkleRoots = ['a', 'b', 'c'];
 
-        const blockInfoDto = new BlockInfoDTO();
+        const blockInfoDto = {} as BlockInfoDTO;
         blockInfoDto.block = blockDTO;
         blockInfoDto.meta = blockMetaDTO;
 
-        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: transactionInfoDto }),
-        );
-        when(blockRoutesApi.getBlockByHeight(deepEqual(UInt64.fromUint(1).toString()))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: blockInfoDto }),
-        );
+        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
+        when(blockRoutesApi.getBlockByHeight(deepEqual(UInt64.fromUint(1).toString()))).thenReturn(Promise.resolve(blockInfoDto));
 
         const fees = await transactionHttp.getTransactionEffectiveFee(generationHash).toPromise();
         expect(fees).to.be.equal(483);
     });
 
     it('Test announce', async () => {
-        const response = new AnnounceTransactionInfoDTO();
-        response.message = 'done';
-
+        const response = { message: 'done' };
         const tx = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
@@ -383,17 +368,14 @@ describe('TransactionHttp', () => {
 
         const signedTx = account.sign(tx, generationHash);
 
-        when(transactionRoutesApi.announceTransaction(deepEqual(signedTx))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: response }),
-        );
+        when(transactionRoutesApi.announceTransaction(deepEqual(signedTx))).thenReturn(Promise.resolve(response));
         const announceResult = await transactionHttp.announce(signedTx).toPromise();
 
         expect(announceResult.message).to.be.equal(response.message);
     });
 
     it('Test announceAggregateBonded', async () => {
-        const response = new AnnounceTransactionInfoDTO();
-        response.message = 'done';
+        const response = { message: 'done' };
 
         const tx = TransferTransaction.create(
             Deadline.create(),
@@ -412,23 +394,18 @@ describe('TransactionHttp', () => {
 
         const signedTx = account.sign(aggTx, generationHash);
 
-        when(transactionRoutesApi.announcePartialTransaction(deepEqual(signedTx))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: response }),
-        );
+        when(transactionRoutesApi.announcePartialTransaction(deepEqual(signedTx))).thenReturn(Promise.resolve(response));
         const announceResult = await transactionHttp.announceAggregateBonded(signedTx).toPromise();
 
         expect(announceResult.message).to.be.equal(response.message);
     });
 
     it('Test announceAggregateBonded Cosignatures', async () => {
-        const response = new AnnounceTransactionInfoDTO();
-        response.message = 'done';
+        const response = { message: 'done' };
 
         const cosignTx = new CosignatureSignedTransaction('parentHash', 'signature', 'signerPubKey');
 
-        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignature))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: response }),
-        );
+        when(transactionRoutesApi.announceCosignatureTransaction(deepEqual(cosignature))).thenReturn(Promise.resolve(response));
         const announceResult = await transactionHttp.announceAggregateBondedCosignature(cosignTx).toPromise();
 
         expect(announceResult.message).to.be.equal(response.message);
@@ -488,9 +465,6 @@ describe('TransactionHttp', () => {
     });
 
     it('announce - Error', async () => {
-        const response = new AnnounceTransactionInfoDTO();
-        response.message = 'done';
-
         const tx = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
@@ -509,8 +483,7 @@ describe('TransactionHttp', () => {
     });
 
     it('announce - Error', async () => {
-        const response = new AnnounceTransactionInfoDTO();
-        response.message = 'done';
+        const response = { message: 'done' };
 
         const tx = TransferTransaction.create(
             Deadline.create(),
@@ -528,13 +501,17 @@ describe('TransactionHttp', () => {
         );
         const signedTx = account.sign(aggTx, generationHash);
 
-        when(transactionRoutesApi.announceTransaction(deepEqual(signedTx))).thenReturn(
-            Promise.resolve({ response: instance(clientResponse), body: response }),
-        );
+        when(transactionRoutesApi.announceTransaction(deepEqual(signedTx))).thenReturn(Promise.resolve(response));
         try {
             await transactionHttp.announce(signedTx).toPromise();
         } catch (error) {
             expect(error).not.to.be.undefined;
         }
+    });
+
+    it('Test fetch querystring', async () => {
+        const params: HTTPQuery = { type: [TransactionType.NAMESPACE_REGISTRATION.valueOf(), TransactionType.TRANSFER.valueOf()] };
+        const query = transactionHttp.config().queryParamsStringify(params);
+        expect(query).eq('type=16718&type=16724');
     });
 });

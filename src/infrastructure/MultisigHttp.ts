@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { MultisigAccountInfoDTO, MultisigRoutesApi } from 'symbol-openapi-typescript-node-client';
+import { MultisigAccountInfoDTO, MultisigRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Address } from '../model/account/Address';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
@@ -36,12 +36,12 @@ export class MultisigHttp extends Http implements MultisigRepository {
 
     /**
      * Constructor
-     * @param url
+     * @param url Base catapult-rest url
+     * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string) {
-        super(url);
-        this.multisigRoutesApi = new MultisigRoutesApi(url);
-        this.multisigRoutesApi.useQuerystring = true;
+    constructor(url: string, fetchApi?: any) {
+        super(url, fetchApi);
+        this.multisigRoutesApi = new MultisigRoutesApi(this.config());
     }
 
     /**
