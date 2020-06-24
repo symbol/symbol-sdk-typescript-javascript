@@ -84,6 +84,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html#fetchapi" class="tsd-kind-icon">fetch<wbr>Api</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html#generationhash" class="tsd-kind-icon">generation<wbr>Hash</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html#networktype" class="tsd-kind-icon">network<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html#websocketinjected" class="tsd-kind-icon">websocket<wbr>Injected</a></li>
@@ -96,12 +97,29 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="fetchapi" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> fetch<wbr>Api</h3>
+					<div class="tsd-signature tsd-kind-icon">fetch<wbr>Api<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryFactoryConfig.ts#L42">infrastructure/RepositoryFactoryConfig.ts:42</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>optional fetch function to be used when performing rest requests. The default value is:</p>
+							<p> 1) window.fetch if running on a browser
+							2) or node-fetch if running on server (window.fetch not found)</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="generationhash" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> generation<wbr>Hash</h3>
 					<div class="tsd-signature tsd-kind-icon">generation<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/RepositoryFactoryConfig.ts#L27">infrastructure/RepositoryFactoryConfig.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryFactoryConfig.ts#L27">infrastructure/RepositoryFactoryConfig.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -116,7 +134,7 @@
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/RepositoryFactoryConfig.ts#L23">infrastructure/RepositoryFactoryConfig.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryFactoryConfig.ts#L23">infrastructure/RepositoryFactoryConfig.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -131,7 +149,7 @@
 					<div class="tsd-signature tsd-kind-icon">websocket<wbr>Injected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/RepositoryFactoryConfig.ts#L35">infrastructure/RepositoryFactoryConfig.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryFactoryConfig.ts#L35">infrastructure/RepositoryFactoryConfig.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -146,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">websocket<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/RepositoryFactoryConfig.ts#L31">infrastructure/RepositoryFactoryConfig.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryFactoryConfig.ts#L31">infrastructure/RepositoryFactoryConfig.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -175,6 +193,9 @@
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html" class="tsd-kind-icon">Repository<wbr>Factory<wbr>Config</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html#fetchapi" class="tsd-kind-icon">fetch<wbr>Api</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_infrastructure_repositoryfactoryconfig_.repositoryfactoryconfig.html#generationhash" class="tsd-kind-icon">generation<wbr>Hash</a>
 							</li>

@@ -113,6 +113,7 @@
 						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_infrastructure_multisighttp_.multisighttp.html#fetchapi" class="tsd-kind-icon">fetch<wbr>Api</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_infrastructure_multisighttp_.multisighttp.html#url" class="tsd-kind-icon">url</a></li>
 							</ul>
 						</section>
@@ -120,12 +121,13 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="_infrastructure_multisighttp_.multisighttp.html#call" class="tsd-kind-icon">call</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_infrastructure_multisighttp_.multisighttp.html#config" class="tsd-kind-icon">config</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_infrastructure_multisighttp_.multisighttp.html#createnetworktypeobservable" class="tsd-kind-icon">create<wbr>Network<wbr>Type<wbr>Observable</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_infrastructure_multisighttp_.multisighttp.html#errorhandling" class="tsd-kind-icon">error<wbr>Handling</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_multisighttp_.multisighttp.html#getmultisigaccountgraphinfo" class="tsd-kind-icon">get<wbr>Multisig<wbr>Account<wbr>Graph<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_multisighttp_.multisighttp.html#getmultisigaccountinfo" class="tsd-kind-icon">get<wbr>Multisig<wbr>Account<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_infrastructure_multisighttp_.multisighttp.html#queryparams" class="tsd-kind-icon">query<wbr>Params</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_infrastructure_multisighttp_.multisighttp.html#tomultisigaccountinfo" class="tsd-kind-icon">to<wbr>Multisig<wbr>Account<wbr>Info</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_infrastructure_multisighttp_.multisighttp.html#errorhandling" class="tsd-kind-icon">error<wbr>Handling</a></li>
 							</ul>
 						</section>
 					</div>
@@ -137,14 +139,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Multisig<wbr>Http<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_infrastructure_multisighttp_.multisighttp.html" class="tsd-signature-type">MultisigHttp</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Multisig<wbr>Http<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fetchApi<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_infrastructure_multisighttp_.multisighttp.html" class="tsd-signature-type">MultisigHttp</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/MultisigHttp.ts#L35">infrastructure/MultisigHttp.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/MultisigHttp.ts#L35">infrastructure/MultisigHttp.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -158,6 +160,15 @@
 									<h5>url: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
+											<p>Base catapult-rest url</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fetchApi: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>fetch function to be used when performing rest requests.</p>
 										</div>
 									</div>
 								</li>
@@ -170,15 +181,36 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="fetchapi" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> fetch<wbr>Api</h3>
+					<div class="tsd-signature tsd-kind-icon">fetch<wbr>Api<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#fetchapi">fetchApi</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L34">infrastructure/Http.ts:34</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>fetch function to be used when performing rest requests.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="url" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> url</h3>
 					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#url">url</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/Http.ts#L29">infrastructure/Http.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L34">infrastructure/Http.ts:34</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Base catapult-rest url</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -187,14 +219,14 @@
 					<a name="call" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> call</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">call&lt;D, M&gt;<span class="tsd-signature-symbol">(</span>remoteCall<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">; </span>response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IncomingMessage</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span>, mapper<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">call&lt;D, M&gt;<span class="tsd-signature-symbol">(</span>remoteCall<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">&gt;</span>, mapper<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#call">call</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/Http.ts#L88">infrastructure/Http.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L110">infrastructure/Http.ts:110</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -214,20 +246,20 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>remoteCall: <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">; </span>response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IncomingMessage</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>remoteCall: <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>the remote call</p>
 									</div>
 								</li>
 								<li>
-									<h5>mapper: <span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">M</span></h5>
+									<h5>mapper: <span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">M</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>the mapper from dto to the model object.</p>
 									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-signature">
 											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span></li>
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">D</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span></li>
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
@@ -235,9 +267,6 @@
 													<ul class="tsd-parameters">
 														<li>
 															<h5>value: <span class="tsd-signature-type">D</span></h5>
-														</li>
-														<li>
-															<h5>index: <span class="tsd-signature-type">number</span></h5>
 														</li>
 													</ul>
 													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">M</span></h4>
@@ -252,6 +281,24 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="config" class="tsd-anchor"></a>
+					<h3>config</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Configuration</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#config">config</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L101">infrastructure/Http.ts:101</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Configuration</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="createnetworktypeobservable" class="tsd-anchor"></a>
 					<h3>create<wbr>Network<wbr>Type<wbr>Observable</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -262,7 +309,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#createnetworktypeobservable">createNetworkTypeObservable</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/Http.ts#L39">infrastructure/Http.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L83">infrastructure/Http.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -272,30 +319,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="errorhandling" class="tsd-anchor"></a>
-					<h3>error<wbr>Handling</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">error<wbr>Handling<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#errorhandling">errorHandling</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/Http.ts#L62">infrastructure/Http.ts:62</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>error: <span class="tsd-signature-type">any</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Error</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -310,7 +333,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_infrastructure_multisigrepository_.multisigrepository.html">MultisigRepository</a>.<a href="../interfaces/_infrastructure_multisigrepository_.multisigrepository.html#getmultisigaccountgraphinfo">getMultisigAccountGraphInfo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/MultisigHttp.ts#L61">infrastructure/MultisigHttp.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/MultisigHttp.ts#L61">infrastructure/MultisigHttp.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -345,7 +368,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_infrastructure_multisigrepository_.multisigrepository.html">MultisigRepository</a>.<a href="../interfaces/_infrastructure_multisigrepository_.multisigrepository.html#getmultisigaccountinfo">getMultisigAccountInfo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/MultisigHttp.ts#L52">infrastructure/MultisigHttp.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/MultisigHttp.ts#L52">infrastructure/MultisigHttp.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -380,7 +403,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#queryparams">queryParams</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/Http.ts#L54">infrastructure/Http.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L93">infrastructure/Http.ts:93</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -403,7 +426,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/73bb755/src/infrastructure/MultisigHttp.ts#L81">infrastructure/MultisigHttp.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/MultisigHttp.ts#L81">infrastructure/MultisigHttp.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -421,6 +444,30 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_model_account_multisigaccountinfo_.multisigaccountinfo.html" class="tsd-signature-type">MultisigAccountInfo</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="errorhandling" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> error<wbr>Handling</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">error<wbr>Handling<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#errorhandling">errorHandling</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/Http.ts#L36">infrastructure/Http.ts:36</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>error: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -448,16 +495,19 @@
 								<a href="_infrastructure_multisighttp_.multisighttp.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="_infrastructure_multisighttp_.multisighttp.html#fetchapi" class="tsd-kind-icon">fetch<wbr>Api</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="_infrastructure_multisighttp_.multisighttp.html#url" class="tsd-kind-icon">url</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
 								<a href="_infrastructure_multisighttp_.multisighttp.html#call" class="tsd-kind-icon">call</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_infrastructure_multisighttp_.multisighttp.html#createnetworktypeobservable" class="tsd-kind-icon">create<wbr>Network<wbr>Type<wbr>Observable</a>
+								<a href="_infrastructure_multisighttp_.multisighttp.html#config" class="tsd-kind-icon">config</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_infrastructure_multisighttp_.multisighttp.html#errorhandling" class="tsd-kind-icon">error<wbr>Handling</a>
+								<a href="_infrastructure_multisighttp_.multisighttp.html#createnetworktypeobservable" class="tsd-kind-icon">create<wbr>Network<wbr>Type<wbr>Observable</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_infrastructure_multisighttp_.multisighttp.html#getmultisigaccountgraphinfo" class="tsd-kind-icon">get<wbr>Multisig<wbr>Account<wbr>Graph<wbr>Info</a>
@@ -470,6 +520,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="_infrastructure_multisighttp_.multisighttp.html#tomultisigaccountinfo" class="tsd-kind-icon">to<wbr>Multisig<wbr>Account<wbr>Info</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_infrastructure_multisighttp_.multisighttp.html#errorhandling" class="tsd-kind-icon">error<wbr>Handling</a>
 							</li>
 						</ul>
 					</li>

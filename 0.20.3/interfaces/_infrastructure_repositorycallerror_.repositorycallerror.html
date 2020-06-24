@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AliasType | symbol-sdk</title>
+	<title>RepositoryCallError | symbol-sdk</title>
 	<meta name="description" content="Documentation for symbol-sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_model_namespace_aliastype_.html">&quot;model/namespace/AliasType&quot;</a>
+					<a href="../modules/_infrastructure_repositorycallerror_.html">&quot;infrastructure/RepositoryCallError&quot;</a>
 				</li>
 				<li>
-					<a href="_model_namespace_aliastype_.aliastype.html">AliasType</a>
+					<a href="_infrastructure_repositorycallerror_.repositorycallerror.html">RepositoryCallError</a>
 				</li>
 			</ul>
-			<h1>Enumeration AliasType</h1>
+			<h1>Interface RepositoryCallError</h1>
 		</div>
 	</div>
 </header>
@@ -72,64 +72,79 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The alias type. Supported types are:
-							0: No alias.
-							1: Mosaic id alias.
-						2: Address alias.</p>
+						<p>When the repository raises an error, the Error&#39;s message would be a json string of this format:</p>
 					</div>
-					<dl class="tsd-comment-tags">
-						<dt>since</dt>
-						<dd><p>0.10.2</p>
-						</dd>
-					</dl>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">RepositoryCallError</span>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Enumeration members</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_namespace_aliastype_.aliastype.html#address" class="tsd-kind-icon">Address</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_namespace_aliastype_.aliastype.html#mosaic" class="tsd-kind-icon">Mosaic</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_model_namespace_aliastype_.aliastype.html#none" class="tsd-kind-icon">None</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositorycallerror_.repositorycallerror.html#body" class="tsd-kind-icon">body</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositorycallerror_.repositorycallerror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_repositorycallerror_.repositorycallerror.html#statusmessage" class="tsd-kind-icon">status<wbr>Message</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Enumeration members</h2>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="address" class="tsd-anchor"></a>
-					<h3>Address</h3>
-					<div class="tsd-signature tsd-kind-icon">Address<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="body" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> body</h3>
+					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/model/namespace/AliasType.ts#L28">model/namespace/AliasType.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryCallError.ts#L34">infrastructure/RepositoryCallError.ts:34</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The rest response body as text.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="mosaic" class="tsd-anchor"></a>
-					<h3>Mosaic</h3>
-					<div class="tsd-signature tsd-kind-icon">Mosaic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="statuscode" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> status<wbr>Code</h3>
+					<div class="tsd-signature tsd-kind-icon">status<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/model/namespace/AliasType.ts#L27">model/namespace/AliasType.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryCallError.ts#L24">infrastructure/RepositoryCallError.ts:24</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The http status code if know, other wise 0.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="none" class="tsd-anchor"></a>
-					<h3>None</h3>
-					<div class="tsd-signature tsd-kind-icon">None<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="statusmessage" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> status<wbr>Message</h3>
+					<div class="tsd-signature tsd-kind-icon">status<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/model/namespace/AliasType.ts#L26">model/namespace/AliasType.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3640ee6/src/infrastructure/RepositoryCallError.ts#L29">infrastructure/RepositoryCallError.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The status message if known;</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -140,7 +155,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_model_namespace_aliastype_.html">&quot;model/namespace/<wbr>Alias<wbr>Type&quot;</a>
+						<a href="../modules/_infrastructure_repositorycallerror_.html">&quot;infrastructure/<wbr>Repository<wbr>Call<wbr>Error&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -148,17 +163,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="_model_namespace_aliastype_.aliastype.html" class="tsd-kind-icon">Alias<wbr>Type</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="_infrastructure_repositorycallerror_.repositorycallerror.html" class="tsd-kind-icon">Repository<wbr>Call<wbr>Error</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_namespace_aliastype_.aliastype.html#address" class="tsd-kind-icon">Address</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_repositorycallerror_.repositorycallerror.html#body" class="tsd-kind-icon">body</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_namespace_aliastype_.aliastype.html#mosaic" class="tsd-kind-icon">Mosaic</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_repositorycallerror_.repositorycallerror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="_model_namespace_aliastype_.aliastype.html#none" class="tsd-kind-icon">None</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_repositorycallerror_.repositorycallerror.html#statusmessage" class="tsd-kind-icon">status<wbr>Message</a>
 							</li>
 						</ul>
 					</li>
@@ -182,6 +197,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
