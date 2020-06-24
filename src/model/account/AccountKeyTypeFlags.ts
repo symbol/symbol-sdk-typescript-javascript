@@ -15,9 +15,9 @@
  */
 
 /**
- * The account key type emu,.
+ * The account key flags enum,.
  */
-export enum AccountKeyType {
+export enum AccountKeyTypeFlags {
     /**
      * Unset key.
      */
@@ -30,22 +30,17 @@ export enum AccountKeyType {
     Linked = 0x01,
 
     /**
-     *VRF public key.
-     */
-    VRF = 0x02,
-
-    /**
-     * Voting public key.
-     */
-    Voting = 0x04,
-
-    /**
      * Node public key on which remote is allowed to harvest.
      */
-    Node = 0x08,
+    Node = 0x02,
+
+    /**
+     * VRF public key.
+     */
+    VRF = 0x04,
 
     /**
      * All valid keys.
      */
-    All = Linked | VRF | Voting | Node,
+    All = Linked | VRF | Node,
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AccountKeyType } from './AccountKeyType';
+import { AccountKeyTypeFlags } from './AccountKeyTypeFlags';
 
 /**
  * Account key
@@ -25,9 +25,9 @@ export class AccountKey {
      */
     constructor(
         /**
-         * Account key type
+         * Account key key flags
          */
-        public readonly keyType: AccountKeyType,
+        public readonly accountKeyFlags: AccountKeyTypeFlags,
         /**
          * Key
          */

@@ -86,7 +86,7 @@ describe('AccountHttp', () => {
         expect(accountInfo.publicKeyHeight.toString()).to.be.equals(accountDTO.publicKeyHeight);
         expect(accountInfo.publicKey).to.be.equals(accountDTO.publicKey);
         expect(accountInfo.supplementalAccountKeys[0].key).to.be.equals(accountDTO.supplementalAccountKeys[0].key);
-        expect(accountInfo.supplementalAccountKeys[0].keyType.valueOf()).to.be.equals(
+        expect(accountInfo.supplementalAccountKeys[0].accountKeyFlags.valueOf()).to.be.equals(
             accountDTO.supplementalAccountKeys[0].keyType.valueOf(),
         );
         expect(accountInfo.mosaics.length).to.be.equals(1);

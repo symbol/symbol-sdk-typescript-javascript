@@ -17,32 +17,28 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { AccountKey } from '../../../src/model/account/AccountKey';
-import { AccountKeyType } from '../../../src/model/account/AccountKeyType';
+import { AccountKeyTypeFlags } from '../../../src/model/account/AccountKeyTypeFlags';
 
 describe('AccountKey', () => {
     it('should createComplete an AccountKey object', () => {
-        let accountKey = new AccountKey(AccountKeyType.Unset, 'abc');
+        let accountKey = new AccountKey(AccountKeyTypeFlags.Unset, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Unset.valueOf());
+        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.Unset.valueOf());
 
-        accountKey = new AccountKey(AccountKeyType.Linked, 'abc');
+        accountKey = new AccountKey(AccountKeyTypeFlags.Linked, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Linked.valueOf());
+        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.Linked.valueOf());
 
-        accountKey = new AccountKey(AccountKeyType.Node, 'abc');
+        accountKey = new AccountKey(AccountKeyTypeFlags.Node, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Node.valueOf());
+        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.Node.valueOf());
 
-        accountKey = new AccountKey(AccountKeyType.VRF, 'abc');
+        accountKey = new AccountKey(AccountKeyTypeFlags.VRF, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.VRF.valueOf());
+        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.VRF.valueOf());
 
-        accountKey = new AccountKey(AccountKeyType.Voting, 'abc');
+        accountKey = new AccountKey(AccountKeyTypeFlags.All, 'abc');
         expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Voting.valueOf());
-
-        accountKey = new AccountKey(AccountKeyType.All, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.All.valueOf());
+        deepEqual(accountKey.accountKeyFlags.valueOf(), AccountKeyTypeFlags.All.valueOf());
     });
 });
