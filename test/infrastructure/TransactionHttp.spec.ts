@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import http = require('http');
+import * as http from 'http';
 import {
     BlockRoutesApi,
     TransactionRoutesApi,

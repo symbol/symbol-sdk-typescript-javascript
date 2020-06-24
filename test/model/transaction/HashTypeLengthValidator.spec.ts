@@ -16,9 +16,7 @@
 import { expect } from 'chai';
 import { sha3_256, sha3_512 } from 'js-sha3';
 import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../../../src/model/transaction/LockHashAlgorithm';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+import * as CryptoJS from 'crypto-js';
 
 describe('LockHashAlgorithmLengthValidator', () => {
     it('LockHashAlgorithm.SHA3_256 should be exactly 64 chars length', () => {

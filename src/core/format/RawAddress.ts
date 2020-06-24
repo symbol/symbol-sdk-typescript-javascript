@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import RIPEMD160 = require('ripemd160');
+import * as ripemd160 from 'ripemd160';
 import { NetworkType } from '../../model/network/NetworkType';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
@@ -83,7 +83,7 @@ export class RawAddress {
         const publicKeyHash = sha3_256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
-        const ripemdHash = new RIPEMD160().update(new Buffer(publicKeyHash)).digest();
+        const ripemdHash = new ripemd160().update(new Buffer(publicKeyHash)).digest();
 
         // step 3: add network identifier byte in front of (2)
         const decodedAddress = new Uint8Array(RawAddress.constants.sizes.addressDecoded);

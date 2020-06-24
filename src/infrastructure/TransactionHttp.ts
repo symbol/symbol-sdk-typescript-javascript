@@ -37,7 +37,7 @@ import { TransactionRepository } from './TransactionRepository';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { Page } from './Page';
 import { TransactionGroup } from './TransactionGroup';
-import http = require('http');
+import * as http from 'http';
 import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**

@@ -19,13 +19,10 @@ import { sha3_256 } from 'js-sha3';
 import { LockHashUtils } from '../../../src/core/utils/LockHashUtils';
 import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
 import { Convert } from '../../../src/core/format/Convert';
+import * as ripemd160 from 'ripemd160';
+import { sha256 } from 'js-sha256';
 
 describe('Hashes', () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ripemd160 = require('ripemd160');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const sha256 = require('js-sha256');
-
     it('Op_Sha3_256', () => {
         const secretSeed = Crypto.randomBytes(20);
         const expected = sha3_256.create().update(secretSeed).hex();

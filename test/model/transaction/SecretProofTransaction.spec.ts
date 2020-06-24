@@ -33,9 +33,7 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+import * as CryptoJS from 'crypto-js';
 
 describe('SecretProofTransaction', () => {
     let account: Account;

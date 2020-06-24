@@ -15,9 +15,7 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const hkdf = require('futoin-hkdf');
+import * as hkdf from 'futoin-hkdf';
 
 describe('hkdf', () => {
     describe('Example tests', () => {
@@ -25,7 +23,7 @@ describe('hkdf', () => {
         const sharedSecret = 'string-or-buffer';
         const hash = 'SHA-256';
         const info = 'catapult';
-        const sharedKey = hkdf(sharedSecret, 32, { salt: new Uint8Array(32), info, hash });
+        const sharedKey = hkdf(sharedSecret, 32, { salt: Buffer.from(new Uint8Array(32)), info, hash });
         expect(Convert.uint8ToHex(sharedKey)).equal('E618ACB2558E1721492E4AE3BED3F4D86F26C2B0CE6AD939943A6A540855D23F');
     });
 });
