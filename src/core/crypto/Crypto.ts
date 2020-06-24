@@ -17,9 +17,8 @@
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+import * as crypto from 'crypto';
+import * as CryptoJS from 'crypto-js';
 
 export class Crypto {
     /**
@@ -183,8 +182,6 @@ export class Crypto {
      * @return {Uint8Array}
      */
     public static randomBytes = (length: number): any => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const crypto = require('crypto');
         return crypto.randomBytes(length);
     };
 }

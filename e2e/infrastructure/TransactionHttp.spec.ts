@@ -76,9 +76,10 @@ import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestric
 import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+import * as ripemd160 from 'ripemd160';
+import { sha256 } from 'js-sha256';
+import * as secureRandom from 'secure-random';
+import * as CryptoJS from 'crypto-js';
 
 describe('TransactionHttp', () => {
     let transactionHash: string;
@@ -101,12 +102,6 @@ describe('TransactionHttp', () => {
     let transactionRepository: TransactionRepository;
     let transactionStatusRepository: TransactionStatusRepository;
     let votingKey: string;
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const secureRandom = require('secure-random');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const sha256 = require('js-sha256');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ripemd160 = require('ripemd160');
 
     const remoteAccount = Account.generateNewAccount(helper.networkType);
 

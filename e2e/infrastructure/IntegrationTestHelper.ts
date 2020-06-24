@@ -27,9 +27,11 @@ import { TransactionService } from '../../src/service/TransactionService';
 import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
 import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import * as yaml from 'js-yaml';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export class IntegrationTestHelper {
-    public readonly yaml = require('js-yaml');
     public apiUrl: string;
     public repositoryFactory: RepositoryFactory;
     public account: Account;
@@ -51,9 +53,7 @@ export class IntegrationTestHelper {
 
     start(): Promise<IntegrationTestHelper> {
         return new Promise<IntegrationTestHelper>((resolve, reject) => {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const path = require('path');
-            require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, jsonData) => {
+            fs.readFile(path.resolve(__dirname, '../conf/network.conf'), (err, jsonData: any) => {
                 if (err) {
                     return reject(err);
                 }
@@ -94,7 +94,7 @@ export class IntegrationTestHelper {
                         const bootstrapRoot =
                             process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
                         const bootstrapPath = `${bootstrapRoot}/build/generated-addresses/addresses.yaml`;
-                        require('fs').readFile(bootstrapPath, (error: any, yamlData: any) => {
+                        fs.readFile(bootstrapPath, (error: any, yamlData: any) => {
                             if (error) {
                                 console.log(
                                     `catapult-service-bootstrap generated address could not be loaded from path ${bootstrapPath}. Ignoring and using accounts from network.conf.`,
@@ -102,7 +102,7 @@ export class IntegrationTestHelper {
                                 return resolve(this);
                             } else {
                                 console.log(`catapult-service-bootstrap generated address loaded from path ${bootstrapPath}.`);
-                                const parsedYaml = this.yaml.safeLoad(yamlData);
+                                const parsedYaml = yaml.safeLoad(yamlData);
                                 this.account = this.createAccount(parsedYaml.nemesis_addresses[0]);
                                 this.account2 = this.createAccount(parsedYaml.nemesis_addresses[1]);
                                 this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
