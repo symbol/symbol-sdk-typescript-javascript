@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.20.3] - 26-Jun-2020
+
+**Milestone**: Gorilla.1(0.9.6.2)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.20.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.21 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.9.3  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- **[BREAKING CHANGE]** Added `startPoint` and `endPoint` in `VotingKeyLinkTransaction`.
+- **[BREAKING CHANGE]** Renamed `SupplementalAccountKeys` to `SupplementalPublicKeys`. The new `SupplementalPublicKeys` has been changed from `array` type to an `object` containing: `linked`, `node`, `vrf` and `voting` key(s).
+- **[BREAKING CHANGE]** Changed to use the SDK's own enums for `order`, `orderBy`, `blockOrderBy` and `meklePosition`.
+- **[BREAKING CHANGE]** Added `TransactionGroup` parameter in `getTransactionsById` which can query `unconfirmed` and `partial` transactions now.
+- Changed base client library from `symbol-openapi-typescript-node-client` to `symbol-openapi-typescript-fetch-client` for better client / brower usability. There is no need to browserify the packages or special webpack processing
+- Made `Fetch API` injectable via `RepositoryFactory` which works like the injected `websocket` in `Listener`.
+
 ## [0.20.2] - 18-Jun-2020
 
 **Milestone**: Gorilla.1(0.9.6.1)
@@ -574,6 +590,7 @@ Client Library | v0.7.20-alpha.6  | [nem2-sdk-openapi-typescript-node-client](ht
 
 - Initial code release.
 
+[0.20.3]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.2...v0.20.3
 [0.20.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.0...v0.20.2
 [0.20.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.2...v0.20.0
 [0.19.2]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.19.1...v0.19.2
