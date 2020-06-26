@@ -1403,13 +1403,13 @@ describe('TransactionHttp', () => {
 
     describe('getTransactionsById', () => {
         it('should return transaction info given array of transactionHash', async () => {
-            const transactions = await transactionRepository.getTransactionsById([transactionHash]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionHash], TransactionGroup.Confirmed).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
 
         it('should return transaction info given array of transactionId', async () => {
-            const transactions = await transactionRepository.getTransactionsById([transactionId]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionId], TransactionGroup.Confirmed).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
