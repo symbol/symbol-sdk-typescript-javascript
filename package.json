@@ -53,6 +53,7 @@
         "@types/lodash": "^4.14.85",
         "@types/long": "^4.0.0",
         "@types/mocha": "^2.2.44",
+        "@types/ripemd160": "^2.0.0",
         "@types/request": "^2.47.0",
         "@types/request-promise-native": "^1.0.14",
         "@types/utf8": "^2.1.6",
@@ -81,7 +82,7 @@
     },
     "dependencies": {
         "bluebird": "^3.7.2",
-        "catbuffer-typescript": "0.0.21-alpha-202006221403",
+        "catbuffer-typescript": "0.0.21",
         "crypto-js": "^4.0.0",
         "diff": "^4.0.2",
         "futoin-hkdf": "^1.3.1",
@@ -98,7 +99,7 @@
         "ripemd160": "^2.0.2",
         "rxjs": "^6.5.3",
         "rxjs-compat": "^6.5.3",
-        "symbol-openapi-typescript-fetch-client": "0.9.3-SNAPSHOT.202006231707",
+        "symbol-openapi-typescript-fetch-client": "0.9.3",
         "tweetnacl": "^1.0.3",
         "utf8": "^3.0.0",
         "ws": "^7.2.3"

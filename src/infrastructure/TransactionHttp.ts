@@ -79,17 +79,34 @@ export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * Gets an array of transactions for different transaction ids
      * @param transactionIds - Array of transactions id and/or hash.
+     * @param transactionGroup - Transaction group.
      * @returns Observable<Transaction[]>
      */
-    public getTransactionsById(transactionIds: string[]): Observable<Transaction[]> {
+    public getTransactionsById(transactionIds: string[], transactionGroup: TransactionGroup): Observable<Transaction[]> {
         const transactionIdsBody = {
             transactionIds,
         };
-        return this.call(this.transactionRoutesApi.getTransactionsById(transactionIdsBody), (body) =>
-            body.map((transactionDTO) => {
-                return CreateTransactionFromDTO(transactionDTO);
-            }),
-        );
+
+        switch (transactionGroup) {
+            case TransactionGroup.Confirmed:
+                return this.call(this.transactionRoutesApi.getConfirmedTransactions(transactionIdsBody), (body) =>
+                    body.map((transactionDTO) => {
+                        return CreateTransactionFromDTO(transactionDTO);
+                    }),
+                );
+            case TransactionGroup.Unconfirmed:
+                return this.call(this.transactionRoutesApi.getUnconfirmedTransactions(transactionIdsBody), (body) =>
+                    body.map((transactionDTO) => {
+                        return CreateTransactionFromDTO(transactionDTO);
+                    }),
+                );
+            case TransactionGroup.Partial:
+                return this.call(this.transactionRoutesApi.getPartialTransactions(transactionIdsBody), (body) =>
+                    body.map((transactionDTO) => {
+                        return CreateTransactionFromDTO(transactionDTO);
+                    }),
+                );
+        }
     }
 
     /**

@@ -286,19 +286,49 @@ describe('TransactionHttp', () => {
         transactionInfoDto.meta = metaDto;
         transactionInfoDto.transaction = transactionDto;
 
-        when(transactionRoutesApi.getTransactionsById(deepEqual({ transactionIds: [generationHash] }))).thenReturn(
+        when(transactionRoutesApi.getConfirmedTransactions(deepEqual({ transactionIds: [generationHash] }))).thenReturn(
             Promise.resolve([transactionInfoDto]),
         );
 
-        const transaction = await transactionHttp.getTransactionsById([generationHash]).toPromise();
+        const transactionConfirmed = await transactionHttp.getTransactionsById([generationHash], TransactionGroup.Confirmed).toPromise();
 
-        expect(transaction.length).to.be.equal(1);
-        expect(transaction[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transaction[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+        when(transactionRoutesApi.getUnconfirmedTransactions(deepEqual({ transactionIds: [generationHash] }))).thenReturn(
+            Promise.resolve([transactionInfoDto]),
+        );
+
+        const transactionUnconfirmed = await transactionHttp
+            .getTransactionsById([generationHash], TransactionGroup.Unconfirmed)
+            .toPromise();
+
+        when(transactionRoutesApi.getPartialTransactions(deepEqual({ transactionIds: [generationHash] }))).thenReturn(
+            Promise.resolve([transactionInfoDto]),
+        );
+
+        const transactionPartial = await transactionHttp.getTransactionsById([generationHash], TransactionGroup.Partial).toPromise();
+
+        expect(transactionConfirmed.length).to.be.equal(1);
+        expect(transactionConfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
+        expect(((transactionConfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
             Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
         );
-        expect(transaction[0].transactionInfo?.id).to.be.equal('id');
-        expect(transaction[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactionConfirmed[0].transactionInfo?.id).to.be.equal('id');
+        expect(transactionConfirmed[0].transactionInfo?.hash).to.be.equal('hash');
+
+        expect(transactionUnconfirmed.length).to.be.equal(1);
+        expect(transactionUnconfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
+        expect(((transactionUnconfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+        );
+        expect(transactionUnconfirmed[0].transactionInfo?.id).to.be.equal('id');
+        expect(transactionUnconfirmed[0].transactionInfo?.hash).to.be.equal('hash');
+
+        expect(transactionPartial.length).to.be.equal(1);
+        expect(transactionPartial[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
+        expect(((transactionPartial[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
+            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+        );
+        expect(transactionPartial[0].transactionInfo?.id).to.be.equal('id');
+        expect(transactionPartial[0].transactionInfo?.hash).to.be.equal('hash');
     });
 
     it('Test getEffectiveFees method', async () => {
@@ -420,11 +450,11 @@ describe('TransactionHttp', () => {
     });
 
     it('getTransactionById - Error', async () => {
-        when(transactionRoutesApi.getTransactionsById(deepEqual({ transactionIds: [generationHash] }))).thenReject(
+        when(transactionRoutesApi.getConfirmedTransactions(deepEqual({ transactionIds: [generationHash] }))).thenReject(
             new Error('Mocked Error'),
         );
         await transactionHttp
-            .getTransactionsById([generationHash])
+            .getTransactionsById([generationHash], TransactionGroup.Confirmed)
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });

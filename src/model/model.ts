@@ -28,8 +28,10 @@ export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
 export * from './account/AccountNames';
 export * from './account/AccountInfoResolvedMosaic';
-export * from './account/AccountKeyType';
-export * from './account/AccountKey';
+export * from './account/AccountKeyTypeFlags';
+export * from './account/AccountLinkPublicKey';
+export * from './account/AccountLinkVotingKey';
+export * from './account/SupplementalPublicKeys';
 export * from './account/UnresolvedAddress';
 
 // Blockchain

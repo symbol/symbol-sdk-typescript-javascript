@@ -16,13 +16,12 @@
 
 import { sha3_256 } from 'js-sha3';
 import { LockHashAlgorithm } from '../../model/transaction/LockHashAlgorithm';
-
+import * as ripemd160 from 'ripemd160';
+import { sha256 } from 'js-sha256';
 /**
  * Hash utilities for SecretLock hashing
  */
 export class LockHashUtils {
-    private static sha256 = require('js-sha256');
-    private static ripemd160 = require('ripemd160');
     /**
      * Perform SHA3_256 hash
      * @param input buffer to be hashed
@@ -38,8 +37,8 @@ export class LockHashUtils {
      * @returns {string} Hash in hexidecimal format
      */
     public static Op_Hash_256(input: Uint8Array): string {
-        const hash = LockHashUtils.sha256(input, 'hex');
-        return LockHashUtils.sha256(Buffer.from(hash, 'hex')).toUpperCase();
+        const hash = sha256(input);
+        return sha256(Buffer.from(hash, 'hex')).toUpperCase();
     }
 
     /**
@@ -48,8 +47,8 @@ export class LockHashUtils {
      * @returns {string} Hash in hexidecimal format
      */
     public static Op_Hash_160(input: Uint8Array): string {
-        const sha256Hash = LockHashUtils.sha256(input);
-        return new LockHashUtils.ripemd160().update(Buffer.from(sha256Hash, 'hex')).digest('hex').toUpperCase();
+        const sha256Hash = sha256(input);
+        return new ripemd160().update(Buffer.from(sha256Hash, 'hex')).digest('hex').toUpperCase();
     }
 
     /**

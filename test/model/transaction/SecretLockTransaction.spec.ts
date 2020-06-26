@@ -35,9 +35,7 @@ import { SecretLockTransaction } from '../../../src/model/transaction/SecretLock
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+import * as CryptoJS from 'crypto-js';
 
 describe('SecretLockTransaction', () => {
     let account: Account;

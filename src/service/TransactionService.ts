@@ -36,6 +36,7 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
 import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { ITransactionService } from './interfaces/ITransactionService';
+import { TransactionGroup } from '../infrastructure/TransactionGroup';
 
 /**
  * Transaction Service
@@ -54,7 +55,7 @@ export class TransactionService implements ITransactionService {
      * @returns Observable<Transaction[]>
      */
     public resolveAliases(transationHashes: string[]): Observable<Transaction[]> {
-        return this.transactionRepository.getTransactionsById(transationHashes).pipe(
+        return this.transactionRepository.getTransactionsById(transationHashes, TransactionGroup.Confirmed).pipe(
             mergeMap((_) => _),
             mergeMap((transaction) => this.resolveTransaction(transaction)),
             toArray(),

@@ -16,18 +16,16 @@
 
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const CryptoJS = require('crypto-js');
+import * as CryptoJS from 'crypto-js';
+import * as hkdf from 'futoin-hkdf';
+import { sha512 } from 'js-sha512';
+import { WordArray } from 'crypto-js';
+
 export const Key_Size = 32;
 export const Signature_Size = 64;
 export const Half_Signature_Size = Signature_Size / 2;
 export const Hash_Size = 64;
 export const Half_Hash_Size = Hash_Size / 2;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const hkdf = require('futoin-hkdf');
-import { sha512 } from 'js-sha512';
-import { WordArray } from 'crypto-js';
-
 /**
  * Convert an Uint8Array to WordArray
  *
@@ -88,7 +86,7 @@ export const catapult_crypto = ((): any => {
             const sharedSecret = catapult_crypto.deriveSharedSecret(privateKey, publicKey);
             const info = 'catapult';
             const hash = 'SHA-256';
-            return hkdf(sharedSecret, 32, { salt: new Uint8Array(32), info, hash });
+            return hkdf(sharedSecret, 32, { salt: Buffer.from(new Uint8Array(32)), info, hash });
         },
 
         deriveSharedSecret: (privateKey: Uint8Array, publicKey: Uint8Array): Uint8Array => {

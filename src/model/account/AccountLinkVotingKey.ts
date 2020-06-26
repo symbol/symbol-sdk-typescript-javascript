@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { AccountKeyType } from './AccountKeyType';
-
+import { UInt64 } from '../UInt64';
 /**
- * Account key
+ * Account link voting key
  */
-export class AccountKey {
+export class AccountLinkVotingKey {
     /**
      *
      */
     constructor(
         /**
-         * Account key type
+         * public key
          */
-        public readonly keyType: AccountKeyType,
+        public readonly publicKey: string,
         /**
-         * Key
+         * Start point
          */
-        public readonly key: string,
+        public readonly startPoint: UInt64,
+        /**
+         * End point
+         */
+        public readonly endPoint: UInt64,
     ) {}
 }

@@ -14,35 +14,63 @@
  * limitations under the License.
  */
 
-import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { AccountKey } from '../../../src/model/account/AccountKey';
-import { AccountKeyType } from '../../../src/model/account/AccountKeyType';
+import { AccountLinkPublicKey } from '../../../src/model/account/AccountLinkPublicKey';
+import { AccountLinkVotingKey } from '../../../src/model/account/AccountLinkVotingKey';
+import { UInt64 } from '../../../src/model/UInt64';
+import { SupplementalPublicKeys } from '../../../src/model/account/SupplementalPublicKeys';
 
-describe('AccountKey', () => {
-    it('should createComplete an AccountKey object', () => {
-        let accountKey = new AccountKey(AccountKeyType.Unset, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Unset.valueOf());
+describe('AccountLinkPublicKey', () => {
+    it('should createComplete an AccountLinkPublicKey object', () => {
+        const accountKey = new AccountLinkPublicKey('abc');
+        expect(accountKey.publicKey).to.be.equal('abc');
+    });
+});
 
-        accountKey = new AccountKey(AccountKeyType.Linked, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Linked.valueOf());
+describe('AccountLinkVotingKey', () => {
+    it('should createComplete an AccountLinkVotingKey object', () => {
+        const accountKey = new AccountLinkVotingKey('abc', UInt64.fromUint(1), UInt64.fromUint(3));
+        expect(accountKey.publicKey).to.be.equal('abc');
+        expect(accountKey.startPoint.toString()).to.be.equal('1');
+        expect(accountKey.endPoint.toString()).to.be.equal('3');
+    });
+});
 
-        accountKey = new AccountKey(AccountKeyType.Node, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Node.valueOf());
+describe('SupplementalPublicKeys', () => {
+    it('should createComplete an SupplementalPublicKeys object', () => {
+        let accountKey = new SupplementalPublicKeys();
+        expect(accountKey.voting).to.be.undefined;
+        expect(accountKey.node).to.be.undefined;
+        expect(accountKey.vrf).to.be.undefined;
+        expect(accountKey.linked).to.be.undefined;
 
-        accountKey = new AccountKey(AccountKeyType.VRF, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.VRF.valueOf());
+        accountKey = new SupplementalPublicKeys(new AccountLinkPublicKey('abc'));
+        expect(accountKey.voting).to.be.undefined;
+        expect(accountKey.node).to.be.undefined;
+        expect(accountKey.vrf).to.be.undefined;
+        expect(accountKey.linked?.publicKey).to.be.eq('abc');
 
-        accountKey = new AccountKey(AccountKeyType.Voting, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.Voting.valueOf());
+        accountKey = new SupplementalPublicKeys(undefined, new AccountLinkPublicKey('abc'));
+        expect(accountKey.voting).to.be.undefined;
+        expect(accountKey.node?.publicKey).to.be.eq('abc');
+        expect(accountKey.vrf).to.be.undefined;
+        expect(accountKey.linked).to.be.undefined;
 
-        accountKey = new AccountKey(AccountKeyType.All, 'abc');
-        expect(accountKey.key).to.be.equal('abc');
-        deepEqual(accountKey.keyType.valueOf(), AccountKeyType.All.valueOf());
+        accountKey = new SupplementalPublicKeys(undefined, undefined, new AccountLinkPublicKey('abc'));
+        expect(accountKey.voting).to.be.undefined;
+        expect(accountKey.node).to.be.undefined;
+        expect(accountKey.vrf?.publicKey).to.be.eq('abc');
+        expect(accountKey.linked).to.be.undefined;
+
+        accountKey = new SupplementalPublicKeys(undefined, undefined, undefined, [
+            new AccountLinkVotingKey('abc', UInt64.fromUint(1), UInt64.fromUint(3)),
+        ]);
+        expect(accountKey.voting).not.to.be.undefined;
+        expect(accountKey.voting![0].publicKey).to.be.eq('abc');
+        expect(accountKey.voting![0].startPoint.toString()).to.be.eq('1');
+        expect(accountKey.voting![0].endPoint.toString()).to.be.eq('3');
+        expect(accountKey.node).to.be.undefined;
+        expect(accountKey.vrf).to.be.undefined;
+        expect(accountKey.linked).to.be.undefined;
     });
 });

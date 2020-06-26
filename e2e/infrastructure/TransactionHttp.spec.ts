@@ -76,9 +76,10 @@ import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestric
 import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+import * as ripemd160 from 'ripemd160';
+import { sha256 } from 'js-sha256';
+import * as secureRandom from 'secure-random';
+import * as CryptoJS from 'crypto-js';
 
 describe('TransactionHttp', () => {
     let transactionHash: string;
@@ -101,12 +102,6 @@ describe('TransactionHttp', () => {
     let transactionRepository: TransactionRepository;
     let transactionStatusRepository: TransactionStatusRepository;
     let votingKey: string;
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const secureRandom = require('secure-random');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const sha256 = require('js-sha256');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ripemd160 = require('ripemd160');
 
     const remoteAccount = Account.generateNewAccount(helper.networkType);
 
@@ -737,6 +732,8 @@ describe('TransactionHttp', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
                 Deadline.create(),
                 votingKey,
+                UInt64.fromUint(100),
+                UInt64.fromUint(300),
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
@@ -745,6 +742,8 @@ describe('TransactionHttp', () => {
 
             return helper.announce(signedTransaction).then((transaction: VotingKeyLinkTransaction) => {
                 expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.startPoint, 'StartPoint').not.to.be.undefined;
+                expect(transaction.endPoint, 'EndPoint').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 return signedTransaction;
             });
@@ -755,6 +754,8 @@ describe('TransactionHttp', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
                 Deadline.create(),
                 votingKey,
+                UInt64.fromUint(100),
+                UInt64.fromUint(300),
                 LinkAction.Unlink,
                 networkType,
                 helper.maxFee,
@@ -1402,13 +1403,13 @@ describe('TransactionHttp', () => {
 
     describe('getTransactionsById', () => {
         it('should return transaction info given array of transactionHash', async () => {
-            const transactions = await transactionRepository.getTransactionsById([transactionHash]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionHash], TransactionGroup.Confirmed).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
 
         it('should return transaction info given array of transactionId', async () => {
-            const transactions = await transactionRepository.getTransactionsById([transactionId]).toPromise();
+            const transactions = await transactionRepository.getTransactionsById([transactionId], TransactionGroup.Confirmed).toPromise();
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
@@ -1468,7 +1469,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = aggregateTransaction.signWith(cosignAccount1, generationHash);
             const transactionAnnounceResponse = await transactionRepository.announceAggregateBonded(signedTransaction).toPromise();
-            expect(transactionAnnounceResponse.message).to.be.equal('packet 500 was pushed to the network via /transactions/partial');
+            expect(transactionAnnounceResponse.message).to.be.equal('packet 256 was pushed to the network via /transactions/partial');
         });
     });
 
@@ -1476,7 +1477,7 @@ describe('TransactionHttp', () => {
         it('should return success when announceAggregateBondedCosignature', async () => {
             const payload = new CosignatureSignedTransaction('', '', '');
             const transactionAnnounceResponse = await transactionRepository.announceAggregateBondedCosignature(payload).toPromise();
-            expect(transactionAnnounceResponse.message).to.be.equal('packet 501 was pushed to the network via /transactions/cosignature');
+            expect(transactionAnnounceResponse.message).to.be.equal('packet 257 was pushed to the network via /transactions/cosignature');
         });
     });
 

@@ -31,6 +31,7 @@ import { TestingAccount } from '../conf/conf.spec';
 import { AccountType } from '../../src/model/account/AccountType';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
+import { SupplementalPublicKeys } from '../../src/model/account/SupplementalPublicKeys';
 
 describe('MosaicService', () => {
     const accountRepositoryMock = mock<AccountRepository>();
@@ -57,7 +58,7 @@ describe('MosaicService', () => {
             TestingAccount.publicKey,
             UInt64.fromUint(1),
             AccountType.Main,
-            [],
+            new SupplementalPublicKeys(),
             [],
             isEmptyMosaic ? [] : [new Mosaic(mosaicId, UInt64.fromUint(100))],
             UInt64.fromUint(1),

@@ -264,6 +264,7 @@ describe('MetadataHttp', () => {
 
     describe('getNamespaceMetadata', () => {
         it('should return metadata given a namespaceId', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
             const metadata = await metadataRepository.getNamespaceMetadata(namespaceId).toPromise();
             expect(metadata.length).to.be.greaterThan(0);
             expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');

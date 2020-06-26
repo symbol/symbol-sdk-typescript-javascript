@@ -40,10 +40,10 @@ export interface TransactionRepository extends Searcher<Transaction, Transaction
     /**
      * Gets an array of transactions for different transaction ids
      * @param transactionIds - Array of transactions id and/or hash.
+     * @param transactionGroup - Transaction group.
      * @returns Observable<Transaction[]>
      */
-    getTransactionsById(transactionIds: string[]): Observable<Transaction[]>;
-
+    getTransactionsById(transactionIds: string[], transactionGroup: TransactionGroup): Observable<Transaction[]>;
     /**
      * Gets a transaction's effective paid fee
      * @param transactionId - Transaction id or hash.

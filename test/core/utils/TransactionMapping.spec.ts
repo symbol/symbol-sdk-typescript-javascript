@@ -418,6 +418,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             Convert.uint8ToHex(Crypto.randomBytes(48)),
+            UInt64.fromUint(1),
+            UInt64.fromUint(3),
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
@@ -611,12 +613,21 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create an VotingKeyLinkTransaction object with link action', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(48));
-        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(Deadline.create(), key, LinkAction.Link, NetworkType.MIJIN_TEST);
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(),
+            key,
+            UInt64.fromUint(1),
+            UInt64.fromUint(3),
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
 
         const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VotingKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
+        expect(transaction.startPoint.toString()).to.be.equal('1');
+        expect(transaction.endPoint.toString()).to.be.equal('3');
         expect(transaction.linkedPublicKey).to.be.equal(key);
     });
 
@@ -906,11 +917,20 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create VotingKeyLinkTransaction', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(48));
-        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(Deadline.create(), key, LinkAction.Link, NetworkType.MIJIN_TEST);
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(),
+            key,
+            UInt64.fromUint(1),
+            UInt64.fromUint(3),
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
 
         const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(key);
+        expect(transaction.startPoint.toString()).to.be.equal('1');
+        expect(transaction.endPoint.toString()).to.be.equal('3');
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
     it('should create AccountRestrictionAddressTransaction', () => {
