@@ -24,7 +24,9 @@ import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
-import { AccountKey } from '../../../src/model/account/AccountKey';
+import { SupplementalPublicKeys } from '../../../src/model/account/SupplementalPublicKeys';
+import { AccountLinkPublicKey } from '../../../src/model/account/AccountLinkPublicKey';
+import { AccountLinkVotingKey } from '../../../src/model/account/AccountLinkVotingKey';
 
 describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {
@@ -35,7 +37,20 @@ describe('AccountInfo', () => {
                 importance: new UInt64([405653170, 0]),
                 importanceHeight: new UInt64([6462, 0]),
                 accountType: 0,
-                supplementalAccountKeys: [{ keyType: 1, key: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144' }],
+                supplementalPublicKeys: {
+                    linked: { publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F' },
+                    node: { publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F' },
+                    vrf: { publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F' },
+                    voting: {
+                        publicKeys: [
+                            {
+                                publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
+                                startPoint: '1',
+                                endpoint: '3',
+                            },
+                        ],
+                    },
+                },
                 activityBucket: [
                     {
                         startHeight: '1000',
@@ -61,7 +76,27 @@ describe('AccountInfo', () => {
             accountInfoDTO.account.publicKey,
             accountInfoDTO.account.publicKeyHeight,
             accountInfoDTO.account.accountType,
-            accountInfoDTO.account.supplementalAccountKeys.map((key) => new AccountKey(key.keyType.valueOf(), key.key)),
+            new SupplementalPublicKeys(
+                accountInfoDTO.account.supplementalPublicKeys.linked
+                    ? new AccountLinkPublicKey(accountInfoDTO.account.supplementalPublicKeys.linked?.publicKey)
+                    : undefined,
+                accountInfoDTO.account.supplementalPublicKeys.node
+                    ? new AccountLinkPublicKey(accountInfoDTO.account.supplementalPublicKeys.node?.publicKey)
+                    : undefined,
+                accountInfoDTO.account.supplementalPublicKeys.vrf
+                    ? new AccountLinkPublicKey(accountInfoDTO.account.supplementalPublicKeys.vrf?.publicKey)
+                    : undefined,
+                accountInfoDTO.account.supplementalPublicKeys.voting
+                    ? accountInfoDTO.account.supplementalPublicKeys.voting?.publicKeys.map(
+                          (v) =>
+                              new AccountLinkVotingKey(
+                                  v.publicKey,
+                                  UInt64.fromNumericString(v.startPoint),
+                                  UInt64.fromNumericString(v.startPoint),
+                              ),
+                      )
+                    : undefined,
+            ),
             accountInfoDTO.account.activityBucket.map(
                 (bucket) =>
                     new ActivityBucket(

@@ -19,11 +19,12 @@ import {
     AccountDTO,
     AccountIds,
     AccountInfoDTO,
-    AccountKeyDTO,
     AccountRoutesApi,
     AccountTypeEnum,
     ActivityBucketDTO,
     Mosaic,
+    AccountLinkPublicKeyDTO,
+    AccountLinkVotingKeyDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -53,10 +54,14 @@ describe('AccountHttp', () => {
     accountDTO.importance = '222';
     accountDTO.importanceHeight = '333';
     accountDTO.publicKeyHeight = '444';
-    const accountKeyDto = {} as AccountKeyDTO;
-    accountKeyDto.key = 'abc';
-    accountKeyDto.keyType = 1;
-    accountDTO.supplementalPublicKeys = [accountKeyDto];
+    const accountKeyDto: AccountLinkPublicKeyDTO = { publicKey: 'abc' };
+    const accountVotingKeyDto: AccountLinkVotingKeyDTO = { publicKey: 'abc', startPoint: '1', endPoint: '3' };
+    accountDTO.supplementalPublicKeys = {
+        linked: accountKeyDto,
+        node: accountKeyDto,
+        vrf: accountKeyDto,
+        voting: { publicKeys: [accountVotingKeyDto] },
+    };
     accountDTO.publicKey = 'AAA';
     accountDTO.activityBuckets = [];
     accountDTO.mosaics = [mosaic];
@@ -85,10 +90,13 @@ describe('AccountHttp', () => {
         expect(accountInfo.importanceHeight.toString()).to.be.equals(accountDTO.importanceHeight);
         expect(accountInfo.publicKeyHeight.toString()).to.be.equals(accountDTO.publicKeyHeight);
         expect(accountInfo.publicKey).to.be.equals(accountDTO.publicKey);
-        expect(accountInfo.supplementalPublicKeys[0].key).to.be.equals(accountDTO.supplementalPublicKeys[0].key);
-        expect(accountInfo.supplementalPublicKeys[0].keyType.valueOf()).to.be.equals(
-            accountDTO.supplementalPublicKeys[0].keyType.valueOf(),
-        );
+        expect(accountInfo.supplementalPublicKeys.linked?.publicKey).to.be.equals('abc');
+        expect(accountInfo.supplementalPublicKeys.node?.publicKey).to.be.equals('abc');
+        expect(accountInfo.supplementalPublicKeys.vrf?.publicKey).to.be.equals('abc');
+        expect(accountInfo.supplementalPublicKeys.voting?.length).to.be.equals(1);
+        expect(accountInfo.supplementalPublicKeys.voting![0].publicKey).to.be.equals('abc');
+        expect(accountInfo.supplementalPublicKeys.voting![0].endPoint.toString()).to.be.equals('3');
+        expect(accountInfo.supplementalPublicKeys.voting![0].startPoint.toString()).to.be.equals('1');
         expect(accountInfo.mosaics.length).to.be.equals(1);
         expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);
         expect(accountInfo.mosaics[0].amount.toString()).to.be.equals(mosaic.amount);

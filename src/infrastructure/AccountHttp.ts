@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs';
 import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { AccountInfo } from '../model/account/AccountInfo';
-import { AccountKey } from '../model/account/AccountKey';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import { Address } from '../model/account/Address';
 import { Mosaic } from '../model/mosaic/Mosaic';
@@ -25,6 +24,9 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
+import { SupplementalPublicKeys } from '../model/account/SupplementalPublicKeys';
+import { AccountLinkPublicKey } from '../model/account/AccountLinkPublicKey';
+import { AccountLinkVotingKey } from '../model/account/AccountLinkVotingKey';
 
 /**
  * Account http repository.
@@ -83,7 +85,27 @@ export class AccountHttp extends Http implements AccountRepository {
             dto.account.publicKey,
             UInt64.fromNumericString(dto.account.publicKeyHeight),
             dto.account.accountType.valueOf(),
-            dto.account.supplementalPublicKeys.map((key) => new AccountKey(key.keyType.valueOf(), key.key)),
+            new SupplementalPublicKeys(
+                dto.account.supplementalPublicKeys.linked
+                    ? new AccountLinkPublicKey(dto.account.supplementalPublicKeys.linked?.publicKey)
+                    : undefined,
+                dto.account.supplementalPublicKeys.node
+                    ? new AccountLinkPublicKey(dto.account.supplementalPublicKeys.node?.publicKey)
+                    : undefined,
+                dto.account.supplementalPublicKeys.vrf
+                    ? new AccountLinkPublicKey(dto.account.supplementalPublicKeys.vrf?.publicKey)
+                    : undefined,
+                dto.account.supplementalPublicKeys.voting
+                    ? dto.account.supplementalPublicKeys.voting?.publicKeys.map(
+                          (v) =>
+                              new AccountLinkVotingKey(
+                                  v.publicKey,
+                                  UInt64.fromNumericString(v.startPoint),
+                                  UInt64.fromNumericString(v.endPoint),
+                              ),
+                      )
+                    : undefined,
+            ),
             dto.account.activityBuckets.map((bucket) => {
                 return new ActivityBucket(
                     UInt64.fromNumericString(bucket.startHeight),
