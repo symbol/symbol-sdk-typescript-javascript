@@ -1,0 +1,693 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Account | symbol-sdk</title>
+	<meta name="description" content="Documentation for symbol-sdk">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">symbol-sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_model_account_account_.html">&quot;model/account/Account&quot;</a>
+				</li>
+				<li>
+					<a href="_model_account_account_.account.html">Account</a>
+				</li>
+			</ul>
+			<h1>Class Account</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The account structure describes an account private key, public key, address and allows signing transactions.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Account</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_account_account_.account.html#address" class="tsd-kind-icon">address</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_model_account_account_.account.html#keypair" class="tsd-kind-icon">key<wbr>Pair</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_model_account_account_.account.html#networktype" class="tsd-kind-icon">network<wbr>Type</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_model_account_account_.account.html#privatekey" class="tsd-kind-icon">private<wbr>Key</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_model_account_account_.account.html#publicaccount" class="tsd-kind-icon">public<wbr>Account</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_model_account_account_.account.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#decryptmessage" class="tsd-kind-icon">decrypt<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#encryptmessage" class="tsd-kind-icon">encrypt<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#sign" class="tsd-kind-icon">sign</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#signcosignaturetransaction" class="tsd-kind-icon">sign<wbr>Cosignature<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#signdata" class="tsd-kind-icon">sign<wbr>Data</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#signtransactiongivensignatures" class="tsd-kind-icon">sign<wbr>Transaction<wbr>Given<wbr>Signatures</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_account_account_.account.html#signtransactionwithcosignatories" class="tsd-kind-icon">sign<wbr>Transaction<wbr>With<wbr>Cosignatories</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_model_account_account_.account.html#createfromprivatekey" class="tsd-kind-icon">create<wbr>From<wbr>Private<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_model_account_account_.account.html#generatenewaccount" class="tsd-kind-icon">generate<wbr>New<wbr>Account</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="address" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> address</h3>
+					<div class="tsd-signature tsd-kind-icon">address<span class="tsd-signature-symbol">:</span> <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L48">model/account/Account.ts:48</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The account address.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="keypair" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> key<wbr>Pair</h3>
+					<div class="tsd-signature tsd-kind-icon">key<wbr>Pair<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_model_account_account_.ikeypair.html" class="tsd-signature-type">IKeyPair</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L52">model/account/Account.ts:52</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="networktype" class="tsd-anchor"></a>
+					<h3>network<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> networkType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L131">model/account/Account.ts:131</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Account network type.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="privatekey" class="tsd-anchor"></a>
+					<h3>private<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> privateKey<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L123">model/account/Account.ts:123</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Account private key.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="publicaccount" class="tsd-anchor"></a>
+					<h3>public<wbr>Account</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> publicAccount<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L115">model/account/Account.ts:115</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Public account.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="publickey" class="tsd-anchor"></a>
+					<h3>public<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> publicKey<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L107">model/account/Account.ts:107</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Account public key.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="decryptmessage" class="tsd-anchor"></a>
+					<h3>decrypt<wbr>Message</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">decrypt<wbr>Message<span class="tsd-signature-symbol">(</span>encryptedMessage<span class="tsd-signature-symbol">: </span><a href="_model_message_encryptedmessage_.encryptedmessage.html" class="tsd-signature-type">EncryptedMessage</a>, publicAccount<span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_message_plainmessage_.plainmessage.html" class="tsd-signature-type">PlainMessage</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L100">model/account/Account.ts:100</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Decrypts an encrypted message</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>encryptedMessage: <a href="_model_message_encryptedmessage_.encryptedmessage.html" class="tsd-signature-type">EncryptedMessage</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Encrypted message</p>
+									</div>
+								</li>
+								<li>
+									<h5>publicAccount: <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The public account originally encrypted the message</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_message_plainmessage_.plainmessage.html" class="tsd-signature-type">PlainMessage</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="encryptmessage" class="tsd-anchor"></a>
+					<h3>encrypt<wbr>Message</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">encrypt<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, recipientPublicAccount<span class="tsd-signature-symbol">: </span><a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_message_encryptedmessage_.encryptedmessage.html" class="tsd-signature-type">EncryptedMessage</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L90">model/account/Account.ts:90</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new encrypted Message</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Plain message to be encrypted</p>
+									</div>
+								</li>
+								<li>
+									<h5>recipientPublicAccount: <a href="_model_account_publicaccount_.publicaccount.html" class="tsd-signature-type">PublicAccount</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Recipient public account</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_message_encryptedmessage_.encryptedmessage.html" class="tsd-signature-type">EncryptedMessage</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="sign" class="tsd-anchor"></a>
+					<h3>sign</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sign<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a>, generationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_signedtransaction_.signedtransaction.html" class="tsd-signature-type">SignedTransaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L141">model/account/Account.ts:141</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sign a transaction</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>transaction: <a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The transaction to be signed.</p>
+									</div>
+								</li>
+								<li>
+									<h5>generationHash: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Network generation hash hex</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_transaction_signedtransaction_.signedtransaction.html" class="tsd-signature-type">SignedTransaction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="signcosignaturetransaction" class="tsd-anchor"></a>
+					<h3>sign<wbr>Cosignature<wbr>Transaction</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sign<wbr>Cosignature<wbr>Transaction<span class="tsd-signature-symbol">(</span>cosignatureTransaction<span class="tsd-signature-symbol">: </span><a href="_model_transaction_cosignaturetransaction_.cosignaturetransaction.html" class="tsd-signature-type">CosignatureTransaction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L180">model/account/Account.ts:180</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sign aggregate signature transaction</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>cosignatureTransaction: <a href="_model_transaction_cosignaturetransaction_.cosignaturetransaction.html" class="tsd-signature-type">CosignatureTransaction</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The aggregate signature transaction.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="signdata" class="tsd-anchor"></a>
+					<h3>sign<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sign<wbr>Data<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L189">model/account/Account.ts:189</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sign raw data</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>data: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Data to be signed</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<ul>
+								<li>Signed data result</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="signtransactiongivensignatures" class="tsd-anchor"></a>
+					<h3>sign<wbr>Transaction<wbr>Given<wbr>Signatures</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sign<wbr>Transaction<wbr>Given<wbr>Signatures<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a>, cosignatureSignedTransactions<span class="tsd-signature-symbol">: </span><a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a><span class="tsd-signature-symbol">[]</span>, generationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_signedtransaction_.signedtransaction.html" class="tsd-signature-type">SignedTransaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L168">model/account/Account.ts:168</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
+									For off chain Aggregated Complete Transaction co-signing.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>transaction: <a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a></h5>
+								</li>
+								<li>
+									<h5>cosignatureSignedTransactions: <a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Array of cosigned transaction</p>
+									</div>
+								</li>
+								<li>
+									<h5>generationHash: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Network generation hash hex</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_transaction_signedtransaction_.signedtransaction.html" class="tsd-signature-type">SignedTransaction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="signtransactionwithcosignatories" class="tsd-anchor"></a>
+					<h3>sign<wbr>Transaction<wbr>With<wbr>Cosignatories</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sign<wbr>Transaction<wbr>With<wbr>Cosignatories<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a>, cosignatories<span class="tsd-signature-symbol">: </span><a href="_model_account_account_.account.html" class="tsd-signature-type">Account</a><span class="tsd-signature-symbol">[]</span>, generationHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_signedtransaction_.signedtransaction.html" class="tsd-signature-type">SignedTransaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L152">model/account/Account.ts:152</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sign transaction with cosignatories creating a new SignedTransaction</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>transaction: <a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The aggregate transaction to be signed.</p>
+									</div>
+								</li>
+								<li>
+									<h5>cosignatories: <a href="_model_account_account_.account.html" class="tsd-signature-type">Account</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The array of accounts that will cosign the transaction</p>
+									</div>
+								</li>
+								<li>
+									<h5>generationHash: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Network generation hash hex</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_transaction_signedtransaction_.signedtransaction.html" class="tsd-signature-type">SignedTransaction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="createfromprivatekey" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>From<wbr>Private<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>From<wbr>Private<wbr>Key<span class="tsd-signature-symbol">(</span>privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_account_account_.account.html" class="tsd-signature-type">Account</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L61">model/account/Account.ts:61</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create an Account from a given private key</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>privateKey: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Private key from an account</p>
+									</div>
+								</li>
+								<li>
+									<h5>networkType: <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Network type</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_account_account_.account.html" class="tsd-signature-type">Account</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="generatenewaccount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> generate<wbr>New<wbr>Account</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">generate<wbr>New<wbr>Account<span class="tsd-signature-symbol">(</span>networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_account_account_.account.html" class="tsd-signature-type">Account</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/fca7a60/src/model/account/Account.ts#L71">model/account/Account.ts:71</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a new account</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>networkType: <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Network type</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_model_account_account_.account.html" class="tsd-signature-type">Account</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/_model_account_account_.html">&quot;model/account/<wbr>Account&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="_model_account_account_.account.html" class="tsd-kind-icon">Account</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#address" class="tsd-kind-icon">address</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_model_account_account_.account.html#keypair" class="tsd-kind-icon">key<wbr>Pair</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#networktype" class="tsd-kind-icon">network<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#privatekey" class="tsd-kind-icon">private<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#publicaccount" class="tsd-kind-icon">public<wbr>Account</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#decryptmessage" class="tsd-kind-icon">decrypt<wbr>Message</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#encryptmessage" class="tsd-kind-icon">encrypt<wbr>Message</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#sign" class="tsd-kind-icon">sign</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#signcosignaturetransaction" class="tsd-kind-icon">sign<wbr>Cosignature<wbr>Transaction</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#signdata" class="tsd-kind-icon">sign<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#signtransactiongivensignatures" class="tsd-kind-icon">sign<wbr>Transaction<wbr>Given<wbr>Signatures</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_account_account_.account.html#signtransactionwithcosignatories" class="tsd-kind-icon">sign<wbr>Transaction<wbr>With<wbr>Cosignatories</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_model_account_account_.account.html#createfromprivatekey" class="tsd-kind-icon">create<wbr>From<wbr>Private<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_model_account_account_.account.html#generatenewaccount" class="tsd-kind-icon">generate<wbr>New<wbr>Account</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../interfaces/_model_account_account_.ikeypair.html" class="tsd-kind-icon">IKey<wbr>Pair</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
