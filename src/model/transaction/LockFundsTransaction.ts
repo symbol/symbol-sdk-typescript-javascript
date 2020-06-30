@@ -26,6 +26,7 @@ import {
     TimestampDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -157,28 +158,10 @@ export class LockFundsTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a LockFundsTransaction
-     * @returns {number}
-     * @memberof LockFundsTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteMosaicId = 8;
-        const byteAmount = 8;
-        const byteDuration = 8;
-        const byteHash = 32;
-
-        return byteSize + byteMosaicId + byteAmount + byteDuration + byteHash;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -194,7 +177,7 @@ export class LockFundsTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

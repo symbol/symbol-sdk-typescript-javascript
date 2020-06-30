@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper } from 'catbuffer-typescript';
+import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper, TransactionBuilder } from 'catbuffer-typescript';
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -37,6 +37,10 @@ import { Address } from '../account/Address';
  * An abstract transaction class that serves as the base class of all NEM transactions.
  */
 export abstract class Transaction {
+    /**
+     * Transaction payload size
+     */
+    private payloadSize?: number;
     /**
      * Transaction header size
      *
@@ -112,7 +116,9 @@ export abstract class Transaction {
          * Transactions meta data object contains additional information about the transaction.
          */
         public readonly transactionInfo?: TransactionInfo | AggregateTransactionInfo,
-    ) {}
+    ) {
+        this.payloadSize = undefined;
+    }
 
     /**
      * Generate transaction hash hex
@@ -173,11 +179,6 @@ export abstract class Transaction {
         SHA3Hasher.func(entityHash, entityHashBytes, 32);
         return Convert.uint8ToHex(entityHash);
     }
-
-    /**
-     * @internal
-     */
-    protected abstract generateBytes(): Uint8Array;
 
     /**
      * @internal
@@ -365,25 +366,38 @@ export abstract class Transaction {
     }
 
     /**
-     * @description get the byte size of a transaction
+     * @override Transaction.size()
+     * @description get the byte size of a transaction using the builder
      * @returns {number}
-     * @memberof Transaction
+     * @memberof TransferTransaction
      */
     public get size(): number {
-        const byteSize =
-            4 + // size
-            4 + // verifiableEntityHeader_Reserved1
-            64 + // signature
-            32 + // signerPublicKey
-            4 + // entityBody_Reserved1
-            1 + // version
-            1 + // networkType
-            2 + // type
-            8 + // maxFee
-            8; // deadline
-
-        return byteSize;
+        return this.payloadSize ?? this.createBuilder().getSize();
     }
+
+    /**
+     * @internal
+     * Set payload size
+     * @param size payload size
+     * @returns {AggregateTransaction}
+     */
+    public setPayloadSize(size?: number): Transaction {
+        this.payloadSize = size;
+        return this;
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        return this.createBuilder().serialize();
+    }
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected abstract createBuilder(): TransactionBuilder;
 
     /**
      * @description Serialize a transaction object

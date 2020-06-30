@@ -128,6 +128,20 @@ describe('MosaicDefinitionTransaction', () => {
             expect(mosaicDefinitionTransaction.size).to.be.equal(150);
             expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
         });
+        it('should set payload size', () => {
+            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+                Deadline.create(),
+                MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
+                new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+                MosaicFlags.create(true, true, false),
+                3,
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicDefinitionTransaction.size).to.be.equal(150);
+            expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
+            expect(mosaicDefinitionTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it without duration', () => {

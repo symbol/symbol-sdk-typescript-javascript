@@ -24,6 +24,7 @@ import {
     NamespaceIdDto,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert, RawAddress } from '../../core/format';
 import { Address } from '../account/Address';
@@ -142,27 +143,10 @@ export class AddressAliasTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a AddressAliasTransaction
-     * @returns {number}
-     * @memberof AddressAliasTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteActionType = 1;
-        const byteNamespaceId = 8;
-        const byteAddress = 24;
-
-        return byteSize + byteActionType + byteNamespaceId + byteAddress;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -178,7 +162,7 @@ export class AddressAliasTransaction extends Transaction {
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
             this.aliasAction.valueOf(),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

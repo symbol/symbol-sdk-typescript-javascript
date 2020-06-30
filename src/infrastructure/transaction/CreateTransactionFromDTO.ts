@@ -161,7 +161,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
         return new NamespaceRegistrationTransaction(
             transactionDTO.network,
@@ -178,7 +178,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MOSAIC_DEFINITION) {
         return new MosaicDefinitionTransaction(
             transactionDTO.network,
@@ -195,7 +195,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
         return new MosaicSupplyChangeTransaction(
             transactionDTO.network,
@@ -210,7 +210,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
         return new MultisigAccountModificationTransaction(
             transactionDTO.network,
@@ -226,7 +226,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.HASH_LOCK) {
         const networkType = transactionDTO.network;
         return new LockFundsTransaction(
@@ -240,7 +240,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, networkType) : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.SECRET_LOCK) {
         const recipientAddress = transactionDTO.recipientAddress;
         const mosaicId = UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId);
@@ -259,7 +259,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.SECRET_PROOF) {
         const recipientAddress = transactionDTO.recipientAddress;
         return new SecretProofTransaction(
@@ -276,7 +276,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
         return new MosaicAliasTransaction(
             transactionDTO.network,
@@ -291,7 +291,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
         return new AddressAliasTransaction(
             transactionDTO.network,
@@ -306,7 +306,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         return new AccountAddressRestrictionTransaction(
             transactionDTO.network,
@@ -321,7 +321,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
         return new AccountOperationRestrictionTransaction(
             transactionDTO.network,
@@ -336,7 +336,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
         return new AccountMosaicRestrictionTransaction(
             transactionDTO.network,
@@ -355,7 +355,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.ACCOUNT_KEY_LINK) {
         return new AccountKeyLinkTransaction(
             transactionDTO.network,
@@ -369,7 +369,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
         return new MosaicGlobalRestrictionTransaction(
             transactionDTO.network,
@@ -388,7 +388,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
         return new MosaicAddressRestrictionTransaction(
             transactionDTO.network,
@@ -405,7 +405,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
         return new AccountMetadataTransaction(
             transactionDTO.network,
@@ -421,7 +421,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
         return new MosaicMetadataTransaction(
             transactionDTO.network,
@@ -438,7 +438,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
         return new NamespaceMetadataTransaction(
             transactionDTO.network,
@@ -455,7 +455,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.VRF_KEY_LINK) {
         return new VrfKeyLinkTransaction(
             transactionDTO.network,
@@ -469,7 +469,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.NODE_KEY_LINK) {
         return new NodeKeyLinkTransaction(
             transactionDTO.network,
@@ -483,7 +483,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     } else if (transactionDTO.type === TransactionType.VOTING_KEY_LINK) {
         return new VotingKeyLinkTransaction(
             transactionDTO.network,
@@ -499,7 +499,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
-        );
+        ).setPayloadSize(transactionDTO.size);
     }
     throw new Error('Unimplemented transaction with type ' + transactionDTO.type);
 };
@@ -545,7 +545,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                 ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey, transactionDTO.transaction.network)
                 : undefined,
             extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
-        );
+        ).setPayloadSize(transactionDTO.transaction.size);
     } else {
         return CreateStandaloneTransactionFromDTO(
             transactionDTO.transaction,

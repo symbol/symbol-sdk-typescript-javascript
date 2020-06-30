@@ -32,6 +32,7 @@ describe('CreateTransactionFromDTO', () => {
                     index: 0,
                 },
                 transaction: {
+                    size: 100,
                     signature:
                         '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
                     signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
@@ -57,6 +58,7 @@ describe('CreateTransactionFromDTO', () => {
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
             deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('test-message');
+            expect(transferTransaction.size).to.be.equal(100);
         });
 
         it('standalone without message', () => {
@@ -69,6 +71,7 @@ describe('CreateTransactionFromDTO', () => {
                     index: 0,
                 },
                 transaction: {
+                    size: 100,
                     signature:
                         '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
                     signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
@@ -90,6 +93,7 @@ describe('CreateTransactionFromDTO', () => {
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
             deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('');
+            expect(transferTransaction.size).to.be.equal(100);
         });
 
         it('aggregate', () => {
@@ -102,6 +106,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
                 transaction: {
+                    size: 100,
                     cosignatures: [
                         {
                             version: '0',
@@ -152,7 +157,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const aggregateTransferTransaction = CreateTransactionFromDTO(aggregateTransferTransactionDTO);
-
+            expect(aggregateTransferTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(aggregateTransferTransaction, aggregateTransferTransactionDTO);
         });
     });
@@ -169,6 +174,7 @@ describe('CreateTransactionFromDTO', () => {
                         merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     },
                     transaction: {
+                        size: 100,
                         deadline: '1',
                         duration: '1000',
                         maxFee: '0',
@@ -186,7 +192,7 @@ describe('CreateTransactionFromDTO', () => {
                 };
 
                 const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO);
-
+                expect(transferTransaction.size).eq(100);
                 ValidateTransaction.validateStandaloneTx(transferTransaction, registerNamespaceTransactionDTO);
             });
 
@@ -200,6 +206,7 @@ describe('CreateTransactionFromDTO', () => {
                         merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                     },
                     transaction: {
+                        size: 100,
                         cosignatures: [
                             {
                                 version: '0',
@@ -243,7 +250,7 @@ describe('CreateTransactionFromDTO', () => {
                 };
 
                 const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateNamespaceRegistrationTransactionDTO);
-
+                expect(aggregateNamespaceRegistrationTransaction.size).eq(100);
                 ValidateTransaction.validateAggregateTx(
                     aggregateNamespaceRegistrationTransaction,
                     aggregateNamespaceRegistrationTransactionDTO,
@@ -262,6 +269,7 @@ describe('CreateTransactionFromDTO', () => {
                         merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     },
                     transaction: {
+                        size: 100,
                         deadline: '1',
                         maxFee: '0',
                         name: '0unius',
@@ -278,7 +286,7 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
                 const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO);
-
+                expect(transferTransaction.size).eq(100);
                 ValidateTransaction.validateStandaloneTx(transferTransaction, registerNamespaceTransactionDTO);
             });
 
@@ -292,6 +300,7 @@ describe('CreateTransactionFromDTO', () => {
                         merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                     },
                     transaction: {
+                        size: 100,
                         cosignatures: [
                             {
                                 version: '0',
@@ -335,7 +344,7 @@ describe('CreateTransactionFromDTO', () => {
                 };
 
                 const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateNamespaceRegistrationTransactionDTO);
-
+                expect(aggregateNamespaceRegistrationTransaction.size).eq(100);
                 ValidateTransaction.validateAggregateTx(
                     aggregateNamespaceRegistrationTransaction,
                     aggregateNamespaceRegistrationTransactionDTO,
@@ -355,6 +364,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                 },
                 transaction: {
+                    size: 100,
                     deadline: '1',
                     maxFee: '0',
                     id: '85BBEA6CC462B244',
@@ -373,6 +383,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const mosaicDefinitionTransaction = CreateTransactionFromDTO(mosaicDefinitionTransactionDTO);
+            expect(mosaicDefinitionTransaction.size).eq(100);
 
             ValidateTransaction.validateStandaloneTx(mosaicDefinitionTransaction, mosaicDefinitionTransactionDTO);
         });
@@ -387,6 +398,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
                 transaction: {
+                    size: 100,
                     cosignatures: [
                         {
                             version: '0',
@@ -431,7 +443,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateMosaicDefinitionTransactionDTO);
-
+            expect(aggregateNamespaceRegistrationTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(aggregateNamespaceRegistrationTransaction, aggregateMosaicDefinitionTransactionDTO);
         });
     });
@@ -447,6 +459,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                 },
                 transaction: {
+                    size: 100,
                     deadline: '1',
                     delta: '1000',
                     action: 1,
@@ -463,7 +476,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const mosaicSupplyChangeTransaction = CreateTransactionFromDTO(mosaicSupplyChangeTransactionDTO);
-
+            expect(mosaicSupplyChangeTransaction.size).eq(100);
             ValidateTransaction.validateStandaloneTx(mosaicSupplyChangeTransaction, mosaicSupplyChangeTransactionDTO);
         });
 
@@ -477,6 +490,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
                 transaction: {
+                    size: 100,
                     cosignatures: [
                         {
                             version: '0',
@@ -519,6 +533,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const aggregateMosaicSupplyChangeTransaction = CreateTransactionFromDTO(aggregateMosaicSupplyChangeTransactionDTO);
+            expect(aggregateMosaicSupplyChangeTransaction.size).eq(100);
 
             ValidateTransaction.validateAggregateTx(aggregateMosaicSupplyChangeTransaction, aggregateMosaicSupplyChangeTransactionDTO);
         });
@@ -535,6 +550,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                 },
                 transaction: {
+                    size: 100,
                     deadline: '1',
                     maxFee: '0',
                     minApprovalDelta: 1,
@@ -552,7 +568,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const modifyMultisigAccountTransaction = CreateTransactionFromDTO(modifyMultisigAccountTransactionDTO);
-
+            expect(modifyMultisigAccountTransaction.size).eq(100);
             ValidateTransaction.validateStandaloneTx(modifyMultisigAccountTransaction, modifyMultisigAccountTransactionDTO);
         });
 
@@ -566,6 +582,7 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
                 },
                 transaction: {
+                    size: 100,
                     cosignatures: [
                         {
                             version: '0',
@@ -611,7 +628,7 @@ describe('CreateTransactionFromDTO', () => {
             const aggregateMultisigAccountModificationTransaction = CreateTransactionFromDTO(
                 aggregateMultisigAccountModificationTransactionDTO,
             );
-
+            expect(aggregateMultisigAccountModificationTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(
                 aggregateMultisigAccountModificationTransaction,
                 aggregateMultisigAccountModificationTransactionDTO,

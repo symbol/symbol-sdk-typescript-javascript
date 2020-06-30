@@ -98,6 +98,22 @@ describe('AccountMetadataTransaction', () => {
             const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
             expect(signedTransaction.hash).not.to.be.undefined;
         });
+
+        it('should set payload size', () => {
+            const accountMetadataTransaction = AccountMetadataTransaction.create(
+                Deadline.create(),
+                account.address,
+                UInt64.fromUint(1000),
+                1,
+                Convert.uint8ToUtf8(new Uint8Array(10)),
+                NetworkType.MIJIN_TEST,
+            );
+
+            expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
+            expect(accountMetadataTransaction.size).to.be.equal(174);
+
+            expect(accountMetadataTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('should create EmbeddedTransactionBuilder', () => {

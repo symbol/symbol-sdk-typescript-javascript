@@ -23,6 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedAddressDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -138,38 +139,10 @@ export class AccountAddressRestrictionTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a AccountAddressRestrictionTransaction
-     * @returns {number}
-     * @memberof AccountAddressRestrictionTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteRestrictionType = 2;
-        const byteAdditionCount = 1;
-        const byteDeletionCount = 1;
-        const byteAccountRestrictionTransactionBody_Reserved1 = 4;
-        const byteRestrictionAdditions = 24 * this.restrictionAdditions.length;
-        const byteRestrictionDeletions = 24 * this.restrictionDeletions.length;
-
-        return (
-            byteSize +
-            byteRestrictionType +
-            byteAdditionCount +
-            byteDeletionCount +
-            byteRestrictionAdditions +
-            byteRestrictionDeletions +
-            byteAccountRestrictionTransactionBody_Reserved1
-        );
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -189,7 +162,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return new UnresolvedAddressDto(deletion.encodeUnresolvedAddress(this.networkType));
             }),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

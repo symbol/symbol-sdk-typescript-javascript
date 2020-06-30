@@ -21,11 +21,11 @@ import {
     CosignatureBuilder,
     EmbeddedTransactionBuilder,
     EmbeddedTransactionHelper,
-    GeneratorUtils,
     Hash256Dto,
     KeyDto,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { KeyPair, MerkleHashBuilder, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
@@ -300,37 +300,10 @@ export class AggregateTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a AggregateTransaction
-     * @returns {number}
-     * @memberof AggregateTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-        const byteTransactionHash = 32;
-        // set static byte size fields
-        const bytePayloadSize = 4;
-
-        const byteHeader_Reserved1 = 4;
-
-        // calculate each inner transaction's size
-        let byteTransactions = 0;
-        this.innerTransactions.forEach((transaction) => {
-            const transactionByte = transaction.toAggregateTransactionBytes();
-            const innerTransactionPadding = new Uint8Array(this.getInnerTransactionPaddingSize(transactionByte.length, 8));
-            const paddedTransactionByte = GeneratorUtils.concatTypedArrays(transactionByte, innerTransactionPadding);
-            byteTransactions += paddedTransactionByte.length;
-        });
-
-        const byteCosignatures = this.cosignatures.length * 104;
-        return byteSize + byteTransactionHash + bytePayloadSize + byteHeader_Reserved1 + byteTransactions + byteCosignatures;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
         const transactions = this.innerTransactions.map((transaction) => (transaction as Transaction).toEmbeddedTransaction());
@@ -366,7 +339,7 @@ export class AggregateTransaction extends Transaction {
                       transactions,
                       cosignatures,
                   );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

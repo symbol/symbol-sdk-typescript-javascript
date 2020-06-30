@@ -98,6 +98,21 @@ describe('NamespaceMetadataTransaction', () => {
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
         });
+
+        it('should set payload size', () => {
+            const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+                Deadline.create(),
+                account.address,
+                UInt64.fromUint(1000),
+                new NamespaceId([2262289484, 3405110546]),
+                1,
+                Convert.uint8ToUtf8(new Uint8Array(10)),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(namespaceMetadataTransaction.size).to.be.equal(182);
+            expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
+            expect(namespaceMetadataTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

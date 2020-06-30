@@ -585,6 +585,24 @@ describe('AggregateTransaction', () => {
             expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
             expect(aggregateTransaction.size).to.be.equal(272);
         });
+        it('should set payload size', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+                [NetworkCurrencyLocal.createRelative(100)],
+                PlainMessage.create('NEM'),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [transaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            expect(aggregateTransaction.size).to.be.equal(272);
+
+            expect(aggregateTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

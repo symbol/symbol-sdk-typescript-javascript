@@ -210,6 +210,19 @@ describe('TransferTransaction', () => {
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
         });
+
+        it('should set payloadsize', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+                [NetworkCurrencyLocal.createRelative(100)],
+                PlainMessage.create('NEM'),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
+            expect(transaction.size).to.be.equal(180);
+            expect(transaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('should create TransferTransaction and sign using catbuffer-typescript', () => {

@@ -235,6 +235,23 @@ describe('SecretLockTransaction', () => {
             expect(secretLockTransaction.size).to.be.equal(209);
             expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
         });
+
+        it('should set payload size', () => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyLocal.createAbsolute(10),
+                UInt64.fromUint(100),
+                LockHashAlgorithm.Op_Hash_256,
+                CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+                recipientAddress,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(secretLockTransaction.size).to.be.equal(209);
+            expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
+            expect(secretLockTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('should be created with alias address', () => {

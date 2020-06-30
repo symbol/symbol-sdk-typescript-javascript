@@ -26,6 +26,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -170,28 +171,6 @@ export class SecretLockTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a SecretLockTransaction
-     * @returns {number}
-     * @memberof SecretLockTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteMosaicId = 8;
-        const byteAmount = 8;
-        const byteDuration = 8;
-        const byteAlgorithm = 1;
-        const byteRecipient = 24;
-
-        // convert secret to uint8
-        const byteSecret = convert.hexToUint8(this.secret).length;
-
-        return byteSize + byteMosaicId + byteAmount + byteDuration + byteAlgorithm + byteRecipient + byteSecret;
-    }
-
-    /**
      * @description Get secret bytes
      * @returns {Uint8Array}
      * @memberof SecretLockTransaction
@@ -202,9 +181,9 @@ export class SecretLockTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -222,7 +201,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashAlgorithm.valueOf(),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

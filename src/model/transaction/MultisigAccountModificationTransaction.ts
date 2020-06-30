@@ -23,6 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedAddressDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -161,40 +162,10 @@ export class MultisigAccountModificationTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a MultisigAccountModificationTransaction
-     * @returns {number}
-     * @memberof MultisigAccountModificationTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteRemovalDelta = 1;
-        const byteApprovalDelta = 1;
-        const byteAdditionCount = 1;
-        const byteDeletionCount = 1;
-        const byteAddressAdditions = 24 * this.addressAdditions.length;
-        const byteAddressyDeletions = 24 * this.addressDeletions.length;
-        const byteReserved1 = 4;
-
-        return (
-            byteSize +
-            byteRemovalDelta +
-            byteApprovalDelta +
-            byteAdditionCount +
-            byteDeletionCount +
-            byteAddressAdditions +
-            byteAddressyDeletions +
-            byteReserved1
-        );
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -215,7 +186,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return new UnresolvedAddressDto(deletion.encodeUnresolvedAddress(this.networkType));
             }),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

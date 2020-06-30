@@ -125,6 +125,21 @@ describe('AddressAliasTransaction', () => {
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
             expect(addressAliasTransaction.size).to.be.equal(161);
         });
+
+        it('should set payload size', () => {
+            const namespaceId = new NamespaceId([33347626, 3779697293]);
+            const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasAction.Link,
+                namespaceId,
+                address,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
+            expect(addressAliasTransaction.size).to.be.equal(161);
+            expect(addressAliasTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {
