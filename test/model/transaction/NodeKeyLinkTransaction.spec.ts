@@ -104,6 +104,17 @@ describe('NodeKeyLinkTransaction', () => {
             expect(Convert.hexToUint8(nodeKeyLinkTransaction.serialize()).length).to.be.equal(nodeKeyLinkTransaction.size);
             expect(nodeKeyLinkTransaction.size).to.be.equal(161);
         });
+        it('should set payload size', () => {
+            const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
+                Deadline.create(),
+                account.publicKey,
+                LinkAction.Unlink,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(Convert.hexToUint8(nodeKeyLinkTransaction.serialize()).length).to.be.equal(nodeKeyLinkTransaction.size);
+            expect(nodeKeyLinkTransaction.size).to.be.equal(161);
+            expect(nodeKeyLinkTransaction.setPayloadSize(19).size).to.be.equal(19);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

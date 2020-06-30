@@ -24,6 +24,7 @@ import {
     TimestampDto,
     UnresolvedAddressDto,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -172,25 +173,6 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a MosaicDefinitionTransaction
-     * @returns {number}
-     * @memberof MosaicAddressRestrictionTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteMosaicId = 8;
-        const byteRestrictionKey = 8;
-        const bytePreviousRestrictionValue = 8;
-        const byteNewRestrictionValue = 8;
-        const byteTargetAddress = 24;
-
-        return byteSize + byteMosaicId + byteRestrictionKey + byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
-    }
-
-    /**
      * Return the string notation for the set recipient
      * @internal
      * @returns {string}
@@ -207,9 +189,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -227,7 +209,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             this.newRestrictionValue.toDTO(),
             new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

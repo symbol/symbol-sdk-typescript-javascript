@@ -24,6 +24,7 @@ import {
     TimestampDto,
     UnresolvedMosaicIdDto,
     UnresolvedAddressDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -166,29 +167,10 @@ export class MosaicMetadataTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a AccountLinkTransaction
-     * @returns {number}
-     * @memberof AccountLinkTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const targetAddress = 24;
-        const byteScopedMetadataKey = 8;
-        const byteTargetMosaicId = 8;
-        const byteValueSizeDelta = 2;
-        const valueSize = 2;
-
-        return byteSize + targetAddress + byteScopedMetadataKey + byteTargetMosaicId + byteValueSizeDelta + valueSize + this.value.length;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -206,7 +188,7 @@ export class MosaicMetadataTransaction extends Transaction {
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

@@ -116,6 +116,19 @@ describe('MosaicSupplyChangeTransaction', () => {
             expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
         });
+        it('should set payload size', () => {
+            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                MosaicSupplyChangeAction.Increase,
+                UInt64.fromUint(10),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
+            expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
+            expect(mosaicSupplyChangeTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

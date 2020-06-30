@@ -23,6 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -137,38 +138,10 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a AccountMosaicRestrictionTransaction
-     * @returns {number}
-     * @memberof AccountMosaicRestrictionTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteRestrictionType = 2;
-        const byteAdditionCount = 1;
-        const byteDeletionCount = 1;
-        const byteAccountRestrictionTransactionBody_Reserved1 = 4;
-        const byteRestrictionAdditions = 8 * this.restrictionAdditions.length;
-        const byteRestrictionDeletions = 8 * this.restrictionDeletions.length;
-
-        return (
-            byteSize +
-            byteRestrictionType +
-            byteAdditionCount +
-            byteDeletionCount +
-            byteRestrictionAdditions +
-            byteRestrictionDeletions +
-            byteAccountRestrictionTransactionBody_Reserved1
-        );
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -188,7 +161,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 return new UnresolvedMosaicIdDto(deletion.id.toDTO());
             }),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

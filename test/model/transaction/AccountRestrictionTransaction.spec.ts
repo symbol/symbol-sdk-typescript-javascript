@@ -89,6 +89,17 @@ describe('AccountRestrictionTransaction', () => {
             );
             expect(mosaicRestrictionTransaction.size).to.be.equal(144);
         });
+        it('should set payload size', () => {
+            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
+                Deadline.create(),
+                MosaicRestrictionFlag.AllowMosaic,
+                [mosaicId],
+                [],
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicRestrictionTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('should return 138 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {

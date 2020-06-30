@@ -22,6 +22,7 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -129,26 +130,10 @@ export class AccountKeyLinkTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a AccountLinkTransaction
-     * @returns {number}
-     * @memberof AccountLinkTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const bytePublicKey = 32;
-        const byteLinkAction = 1;
-
-        return byteSize + bytePublicKey + byteLinkAction;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -163,7 +148,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

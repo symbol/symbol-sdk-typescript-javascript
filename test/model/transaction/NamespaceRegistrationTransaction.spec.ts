@@ -115,6 +115,17 @@ describe('NamespaceRegistrationTransaction', () => {
             expect(registerNamespaceTransaction.size).to.be.equal(165);
             expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
         });
+        it('should set payload size', () => {
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(),
+                'root-test-namespace',
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(registerNamespaceTransaction.size).to.be.equal(165);
+            expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
+            expect(registerNamespaceTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

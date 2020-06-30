@@ -25,6 +25,7 @@ import {
     MosaicNonceDto,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
@@ -164,25 +165,6 @@ export class MosaicDefinitionTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a MosaicDefinitionTransaction
-     * @returns {number}
-     * @memberof MosaicDefinitionTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteMosaicId = 8;
-        const byteDuration = 8;
-        const byteNonce = 4;
-        const byteFlags = 1;
-        const byteDivisibility = 1;
-
-        return byteSize + byteNonce + byteMosaicId + byteFlags + byteDivisibility + byteDuration;
-    }
-
-    /**
      * @description Get mosaic nonce int value
      * @returns {number}
      * @memberof MosaicDefinitionTransaction
@@ -193,9 +175,9 @@ export class MosaicDefinitionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -213,7 +195,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.flags.getValue(),
             this.divisibility,
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

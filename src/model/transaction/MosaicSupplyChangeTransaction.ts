@@ -23,6 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -146,27 +147,10 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a MosaicSupplyChangeTransaction
-     * @returns {number}
-     * @memberof MosaicSupplyChangeTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteMosaicId = 8;
-        const byteAction = 1;
-        const byteDelta = 8;
-
-        return byteSize + byteMosaicId + byteAction + byteDelta;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -182,7 +166,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             new AmountDto(this.delta.toDTO()),
             this.action.valueOf(),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

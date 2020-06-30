@@ -130,6 +130,20 @@ describe('MosaicAliasTransaction', () => {
             expect(mosaicAliasTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
         });
+        it('should set payload size', () => {
+            const namespaceId = new NamespaceId([33347626, 3779697293]);
+            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasAction.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicAliasTransaction.size).to.be.equal(145);
+            expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
+            expect(mosaicAliasTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

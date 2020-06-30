@@ -144,6 +144,20 @@ describe('LockFundsTransaction', () => {
             );
             expect(lockFundsTransaction.size).to.be.equal(184);
         });
+
+        it('should set payload size', () => {
+            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+            const signedTransaction = account.sign(aggregateTransaction, generationHash);
+            const lockFundsTransaction = LockFundsTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyLocal.createRelative(10),
+                UInt64.fromUint(10),
+                signedTransaction,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(lockFundsTransaction.size).to.be.equal(184);
+            expect(lockFundsTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

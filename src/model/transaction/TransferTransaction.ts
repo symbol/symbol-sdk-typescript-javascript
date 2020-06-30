@@ -26,6 +26,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import * as Long from 'long';
 import { Convert } from '../../core/format';
@@ -222,48 +223,13 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a TransferTransaction
-     * @returns {number}
-     * @memberof TransferTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // recipient and number of mosaics are static byte size
-        const byteRecipientAddress = 24;
-        const byteMosaicsCount = 1;
-        const byteMessageSize = 2;
-        const byteTransferTransactionBody_Reserved1 = 4;
-        const byteTransferTransactionBody_Reserved2 = 1;
-
-        // read message payload size
-        const bytePayload = this.getMessageBuffer().length;
-
-        // mosaicId / namespaceId are written on 8 bytes + 8 bytes for the amount.
-        const byteMosaics = (8 + 8) * this.mosaics.length;
-
-        return (
-            byteSize +
-            byteMosaicsCount +
-            byteRecipientAddress +
-            byteTransferTransactionBody_Reserved1 +
-            byteTransferTransactionBody_Reserved2 +
-            byteMessageSize +
-            bytePayload +
-            byteMosaics
-        );
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
-        const transactionBuilder = new TransferTransactionBuilder(
+        return new TransferTransactionBuilder(
             new SignatureDto(signatureBuffer),
             new KeyDto(signerBuffer),
             this.versionToDTO(),
@@ -277,7 +243,6 @@ export class TransferTransaction extends Transaction {
             }),
             this.getMessageBuffer(),
         );
-        return transactionBuilder.serialize();
     }
 
     /**

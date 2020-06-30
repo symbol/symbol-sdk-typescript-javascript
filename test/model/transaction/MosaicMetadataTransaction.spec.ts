@@ -135,6 +135,21 @@ describe('MosaicMetadataTransaction', () => {
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
         });
+
+        it('should set payload size', () => {
+            const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+                Deadline.create(),
+                account.address,
+                UInt64.fromUint(1000),
+                new MosaicId([2262289484, 3405110546]),
+                1,
+                Convert.uint8ToUtf8(new Uint8Array(10)),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicMetadataTransaction.size).to.be.equal(182);
+            expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
+            expect(mosaicMetadataTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

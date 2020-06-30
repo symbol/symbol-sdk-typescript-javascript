@@ -23,6 +23,7 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -190,40 +191,10 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a MosaicDefinitionTransaction
-     * @returns {number}
-     * @memberof MosaicGlobalRestrictionTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteMosaicId = 8;
-        const byteReferenceMosaicId = 8;
-        const byteRestrictionKey = 8;
-        const bytePreviousRestrictionValue = 8;
-        const byteNewRestrictionValue = 8;
-        const bytePreviousRestrictionType = 1;
-        const byteNewRestrictionType = 1;
-
-        return (
-            byteSize +
-            byteMosaicId +
-            byteRestrictionKey +
-            byteReferenceMosaicId +
-            bytePreviousRestrictionValue +
-            byteNewRestrictionValue +
-            byteNewRestrictionType +
-            bytePreviousRestrictionType
-        );
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
 
@@ -243,7 +214,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             this.previousRestrictionType.valueOf(),
             this.newRestrictionType.valueOf(),
         );
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**

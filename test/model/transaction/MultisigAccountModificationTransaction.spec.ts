@@ -108,6 +108,21 @@ describe('MultisigAccountModificationTransaction', () => {
                 modifyMultisigAccountTransaction.size,
             );
         });
+        it('should set payload size', () => {
+            const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
+                Deadline.create(),
+                1,
+                1,
+                [address1],
+                [],
+                NetworkType.MIJIN_TEST,
+            );
+            expect(modifyMultisigAccountTransaction.size).to.be.equal(160);
+            expect(Convert.hexToUint8(modifyMultisigAccountTransaction.serialize()).length).to.be.equal(
+                modifyMultisigAccountTransaction.size,
+            );
+            expect(modifyMultisigAccountTransaction.setPayloadSize(10).size).to.be.equal(10);
+        });
     });
 
     it('Test set maxFee using multiplier', () => {

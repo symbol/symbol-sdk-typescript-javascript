@@ -24,8 +24,9 @@ import {
     NamespaceRegistrationTransactionBuilder,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
 } from 'catbuffer-typescript';
-import { Convert, Convert as convert } from '../../core/format';
+import { Convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -212,31 +213,10 @@ export class NamespaceRegistrationTransaction extends Transaction {
     }
 
     /**
-     * @override Transaction.size()
-     * @description get the byte size of a NamespaceRegistrationTransaction
-     * @returns {number}
-     * @memberof NamespaceRegistrationTransaction
-     */
-    public get size(): number {
-        const byteSize = super.size;
-
-        // set static byte size fields
-        const byteType = 1;
-        const byteDurationParentId = 8;
-        const byteNamespaceId = 8;
-        const byteNameSize = 1;
-
-        // convert name to uint8
-        const byteName = convert.utf8ToHex(this.namespaceName).length / 2;
-
-        return byteSize + byteType + byteDurationParentId + byteNamespaceId + byteNameSize + byteName;
-    }
-
-    /**
      * @internal
-     * @returns {Uint8Array}
+     * @returns {TransactionBuilder}
      */
-    protected generateBytes(): Uint8Array {
+    protected createBuilder(): TransactionBuilder {
         const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
         const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
         let transactionBuilder: NamespaceRegistrationTransactionBuilder;
@@ -269,7 +249,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 new NamespaceIdDto(this.parentId!.id.toDTO()),
             );
         }
-        return transactionBuilder.serialize();
+        return transactionBuilder;
     }
 
     /**
