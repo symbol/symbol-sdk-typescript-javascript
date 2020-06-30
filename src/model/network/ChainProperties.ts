@@ -38,6 +38,9 @@ export class ChainProperties {
      * @param minHarvesterBalance - Minimum number of harvesting mosaic atomic units needed for an account to be eligible for harvesting.
      * @param maxHarvesterBalance - Maximum number of harvesting mosaic atomic units needed for an account to be eligible for harvesting.
      * @param minVoterBalance - Minimum number of harvesting mosaic atomic units needed for an account to be eligible for voting.
+     * @param maxVotingKeysPerAccount - Maximum number of voting keys that can be registered at once per account.
+     * @param minVotingKeyLifetime - Minimum number of finalization rounds for which voting key can be registered.
+     * @param maxVotingKeyLifetime - Maximum number of finalization rounds for which voting key can be registered.
      * @param harvestBeneficiaryPercentage - Percentage of the harvested fee that is collected by the beneficiary account.
      * @param harvestNetworkPercentage - Percentage of the harvested fee that is collected by network.
      * @param harvestNetworkFeeSinkAddress - The harvest network fee sink address.
@@ -65,6 +68,9 @@ export class ChainProperties {
         public readonly minHarvesterBalance?: string,
         public readonly maxHarvesterBalance?: string,
         public readonly minVoterBalance?: string,
+        public readonly maxVotingKeysPerAccount?: string,
+        public readonly minVotingKeyLifetime?: string,
+        public readonly maxVotingKeyLifetime?: string,
         public readonly harvestBeneficiaryPercentage?: string,
         public readonly harvestNetworkPercentage?: string,
         public readonly harvestNetworkFeeSinkAddress?: string,
