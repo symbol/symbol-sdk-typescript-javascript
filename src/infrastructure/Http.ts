@@ -21,6 +21,7 @@ import { NetworkType } from '../model/network/NetworkType';
 import { Page } from './Page';
 import { QueryParams } from './QueryParams';
 import { RepositoryCallError } from './RepositoryCallError';
+import fetch from 'node-fetch';
 
 /**
  * Http extended by all http services
@@ -99,7 +100,8 @@ export abstract class Http {
     }
 
     public config(): Configuration {
-        return new Configuration({ basePath: this.url, fetchApi: this.fetchApi, queryParamsStringify: querystring });
+        const fetchApi = this.fetchApi || (typeof window !== 'undefined' && window.fetch.bind(window)) || fetch;
+        return new Configuration({ basePath: this.url, fetchApi: fetchApi, queryParamsStringify: querystring });
     }
 
     /**
