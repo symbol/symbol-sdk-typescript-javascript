@@ -49,7 +49,6 @@ import { TransactionHttp } from './TransactionHttp';
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusHttp } from './TransactionStatusHttp';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
-import fetch from 'node-fetch';
 /**
  * Receipt http repository.
  *
@@ -69,7 +68,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      */
     constructor(url: string, configs?: RepositoryFactoryConfig) {
         this.url = url;
-        this.fetchApi = configs?.fetchApi || (typeof window !== 'undefined' && window.fetch.bind(window)) || fetch;
+        this.fetchApi = configs?.fetchApi;
         this.networkType = configs?.networkType
             ? observableOf(configs.networkType)
             : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
