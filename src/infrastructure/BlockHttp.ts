@@ -60,7 +60,7 @@ export class BlockHttp extends Http implements BlockRepository {
     }
 
     /**
-     * Gets an array of bocks.
+     * Gets an array of blocks.
      * @param criteria - Block search criteria
      * @returns Observable<BlockInfo[]>
      */

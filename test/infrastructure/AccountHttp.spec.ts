@@ -25,6 +25,8 @@ import {
     Mosaic,
     AccountLinkPublicKeyDTO,
     AccountLinkVotingKeyDTO,
+    Pagination,
+    AccountPage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -33,6 +35,7 @@ import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
+import { MosaicId } from '../../src/model/mosaic/MosaicId';
 
 describe('AccountHttp', () => {
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
@@ -120,5 +123,22 @@ describe('AccountHttp', () => {
         when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve([accountInfoDto]));
         const accountInfos = await accountRepository.getAccountsInfo([address]).toPromise();
         assertAccountInfo(accountInfos[0]);
+    });
+
+    it('searchAccounts', async () => {
+        const pagination = {} as Pagination;
+        pagination.pageNumber = 1;
+        pagination.pageSize = 1;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
+
+        const body = {} as AccountPage;
+        body.data = [accountInfoDto];
+        body.pagination = pagination;
+        when(accountRoutesApi.searchAccounts(undefined, undefined, undefined, undefined, undefined, mosaic.id)).thenReturn(
+            Promise.resolve(body),
+        );
+        const infos = await accountRepository.search({ mosaicId: new MosaicId(mosaic.id) }).toPromise();
+        assertAccountInfo(infos.data[0]);
     });
 });

@@ -85,7 +85,7 @@ describe('AccountService', () => {
 
     describe('call accountNamespacesWithName', () => {
         it('accountNamespacesWithName', async () => {
-            const info = await accountService.accountNamespacesWithName([account.address]).toPromise();
+            const info = await accountService.accountNamespacesWithName(account.address).toPromise();
             expect(info).to.not.be.undefined;
             expect(info.find((i) => i.id.equals(namespaceId))).to.not.be.undefined;
             expect(info.find((i) => i.id.equals(namespaceId))?.namespaceName).to.be.equal(name);

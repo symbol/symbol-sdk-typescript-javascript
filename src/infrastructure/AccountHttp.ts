@@ -27,6 +27,9 @@ import { Http } from './Http';
 import { SupplementalPublicKeys } from '../model/account/SupplementalPublicKeys';
 import { AccountLinkPublicKey } from '../model/account/AccountLinkPublicKey';
 import { AccountLinkVotingKey } from '../model/account/AccountLinkVotingKey';
+import { AccountSearchCriteria } from './searchCriteria/AccountSearchCriteria';
+import { DtoMapping } from '../core/utils/DtoMapping';
+import { Page } from './Page';
 
 /**
  * Account http repository.
@@ -69,6 +72,25 @@ export class AccountHttp extends Http implements AccountRepository {
             addresses: addresses.map((address) => address.plain()),
         };
         return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(this.toAccountInfo));
+    }
+
+    /**
+     * Gets an array of accounts.
+     * @param criteria - Account search criteria
+     * @returns Observable<AccountInfo[]>
+     */
+    public search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
+        return this.call(
+            this.accountRoutesApi.searchAccounts(
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
+                DtoMapping.mapEnum(criteria.orderBy),
+                criteria.mosaicId?.toHex(),
+            ),
+            (body) => super.toPage(body.pagination, body.data, this.toAccountInfo),
+        );
     }
 
     /**

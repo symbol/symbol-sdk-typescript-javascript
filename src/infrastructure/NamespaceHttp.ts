@@ -33,7 +33,9 @@ import { NetworkType } from '../model/network/NetworkType';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
-import { QueryParams } from './QueryParams';
+import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
+import { Page } from './Page';
+import { DtoMapping } from '../core/utils/DtoMapping';
 
 /**
  * Namespace http repository.
@@ -120,43 +122,11 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     }
 
     /**
-     * Gets array of NamespaceInfo for an account
-     * @param address - Address
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<NamespaceInfo[]>
-     */
-    public getNamespacesFromAccount(address: Address, queryParams?: QueryParams): Observable<NamespaceInfo[]> {
-        return this.call(
-            this.namespaceRoutesApi.getNamespacesFromAccount(
-                address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-            ),
-            (body) => body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO)),
-        );
-    }
-
-    /**
-     * Gets array of NamespaceInfo for different account
-     * @param addresses - Array of Address
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<NamespaceInfo[]>
-     */
-    public getNamespacesFromAccounts(addresses: Address[]): Observable<NamespaceInfo[]> {
-        const publicKeysBody = {
-            addresses: addresses.map((address) => address.plain()),
-        };
-        return this.call(this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody), (body) =>
-            body.namespaces.map((namespaceInfoDTO) => this.toNamespaceInfo(namespaceInfoDTO)),
-        );
-    }
-
-    /**
      * Gets array of NamespaceName for different namespaceIds
      * @param namespaceIds - Array of namespace ids
      * @returns Observable<NamespaceName[]>
      */
-    public getNamespacesName(namespaceIds: NamespaceId[]): Observable<NamespaceName[]> {
+    public getNamespacesNames(namespaceIds: NamespaceId[]): Observable<NamespaceName[]> {
         const namespaceIdsBody = {
             namespaceIds: namespaceIds.map((id) => id.toHex()),
         };
@@ -168,6 +138,27 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                     namespaceNameDTO.parentId ? NamespaceId.createFromEncoded(namespaceNameDTO.parentId) : undefined,
                 );
             }),
+        );
+    }
+
+    /**
+     * Gets an array of namespaces.
+     * @param criteria - Namespace search criteria
+     * @returns Observable<NamespaceInfo[]>
+     */
+    public search(criteria: NamespaceSearchCriteria): Observable<Page<NamespaceInfo>> {
+        return this.call(
+            this.namespaceRoutesApi.searchNamespaces(
+                criteria.ownerAddress?.plain(),
+                criteria.registrationType?.valueOf(),
+                criteria.level0?.toHex(),
+                criteria.aliasType?.valueOf(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
+            ),
+            (body) => super.toPage(body.pagination, body.data, this.toNamespaceInfo),
         );
     }
 
@@ -239,16 +230,22 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             dto.meta.id,
             dto.namespace.registrationType as number,
             dto.namespace.depth,
-            this.extractLevels(dto.namespace),
+            NamespaceHttp.extractLevels(dto.namespace),
             NamespaceId.createFromEncoded(dto.namespace.parentId),
             Address.createFromEncoded(dto.namespace.ownerAddress),
             UInt64.fromNumericString(dto.namespace.startHeight),
             UInt64.fromNumericString(dto.namespace.endHeight),
-            this.extractAlias(dto.namespace),
+            NamespaceHttp.extractAlias(dto.namespace),
         );
     }
 
-    private extractLevels(namespace: NamespaceDTO): NamespaceId[] {
+    /**
+     * Extract the namespace levels
+     *
+     * @internal
+     * @param namespace
+     */
+    private static extractLevels(namespace: NamespaceDTO): NamespaceId[] {
         const result: NamespaceId[] = [];
         if (namespace.level0) {
             result.push(NamespaceId.createFromEncoded(namespace.level0));
@@ -266,10 +263,9 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * Extract the alias from a namespace
      *
      * @internal
-     * @access private
      * @param namespace
      */
-    private extractAlias(namespace: NamespaceDTO): Alias {
+    private static extractAlias(namespace: NamespaceDTO): Alias {
         if (namespace.alias && namespace.alias.type.valueOf() === AliasType.Mosaic) {
             return new MosaicAlias(new MosaicId(namespace.alias.mosaicId!));
         } else if (namespace.alias && namespace.alias.type.valueOf() === AliasType.Address) {

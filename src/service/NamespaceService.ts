@@ -40,7 +40,7 @@ export class NamespaceService {
     namespace(id: NamespaceId): Observable<Namespace> {
         return this.namespaceRepository.getNamespace(id).pipe(
             mergeMap((namespaceInfo: NamespaceInfo) =>
-                this.namespaceRepository.getNamespacesName(namespaceInfo.levels).pipe(
+                this.namespaceRepository.getNamespacesNames(namespaceInfo.levels).pipe(
                     map((names) =>
                         Object.assign(
                             {
