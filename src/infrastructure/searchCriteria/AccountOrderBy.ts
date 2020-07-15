@@ -15,6 +15,5 @@
  */
 export enum AccountOrderBy {
     Id = 'id',
-    Importance = 'importance',
     Balance = 'balance',
 }

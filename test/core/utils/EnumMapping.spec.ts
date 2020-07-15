@@ -100,11 +100,6 @@ describe('AccountOrderBy', () => {
         const value2: AccountOrderByEnum = DtoMapping.mapEnum(value1);
         expect(value2).eq(undefined);
     });
-    it('should be able to map AccountOrderBy', () => {
-        const value1: AccountOrderBy = AccountOrderBy.Importance;
-        const value2: Order = DtoMapping.mapEnum(value1);
-        expect(value2).eq(AccountOrderByEnum.Importance);
-    });
     it('openAPI sanity check', () => {
         for (const item in AccountOrderByEnum) {
             const value: AccountOrderBy = DtoMapping.mapEnum(item);
