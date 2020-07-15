@@ -27,6 +27,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { take, toArray } from 'rxjs/operators';
+import { Order } from '../../src/infrastructure/infrastructure';
 
 describe('NamespaceHttp', () => {
     let defaultNamespaceId: NamespaceId;
@@ -115,7 +116,7 @@ describe('NamespaceHttp', () => {
 
     describe('searchNamespace', () => {
         it('should return namespace info', async () => {
-            const info = await namespaceRepository.search({}).toPromise();
+            const info = await namespaceRepository.search({ ownerAddress: account.address }).toPromise();
             expect(info.data.length).to.be.greaterThan(0);
         });
     });
@@ -123,10 +124,13 @@ describe('NamespaceHttp', () => {
     describe('searchNamespace with streamer', () => {
         it('should return namespace info', async () => {
             const streamer = new NamespacePaginationStreamer(namespaceRepository);
-            const infoStreamer = await streamer.search({ pageSize: 20 }).pipe(take(20), toArray()).toPromise();
-            const info = await namespaceRepository.search({ pageSize: 20 }).toPromise();
+            const infoStreamer = await streamer
+                .search({ ownerAddress: account.address, pageSize: 20, order: Order.Desc })
+                .pipe(take(20), toArray())
+                .toPromise();
+            const info = await namespaceRepository.search({ pageSize: 20, order: Order.Desc }).toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
-            deepEqual(infoStreamer, info.data);
+            deepEqual(infoStreamer[0], info.data[0]);
         });
     });
 });

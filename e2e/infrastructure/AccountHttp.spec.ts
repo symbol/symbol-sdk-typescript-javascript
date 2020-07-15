@@ -33,6 +33,9 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
+import { toArray, take } from 'rxjs/operators';
+import { deepEqual } from 'assert';
 
 describe('AccountHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -158,11 +161,11 @@ describe('AccountHttp', () => {
         });
     });
 
-    /**
-     * =========================
-     * Tests
-     * =========================
-     */
+    // /**
+    //  * =========================
+    //  * Tests
+    //  * =========================
+    //  */
 
     describe('getAccountInfo', () => {
         it('should return account data given a NEM Address', async () => {
@@ -175,6 +178,23 @@ describe('AccountHttp', () => {
         it('should return account data given a NEM Address', async () => {
             const accountsInfo = await accountRepository.getAccountsInfo([accountAddress]).toPromise();
             expect(accountsInfo[0].publicKey).to.be.equal(accountPublicKey);
+        });
+    });
+
+    describe('searchAccount', () => {
+        it('should return account info', async () => {
+            const info = await accountRepository.search({}).toPromise();
+            expect(info.data.length).to.be.greaterThan(0);
+        });
+    });
+
+    describe('searchAccount with streamer', () => {
+        it('should return account info', async () => {
+            const streamer = new AccountPaginationStreamer(accountRepository);
+            const infoStreamer = await streamer.search({ pageSize: 20 }).pipe(take(20), toArray()).toPromise();
+            const info = await namespaceRepository.search({ pageSize: 20 }).toPromise();
+            expect(infoStreamer.length).to.be.greaterThan(0);
+            deepEqual(infoStreamer, info.data);
         });
     });
 
