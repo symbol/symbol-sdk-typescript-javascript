@@ -22,14 +22,15 @@ import { MosaicNames } from '../model/mosaic/MosaicNames';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
-import { QueryParams } from './QueryParams';
+import { Searcher } from './paginationStreamer/Searcher';
+import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 
 /**
  * Namespace interface repository.
  *
  * @since 1.0
  */
-export interface NamespaceRepository {
+export interface NamespaceRepository extends Searcher<NamespaceInfo, NamespaceSearchCriteria> {
     /**
      * Get readable names for a set of accountIds.
      * Returns friendly names for accounts.
@@ -54,27 +55,11 @@ export interface NamespaceRepository {
     getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo>;
 
     /**
-     * Gets array of NamespaceInfo for an account
-     * @param address - Address
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<NamespaceInfo[]>
-     */
-    getNamespacesFromAccount(address: Address, queryParams?: QueryParams): Observable<NamespaceInfo[]>;
-
-    /**
-     * Gets array of NamespaceInfo for different account
-     * @param addresses - Array of Address
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<NamespaceInfo[]>
-     */
-    getNamespacesFromAccounts(addresses: Address[], queryParams?: QueryParams): Observable<NamespaceInfo[]>;
-
-    /**
      * Gets array of NamespaceName for different namespaceIds
      * @param namespaceIds - Array of namespace ids
      * @returns Observable<NamespaceName[]>
      */
-    getNamespacesName(namespaceIds: NamespaceId[]): Observable<NamespaceName[]>;
+    getNamespacesNames(namespaceIds: NamespaceId[]): Observable<NamespaceName[]>;
 
     /**
      * Gets the MosaicId from a MosaicAlias

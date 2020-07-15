@@ -37,6 +37,7 @@ import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { SupplementalPublicKeys } from '../../src/model/account/SupplementalPublicKeys';
+import { Page } from '../../src/infrastructure/Page';
 
 describe('AccountService', () => {
     let accountService: AccountService;
@@ -125,23 +126,31 @@ describe('AccountService', () => {
 
         when(mockAccountRepository.getAccountsInfo(deepEqual([account.address]))).thenReturn(observableOf(mockAccountInfo()));
 
-        when(mockNamespaceRepository.getNamespacesFromAccounts(deepEqual([account.address]))).thenReturn(observableOf(mockNamespaceInfo()));
-        when(mockNamespaceRepository.getNamespacesFromAccounts(deepEqual([account2.address]))).thenReturn(
-            observableOf(mockNamespaceInfo()),
+        when(
+            mockNamespaceRepository.search(
+                deepEqual({
+                    ownerAddress: account.address,
+                    pageNumber: 1,
+                }),
+            ),
+        ).thenReturn(observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20, 3, 1)));
+
+        when(mockNamespaceRepository.search(deepEqual({ ownerAddress: account.address, pageNumber: 1 }))).thenReturn(
+            observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20, 3, 1)),
         );
 
-        when(mockNamespaceRepository.getNamespacesName(deepEqual([NetworkCurrencyLocal.NAMESPACE_ID]))).thenReturn(
+        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyLocal.NAMESPACE_ID]))).thenReturn(
             observableOf([mockNamespaceName(NetworkCurrencyLocal.NAMESPACE_ID, 'catapult.currency')]),
         );
-        when(mockNamespaceRepository.getNamespacesName(deepEqual([NetworkCurrencyPublic.NAMESPACE_ID]))).thenReturn(
+        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyPublic.NAMESPACE_ID]))).thenReturn(
             observableOf([mockNamespaceName(NetworkCurrencyPublic.NAMESPACE_ID, 'symbol.xym')]),
         );
-        when(mockNamespaceRepository.getNamespacesName(deepEqual([NetworkHarvestLocal.NAMESPACE_ID]))).thenReturn(
+        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkHarvestLocal.NAMESPACE_ID]))).thenReturn(
             observableOf([mockNamespaceName(NetworkHarvestLocal.NAMESPACE_ID, 'catapult.harvest')]),
         );
 
         when(
-            mockNamespaceRepository.getNamespacesName(
+            mockNamespaceRepository.getNamespacesNames(
                 deepEqual([NetworkCurrencyLocal.NAMESPACE_ID, NetworkCurrencyPublic.NAMESPACE_ID, NetworkHarvestLocal.NAMESPACE_ID]),
             ),
         ).thenReturn(
@@ -181,7 +190,7 @@ describe('AccountService', () => {
     });
 
     it('should return namespaceInfo with resolved name', async () => {
-        const result = await accountService.accountNamespacesWithName([account.address]).toPromise();
+        const result = await accountService.accountNamespacesWithName(account.address).toPromise();
         expect(result).to.not.be.undefined;
         expect(result.length).to.be.greaterThan(0);
         expect(result![0].namespaceName).to.be.equal('catapult.currency');

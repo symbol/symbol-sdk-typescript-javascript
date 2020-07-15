@@ -66,10 +66,10 @@ describe('NamespaceService', () => {
         const subnamespace = givenSubnamespace();
         when(mockedNamespaceRepository.getNamespace(rootNamespace.id)).thenReturn(observableOf(rootNamespace));
         when(mockedNamespaceRepository.getNamespace(subnamespace.id)).thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id]))).thenReturn(
+        when(mockedNamespaceRepository.getNamespacesNames(deepEqual([rootNamespace.id]))).thenReturn(
             observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]),
         );
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
+        when(mockedNamespaceRepository.getNamespacesNames(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
             observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
@@ -88,13 +88,13 @@ describe('NamespaceService', () => {
         const subnamespace = givenSubnamespace();
         when(mockedNamespaceRepository.getNamespace(rootNamespace.id)).thenReturn(observableOf(rootNamespace));
         when(mockedNamespaceRepository.getNamespace(subnamespace.id)).thenReturn(observableOf(subnamespace));
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id]))).thenReturn(
+        when(mockedNamespaceRepository.getNamespacesNames(deepEqual([rootNamespace.id]))).thenReturn(
             observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests')]),
         );
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([subnamespace.id]))).thenReturn(
+        when(mockedNamespaceRepository.getNamespacesNames(deepEqual([subnamespace.id]))).thenReturn(
             observableOf([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]),
         );
-        when(mockedNamespaceRepository.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
+        when(mockedNamespaceRepository.getNamespacesNames(deepEqual([rootNamespace.id, subnamespace.id]))).thenReturn(
             observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'symboltests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),

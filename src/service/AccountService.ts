@@ -15,7 +15,7 @@
  */
 
 import { Observable, of } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { map, withLatestFrom, toArray } from 'rxjs/operators';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { AccountRepository } from '../infrastructure/AccountRepository';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
@@ -31,6 +31,7 @@ import { NamespaceId } from '../model/namespace/NamespaceId';
 import { AccountInfoResolvedMosaic } from '../model/account/AccountInfoResolvedMosaic';
 import { AccountInfo } from '../model/account/AccountInfo';
 import { NamespaceName } from '../model/namespace/NamespaceName';
+import { NamespacePaginationStreamer } from '../infrastructure/paginationStreamer/NamespacePaginationStreamer';
 /**
  * Account Service
  */
@@ -58,7 +59,7 @@ export class AccountService implements IAccountService {
             mergeMap((info) => {
                 const namespaceIds = this.getDistinctNamespaceIdFromAccountInfos(info);
                 if (namespaceIds.length) {
-                    return this.namespaceRepository.getNamespacesName(namespaceIds);
+                    return this.namespaceRepository.getNamespacesNames(namespaceIds);
                 }
                 return of([]);
             }),
@@ -77,23 +78,26 @@ export class AccountService implements IAccountService {
 
     /**
      * Get namespace info for account with namespace name
-     * @param addresses Array of addresses
+     * @param addresses Namespace owner address
      * @returns {Observable<NamespaceInfoWithName[]>}
      */
-    public accountNamespacesWithName(addresses: Address[]): Observable<NamespaceInfoWithName[]> {
-        return this.namespaceRepository.getNamespacesFromAccounts(addresses).pipe(
-            mergeMap((infos) => {
-                const namespaceIds = infos.map((i) => i.id);
-                return this.namespaceRepository.getNamespacesName(namespaceIds).pipe(
-                    map((resolved) => {
-                        return infos.map((info) => {
-                            const name = resolved.find((r) => r.namespaceId.equals(info.id));
-                            return DtoMapping.assign(info, { namespaceName: name?.name });
-                        });
-                    }),
-                );
-            }),
-        );
+    public accountNamespacesWithName(address: Address): Observable<NamespaceInfoWithName[]> {
+        return new NamespacePaginationStreamer(this.namespaceRepository)
+            .search({ ownerAddress: address })
+            .pipe(toArray())
+            .pipe(
+                mergeMap((infos) => {
+                    const namespaceIds = infos.map((i) => i.id);
+                    return this.namespaceRepository.getNamespacesNames(namespaceIds).pipe(
+                        map((resolved) => {
+                            return infos.map((info) => {
+                                const name = resolved.find((r) => r.namespaceId.equals(info.id));
+                                return DtoMapping.assign(info, { namespaceName: name?.name });
+                            });
+                        }),
+                    );
+                }),
+            );
     }
 
     /**

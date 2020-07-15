@@ -25,6 +25,9 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
+import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
+import { take, toArray } from 'rxjs/operators';
+import { Order } from '../../src/infrastructure/infrastructure';
 
 describe('NamespaceHttp', () => {
     let defaultNamespaceId: NamespaceId;
@@ -90,23 +93,9 @@ describe('NamespaceHttp', () => {
         });
     });
 
-    describe('getNamespacesFromAccount', () => {
-        it('should return namespace data given publicKeyNemesis', async () => {
-            const namespaces = await namespaceRepository.getNamespacesFromAccount(account.address).toPromise();
-            deepEqual(namespaces[0].ownerAddress, account.address);
-        });
-    });
-
-    describe('getNamespacesFromAccounts', () => {
-        it('should return namespaces data given publicKeyNemesis', async () => {
-            const namespaces = await namespaceRepository.getNamespacesFromAccounts([account.address]).toPromise();
-            deepEqual(namespaces[0].ownerAddress, account.address);
-        });
-    });
-
     describe('getNamespacesName', () => {
         it('should return namespace name given array of namespaceIds', async () => {
-            const namespaceNames = await namespaceRepository.getNamespacesName([defaultNamespaceId]).toPromise();
+            const namespaceNames = await namespaceRepository.getNamespacesNames([defaultNamespaceId]).toPromise();
             expect(namespaceNames[0].name).to.be.equal('currency');
         });
     });
@@ -122,6 +111,26 @@ describe('NamespaceHttp', () => {
         it('should return address given namespaceId', async () => {
             const address = (await namespaceRepository.getLinkedAddress(namespaceId).toPromise()) as Address;
             expect(address.plain()).to.be.equal(account.address.plain());
+        });
+    });
+
+    describe('searchNamespace', () => {
+        it('should return namespace info', async () => {
+            const info = await namespaceRepository.search({ ownerAddress: account.address }).toPromise();
+            expect(info.data.length).to.be.greaterThan(0);
+        });
+    });
+
+    describe('searchNamespace with streamer', () => {
+        it('should return namespace info', async () => {
+            const streamer = new NamespacePaginationStreamer(namespaceRepository);
+            const infoStreamer = await streamer
+                .search({ ownerAddress: account.address, pageSize: 20, order: Order.Desc })
+                .pipe(take(20), toArray())
+                .toPromise();
+            const info = await namespaceRepository.search({ pageSize: 20, order: Order.Desc }).toPromise();
+            expect(infoStreamer.length).to.be.greaterThan(0);
+            deepEqual(infoStreamer[0], info.data[0]);
         });
     });
 });

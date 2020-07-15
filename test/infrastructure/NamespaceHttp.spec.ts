@@ -27,6 +27,8 @@ import {
     NamespaceMetaDTO,
     NamespaceNameDTO,
     NamespaceRoutesApi,
+    Pagination,
+    NamespacePage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -162,7 +164,7 @@ describe('NamespaceHttp', () => {
         when(namespaceRoutesApi.getNamespacesNames(deepEqual({ namespaceIds: [namespaceId.toHex()] }))).thenReturn(
             Promise.resolve([namespaceNameParent, namespaceNameChild]),
         );
-        const namespace = await namespaceRepository.getNamespacesName([namespaceId]).toPromise();
+        const namespace = await namespaceRepository.getNamespacesNames([namespaceId]).toPromise();
         expect(namespace.length).to.be.equal(2);
         expect(namespace[0].name).to.be.equal('parent');
         expect(namespace[0].namespaceId.toHex()).to.be.equal(namespaceId.toHex());
@@ -170,24 +172,6 @@ describe('NamespaceHttp', () => {
         expect(namespace[1].name).to.be.equal('child');
         expect(namespace[1].parentId!.toHex()).to.be.equal(namespaceId.toHex());
         expect(namespace[1].namespaceId.toHex()).to.be.equal(new NamespaceId('child').toHex());
-    });
-
-    it('getNamespaceFromAccount', async () => {
-        when(namespaceRoutesApi.getNamespacesFromAccount(deepEqual(address.plain()), undefined, undefined)).thenReturn(
-            Promise.resolve({ namespaces: [namespaceInfoDto] }),
-        );
-        const namespaces = await namespaceRepository.getNamespacesFromAccount(address).toPromise();
-
-        assertNamespaceInfo(namespaces[0]);
-    });
-
-    it('getNamespaceFromAccounts', async () => {
-        when(namespaceRoutesApi.getNamespacesFromAccounts(deepEqual(deepEqual({ addresses: [address.plain()] })))).thenReturn(
-            Promise.resolve({ namespaces: [namespaceInfoDto] }),
-        );
-        const namespaces = await namespaceRepository.getNamespacesFromAccount(address).toPromise();
-
-        assertNamespaceInfo(namespaces[0]);
     });
 
     it('getLinkedAddress', async () => {
@@ -218,5 +202,31 @@ describe('NamespaceHttp', () => {
             .getLinkedAddress(namespaceId)
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('searchNameapsces', async () => {
+        const pagination = {} as Pagination;
+        pagination.pageNumber = 1;
+        pagination.pageSize = 1;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
+
+        const body = {} as NamespacePage;
+        body.data = [namespaceInfoDto];
+        body.pagination = pagination;
+        when(
+            namespaceRoutesApi.searchNamespaces(
+                deepEqual(address.plain()),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(body));
+        const infos = await namespaceRepository.search({ ownerAddress: address }).toPromise();
+        assertNamespaceInfo(infos.data[0]);
     });
 });

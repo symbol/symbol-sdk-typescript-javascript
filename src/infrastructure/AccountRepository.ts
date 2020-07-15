@@ -17,13 +17,15 @@
 import { Observable } from 'rxjs';
 import { AccountInfo } from '../model/account/AccountInfo';
 import { Address } from '../model/account/Address';
+import { Searcher } from './paginationStreamer/Searcher';
+import { AccountSearchCriteria } from './searchCriteria/AccountSearchCriteria';
 
 /**
  * Account interface repository.
  *
  * @since 1.0
  */
-export interface AccountRepository {
+export interface AccountRepository extends Searcher<AccountInfo, AccountSearchCriteria> {
     /**
      * Gets an AccountInfo for an account.
      * @param address Address

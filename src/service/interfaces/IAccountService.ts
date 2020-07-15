@@ -31,8 +31,8 @@ export interface IAccountService {
 
     /**
      * Get namespace info for account with namespace name
-     * @param addresses Array of addresses
+     * @param address Namespace owner address
      * @returns {Observable<NamespaceInfoWithName[]>}
      */
-    accountNamespacesWithName(addresses: Address[]): Observable<NamespaceInfoWithName[]>;
+    accountNamespacesWithName(addresses: Address): Observable<NamespaceInfoWithName[]>;
 }

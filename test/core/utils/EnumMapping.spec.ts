@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Order, PositionEnum, BlockOrderByEnum } from 'symbol-openapi-typescript-fetch-client';
+import { Order, PositionEnum, BlockOrderByEnum, AccountOrderByEnum } from 'symbol-openapi-typescript-fetch-client';
 import { Order as OrderModel } from '../../../src/infrastructure/searchCriteria/Order';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
 import { BlockOrderBy } from '../../../src/infrastructure/searchCriteria/BlockOrderBy';
 import { MerklePosition } from '../../../src/model/blockchain/MerklePosition';
+import { AccountOrderBy } from '../../../src/infrastructure/searchCriteria/AccountOrderBy';
 
 describe('Order', () => {
     it('should be able to map Order', () => {
@@ -73,6 +74,35 @@ describe('BlockOrderBy', () => {
     it('openAPI sanity check', () => {
         for (const item in BlockOrderByEnum) {
             const value: BlockOrderBy = DtoMapping.mapEnum(item);
+            expect(value).not.to.be.undefined;
+        }
+    });
+});
+
+describe('AccountOrderBy', () => {
+    it('should be able to map AccountOrderByEnum', () => {
+        const value1: AccountOrderByEnum = AccountOrderByEnum.Id;
+        const value2: AccountOrderBy = DtoMapping.mapEnum(value1);
+        expect(value2).eq(AccountOrderBy.Id);
+    });
+    it('should be able to map AccountOrderBy when undefined', () => {
+        const value1: AccountOrderByEnum | undefined = undefined;
+        const value2: AccountOrderBy = DtoMapping.mapEnum(value1);
+        expect(value2).eq(undefined);
+    });
+    it('should be able to map AccountOrderBy', () => {
+        const value1: AccountOrderBy = AccountOrderBy.Balance;
+        const value2: Order = DtoMapping.mapEnum(value1);
+        expect(value2).eq(AccountOrderByEnum.Balance);
+    });
+    it('should be able to map AccountOrderBy when undefined', () => {
+        const value1: AccountOrderBy | undefined = undefined;
+        const value2: AccountOrderByEnum = DtoMapping.mapEnum(value1);
+        expect(value2).eq(undefined);
+    });
+    it('openAPI sanity check', () => {
+        for (const item in AccountOrderByEnum) {
+            const value: AccountOrderBy = DtoMapping.mapEnum(item);
             expect(value).not.to.be.undefined;
         }
     });
