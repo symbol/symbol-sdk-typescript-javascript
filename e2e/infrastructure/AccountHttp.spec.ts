@@ -36,6 +36,8 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
+import { Order } from '../../src/infrastructure/infrastructure';
+import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
 
 describe('AccountHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -191,10 +193,13 @@ describe('AccountHttp', () => {
     describe('searchAccount with streamer', () => {
         it('should return account info', async () => {
             const streamer = new AccountPaginationStreamer(accountRepository);
-            const infoStreamer = await streamer.search({ pageSize: 20 }).pipe(take(20), toArray()).toPromise();
-            const info = await namespaceRepository.search({ pageSize: 20 }).toPromise();
+            const infoStreamer = await streamer
+                .search({ pageSize: 20, order: Order.Asc, orderBy: AccountOrderBy.Id })
+                .pipe(take(20), toArray())
+                .toPromise();
+            const info = await accountRepository.search({ pageSize: 20, order: Order.Asc, orderBy: AccountOrderBy.Id }).toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
-            deepEqual(infoStreamer, info.data);
+            deepEqual(infoStreamer[0], info.data[0]);
         });
     });
 
