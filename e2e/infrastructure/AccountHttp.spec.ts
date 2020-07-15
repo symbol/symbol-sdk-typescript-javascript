@@ -163,11 +163,11 @@ describe('AccountHttp', () => {
         });
     });
 
-    // /**
-    //  * =========================
-    //  * Tests
-    //  * =========================
-    //  */
+    /**
+     * =========================
+     * Tests
+     * =========================
+     */
 
     describe('getAccountInfo', () => {
         it('should return account data given a NEM Address', async () => {
