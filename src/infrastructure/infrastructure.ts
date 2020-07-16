@@ -62,3 +62,8 @@ export * from './TransactionGroup';
 export * from './searchCriteria/BlockOrderBy';
 export * from './searchCriteria/Order';
 export * from './RepositoryCallError';
+export * from './searchCriteria/AccountOrderBy';
+export * from './searchCriteria/AccountSearchCriteria';
+export * from './searchCriteria/NamespaceSearchCriteria';
+export * from './paginationStreamer/AccountPaginationStreamer';
+export * from './paginationStreamer/NamespacePaginationStreamer';
