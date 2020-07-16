@@ -15,7 +15,7 @@
  */
 
 import { merge, Observable, of } from 'rxjs';
-import { first, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
+import { first, flatMap, map, mergeMap, toArray, withLatestFrom } from 'rxjs/operators';
 import { IListener } from '../infrastructure/IListener';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { TransactionRepository } from '../infrastructure/TransactionRepository';
@@ -37,6 +37,10 @@ import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { ITransactionService } from './interfaces/ITransactionService';
 import { TransactionGroup } from '../infrastructure/TransactionGroup';
+import { StatementType } from '../model/model';
+import { ReceiptPaginationStreamer } from '../infrastructure/paginationStreamer/ReceiptPaginationStreamer';
+import { Statement } from '../model/receipt/Statement';
+import { ResolutionStatement } from '../model/receipt/ResolutionStatement';
 
 /**
  * Transaction Service
@@ -230,8 +234,17 @@ export class TransactionService implements ITransactionService {
      * @return {Observable<Transaction>}
      */
     private resolvedFromReceipt(transaction: Transaction, aggregateIndex: number): Observable<Transaction> {
-        return this.receiptRepository
-            .getBlockReceipts(transaction.transactionInfo!.height)
+        const streamer = new ReceiptPaginationStreamer(this.receiptRepository);
+        const addressResolution = streamer
+            .search({ height: transaction.transactionInfo!.height, statementType: StatementType.AddressResolutionStatement })
+            .pipe(toArray());
+        return streamer
+            .search({ height: transaction.transactionInfo!.height, statementType: StatementType.MosaicResolutionStatement })
+            .pipe(toArray())
+            .pipe(
+                withLatestFrom(addressResolution),
+                map(([mosaic, address]) => new Statement([], address as ResolutionStatement[], mosaic as ResolutionStatement[])),
+            )
             .pipe(map((statement) => transaction.resolveAliases(statement, aggregateIndex)));
     }
 }

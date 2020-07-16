@@ -28,6 +28,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
 import { deepEqual } from 'assert';
 import { take } from 'rxjs/operators';
+import { StatementType, TransactionStatement } from '../../src/model/model';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -116,10 +117,10 @@ describe('BlockHttp', () => {
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', async () => {
             const merkleReceipts = await receiptRepository
-                .getBlockReceipts(chainHeight)
+                .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
                 .pipe(
                     mergeMap((_) => {
-                        return receiptRepository.getMerkleReceipts(chainHeight, _.transactionStatements[0].generateHash());
+                        return receiptRepository.getMerkleReceipts(chainHeight, (_.data[0] as TransactionStatement).generateHash());
                     }),
                 )
                 .toPromise();
@@ -135,9 +136,10 @@ describe('BlockHttp', () => {
 
     describe('getBlockReceipts', () => {
         it('should return block receipts', async () => {
-            const statement = await receiptRepository.getBlockReceipts(chainHeight).toPromise();
-            expect(statement.transactionStatements).not.to.be.null;
-            expect(statement.transactionStatements.length).to.be.greaterThan(0);
+            const statement = await receiptRepository
+                .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
+                .toPromise();
+            expect(statement.data.length).not.to.greaterThan(0);
         });
     });
 });

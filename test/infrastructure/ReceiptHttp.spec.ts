@@ -24,14 +24,20 @@ import {
     MerkleProofInfoDTO,
     PositionEnum,
     ReceiptRoutesApi,
-    StatementsDTO,
+    ResolutionStatementDTO,
+    ResolutionEntryDTO,
+    SourceDTO,
+    ResolutionStatementPage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { UInt64 } from '../../src/model/model';
+import { UInt64, NamespaceId, MosaicId, StatementType, ResolutionType } from '../../src/model/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { ResolutionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { Pagination } from 'symbol-openapi-typescript-fetch-client';
+import { ResolutionStatement } from '../../src/model/receipt/ResolutionStatement';
 
 describe('ReceiptHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -62,18 +68,43 @@ describe('ReceiptHttp', () => {
     });
 
     it('getBlockReceipt', async () => {
-        const statementDto = {} as StatementsDTO;
-        statementDto.addressResolutionStatements = [];
-        statementDto.transactionStatements = [];
-        statementDto.mosaicResolutionStatements = [];
+        const resolutionStatementInfoDto = {} as ResolutionStatementInfoDTO;
+        resolutionStatementInfoDto.id = '1';
+        const resolutionStatementDto = {} as ResolutionStatementDTO;
+        resolutionStatementDto.height = '1';
+        resolutionStatementDto.unresolved = new NamespaceId('test').toHex();
+        const resolutionEntry = {} as ResolutionEntryDTO;
+        resolutionEntry.resolved = new MosaicId('85BBEA6CC462B244').toHex();
+        const source = {} as SourceDTO;
+        source.primaryId = 1;
+        source.secondaryId = 1;
+        resolutionEntry.source = source;
+        resolutionStatementDto.resolutionEntries = [resolutionEntry];
+        resolutionStatementInfoDto.statement = resolutionStatementDto;
 
-        when(receiptRoutesApi.getBlockReceipts('1')).thenReturn(Promise.resolve(statementDto));
+        const resolutionPage = {} as ResolutionStatementPage;
+        resolutionPage.data = [resolutionStatementInfoDto];
+        const pagination = {} as Pagination;
+        pagination.pageNumber = 1;
+        pagination.pageSize = 20;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
+        resolutionPage.pagination = pagination;
 
-        const statement = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
+        when(receiptRoutesApi.searchMosaicResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReturn(
+            Promise.resolve(resolutionPage),
+        );
+
+        const statement = await receiptRepository
+            .search({
+                statementType: StatementType.MosaicResolutionStatement,
+                height: UInt64.fromUint(1),
+            })
+            .toPromise();
         expect(statement).to.be.not.null;
-        expect(statement.addressResolutionStatements.length).to.be.equal(0);
-        expect(statement.mosaicResolutionStatements.length).to.be.equal(0);
-        expect(statement.transactionStatements.length).to.be.equal(0);
+        expect((statement.data[0] as ResolutionStatement).height.toString()).to.be.equal('1');
+        expect((statement.data[0] as ResolutionStatement).resolutionType.valueOf()).to.be.equal(ResolutionType.Mosaic);
+        expect(((statement.data[0] as ResolutionStatement).unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('test').toHex());
     });
 
     it('getMerkleReceipts', async () => {
@@ -93,11 +124,44 @@ describe('ReceiptHttp', () => {
     });
 
     it('getBlockReceipt - Error', async () => {
-        when(receiptRoutesApi.getBlockReceipts('1')).thenReject(new Error('Mocked Error'));
+        when(
+            receiptRoutesApi.searchReceipts(
+                '1',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReject(new Error('Mocked Error'));
         await receiptRepository
-            .getBlockReceipts(UInt64.fromUint(1))
+            .search({ statementType: StatementType.TransactionStatement, height: UInt64.fromUint(1) })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('getBlockReceipt - Error no type', async () => {
+        when(
+            receiptRoutesApi.searchReceipts(
+                '1',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReject(new Error('Mocked Error'));
+        expect(() => {
+            receiptRepository.search({ height: UInt64.fromUint(1) }).toPromise();
+        }).to.throw(Error, `Search criteria 'StatementType' must be provided.`);
     });
 
     it('getMerkleReceipts - Error', async () => {

@@ -1,0 +1,64 @@
+/*
+ * Copyright 2020 NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { SearchCriteria } from './SearchCriteria';
+import { UInt64 } from '../../model/UInt64';
+import { ReceiptType } from '../../model/receipt/ReceiptType';
+import { Address } from '../../model/account/Address';
+import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { MosaicId } from '../../model/mosaic/MosaicId';
+import { StatementType } from '../../model/receipt/StatementType';
+
+/**
+ * Defines the params used to search transaction statement receipts. With this criteria, you can sort and filter
+ * receipt queries using rest.
+ */
+export interface ReceiptSearchCriteria extends SearchCriteria {
+    /**
+     * Statement type. (Mandatory)
+     */
+    statementType?: StatementType;
+
+    /**
+     * Block height. (optional)
+     */
+    height?: UInt64;
+
+    /**
+     * receipt type. (optional, TransactionStatement only)
+     */
+    receiptType?: ReceiptType;
+
+    /**
+     * Recipient address. (optional, TransactionStatement only)
+     */
+    recipientAddress?: Address;
+
+    /**
+     * Sender address. (optional, TransactionStatement only)
+     */
+    senderAddress?: Address;
+
+    /**
+     * Target address. (optional, TransactionStatement only)
+     */
+    targetAddress?: Address;
+
+    /**
+     * Artifact id. (optional, TransactionStatement only)
+     */
+    artifactId?: MosaicId | NamespaceId;
+}

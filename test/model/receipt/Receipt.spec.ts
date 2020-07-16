@@ -35,6 +35,7 @@ import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
 import { Convert } from '../../../src/core/format/Convert';
+import { StatementType } from '../../../src/model/receipt/StatementType';
 
 describe('Receipt', () => {
     let account: Account;
@@ -339,22 +340,28 @@ describe('Receipt', () => {
     });
 
     it('should generate hash for MosaicResolutionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const receipt = statement.mosaicResolutionStatements[0];
+        const receipt = CreateStatementFromDTO(
+            statementDTO.mosaicResolutionStatements[0],
+            StatementType.MosaicResolutionStatement,
+        ) as ResolutionStatement;
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('DE29FB6356530E5D1FBEE0A84202520C155D882C46EA74456752D6C75F0707B3');
     });
 
     it('should generate hash for AddressResolutionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const receipt = statement.addressResolutionStatements[0];
+        const receipt = CreateStatementFromDTO(
+            statementDTO.addressResolutionStatements[0],
+            StatementType.AddressResolutionStatement,
+        ) as ResolutionStatement;
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('AA9B667C37C8A19902F3E1098FCEE681318455551CC2FBE9B81E8FA47007CA79');
     });
 
     it('should generate hash for TransactionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const receipt = statement.transactionStatements[0];
+        const receipt = CreateStatementFromDTO(
+            statementDTO.transactionStatements[0],
+            StatementType.TransactionStatement,
+        ) as TransactionStatement;
         const hash = receipt.generateHash();
         expect(hash).to.be.equal('E73E67382162C38AED77D5D5D67F96AA590DC12FF13AE263AA50932896AC4801');
     });

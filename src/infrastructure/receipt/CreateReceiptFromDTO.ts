@@ -30,9 +30,9 @@ import { ReceiptType } from '../../model/receipt/ReceiptType';
 import { ResolutionEntry } from '../../model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../model/receipt/ResolutionType';
-import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import { UInt64 } from '../../model/UInt64';
+import { StatementType } from '../../model/receipt/StatementType';
 
 /**
  * @interal
@@ -212,16 +212,17 @@ const createTransactionStatement = (statementDTO): TransactionStatement => {
 };
 
 /**
- * @param receiptDTO
- * @returns {Statement}
- * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
- * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
- * @constructor
+ * Create statement
+ * @param statementDto address resolution statement dto
+ * @returns {ResolutionStatement | TransactionStatement}
  */
-export const CreateStatementFromDTO = (receiptDTO): Statement => {
-    return new Statement(
-        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement)),
-        receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Address)),
-        receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Mosaic)),
-    );
+export const CreateStatementFromDTO = (statementDto: any, statementType: StatementType): ResolutionStatement | TransactionStatement => {
+    switch (statementType) {
+        case StatementType.AddressResolutionStatement:
+            return createResolutionStatement(statementDto.statement, ResolutionType.Address);
+        case StatementType.MosaicResolutionStatement:
+            return createResolutionStatement(statementDto.statement, ResolutionType.Mosaic);
+        case StatementType.TransactionStatement:
+            return createTransactionStatement(statementDto.statement);
+    }
 };

@@ -24,6 +24,10 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
 import { UInt64 } from '../../../src/model/UInt64';
+import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { Statement } from '../../../src/model/receipt/Statement';
+import { StatementType } from '../../../src/model/receipt/StatementType';
+import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 
 describe('Receipt - CreateStatementFromDTO', () => {
     let account: Account;
@@ -34,6 +38,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         statementDto = {
             transactionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -52,6 +57,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -71,6 +77,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -87,6 +94,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -103,6 +111,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -119,6 +128,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -138,6 +148,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
             ],
             addressResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
                         unresolved: '9103B60AAF27626883000000000000000000000000000000',
@@ -153,6 +164,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
                         unresolved: '917E7E29A01014C2F3000000000000000000000000000000',
@@ -170,6 +182,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
             ],
             mosaicResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1506',
                         unresolved: '85BBEA6CC462B244',
@@ -185,6 +198,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '1506',
                         unresolved: '85BBEA6CC462B244',
@@ -203,7 +217,18 @@ describe('Receipt - CreateStatementFromDTO', () => {
         };
     });
     it('should create Statement', () => {
-        const statement = CreateStatementFromDTO(statementDto);
+        const statement = new Statement(
+            statementDto.transactionStatements.map(
+                (s) => CreateStatementFromDTO(s, StatementType.TransactionStatement) as TransactionStatement,
+            ),
+            statementDto.addressResolutionStatements.map(
+                (s) => CreateStatementFromDTO(s, StatementType.AddressResolutionStatement) as ResolutionStatement,
+            ),
+            statementDto.mosaicResolutionStatements.map(
+                (s) => CreateStatementFromDTO(s, StatementType.MosaicResolutionStatement) as ResolutionStatement,
+            ),
+        );
+
         const unresolvedAddress = statement.addressResolutionStatements[0].unresolved as NamespaceId;
         const unresolvedMosaicId = statement.mosaicResolutionStatements[0].unresolved as NamespaceId;
 
@@ -265,9 +290,10 @@ describe('Receipt - CreateStatementFromDTO', () => {
             transactionStatements: [],
             addressResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
-                        unresolved: account.address,
+                        unresolved: account.address.encoded(),
                         resolutionEntries: [
                             {
                                 source: {
@@ -282,14 +308,17 @@ describe('Receipt - CreateStatementFromDTO', () => {
             ],
             mosaicResolutionStatements: [],
         };
-        const statement = CreateStatementFromDTO(dto);
-        expect(statement.addressResolutionStatements.length).to.be.equal(1);
-        expect((statement.addressResolutionStatements[0].unresolved as Address).plain()).to.be.equal(account.address.plain());
+        const statement = CreateStatementFromDTO(
+            dto.addressResolutionStatements[0],
+            StatementType.AddressResolutionStatement,
+        ) as ResolutionStatement;
+        expect((statement.unresolved as Address).plain()).to.be.equal(account.address.plain());
 
         const dtoJson = {
             transactionStatements: [],
             addressResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
                         unresolved: {
@@ -311,14 +340,17 @@ describe('Receipt - CreateStatementFromDTO', () => {
             mosaicResolutionStatements: [],
         };
 
-        const statementJson = CreateStatementFromDTO(dtoJson);
-        expect(statementJson.addressResolutionStatements.length).to.be.equal(1);
-        expect((statementJson.addressResolutionStatements[0].unresolved as Address).plain()).to.be.equal(account.address.plain());
+        const statementJson = CreateStatementFromDTO(
+            dtoJson.addressResolutionStatements[0],
+            StatementType.AddressResolutionStatement,
+        ) as ResolutionStatement;
+        expect((statementJson.unresolved as Address).plain()).to.be.equal(account.address.plain());
 
         const dtoId = {
             transactionStatements: [],
             addressResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
                         unresolved: {
@@ -340,9 +372,11 @@ describe('Receipt - CreateStatementFromDTO', () => {
             mosaicResolutionStatements: [],
         };
 
-        const statementId = CreateStatementFromDTO(dtoId);
-        expect(statementId.addressResolutionStatements.length).to.be.equal(1);
-        expect((statementId.addressResolutionStatements[0].unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('name').toHex());
+        const statementId = CreateStatementFromDTO(
+            dtoId.addressResolutionStatements[0],
+            StatementType.AddressResolutionStatement,
+        ) as ResolutionStatement;
+        expect((statementId.unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('name').toHex());
 
         const dtoError = {
             transactionStatements: [],
@@ -369,7 +403,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         };
 
         expect(() => {
-            CreateStatementFromDTO(dtoError);
+            CreateStatementFromDTO(dtoError, StatementType.AddressResolutionStatement);
         }).to.throw();
     });
 
@@ -398,7 +432,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         };
 
         expect(() => {
-            CreateStatementFromDTO(dtoError);
+            CreateStatementFromDTO(dtoError, StatementType.TransactionStatement);
         }).to.throw();
     });
 });

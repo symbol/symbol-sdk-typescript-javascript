@@ -77,7 +77,7 @@ export class AccountHttp extends Http implements AccountRepository {
     /**
      * Gets an array of accounts.
      * @param criteria - Account search criteria
-     * @returns Observable<AccountInfo[]>
+     * @returns Observable<Page<AccountInfo>>
      */
     public search(criteria: AccountSearchCriteria): Observable<Page<AccountInfo>> {
         return this.call(

@@ -16,23 +16,18 @@
 
 import { Observable } from 'rxjs';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { Statement } from '../model/receipt/Statement';
 import { UInt64 } from '../model/UInt64';
+import { Searcher } from './paginationStreamer/Searcher';
+import { ReceiptSearchCriteria } from './searchCriteria/ReceiptSearchCriteria';
+import { TransactionStatement } from '../model/receipt/TransactionStatement';
+import { ResolutionStatement } from '../model/receipt/ResolutionStatement';
 
 /**
  * Receipt interface repository.
  *
  * @since 1.0
  */
-export interface ReceiptRepository {
-    /**
-     * Get receipts from a block
-     * Returns the receipts linked to a block.
-     * @param {UInt64} height The height of the block.
-     * @return Observable<Statement>
-     */
-    getBlockReceipts(height: UInt64): Observable<Statement>;
-
+export interface ReceiptRepository extends Searcher<ResolutionStatement | TransactionStatement, ReceiptSearchCriteria> {
     /**
      * Get the merkle path for a given a receipt statement hash and block
      * Returns the merkle path for a [receipt statement or resolution](https://nemtech.github.io/concepts/receipt.html)
