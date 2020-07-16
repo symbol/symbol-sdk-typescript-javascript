@@ -123,6 +123,7 @@ export * from './receipt/TransactionStatement';
 export * from './receipt/ResolutionType';
 export * from './receipt/InflationReceipt';
 export * from './receipt/Statement';
+export * from './receipt/StatementType';
 
 // Restriction
 export * from './restriction/AccountRestrictions';

@@ -30,6 +30,7 @@ import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTr
 import { NamespaceMetadataTransaction } from '../model/transaction/NamespaceMetadataTransaction';
 import { UInt64 } from '../model/UInt64';
 import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
+import { Page } from '../infrastructure/Page';
 
 /**
  * MetadataTransaction service
@@ -121,8 +122,9 @@ export class MetadataTransactionService {
         sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<AccountMetadataTransaction> {
-        return this.metadataRepository.getAccountMetadataByKeyAndSender(targetAddress, key.toHex(), sourceAddress).pipe(
-            map((metadata: Metadata) => {
+        return this.metadataRepository.search({ targetAddress, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress }).pipe(
+            map((metadatas: Page<Metadata>) => {
+                const metadata = metadatas.data[0];
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return AccountMetadataTransaction.create(
@@ -170,8 +172,9 @@ export class MetadataTransactionService {
         sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<MosaicMetadataTransaction> {
-        return this.metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, key.toHex(), sourceAddress).pipe(
-            map((metadata: Metadata) => {
+        return this.metadataRepository.search({ targetId: mosaicId, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress }).pipe(
+            map((metadatas: Page<Metadata>) => {
+                const metadata = metadatas.data[0];
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return MosaicMetadataTransaction.create(
@@ -229,8 +232,9 @@ export class MetadataTransactionService {
         sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<NamespaceMetadataTransaction> {
-        return this.metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, key.toHex(), sourceAddress).pipe(
-            map((metadata: Metadata) => {
+        return this.metadataRepository.search({ targetId: namespaceId, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress }).pipe(
+            map((metadatas: Page<Metadata>) => {
+                const metadata = metadatas.data[0];
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return NamespaceMetadataTransaction.create(

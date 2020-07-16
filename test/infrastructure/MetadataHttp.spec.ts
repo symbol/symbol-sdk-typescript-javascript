@@ -15,18 +15,18 @@
  */
 import { expect } from 'chai';
 import {
-    MetadataDTO,
-    MetadataEntriesDTO,
     MetadataEntryDTO,
     MetadataRoutesApi,
     MetadataTypeEnum,
     Order,
+    MetadataInfoDTO,
+    MetadataPage,
+    Pagination,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
-import { QueryParams } from '../../src/infrastructure/QueryParams';
 import { Address } from '../../src/model/account/Address';
 import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
@@ -46,7 +46,13 @@ describe('MetadataHttp', () => {
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');
 
-    const metadataDTOMosaic = {} as MetadataDTO;
+    const pagination = {} as Pagination;
+    pagination.pageNumber = 1;
+    pagination.pageSize = 1;
+    pagination.totalEntries = 1;
+    pagination.totalPages = 1;
+
+    const metadataDTOMosaic = {} as MetadataInfoDTO;
     metadataDTOMosaic.id = 'aaa';
 
     const metadataEntryDtoMosaic = {} as MetadataEntryDTO;
@@ -59,7 +65,11 @@ describe('MetadataHttp', () => {
     metadataEntryDtoMosaic.targetId = '941299B2B7E1291C' as any;
     metadataDTOMosaic.metadataEntry = metadataEntryDtoMosaic;
 
-    const metadataDTOAddress = {} as MetadataDTO;
+    const metadataPageMosaic = {} as MetadataPage;
+    metadataPageMosaic.data = [metadataDTOMosaic];
+    metadataPageMosaic.pagination = pagination;
+
+    const metadataDTOAddress = {} as MetadataInfoDTO;
     metadataDTOAddress.id = 'bbb';
 
     const metadataEntryDtoAddress = {} as MetadataEntryDTO;
@@ -72,7 +82,11 @@ describe('MetadataHttp', () => {
     metadataEntryDtoAddress.targetId = '941299B2B7E1291D' as any;
     metadataDTOAddress.metadataEntry = metadataEntryDtoAddress;
 
-    const metadataDTONamespace = {} as MetadataDTO;
+    const metadataPageAccount = {} as MetadataPage;
+    metadataPageAccount.data = [metadataDTOAddress];
+    metadataPageAccount.pagination = pagination;
+
+    const metadataDTONamespace = {} as MetadataInfoDTO;
     metadataDTONamespace.id = 'ccc';
 
     const metadataEntryDtoNamespace = {} as MetadataEntryDTO;
@@ -85,8 +99,13 @@ describe('MetadataHttp', () => {
     metadataEntryDtoNamespace.targetId = '941299B2B7E1291E' as any;
     metadataDTONamespace.metadataEntry = metadataEntryDtoNamespace;
 
-    const metadataEntriesDTO = {} as MetadataEntriesDTO;
-    metadataEntriesDTO.metadataEntries = [metadataDTOMosaic, metadataDTOAddress, metadataDTONamespace];
+    const metadataPageNamespace = {} as MetadataPage;
+    metadataPageNamespace.data = [metadataDTONamespace];
+    metadataPageNamespace.pagination = pagination;
+
+    const metadataPage = {} as MetadataPage;
+    metadataPage.data = [metadataDTOMosaic, metadataDTOAddress, metadataDTONamespace];
+    metadataPage.pagination = pagination;
 
     const url = 'http://someHost';
     const notFoundResponse = {
@@ -102,7 +121,7 @@ describe('MetadataHttp', () => {
         reset(metadataRoutesApi);
     });
 
-    function assertMetadataInfo(metadataInfo: Metadata, dto: MetadataDTO): void {
+    function assertMetadataInfo(metadataInfo: Metadata, dto: MetadataInfoDTO): void {
         expect(metadataInfo).to.be.not.null;
         expect(metadataInfo.id).to.be.equals(dto.id);
         if (metadataInfo.metadataEntry.metadataType === MetadataType.Mosaic) {
@@ -121,110 +140,225 @@ describe('MetadataHttp', () => {
     }
 
     it('getAccountMetadata', async () => {
-        when(metadataRoutesApi.getAccountMetadata(address.plain(), 1, Order.Desc, 'a')).thenReturn(Promise.resolve(metadataEntriesDTO));
-        const metadatas = await metadataRepository
-            .getAccountMetadata(
-                address,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-            )
-            .toPromise();
-        expect(metadatas.length).to.be.equals(3);
-        assertMetadataInfo(metadatas[0], metadataDTOMosaic);
-        assertMetadataInfo(metadatas[1], metadataDTOAddress);
-        assertMetadataInfo(metadatas[2], metadataDTONamespace);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                undefined,
+                address.plain(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                1,
+                undefined,
+                Order.Asc,
+            ),
+        ).thenReturn(Promise.resolve(metadataPage));
+        const metadatas = await metadataRepository.search({ targetAddress: address, pageNumber: 1, order: Order.Asc }).toPromise();
+        expect(metadatas.data.length).to.be.equals(3);
+        assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
+        assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
+        assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
     });
 
     it('getAccountMetadataByKey', async () => {
-        when(metadataRoutesApi.getAccountMetadataByKey(address.plain(), 'aaa')).thenReturn(Promise.resolve(metadataEntriesDTO));
-        const metadatas = await metadataRepository.getAccountMetadataByKey(address, 'aaa').toPromise();
-        assertMetadataInfo(metadatas[0], metadataDTOMosaic);
-        assertMetadataInfo(metadatas[1], metadataDTOAddress);
-        assertMetadataInfo(metadatas[2], metadataDTONamespace);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                undefined,
+                address.plain(),
+                'aaa',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(metadataPage));
+        const metadatas = await metadataRepository.search({ targetAddress: address, scopedMetadataKey: 'aaa' }).toPromise();
+        assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
+        assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
+        assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
     });
 
     it('getAccountMetadataByKeyAndSender', async () => {
-        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), 'aaa', address.plain())).thenReturn(
-            Promise.resolve(metadataDTOMosaic),
-        );
-        const metadata = await metadataRepository.getAccountMetadataByKeyAndSender(address, 'aaa', address).toPromise();
-        assertMetadataInfo(metadata, metadataDTOMosaic);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                address.plain(),
+                'aaa',
+                undefined,
+                MetadataTypeEnum.NUMBER_0,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(metadataPageMosaic));
+        const metadata = await metadataRepository
+            .search({
+                sourceAddress: address,
+                scopedMetadataKey: 'aaa',
+                targetAddress: address,
+                metadataType: MetadataType.Account,
+            })
+            .toPromise();
+        assertMetadataInfo(metadata.data[0], metadataDTOMosaic);
     });
 
     it('getMosaicMetadata', async () => {
-        when(metadataRoutesApi.getMosaicMetadata(mosaicId.toHex(), 1, 'a', Order.Desc)).thenReturn(Promise.resolve(metadataEntriesDTO));
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                undefined,
+                undefined,
+                undefined,
+                mosaicId.toHex(),
+                MetadataTypeEnum.NUMBER_1.valueOf(),
+                2,
+                undefined,
+                undefined,
+                Order.Desc,
+            ),
+        ).thenReturn(Promise.resolve(metadataPage));
         const metadatas = await metadataRepository
-            .getMosaicMetadata(
-                mosaicId,
-                new QueryParams({
-                    pageSize: 1,
-                    id: 'a',
-                }),
-            )
+            .search({
+                targetId: mosaicId,
+                metadataType: MetadataType.Mosaic,
+                pageSize: 2,
+                order: Order.Desc,
+            })
             .toPromise();
-        expect(metadatas.length).to.be.equals(3);
-        assertMetadataInfo(metadatas[0], metadataDTOMosaic);
-        assertMetadataInfo(metadatas[1], metadataDTOAddress);
-        assertMetadataInfo(metadatas[2], metadataDTONamespace);
+        expect(metadatas.data.length).to.be.equals(3);
+        assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
+        assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
+        assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
     });
 
     it('getMosaicMetadataByKey', async () => {
-        when(metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), 'aaa')).thenReturn(Promise.resolve(metadataEntriesDTO));
-        const metadatas = await metadataRepository.getMosaicMetadataByKey(mosaicId, 'aaa').toPromise();
-        assertMetadataInfo(metadatas[0], metadataDTOMosaic);
-        assertMetadataInfo(metadatas[1], metadataDTOAddress);
-        assertMetadataInfo(metadatas[2], metadataDTONamespace);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                undefined,
+                undefined,
+                'aaa',
+                mosaicId.toHex(),
+                MetadataTypeEnum.NUMBER_1,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(metadataPage));
+        const metadatas = await metadataRepository
+            .search({ targetId: mosaicId, scopedMetadataKey: 'aaa', metadataType: MetadataType.Mosaic })
+            .toPromise();
+        assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
+        assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
+        assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
     });
 
     it('getMosaicMetadataByKeyAndSender', async () => {
-        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), 'aaa', address.plain())).thenReturn(
-            Promise.resolve(metadataDTOMosaic),
-        );
-        const metadata = await metadataRepository.getMosaicMetadataByKeyAndSender(mosaicId, 'aaa', address).toPromise();
-        assertMetadataInfo(metadata, metadataDTOMosaic);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                undefined,
+                'aaa',
+                mosaicId.toHex(),
+                MetadataTypeEnum.NUMBER_1,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(metadataPageMosaic));
+        const metadata = await metadataRepository
+            .search({ targetId: mosaicId, scopedMetadataKey: 'aaa', sourceAddress: address, metadataType: MetadataType.Mosaic })
+            .toPromise();
+        assertMetadataInfo(metadata.data[0], metadataDTOMosaic);
     });
 
     it('getNamespaceMetadata', async () => {
-        when(metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(), 2, 'a', Order.Desc)).thenReturn(
-            Promise.resolve(metadataEntriesDTO),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                undefined,
+                undefined,
+                undefined,
+                namespaceId.toHex(),
+                MetadataTypeEnum.NUMBER_2.valueOf(),
+                2,
+                undefined,
+                undefined,
+                Order.Desc,
+            ),
+        ).thenReturn(Promise.resolve(metadataPage));
         const metadatas = await metadataRepository
-            .getNamespaceMetadata(
-                namespaceId,
-                new QueryParams({
-                    pageSize: 2,
-                    id: 'a',
-                }),
-            )
+            .search({
+                targetId: namespaceId,
+                metadataType: MetadataType.Namespace,
+                pageSize: 2,
+                order: Order.Desc,
+            })
             .toPromise();
-        expect(metadatas.length).to.be.equals(3);
-        assertMetadataInfo(metadatas[0], metadataDTOMosaic);
-        assertMetadataInfo(metadatas[1], metadataDTOAddress);
-        assertMetadataInfo(metadatas[2], metadataDTONamespace);
+        expect(metadatas.data.length).to.be.equals(3);
+        assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
+        assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
+        assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
     });
 
     it('getNamespaceMetadataByKey', async () => {
-        when(metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), 'bbb')).thenReturn(Promise.resolve(metadataEntriesDTO));
-        const metadatas = await metadataRepository.getNamespaceMetadataByKey(namespaceId, 'bbb').toPromise();
-        assertMetadataInfo(metadatas[0], metadataDTOMosaic);
-        assertMetadataInfo(metadatas[1], metadataDTOAddress);
-        assertMetadataInfo(metadatas[2], metadataDTONamespace);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                undefined,
+                undefined,
+                'bbb',
+                namespaceId.toHex(),
+                MetadataTypeEnum.NUMBER_2.valueOf(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(metadataPage));
+        const metadatas = await metadataRepository
+            .search({ targetId: namespaceId, scopedMetadataKey: 'bbb', metadataType: MetadataType.Namespace })
+            .toPromise();
+        assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
+        assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
+        assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
     });
 
     it('getNamespaceMetadataByKeyAndSender', async () => {
-        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), 'cccc', address.plain())).thenReturn(
-            Promise.resolve(metadataDTOMosaic),
-        );
-        const metadata = await metadataRepository.getNamespaceMetadataByKeyAndSender(namespaceId, 'cccc', address).toPromise();
-        assertMetadataInfo(metadata, metadataDTOMosaic);
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                undefined,
+                'cccc',
+                namespaceId.toHex(),
+                MetadataTypeEnum.NUMBER_2.valueOf(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(metadataPageNamespace));
+        const metadata = await metadataRepository
+            .search({ sourceAddress: address, targetId: namespaceId, scopedMetadataKey: 'cccc', metadataType: MetadataType.Namespace })
+            .toPromise();
+        assertMetadataInfo(metadata.data[0], metadataDTONamespace);
     });
 
     it('Address meta no previous value', (done) => {
-        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject(notFoundResponse),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                address.plain(),
+                '85BBEA6CC462B244',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
             .createMetadataTransaction(
@@ -244,9 +378,19 @@ describe('MetadataHttp', () => {
     });
 
     it('Mosaic meta no previous value', (done) => {
-        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject(notFoundResponse),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                undefined,
+                '85BBEA6CC462B244',
+                mosaicId.toHex(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
             .createMetadataTransaction(
@@ -267,9 +411,19 @@ describe('MetadataHttp', () => {
     });
 
     it('Namespace meta no previous value', (done) => {
-        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject(notFoundResponse),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                undefined,
+                '85BBEA6CC462B244',
+                namespaceId.toHex(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
             .createMetadataTransaction(
@@ -290,9 +444,19 @@ describe('MetadataHttp', () => {
     });
 
     it('Address meta no previous value Error', async () => {
-        when(metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject(notFoundResponse),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                address.plain(),
+                '85BBEA6CC462B244',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
             .createMetadataTransaction(
@@ -309,9 +473,19 @@ describe('MetadataHttp', () => {
     });
 
     it('Mosaic meta no previous value', async () => {
-        when(metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject(notFoundResponse),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                undefined,
+                '85BBEA6CC462B244',
+                mosaicId.toHex(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
             .createMetadataTransaction(
@@ -329,9 +503,19 @@ describe('MetadataHttp', () => {
     });
 
     it('Namespace meta no previous value', async () => {
-        when(metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), '85BBEA6CC462B244', address.plain())).thenReturn(
-            Promise.reject(notFoundResponse),
-        );
+        when(
+            metadataRoutesApi.searchMetadataEntries(
+                address.plain(),
+                undefined,
+                '85BBEA6CC462B244',
+                namespaceId.toHex(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
             .createMetadataTransaction(

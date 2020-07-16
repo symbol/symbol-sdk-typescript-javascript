@@ -144,7 +144,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     /**
      * Gets an array of namespaces.
      * @param criteria - Namespace search criteria
-     * @returns Observable<NamespaceInfo[]>
+     * @returns Observable<Page<NamespaceInfo>>
      */
     public search(criteria: NamespaceSearchCriteria): Observable<Page<NamespaceInfo>> {
         return this.call(

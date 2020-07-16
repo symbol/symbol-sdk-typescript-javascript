@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import { Metadata } from '../model/metadata/Metadata';
-import { Searcher } from './paginationStreamer/Searcher';
-import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
-
-/**
- * Metadata interface repository.
- *
- * @since 1.0
- */
-export type MetadataRepository = Searcher<Metadata, MetadataSearchCriteria>;
+export enum StatementType {
+    TransactionStatement = 0,
+    AddressResolutionStatement = 1,
+    MosaicResolutionStatement = 2,
+}

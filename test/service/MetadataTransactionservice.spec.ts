@@ -34,6 +34,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
+import { Page } from '../../src/infrastructure/Page';
 
 describe('MetadataTransactionService', () => {
     let account: Account;
@@ -70,19 +71,36 @@ describe('MetadataTransactionService', () => {
         account = TestingAccount;
         const mockMetadataRepository: MetadataRepository = mock();
 
-        when(mockMetadataRepository.getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.address)).thenReturn(
-            observableOf(mockMetadata(MetadataType.Account)),
-        );
         when(
-            mockMetadataRepository.getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key.toHex(), account.address),
-        ).thenReturn(observableOf(mockMetadata(MetadataType.Mosaic)));
-        when(
-            mockMetadataRepository.getNamespaceMetadataByKeyAndSender(
-                deepEqual(NamespaceId.createFromEncoded(targetIdHex)),
-                key.toHex(),
-                account.address,
+            mockMetadataRepository.search(
+                deepEqual({
+                    targetAddress: account.address,
+                    scopedMetadataKey: key.toHex(),
+                    sourceAddress: account.address,
+                }),
             ),
-        ).thenReturn(observableOf(mockMetadata(MetadataType.Namespace)));
+        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Account)], 1, 20, 1, 1)));
+
+        when(
+            mockMetadataRepository.search(
+                deepEqual({
+                    targetId: new MosaicId(targetIdHex),
+                    scopedMetadataKey: key.toHex(),
+                    sourceAddress: account.address,
+                }),
+            ),
+        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Mosaic)], 1, 20, 1, 1)));
+
+        when(
+            mockMetadataRepository.search(
+                deepEqual({
+                    targetId: NamespaceId.createFromEncoded(targetIdHex),
+                    scopedMetadataKey: key.toHex(),
+                    sourceAddress: account.address,
+                }),
+            ),
+        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Namespace)], 1, 20, 1, 1)));
+
         const metadataRepository = instance(mockMetadataRepository);
         metadataTransactionService = new MetadataTransactionService(metadataRepository);
     });
