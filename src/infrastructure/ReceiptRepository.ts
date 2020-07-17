@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs';
-import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { UInt64 } from '../model/UInt64';
 import { Searcher } from './paginationStreamer/Searcher';
 import { ReceiptSearchCriteria } from './searchCriteria/ReceiptSearchCriteria';
 import { TransactionStatement } from '../model/receipt/TransactionStatement';
@@ -27,16 +24,4 @@ import { ResolutionStatement } from '../model/receipt/ResolutionStatement';
  *
  * @since 1.0
  */
-export interface ReceiptRepository extends Searcher<ResolutionStatement | TransactionStatement, ReceiptSearchCriteria> {
-    /**
-     * Get the merkle path for a given a receipt statement hash and block
-     * Returns the merkle path for a [receipt statement or resolution](https://nemtech.github.io/concepts/receipt.html)
-     * linked to a block. The path is the complementary data needed to calculate the merkle root.
-     * A client can compare if the calculated root equals the one recorded in the block header,
-     * verifying that the receipt was linked with the block.
-     * @param height The height of the block.
-     * @param hash The hash of the receipt statement or resolution.
-     * @return Observable<MerkleProofInfo>
-     */
-    getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo>;
-}
+export type ReceiptRepository = Searcher<ResolutionStatement | TransactionStatement, ReceiptSearchCriteria>;

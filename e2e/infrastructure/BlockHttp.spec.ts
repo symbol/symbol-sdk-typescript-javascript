@@ -29,6 +29,8 @@ import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStre
 import { deepEqual } from 'assert';
 import { take } from 'rxjs/operators';
 import { StatementType, TransactionStatement } from '../../src/model/model';
+import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
+import { Order } from '../../src/infrastructure/infrastructure';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -120,7 +122,7 @@ describe('BlockHttp', () => {
                 .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
                 .pipe(
                     mergeMap((_) => {
-                        return receiptRepository.getMerkleReceipts(chainHeight, (_.data[0] as TransactionStatement).generateHash());
+                        return blockRepository.getMerkleReceipts(chainHeight, (_.data[0] as TransactionStatement).generateHash());
                     }),
                 )
                 .toPromise();
@@ -140,6 +142,21 @@ describe('BlockHttp', () => {
                 .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
                 .toPromise();
             expect(statement.data.length).not.to.greaterThan(0);
+        });
+    });
+
+    describe('searchReceipt with streamer', () => {
+        it('should return receipt info', async () => {
+            const streamer = new ReceiptPaginationStreamer(receiptRepository);
+            const infoStreamer = await streamer
+                .search({ pageSize: 20, statementType: StatementType.TransactionStatement, height: chainHeight, order: Order.Asc })
+                .pipe(take(20), toArray())
+                .toPromise();
+            const info = await receiptRepository
+                .search({ pageSize: 20, statementType: StatementType.TransactionStatement, height: chainHeight, order: Order.Asc })
+                .toPromise();
+            expect(infoStreamer.length).to.be.greaterThan(0);
+            deepEqual(infoStreamer[0], info.data[0]);
         });
     });
 });

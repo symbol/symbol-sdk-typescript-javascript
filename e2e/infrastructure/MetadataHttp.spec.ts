@@ -33,7 +33,9 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { MetadataType } from '../../src/model/model';
-import { Order } from '../../src/infrastructure/infrastructure';
+import { Order, MetadataPaginationStreamer } from '../../src/infrastructure/infrastructure';
+import { deepEqual } from 'assert';
+import { take, toArray } from 'rxjs/operators';
 
 describe('MetadataHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -347,6 +349,21 @@ describe('MetadataHttp', () => {
             expect((metadata.data[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
             expect(metadata.data[0].metadataEntry.value).to.be.equal('Test namespace meta value');
             expect(metadata.data[0].metadataEntry.value.length).to.be.equal(25);
+        });
+    });
+
+    describe('getAccountMetadata with streamer', () => {
+        it('should return metadata given a NEM Address', async () => {
+            const streamer = new MetadataPaginationStreamer(metadataRepository);
+            const infoStreamer = await streamer
+                .search({ pageSize: 20, targetAddress: accountAddress, metadataType: MetadataType.Account, order: Order.Desc })
+                .pipe(take(20), toArray())
+                .toPromise();
+            const info = await metadataRepository
+                .search({ pageSize: 20, targetAddress: accountAddress, metadataType: MetadataType.Account, order: Order.Desc })
+                .toPromise();
+            expect(infoStreamer.length).to.be.greaterThan(0);
+            deepEqual(infoStreamer[0], info.data[0]);
         });
     });
 });
