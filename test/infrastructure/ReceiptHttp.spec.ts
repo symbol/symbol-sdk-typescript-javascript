@@ -20,9 +20,6 @@ import {
     AccountRestrictionFlagsEnum,
     AccountRestrictionsDTO,
     AccountRestrictionsInfoDTO,
-    MerklePathItemDTO,
-    MerkleProofInfoDTO,
-    PositionEnum,
     ReceiptRoutesApi,
     ResolutionStatementDTO,
     ResolutionEntryDTO,
@@ -107,22 +104,6 @@ describe('ReceiptHttp', () => {
         expect(((statement.data[0] as ResolutionStatement).unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('test').toHex());
     });
 
-    it('getMerkleReceipts', async () => {
-        const merkleProofInfoDto = {} as MerkleProofInfoDTO;
-        const merklePathDto = {} as MerklePathItemDTO;
-        merklePathDto.hash = 'merkleHash';
-        merklePathDto.position = PositionEnum.Left;
-        merkleProofInfoDto.merklePath = [merklePathDto];
-
-        when(receiptRoutesApi.getMerkleReceipts('1', 'Hash')).thenReturn(Promise.resolve(merkleProofInfoDto));
-
-        const proof = await receiptRepository.getMerkleReceipts(UInt64.fromUint(1), 'Hash').toPromise();
-        expect(proof).to.be.not.null;
-        expect(proof.merklePath!.length).to.be.greaterThan(0);
-        expect(proof.merklePath![0].hash).to.be.equal('merkleHash');
-        expect(proof.merklePath![0].position!.toString()).to.be.equal('left');
-    });
-
     it('getBlockReceipt - Error', async () => {
         when(
             receiptRoutesApi.searchReceipts(
@@ -162,13 +143,5 @@ describe('ReceiptHttp', () => {
         expect(() => {
             receiptRepository.search({ height: UInt64.fromUint(1) }).toPromise();
         }).to.throw(Error, `Search criteria 'StatementType' must be provided.`);
-    });
-
-    it('getMerkleReceipts - Error', async () => {
-        when(receiptRoutesApi.getMerkleReceipts('1', 'Hash')).thenReject(new Error('Mocked Error'));
-        await receiptRepository
-            .getMerkleReceipts(UInt64.fromUint(1), 'Hash')
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
     });
 });

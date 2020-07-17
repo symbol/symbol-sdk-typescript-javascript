@@ -142,4 +142,28 @@ describe('BlockHttp', () => {
         expect(merkleProofInfo).to.be.not.null;
         expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(MerklePosition.Left, 'bbb')]);
     });
+
+    it('getMerkleReceipts', async () => {
+        const merkleProofInfoDto = {} as MerkleProofInfoDTO;
+        const merklePathDto = {} as MerklePathItemDTO;
+        merklePathDto.hash = 'merkleHash';
+        merklePathDto.position = PositionEnum.Left;
+        merkleProofInfoDto.merklePath = [merklePathDto];
+
+        when(blockRoutesApi.getMerkleReceipts('1', 'Hash')).thenReturn(Promise.resolve(merkleProofInfoDto));
+
+        const proof = await blockRepository.getMerkleReceipts(UInt64.fromUint(1), 'Hash').toPromise();
+        expect(proof).to.be.not.null;
+        expect(proof.merklePath!.length).to.be.greaterThan(0);
+        expect(proof.merklePath![0].hash).to.be.equal('merkleHash');
+        expect(proof.merklePath![0].position!.toString()).to.be.equal('left');
+    });
+
+    it('getMerkleReceipts - Error', async () => {
+        when(blockRoutesApi.getMerkleReceipts('1', 'Hash')).thenReject(new Error('Mocked Error'));
+        await blockRepository
+            .getMerkleReceipts(UInt64.fromUint(1), 'Hash')
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
 });

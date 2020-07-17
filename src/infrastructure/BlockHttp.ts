@@ -136,4 +136,24 @@ export class BlockHttp extends Http implements BlockRepository {
                 ),
         );
     }
+
+    /**
+     * Get the merkle path for a given a receipt statement hash and block
+     * Returns the merkle path for a [receipt statement or resolution](https://nemtech.github.io/concepts/receipt.html)
+     * linked to a block. The path is the complementary data needed to calculate the merkle root.
+     * A client can compare if the calculated root equals the one recorded in the block header,
+     * verifying that the receipt was linked with the block.
+     * @param height The height of the block.
+     * @param hash The hash of the receipt statement or resolution.
+     * @return Observable<MerkleProofInfo>
+     */
+    public getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo> {
+        return this.call(
+            this.blockRoutesApi.getMerkleReceipts(height.toString(), hash),
+            (body) =>
+                new MerkleProofInfo(
+                    body.merklePath!.map((payload) => new MerklePathItem(DtoMapping.mapEnum(payload.position), payload.hash)),
+                ),
+        );
+    }
 }
