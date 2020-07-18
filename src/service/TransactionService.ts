@@ -15,7 +15,7 @@
  */
 
 import { merge, Observable, of } from 'rxjs';
-import { first, flatMap, map, mergeMap, toArray, withLatestFrom } from 'rxjs/operators';
+import { first, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { IListener } from '../infrastructure/IListener';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { TransactionRepository } from '../infrastructure/TransactionRepository';
@@ -41,6 +41,7 @@ import { StatementType } from '../model/model';
 import { ReceiptPaginationStreamer } from '../infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { Statement } from '../model/receipt/Statement';
 import { ResolutionStatement } from '../model/receipt/ResolutionStatement';
+import { combineLatest } from 'rxjs';
 
 /**
  * Transaction Service
@@ -60,7 +61,9 @@ export class TransactionService implements ITransactionService {
      */
     public resolveAliases(transationHashes: string[]): Observable<Transaction[]> {
         return this.transactionRepository.getTransactionsById(transationHashes, TransactionGroup.Confirmed).pipe(
-            mergeMap((_) => _),
+            mergeMap((_) => {
+                return _;
+            }),
             mergeMap((transaction) => this.resolveTransaction(transaction)),
             toArray(),
         );
@@ -238,12 +241,14 @@ export class TransactionService implements ITransactionService {
         const addressResolution = streamer
             .search({ height: transaction.transactionInfo!.height, statementType: StatementType.AddressResolutionStatement })
             .pipe(toArray());
-        return streamer
+        const mosaicResolution = streamer
             .search({ height: transaction.transactionInfo!.height, statementType: StatementType.MosaicResolutionStatement })
-            .pipe(toArray())
+            .pipe(toArray());
+        return combineLatest(mosaicResolution, addressResolution)
             .pipe(
-                withLatestFrom(addressResolution),
-                map(([mosaic, address]) => new Statement([], address as ResolutionStatement[], mosaic as ResolutionStatement[])),
+                map(([mosaic, address]) => {
+                    return new Statement([], address as ResolutionStatement[], mosaic as ResolutionStatement[]);
+                }),
             )
             .pipe(map((statement) => transaction.resolveAliases(statement, aggregateIndex)));
     }
