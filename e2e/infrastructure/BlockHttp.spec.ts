@@ -141,7 +141,7 @@ describe('BlockHttp', () => {
             const statement = await receiptRepository
                 .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
                 .toPromise();
-            expect(statement.data.length).not.to.greaterThan(0);
+            expect(statement.data.length).to.be.greaterThan(0);
         });
     });
 

@@ -82,22 +82,20 @@ export class AccountService implements IAccountService {
      * @returns {Observable<NamespaceInfoWithName[]>}
      */
     public accountNamespacesWithName(address: Address): Observable<NamespaceInfoWithName[]> {
-        return new NamespacePaginationStreamer(this.namespaceRepository)
-            .search({ ownerAddress: address })
-            .pipe(toArray())
-            .pipe(
-                mergeMap((infos) => {
-                    const namespaceIds = infos.map((i) => i.id);
-                    return this.namespaceRepository.getNamespacesNames(namespaceIds).pipe(
-                        map((resolved) => {
-                            return infos.map((info) => {
-                                const name = resolved.find((r) => r.namespaceId.equals(info.id));
-                                return DtoMapping.assign(info, { namespaceName: name?.name });
-                            });
-                        }),
-                    );
-                }),
-            );
+        const steatmer = new NamespacePaginationStreamer(this.namespaceRepository).search({ ownerAddress: address }).pipe(toArray());
+        return steatmer.pipe(
+            mergeMap((infos) => {
+                const namespaceIds = infos.map((i) => i.id);
+                return this.namespaceRepository.getNamespacesNames(namespaceIds).pipe(
+                    map((resolved) => {
+                        return infos.map((info) => {
+                            const name = resolved.find((r) => r.namespaceId.equals(info.id));
+                            return DtoMapping.assign(info, { namespaceName: name?.name });
+                        });
+                    }),
+                );
+            }),
+        );
     }
 
     /**

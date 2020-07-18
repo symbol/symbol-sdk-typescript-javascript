@@ -394,8 +394,7 @@ describe('TransactionService', () => {
                             expect((tx.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
                             expect(tx.mosaics.find((m) => m.id.toHex() === mosaicId.toHex())).not.to.equal(undefined);
                         } else if (tx instanceof AggregateTransaction) {
-                            console.log(tx.innerTransactions);
-                            expect(tx.innerTransactions.length).to.be.equal(5);
+                            expect(tx.innerTransactions.length).to.be.equal(6);
                             // Assert Transfer
                             expect(((tx.innerTransactions[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
                                 account.address.plain(),
