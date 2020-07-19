@@ -272,6 +272,14 @@ describe('convert', () => {
             expect(actual).to.equal('E58588E7A7A6E585A9E6BCA2');
         });
 
+        it('utf8 text containing emoji to hex', () => {
+            // Act:
+            const actual = convert.utf8ToHex('😀こんにちは😀');
+
+            // Assert:
+            expect(actual).to.equal('F09F9880E38193E38293E381ABE381A1E381AFF09F9880');
+        });
+
         it('utf8 text to hex with control char', () => {
             // Act:
             const actual = convert.utf8ToHex(String.fromCodePoint(0x0f) + ' Hello World!');

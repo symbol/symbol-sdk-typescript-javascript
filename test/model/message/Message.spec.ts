@@ -50,4 +50,9 @@ describe('Message', () => {
         const hex = '746573742D6D657373616765';
         expect(Message.decodeHex(hex)).to.be.equal('test-message');
     });
+
+    it('should decode hex string (emoji)', () => {
+        const hex = 'F09F9880E38193E38293E381ABE381A1E381AFF09F9880';
+        expect(Message.decodeHex(hex)).to.be.equal('😀こんにちは😀');
+    });
 });

@@ -165,12 +165,7 @@ export class Convert {
      * @return {string}
      */
     public static utf8ToHex = (input: string): string => {
-        const rawString = Convert.rstr2utf8(input);
-        let result = '';
-        for (let i = 0; i < rawString.length; i++) {
-            result += rawString.charCodeAt(i).toString(16).padStart(2, '0');
-        }
-        return result.toUpperCase();
+        return Buffer.from(input, 'utf-8').toString('hex').toUpperCase();
     };
 
     /**
