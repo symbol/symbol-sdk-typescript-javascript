@@ -26,7 +26,7 @@ import { Transaction } from './Transaction';
  */
 export class CosignatureTransaction {
     /**
-     * @param transactionToCosign
+     * @param transactionToCosign Aggregate transaction
      */
     constructor(
         /**
@@ -66,13 +66,14 @@ export class CosignatureTransaction {
     /**
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account
+     * @param transactionHash Transaction hash (optional)
      * @returns {CosignatureSignedTransaction}
      */
-    public signWith(account: Account): CosignatureSignedTransaction {
-        if (!this.transactionToCosign.transactionInfo!.hash) {
+    public signWith(account: Account, transactionHash?: string): CosignatureSignedTransaction {
+        if ((!this.transactionToCosign.transactionInfo || !this.transactionToCosign.transactionInfo!.hash) && !transactionHash) {
             throw new Error('Transaction to cosign should be announced first');
         }
-        const hash = this.transactionToCosign.transactionInfo!.hash;
+        const hash = !transactionHash ? this.transactionToCosign.transactionInfo!.hash : transactionHash;
         const hashBytes = Convert.hexToUint8(hash ? hash : '');
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey);
         const signature = KeyPair.sign(keyPairEncoded, new Uint8Array(hashBytes));
