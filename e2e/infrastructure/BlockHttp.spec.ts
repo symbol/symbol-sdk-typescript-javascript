@@ -28,7 +28,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
 import { deepEqual } from 'assert';
 import { take } from 'rxjs/operators';
-import { StatementType, TransactionStatement } from '../../src/model/model';
+import { TransactionStatement } from '../../src/model/model';
 import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { Order } from '../../src/infrastructure/infrastructure';
 
@@ -119,7 +119,7 @@ describe('BlockHttp', () => {
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', async () => {
             const merkleReceipts = await receiptRepository
-                .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
+                .searchReceipts({ height: chainHeight })
                 .pipe(
                     mergeMap((_) => {
                         return blockRepository.getMerkleReceipts(chainHeight, (_.data[0] as TransactionStatement).generateHash());
@@ -138,23 +138,19 @@ describe('BlockHttp', () => {
 
     describe('getBlockReceipts', () => {
         it('should return block receipts', async () => {
-            const statement = await receiptRepository
-                .search({ statementType: StatementType.TransactionStatement, height: chainHeight })
-                .toPromise();
+            const statement = await receiptRepository.searchReceipts({ height: chainHeight }).toPromise();
             expect(statement.data.length).to.be.greaterThan(0);
         });
     });
 
     describe('searchReceipt with streamer', () => {
         it('should return receipt info', async () => {
-            const streamer = new ReceiptPaginationStreamer(receiptRepository);
+            const streamer = ReceiptPaginationStreamer.transactionStatements(receiptRepository);
             const infoStreamer = await streamer
-                .search({ pageSize: 20, statementType: StatementType.TransactionStatement, height: chainHeight, order: Order.Asc })
+                .search({ pageSize: 20, height: chainHeight, order: Order.Asc })
                 .pipe(take(20), toArray())
                 .toPromise();
-            const info = await receiptRepository
-                .search({ pageSize: 20, statementType: StatementType.TransactionStatement, height: chainHeight, order: Order.Asc })
-                .toPromise();
+            const info = await receiptRepository.searchReceipts({ pageSize: 20, height: chainHeight, order: Order.Asc }).toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });

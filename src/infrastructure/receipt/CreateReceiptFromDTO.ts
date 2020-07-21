@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ResolutionStatementInfoDTO, TransactionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
 import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
@@ -28,11 +29,10 @@ import { Receipt } from '../../model/receipt/Receipt';
 import { ReceiptSource } from '../../model/receipt/ReceiptSource';
 import { ReceiptType } from '../../model/receipt/ReceiptType';
 import { ResolutionEntry } from '../../model/receipt/ResolutionEntry';
-import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { ResolutionType } from '../../model/receipt/ResolutionType';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import { UInt64 } from '../../model/UInt64';
-import { StatementType } from '../../model/receipt/StatementType';
 
 /**
  * @interal
@@ -55,38 +55,41 @@ const extractUnresolvedAddress = (unresolvedAddress: any): UnresolvedAddress => 
 
 /**
  * @internal
- * @param statementDTO
- * @param resolutionType
- * @returns {ResolutionStatement}
+ * @param statementInfoDTO
+ * @returns {MosaicIdResolutionStatement}
  * @constructor
  */
-const createResolutionStatement = (statementDTO, resolutionType: ResolutionType): ResolutionStatement => {
-    switch (resolutionType) {
-        case ResolutionType.Address:
-            return new ResolutionStatement(
-                ResolutionType.Address,
-                UInt64.fromNumericString(statementDTO.height),
-                extractUnresolvedAddress(statementDTO.unresolved),
-                statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(
-                        Address.createFromEncoded(entry.resolved),
-                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
-                    );
-                }),
+export const createMosaicResolutionStatement = (statementInfoDTO: ResolutionStatementInfoDTO): MosaicIdResolutionStatement => {
+    const statementDTO = statementInfoDTO.statement;
+    return new ResolutionStatement(
+        ResolutionType.Mosaic,
+        UInt64.fromNumericString(statementDTO.height),
+        UnresolvedMapping.toUnresolvedMosaic(statementDTO.unresolved),
+        statementDTO.resolutionEntries.map((entry) => {
+            return new ResolutionEntry(new MosaicId(entry.resolved), new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
+        }),
+    );
+};
+
+/**
+ * @internal
+ * @param statementInfoDTO
+ * @returns {AddressResolutionStatement}
+ * @constructor
+ */
+export const createAddressResolutionStatement = (statementInfoDTO: ResolutionStatementInfoDTO): AddressResolutionStatement => {
+    const statementDTO = statementInfoDTO.statement;
+    return new ResolutionStatement(
+        ResolutionType.Address,
+        UInt64.fromNumericString(statementDTO.height),
+        extractUnresolvedAddress(statementDTO.unresolved),
+        statementDTO.resolutionEntries.map((entry) => {
+            return new ResolutionEntry(
+                Address.createFromEncoded(entry.resolved),
+                new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
             );
-        case ResolutionType.Mosaic:
-            return new ResolutionStatement(
-                ResolutionType.Mosaic,
-                UInt64.fromNumericString(statementDTO.height),
-                UnresolvedMapping.toUnresolvedMosaic(statementDTO.unresolved),
-                statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(
-                        new MosaicId(entry.resolved),
-                        new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
-                    );
-                }),
-            );
-    }
+        }),
+    );
 };
 
 /**
@@ -197,11 +200,12 @@ export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
 
 /**
  * @internal
- * @param statementDTO
+ * @param statementInfoDTO
  * @returns {TransactionStatement}
  * @constructor
  */
-const createTransactionStatement = (statementDTO): TransactionStatement => {
+export const createTransactionStatement = (statementInfoDTO: TransactionStatementInfoDTO): TransactionStatement => {
+    const statementDTO = statementInfoDTO.statement;
     return new TransactionStatement(
         UInt64.fromNumericString(statementDTO.height),
         new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
@@ -209,20 +213,4 @@ const createTransactionStatement = (statementDTO): TransactionStatement => {
             return CreateReceiptFromDTO(receipt);
         }),
     );
-};
-
-/**
- * Create statement
- * @param statementDto address resolution statement dto
- * @returns {ResolutionStatement | TransactionStatement}
- */
-export const CreateStatementFromDTO = (statementDto: any, statementType: StatementType): ResolutionStatement | TransactionStatement => {
-    switch (statementType) {
-        case StatementType.AddressResolutionStatement:
-            return createResolutionStatement(statementDto.statement, ResolutionType.Address);
-        case StatementType.MosaicResolutionStatement:
-            return createResolutionStatement(statementDto.statement, ResolutionType.Mosaic);
-        case StatementType.TransactionStatement:
-            return createTransactionStatement(statementDto.statement);
-    }
 };

@@ -24,7 +24,7 @@ import { ReceiptSource } from './ReceiptSource';
 /**
  * The receipt source object.
  */
-export class ResolutionEntry {
+export class ResolutionEntry<R extends Address | MosaicId> {
     /**
      * @constructor
      * @param resolved - A resolved address or resolved mosaicId (alias).
@@ -34,7 +34,7 @@ export class ResolutionEntry {
         /**
          * A resolved address or resolved mosaicId (alias).
          */
-        public readonly resolved: Address | MosaicId,
+        public readonly resolved: R,
         /**
          * The receipt source.
          */

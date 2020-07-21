@@ -40,11 +40,21 @@ import { UnresolvedAddress } from '../account/UnresolvedAddress';
 import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
+ * ResolutionStatement alias for Addresses receipts.
+ */
+export type AddressResolutionStatement = ResolutionStatement<UnresolvedAddress, Address>;
+
+/**
+ * ResolutionStatement alias for Mosaic ids receipts.
+ */
+export type MosaicIdResolutionStatement = ResolutionStatement<UnresolvedMosaicId, MosaicId>;
+
+/**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
  * - Address Resolution: An account alias was used in the block.
  * - Mosaic Resolution: A mosaic alias was used in the block.
  */
-export class ResolutionStatement<T extends UnresolvedAddress | UnresolvedMosaicId> {
+export class ResolutionStatement<U extends UnresolvedAddress | UnresolvedMosaicId, R extends Address | MosaicId> {
     /**
      * Receipt - resolution statement object
      * @param resolutionType - The resolution type
@@ -64,11 +74,11 @@ export class ResolutionStatement<T extends UnresolvedAddress | UnresolvedMosaicI
         /**
          * An unresolved address or unresolved mosaicId.
          */
-        public readonly unresolved: T,
+        public readonly unresolved: U,
         /**
          * The array of resolution entries.
          */
-        public readonly resolutionEntries: ResolutionEntry[],
+        public readonly resolutionEntries: ResolutionEntry<R>[],
     ) {}
 
     /**
@@ -119,7 +129,7 @@ export class ResolutionStatement<T extends UnresolvedAddress | UnresolvedMosaicI
      * @param secondaryId Secondary id
      * @returns {ResolutionEntry | undefined}
      */
-    public getResolutionEntryById(primaryId: number, secondaryId: number): ResolutionEntry | undefined {
+    public getResolutionEntryById(primaryId: number, secondaryId: number): ResolutionEntry<R> | undefined {
         /*
         Primary id and secondary id do not specifically map to the exact transaction index on the same block.
         The ids are just the order of the resolution reflecting on the order of transactions (ordered by index).

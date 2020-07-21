@@ -22,36 +22,36 @@ import { ReceiptRepository } from '../../../src/infrastructure/ReceiptRepository
 describe('ReceiptPaginationStreamer', () => {
     it('basicMultiPageTest', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
-        const streamer = new ReceiptPaginationStreamer(instance(receiptRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(streamer, mock(), receiptRepositoryMock, {});
+        const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: receiptRepositoryMock.searchReceipts }, {});
         return tester.basicMultiPageTest();
     });
 
     it('basicSinglePageTest', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
-        const streamer = new ReceiptPaginationStreamer(instance(receiptRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(streamer, mock(), receiptRepositoryMock, {});
+        const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: receiptRepositoryMock.searchReceipts }, {});
         return tester.basicSinglePageTest();
     });
 
     it('limitToTwoPages', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
-        const streamer = new ReceiptPaginationStreamer(instance(receiptRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(streamer, mock(), receiptRepositoryMock, {});
+        const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: receiptRepositoryMock.searchReceipts }, {});
         return tester.limitToTwoPages();
     });
 
     it('multipageWithLimit', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
-        const streamer = new ReceiptPaginationStreamer(instance(receiptRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(streamer, mock(), receiptRepositoryMock, {});
+        const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: receiptRepositoryMock.searchReceipts }, {});
         return tester.multipageWithLimit();
     });
 
     it('limitToThreePages', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
-        const streamer = new ReceiptPaginationStreamer(instance(receiptRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(streamer, mock(), receiptRepositoryMock, {});
+        const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: receiptRepositoryMock.searchReceipts }, {});
         return tester.limitToThreePages();
     });
 });

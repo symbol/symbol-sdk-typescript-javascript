@@ -18,7 +18,7 @@ import { Address } from '../account/Address';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { ResolutionStatement } from './ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from './ResolutionStatement';
 import { ResolutionType } from './ResolutionType';
 import { TransactionStatement } from './TransactionStatement';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
@@ -39,11 +39,11 @@ export class Statement {
         /**
          * The address resolution statements.
          */
-        public readonly addressResolutionStatements: ResolutionStatement[],
+        public readonly addressResolutionStatements: AddressResolutionStatement[],
         /**
          * The mosaic resolution statements.
          */
-        public readonly mosaicResolutionStatements: ResolutionStatement[],
+        public readonly mosaicResolutionStatements: MosaicIdResolutionStatement[],
     ) {}
 
     /**
@@ -136,10 +136,13 @@ export class Statement {
         height: string,
         aggregateTransactionIndex?: number,
     ): MosaicId | Address {
-        const resolutionStatement = (resolutionType === ResolutionType.Address
-            ? this.addressResolutionStatements
-            : this.mosaicResolutionStatements
-        ).find((resolution) => resolution.height.toString() === height && (resolution.unresolved as NamespaceId).equals(unresolved));
+        const list: (AddressResolutionStatement | MosaicIdResolutionStatement)[] =
+            resolutionType === ResolutionType.Address ? this.addressResolutionStatements : this.mosaicResolutionStatements;
+
+        const filter = (resolution: AddressResolutionStatement | MosaicIdResolutionStatement) =>
+            resolution.height.toString() === height && (resolution.unresolved as NamespaceId).equals(unresolved);
+
+        const resolutionStatement = list.find(filter);
 
         if (!resolutionStatement) {
             throw new Error(`No resolution statement found on block: ${height} for unresolved: ${unresolved.toHex()}`);

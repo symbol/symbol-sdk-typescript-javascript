@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import { Searcher } from './paginationStreamer/Searcher';
-import { ReceiptSearchCriteria, ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
+import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
 import { TransactionStatement } from '../model/receipt/TransactionStatement';
-import { ResolutionStatement } from '../model/receipt/ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from '../model/receipt/ResolutionStatement';
 import { Observable } from 'rxjs';
 import { Page } from './Page';
 import { TransactionStatementSearchCriteria } from './searchCriteria/TransactionStatementSearchCriteria';
-import { UnresolvedAddress, UnresolvedMosaicId } from '../model/model';
 
 /**
  * Receipt interface repository.
@@ -45,17 +43,13 @@ export interface ReceiptRepository {
      * @param criteria the criteria
      * @return a page of {@link AddressResolutionStatement}
      */
-    searchAddressResolutionStatements(
-        criteria: ResolutionStatementSearchCriteria,
-    ): Observable<Page<ResolutionStatement<UnresolvedAddress>>>;
+    searchAddressResolutionStatements(criteria: ResolutionStatementSearchCriteria): Observable<Page<AddressResolutionStatement>>;
 
     /**
      * Returns an mosaic resoslution statements page based on the criteria.
      *
      * @param criteria the criteria
-     * @return a page of {@link MosaicResolutionStatement}
+     * @return a page of {@link MosaicIdResolutionStatement}
      */
-    searchMosaicResolutionStatements(
-        criteria: ResolutionStatementSearchCriteria,
-    ): Observable<Page<ResolutionStatement<UnresolvedMosaicId>>>;
+    searchMosaicResolutionStatements(criteria: ResolutionStatementSearchCriteria): Observable<Page<MosaicIdResolutionStatement>>;
 }

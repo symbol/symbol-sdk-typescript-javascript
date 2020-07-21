@@ -17,17 +17,18 @@
 import { Observable } from 'rxjs';
 import { ReceiptRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
-import { MerklePathItem } from '../model/blockchain/MerklePathItem';
-import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { ReceiptRepository } from './ReceiptRepository';
-import { ReceiptSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
+import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
 import { Page } from './Page';
 import { TransactionStatement } from '../model/receipt/TransactionStatement';
-import { ResolutionStatement } from '../model/receipt/ResolutionStatement';
-import { StatementType } from '../model/receipt/StatementType';
-import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
+import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../model/receipt/ResolutionStatement';
+import {
+    createAddressResolutionStatement,
+    createMosaicResolutionStatement,
+    createTransactionStatement,
+} from './receipt/CreateReceiptFromDTO';
+import { TransactionStatementSearchCriteria } from './searchCriteria/TransactionStatementSearchCriteria';
 
 /**
  * Receipt http repository.
@@ -51,55 +52,47 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
         this.receiptRoutesApi = new ReceiptRoutesApi(this.config());
     }
 
-    /**
-     * Gets an block statement.
-     * @param criteria - Receipt search criteria
-     * @returns Observable<Page<Statement>>
-     */
-    public search(criteria: ReceiptSearchCriteria): Observable<Page<ResolutionStatement | TransactionStatement>> {
-        switch (criteria.statementType) {
-            case StatementType.AddressResolutionStatement:
-                return this.call(
-                    this.receiptRoutesApi.searchAddressResolutionStatements(
-                        criteria.height?.toString(),
-                        criteria.pageSize,
-                        criteria.pageNumber,
-                        criteria.offset,
-                        DtoMapping.mapEnum(criteria.order),
-                    ),
-                    (body) =>
-                        super.toStatementPage(body.pagination, body.data, CreateStatementFromDTO, StatementType.AddressResolutionStatement),
-                );
-            case StatementType.MosaicResolutionStatement:
-                return this.call(
-                    this.receiptRoutesApi.searchMosaicResolutionStatements(
-                        criteria.height?.toString(),
-                        criteria.pageSize,
-                        criteria.pageNumber,
-                        criteria.offset,
-                        DtoMapping.mapEnum(criteria.order),
-                    ),
-                    (body) =>
-                        super.toStatementPage(body.pagination, body.data, CreateStatementFromDTO, StatementType.MosaicResolutionStatement),
-                );
-            case StatementType.TransactionStatement:
-                return this.call(
-                    this.receiptRoutesApi.searchReceipts(
-                        criteria.height?.toString(),
-                        criteria.receiptType?.valueOf(),
-                        criteria.recipientAddress?.plain(),
-                        criteria.senderAddress?.plain(),
-                        criteria.targetAddress?.plain(),
-                        criteria.artifactId?.toHex(),
-                        criteria.pageSize,
-                        criteria.pageNumber,
-                        criteria.offset,
-                        DtoMapping.mapEnum(criteria.order),
-                    ),
-                    (body) => super.toStatementPage(body.pagination, body.data, CreateStatementFromDTO, StatementType.TransactionStatement),
-                );
-            default:
-                throw new Error(`Search criteria 'StatementType' must be provided.`);
-        }
+    searchAddressResolutionStatements(criteria: ResolutionStatementSearchCriteria): Observable<Page<AddressResolutionStatement>> {
+        return this.call(
+            this.receiptRoutesApi.searchAddressResolutionStatements(
+                criteria.height?.toString(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
+            ),
+            (body) => super.toPage(body.pagination, body.data, createAddressResolutionStatement),
+        );
+    }
+
+    searchMosaicResolutionStatements(criteria: ResolutionStatementSearchCriteria): Observable<Page<MosaicIdResolutionStatement>> {
+        return this.call(
+            this.receiptRoutesApi.searchMosaicResolutionStatements(
+                criteria.height?.toString(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
+            ),
+            (body) => super.toPage(body.pagination, body.data, createMosaicResolutionStatement),
+        );
+    }
+
+    searchReceipts(criteria: TransactionStatementSearchCriteria): Observable<Page<TransactionStatement>> {
+        return this.call(
+            this.receiptRoutesApi.searchReceipts(
+                criteria.height?.toString(),
+                criteria.receiptType?.valueOf(),
+                criteria.recipientAddress?.plain(),
+                criteria.senderAddress?.plain(),
+                criteria.targetAddress?.plain(),
+                criteria.artifactId?.toHex(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
+            ),
+            (body) => super.toPage(body.pagination, body.data, createTransactionStatement),
+        );
     }
 }

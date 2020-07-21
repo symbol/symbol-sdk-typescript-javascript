@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { Observable } from 'rxjs/internal/Observable';
+import { Page } from '../Page';
 import { PaginationStreamer } from './PaginationStreamer';
-import { Searcher } from './Searcher';
 import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
-import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
 import { ReceiptRepository } from '../ReceiptRepository';
-import { UnresolvedAddress, UnresolvedMosaicId } from '../../model/model';
 
 /**
  * A helper object that streams {@link Statement} using the search.
@@ -36,9 +36,11 @@ export class ReceiptPaginationStreamer {
     public static transactionStatements(
         repository: ReceiptRepository,
     ): PaginationStreamer<TransactionStatement, TransactionStatementSearchCriteria> {
-        return new PaginationStreamer<TransactionStatement, TransactionStatementSearchCriteria>((criteria) =>
-            repository.searchReceipts(criteria),
-        );
+        return new PaginationStreamer<TransactionStatement, TransactionStatementSearchCriteria>({
+            search(criteria: TransactionStatementSearchCriteria): Observable<Page<TransactionStatement>> {
+                return repository.searchReceipts(criteria);
+            },
+        });
     }
 
     /**
@@ -47,12 +49,14 @@ export class ReceiptPaginationStreamer {
      * @param repository the {@link ReceiptRepository} repository
      * @return a new Pagination Streamer.
      */
-    public static addresseResolutionStatements(
+    public static addressResolutionStatements(
         repository: ReceiptRepository,
-    ): PaginationStreamer<ResolutionStatement<UnresolvedAddress>, ResolutionStatementSearchCriteria> {
-        return new PaginationStreamer<ResolutionStatement<UnresolvedAddress>, ResolutionStatementSearchCriteria>((criteria) =>
-            repository.searchAddressResolutionStatements(criteria),
-        );
+    ): PaginationStreamer<AddressResolutionStatement, ResolutionStatementSearchCriteria> {
+        return new PaginationStreamer<AddressResolutionStatement, ResolutionStatementSearchCriteria>({
+            search(criteria: ResolutionStatementSearchCriteria): Observable<Page<AddressResolutionStatement>> {
+                return repository.searchAddressResolutionStatements(criteria);
+            },
+        });
     }
 
     /**
@@ -63,9 +67,11 @@ export class ReceiptPaginationStreamer {
      */
     public static mosaicResolutionStatements(
         repository: ReceiptRepository,
-    ): PaginationStreamer<ResolutionStatement<UnresolvedMosaicId>, ResolutionStatementSearchCriteria> {
-        return new PaginationStreamer<ResolutionStatement<UnresolvedMosaicId>, ResolutionStatementSearchCriteria>((criteria) =>
-            repository.searchMosaicResolutionStatements(criteria),
-        );
+    ): PaginationStreamer<MosaicIdResolutionStatement, ResolutionStatementSearchCriteria> {
+        return new PaginationStreamer<MosaicIdResolutionStatement, ResolutionStatementSearchCriteria>({
+            search(criteria: ResolutionStatementSearchCriteria): Observable<Page<MosaicIdResolutionStatement>> {
+                return repository.searchMosaicResolutionStatements(criteria);
+            },
+        });
     }
 }

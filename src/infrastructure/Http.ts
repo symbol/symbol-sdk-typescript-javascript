@@ -22,7 +22,6 @@ import { Page } from './Page';
 import { QueryParams } from './QueryParams';
 import { RepositoryCallError } from './RepositoryCallError';
 import fetch from 'node-fetch';
-import { StatementType } from '../model/receipt/StatementType';
 
 /**
  * Http extended by all http services
@@ -135,32 +134,6 @@ export abstract class Http {
     ): Page<M> {
         return new Page<M>(
             data.map((d) => mapper(d, networkType)),
-            pagination?.pageNumber,
-            pagination?.pageSize,
-            pagination?.totalEntries,
-            pagination?.totalPages,
-        );
-    }
-
-    /**
-     * This method maps a rest statement page object from rest to the SDK's Page model object.
-     *
-     * @internal
-     * @param pagination rest pagination object.
-     * @param data rest pagination data object.
-     * @param mapper the mapper from dto to the model object.
-     * @param statementType the statement type.
-     * @param resolutionType the resolution type.
-     * @returns Page<Statement> model
-     */
-    protected toStatementPage<D, M>(
-        pagination: Pagination,
-        data: D[],
-        mapper: (value: D, statementType: StatementType) => M,
-        statementType: StatementType,
-    ): Page<M> {
-        return new Page<M>(
-            data.map((d) => mapper(d, statementType)),
             pagination?.pageNumber,
             pagination?.pageSize,
             pagination?.totalEntries,

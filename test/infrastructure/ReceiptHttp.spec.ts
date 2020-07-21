@@ -30,11 +30,10 @@ import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { UInt64, NamespaceId, MosaicId, StatementType, ResolutionType } from '../../src/model/model';
+import { UInt64, NamespaceId, MosaicId, ResolutionType } from '../../src/model/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { ResolutionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Pagination } from 'symbol-openapi-typescript-fetch-client';
-import { ResolutionStatement } from '../../src/model/receipt/ResolutionStatement';
 
 describe('ReceiptHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -93,15 +92,14 @@ describe('ReceiptHttp', () => {
         );
 
         const statement = await receiptRepository
-            .search({
-                statementType: StatementType.MosaicResolutionStatement,
+            .searchMosaicResolutionStatements({
                 height: UInt64.fromUint(1),
             })
             .toPromise();
         expect(statement).to.be.not.null;
-        expect((statement.data[0] as ResolutionStatement).height.toString()).to.be.equal('1');
-        expect((statement.data[0] as ResolutionStatement).resolutionType.valueOf()).to.be.equal(ResolutionType.Mosaic);
-        expect(((statement.data[0] as ResolutionStatement).unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('test').toHex());
+        expect(statement.data[0].height.toString()).to.be.equal('1');
+        expect(statement.data[0].resolutionType.valueOf()).to.be.equal(ResolutionType.Mosaic);
+        expect((statement.data[0].unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('test').toHex());
     });
 
     it('getBlockReceipt - Error', async () => {
@@ -120,28 +118,8 @@ describe('ReceiptHttp', () => {
             ),
         ).thenReject(new Error('Mocked Error'));
         await receiptRepository
-            .search({ statementType: StatementType.TransactionStatement, height: UInt64.fromUint(1) })
+            .searchReceipts({ height: UInt64.fromUint(1) })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
-    });
-
-    it('getBlockReceipt - Error no type', async () => {
-        when(
-            receiptRoutesApi.searchReceipts(
-                '1',
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-            ),
-        ).thenReject(new Error('Mocked Error'));
-        expect(() => {
-            receiptRepository.search({ height: UInt64.fromUint(1) }).toPromise();
-        }).to.throw(Error, `Search criteria 'StatementType' must be provided.`);
     });
 });
