@@ -20,17 +20,16 @@ import {
     createAddressResolutionStatement,
     createMosaicResolutionStatement,
 } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 
 describe('ResolutionStatement', () => {
-    let account: Account;
+    let address: Address;
     let addressResolutionStatements: ResolutionStatementInfoDTO[];
     let mosaicResolutionStatements: ResolutionStatementInfoDTO[];
 
     before(() => {
+        address = Address.createFromEncoded('903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3');
         addressResolutionStatements = [
             {
                 id: '1',
@@ -135,7 +134,7 @@ describe('ResolutionStatement', () => {
         const entry = resolution.getResolutionEntryById(1, 0);
 
         expect(entry!.resolved instanceof Address).to.be.true;
-        expect((entry!.resolved as Address).equals(account.address)).to.be.true;
+        expect((entry!.resolved as Address).equals(address)).to.be.true;
     });
 
     it('should get resolved entry when primaryId is greater than max', () => {
@@ -175,7 +174,7 @@ describe('ResolutionStatement', () => {
     });
 
     it('should return undefined', () => {
-        const statement = createMosaicResolutionStatement(addressResolutionStatements[0]);
+        const statement = createMosaicResolutionStatement(mosaicResolutionStatements[0]);
         const entry = statement.getResolutionEntryById(0, 0);
         expect(entry).to.be.undefined;
     });

@@ -18,7 +18,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { Page } from '../Page';
 import { PaginationStreamer } from './PaginationStreamer';
 import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
-import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from '../../model/receipt/ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
 import { ReceiptRepository } from '../ReceiptRepository';
