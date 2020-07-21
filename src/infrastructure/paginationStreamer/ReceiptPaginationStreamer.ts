@@ -16,20 +16,56 @@
 
 import { PaginationStreamer } from './PaginationStreamer';
 import { Searcher } from './Searcher';
-import { ReceiptSearchCriteria } from '../searchCriteria/ReceiptSearchCriteria';
+import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
 import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
+import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
+import { ReceiptRepository } from '../ReceiptRepository';
+import { UnresolvedAddress, UnresolvedMosaicId } from '../../model/model';
 
 /**
  * A helper object that streams {@link Statement} using the search.
  */
-export class ReceiptPaginationStreamer extends PaginationStreamer<ResolutionStatement | TransactionStatement, ReceiptSearchCriteria> {
+export class ReceiptPaginationStreamer {
     /**
-     * Constructor
+     * It creates a transaction statement streamer of TransactionStatement objects.
      *
-     * @param searcher the receipt repository that will perform the searches
+     * @param repository the {@link ReceiptRepository} repository
+     * @return a new Pagination Streamer.
      */
-    constructor(searcher: Searcher<ResolutionStatement | TransactionStatement, ReceiptSearchCriteria>) {
-        super(searcher);
+    public static transactionStatements(
+        repository: ReceiptRepository,
+    ): PaginationStreamer<TransactionStatement, TransactionStatementSearchCriteria> {
+        return new PaginationStreamer<TransactionStatement, TransactionStatementSearchCriteria>((criteria) =>
+            repository.searchReceipts(criteria),
+        );
+    }
+
+    /**
+     * It creates a transaction statement streamer of AddressResolutionStatement objects.
+     *
+     * @param repository the {@link ReceiptRepository} repository
+     * @return a new Pagination Streamer.
+     */
+    public static addresseResolutionStatements(
+        repository: ReceiptRepository,
+    ): PaginationStreamer<ResolutionStatement<UnresolvedAddress>, ResolutionStatementSearchCriteria> {
+        return new PaginationStreamer<ResolutionStatement<UnresolvedAddress>, ResolutionStatementSearchCriteria>((criteria) =>
+            repository.searchAddressResolutionStatements(criteria),
+        );
+    }
+
+    /**
+     * It creates a mosaic resolution statement streamer of MosaicResolutionStatement objects.
+     *
+     * @param repository the {@link ReceiptRepository} repository
+     * @return a new Pagination Streamer.
+     */
+    public static mosaicResolutionStatements(
+        repository: ReceiptRepository,
+    ): PaginationStreamer<ResolutionStatement<UnresolvedMosaicId>, ResolutionStatementSearchCriteria> {
+        return new PaginationStreamer<ResolutionStatement<UnresolvedMosaicId>, ResolutionStatementSearchCriteria>((criteria) =>
+            repository.searchMosaicResolutionStatements(criteria),
+        );
     }
 }

@@ -44,7 +44,7 @@ import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
  * - Address Resolution: An account alias was used in the block.
  * - Mosaic Resolution: A mosaic alias was used in the block.
  */
-export class ResolutionStatement {
+export class ResolutionStatement<T extends UnresolvedAddress | UnresolvedMosaicId> {
     /**
      * Receipt - resolution statement object
      * @param resolutionType - The resolution type
@@ -64,7 +64,7 @@ export class ResolutionStatement {
         /**
          * An unresolved address or unresolved mosaicId.
          */
-        public readonly unresolved: UnresolvedAddress | UnresolvedMosaicId,
+        public readonly unresolved: T,
         /**
          * The array of resolution entries.
          */

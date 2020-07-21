@@ -67,7 +67,7 @@ export * from './searchCriteria/NamespaceSearchCriteria';
 export * from './paginationStreamer/AccountPaginationStreamer';
 export * from './paginationStreamer/NamespacePaginationStreamer';
 export * from './searchCriteria/MetadataSearchCriteria';
-export * from './searchCriteria/ReceiptSearchCriteria';
+export * from './searchCriteria/ResolutionStatementSearchCriteria';
 export * from './paginationStreamer/MetadataPaginationStreamer';
 export * from './paginationStreamer/ReceiptPaginationStreamer';
 export * from './MetadataRepository';

@@ -22,7 +22,7 @@ import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { ReceiptRepository } from './ReceiptRepository';
-import { ReceiptSearchCriteria } from './searchCriteria/ReceiptSearchCriteria';
+import { ReceiptSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
 import { Page } from './Page';
 import { TransactionStatement } from '../model/receipt/TransactionStatement';
 import { ResolutionStatement } from '../model/receipt/ResolutionStatement';

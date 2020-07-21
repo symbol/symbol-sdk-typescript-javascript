@@ -20,18 +20,12 @@ import { ReceiptType } from '../../model/receipt/ReceiptType';
 import { Address } from '../../model/account/Address';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { MosaicId } from '../../model/mosaic/MosaicId';
-import { StatementType } from '../../model/receipt/StatementType';
 
 /**
  * Defines the params used to search transaction statement receipts. With this criteria, you can sort and filter
  * receipt queries using rest.
  */
-export interface ReceiptSearchCriteria extends SearchCriteria {
-    /**
-     * Statement type. (Mandatory)
-     */
-    statementType?: StatementType;
-
+export interface TransactionStatementSearchCriteria extends SearchCriteria {
     /**
      * Block height. (optional)
      */
