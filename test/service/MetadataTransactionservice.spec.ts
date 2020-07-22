@@ -77,6 +77,7 @@ describe('MetadataTransactionService', () => {
                     targetAddress: account.address,
                     scopedMetadataKey: key.toHex(),
                     sourceAddress: account.address,
+                    metadataType: MetadataType.Account,
                 }),
             ),
         ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Account)], 1, 20, 1, 1)));
@@ -87,6 +88,7 @@ describe('MetadataTransactionService', () => {
                     targetId: new MosaicId(targetIdHex),
                     scopedMetadataKey: key.toHex(),
                     sourceAddress: account.address,
+                    metadataType: MetadataType.Mosaic,
                 }),
             ),
         ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Mosaic)], 1, 20, 1, 1)));
@@ -97,6 +99,7 @@ describe('MetadataTransactionService', () => {
                     targetId: NamespaceId.createFromEncoded(targetIdHex),
                     scopedMetadataKey: key.toHex(),
                     sourceAddress: account.address,
+                    metadataType: MetadataType.Namespace,
                 }),
             ),
         ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Namespace)], 1, 20, 1, 1)));

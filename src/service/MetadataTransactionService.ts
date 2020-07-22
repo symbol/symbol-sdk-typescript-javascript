@@ -122,32 +122,54 @@ export class MetadataTransactionService {
         sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<AccountMetadataTransaction> {
-        return this.metadataRepository.search({ targetAddress, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress }).pipe(
-            map((metadatas: Page<Metadata>) => {
-                const metadata = metadatas.data[0];
-                const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
-                const newValueBytes = Convert.utf8ToUint8(value);
-                return AccountMetadataTransaction.create(
-                    deadline,
-                    targetAddress,
-                    key,
-                    newValueBytes.length - currentValueByte.length,
-                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
-                    networkType,
-                    maxFee,
-                );
-            }),
-            catchError((err: Error) => {
-                const error = JSON.parse(err.message);
-                if (error && error.statusCode && error.statusCode === 404) {
+        return this.metadataRepository
+            .search({ targetAddress, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress, metadataType: MetadataType.Account })
+            .pipe(
+                map((metadatas: Page<Metadata>) => {
+                    if (metadatas.data.length > 0) {
+                        const metadata = metadatas.data[0];
+                        const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
+                        const newValueBytes = Convert.utf8ToUint8(value);
+                        return AccountMetadataTransaction.create(
+                            deadline,
+                            targetAddress,
+                            key,
+                            newValueBytes.length - currentValueByte.length,
+                            Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
+                            networkType,
+                            maxFee,
+                        );
+                    }
                     const newValueBytes = Convert.utf8ToUint8(value);
-                    return of(
-                        AccountMetadataTransaction.create(deadline, targetAddress, key, newValueBytes.length, value, networkType, maxFee),
+                    return AccountMetadataTransaction.create(
+                        deadline,
+                        targetAddress,
+                        key,
+                        newValueBytes.length,
+                        value,
+                        networkType,
+                        maxFee,
                     );
-                }
-                throw Error(err.message);
-            }),
-        );
+                }),
+                catchError((err: Error) => {
+                    const error = JSON.parse(err.message);
+                    if (error && error.statusCode && error.statusCode === 404) {
+                        const newValueBytes = Convert.utf8ToUint8(value);
+                        return of(
+                            AccountMetadataTransaction.create(
+                                deadline,
+                                targetAddress,
+                                key,
+                                newValueBytes.length,
+                                value,
+                                networkType,
+                                maxFee,
+                            ),
+                        );
+                    }
+                    throw Error(err.message);
+                }),
+            );
     }
 
     /**
@@ -172,42 +194,57 @@ export class MetadataTransactionService {
         sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<MosaicMetadataTransaction> {
-        return this.metadataRepository.search({ targetId: mosaicId, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress }).pipe(
-            map((metadatas: Page<Metadata>) => {
-                const metadata = metadatas.data[0];
-                const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
-                const newValueBytes = Convert.utf8ToUint8(value);
-                return MosaicMetadataTransaction.create(
-                    deadline,
-                    targetAddress,
-                    key,
-                    mosaicId,
-                    newValueBytes.length - currentValueByte.length,
-                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
-                    networkType,
-                    maxFee,
-                );
-            }),
-            catchError((err: Error) => {
-                const error = JSON.parse(err.message);
-                if (error && error.statusCode && error.statusCode === 404) {
-                    const newValueBytes = Convert.utf8ToUint8(value);
-                    return of(
-                        MosaicMetadataTransaction.create(
+        return this.metadataRepository
+            .search({ targetId: mosaicId, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress, metadataType: MetadataType.Mosaic })
+            .pipe(
+                map((metadatas: Page<Metadata>) => {
+                    if (metadatas.data.length > 0) {
+                        const metadata = metadatas.data[0];
+                        const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
+                        const newValueBytes = Convert.utf8ToUint8(value);
+                        return MosaicMetadataTransaction.create(
                             deadline,
                             targetAddress,
                             key,
                             mosaicId,
-                            newValueBytes.length,
-                            value,
+                            newValueBytes.length - currentValueByte.length,
+                            Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
                             networkType,
                             maxFee,
-                        ),
+                        );
+                    }
+                    const newValueBytes = Convert.utf8ToUint8(value);
+                    return MosaicMetadataTransaction.create(
+                        deadline,
+                        targetAddress,
+                        key,
+                        mosaicId,
+                        newValueBytes.length,
+                        value,
+                        networkType,
+                        maxFee,
                     );
-                }
-                throw Error(err.message);
-            }),
-        );
+                }),
+                catchError((err: Error) => {
+                    const error = JSON.parse(err.message);
+                    if (error && error.statusCode && error.statusCode === 404) {
+                        const newValueBytes = Convert.utf8ToUint8(value);
+                        return of(
+                            MosaicMetadataTransaction.create(
+                                deadline,
+                                targetAddress,
+                                key,
+                                mosaicId,
+                                newValueBytes.length,
+                                value,
+                                networkType,
+                                maxFee,
+                            ),
+                        );
+                    }
+                    throw Error(err.message);
+                }),
+            );
     }
 
     /**
@@ -232,41 +269,61 @@ export class MetadataTransactionService {
         sourceAddress: Address,
         maxFee: UInt64,
     ): Observable<NamespaceMetadataTransaction> {
-        return this.metadataRepository.search({ targetId: namespaceId, scopedMetadataKey: key.toHex(), sourceAddress: sourceAddress }).pipe(
-            map((metadatas: Page<Metadata>) => {
-                const metadata = metadatas.data[0];
-                const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
-                const newValueBytes = Convert.utf8ToUint8(value);
-                return NamespaceMetadataTransaction.create(
-                    deadline,
-                    targetAddress,
-                    key,
-                    namespaceId,
-                    newValueBytes.length - currentValueByte.length,
-                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
-                    networkType,
-                    maxFee,
-                );
-            }),
-            catchError((err: Error) => {
-                const error = JSON.parse(err.message);
-                if (error && error.statusCode && error.statusCode === 404) {
-                    const newValueBytes = Convert.utf8ToUint8(value);
-                    return of(
-                        NamespaceMetadataTransaction.create(
+        return this.metadataRepository
+            .search({
+                targetId: namespaceId,
+                scopedMetadataKey: key.toHex(),
+                sourceAddress: sourceAddress,
+                metadataType: MetadataType.Namespace,
+            })
+            .pipe(
+                map((metadatas: Page<Metadata>) => {
+                    if (metadatas.data.length > 0) {
+                        const metadata = metadatas.data[0];
+                        const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
+                        const newValueBytes = Convert.utf8ToUint8(value);
+                        return NamespaceMetadataTransaction.create(
                             deadline,
                             targetAddress,
                             key,
                             namespaceId,
-                            newValueBytes.length,
-                            value,
+                            newValueBytes.length - currentValueByte.length,
+                            Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
                             networkType,
                             maxFee,
-                        ),
+                        );
+                    }
+                    const newValueBytes = Convert.utf8ToUint8(value);
+                    return NamespaceMetadataTransaction.create(
+                        deadline,
+                        targetAddress,
+                        key,
+                        namespaceId,
+                        newValueBytes.length,
+                        value,
+                        networkType,
+                        maxFee,
                     );
-                }
-                throw Error(err.message);
-            }),
-        );
+                }),
+                catchError((err: Error) => {
+                    const error = JSON.parse(err.message);
+                    if (error && error.statusCode && error.statusCode === 404) {
+                        const newValueBytes = Convert.utf8ToUint8(value);
+                        return of(
+                            NamespaceMetadataTransaction.create(
+                                deadline,
+                                targetAddress,
+                                key,
+                                namespaceId,
+                                newValueBytes.length,
+                                value,
+                                networkType,
+                                maxFee,
+                            ),
+                        );
+                    }
+                    throw Error(err.message);
+                }),
+            );
     }
 }
