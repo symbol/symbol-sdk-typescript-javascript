@@ -21,13 +21,13 @@ deploy:
     skip_cleanup: true
     script: /bin/sh travis/github-pages.sh
     on:
-      branch: master
+      branch: main
       node_js: "12"
   - provider: script
     skip_cleanup: true
     script: /bin/sh travis/uploadArchives.sh
     on:
-      branch: master
+      branch: main
       node_js: "10"
   - provider: script
     skip_cleanup: true
