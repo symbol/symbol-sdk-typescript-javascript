@@ -346,6 +346,7 @@ describe('MetadataHttp', () => {
     });
 
     it('Address meta no previous value', (done) => {
+        Object.assign(metadataPage, { data: [] });
         when(
             metadataRoutesApi.searchMetadataEntries(
                 address.plain(),
@@ -358,17 +359,17 @@ describe('MetadataHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.reject(notFoundResponse));
+        ).thenReturn(Promise.resolve(metadataPage));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
-            .createMetadataTransaction(
+            .createAccountMetadataTransaction(
                 Deadline.create(),
                 NetworkType.MIJIN_TEST,
-                MetadataType.Account,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
                 address,
+                UInt64.fromUint(2000),
             )
             .subscribe((transaction: AccountMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
@@ -378,6 +379,7 @@ describe('MetadataHttp', () => {
     });
 
     it('Mosaic meta no previous value', (done) => {
+        Object.assign(metadataPageMosaic, { data: [] });
         when(
             metadataRoutesApi.searchMetadataEntries(
                 address.plain(),
@@ -390,18 +392,18 @@ describe('MetadataHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.reject(notFoundResponse));
+        ).thenReturn(Promise.resolve(metadataPageMosaic));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
-            .createMetadataTransaction(
+            .createMosaicMetadataTransaction(
                 Deadline.create(),
                 NetworkType.MIJIN_TEST,
-                MetadataType.Mosaic,
                 address,
+                mosaicId,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
                 address,
-                mosaicId,
+                UInt64.fromUint(2000),
             )
             .subscribe((transaction: MosaicMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
@@ -411,6 +413,7 @@ describe('MetadataHttp', () => {
     });
 
     it('Namespace meta no previous value', (done) => {
+        Object.assign(metadataPageNamespace, { data: [] });
         when(
             metadataRoutesApi.searchMetadataEntries(
                 address.plain(),
@@ -423,18 +426,18 @@ describe('MetadataHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.reject(notFoundResponse));
+        ).thenReturn(Promise.resolve(metadataPageNamespace));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
-            .createMetadataTransaction(
+            .createNamespaceMetadataTransaction(
                 Deadline.create(),
                 NetworkType.MIJIN_TEST,
-                MetadataType.Namespace,
                 address,
+                namespaceId,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
                 address,
-                namespaceId,
+                UInt64.fromUint(2000),
             )
             .subscribe((transaction: NamespaceMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
@@ -459,14 +462,14 @@ describe('MetadataHttp', () => {
         ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
-            .createMetadataTransaction(
+            .createAccountMetadataTransaction(
                 Deadline.create(),
                 NetworkType.MIJIN_TEST,
-                MetadataType.Account,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
                 address,
+                UInt64.fromUint(2000),
             )
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
@@ -488,15 +491,15 @@ describe('MetadataHttp', () => {
         ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
-            .createMetadataTransaction(
+            .createMosaicMetadataTransaction(
                 Deadline.create(),
                 NetworkType.MIJIN_TEST,
-                MetadataType.Mosaic,
                 address,
+                mosaicId,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
                 address,
-                mosaicId,
+                UInt64.fromUint(2000),
             )
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
@@ -518,15 +521,15 @@ describe('MetadataHttp', () => {
         ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
-            .createMetadataTransaction(
+            .createNamespaceMetadataTransaction(
                 Deadline.create(),
                 NetworkType.MIJIN_TEST,
-                MetadataType.Namespace,
                 address,
+                namespaceId,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
                 address,
-                namespaceId,
+                UInt64.fromUint(2000),
             )
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);

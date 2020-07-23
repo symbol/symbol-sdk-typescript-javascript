@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
-import { MetadataType } from '../../src/model/metadata/MetadataType';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
@@ -152,14 +151,14 @@ describe('MetadataTransactionService', () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
             const transaction = await metaDataService
-                .createMetadataTransaction(
+                .createAccountMetadataTransaction(
                     deadline,
                     networkType,
-                    MetadataType.Account,
                     targetAccount.address,
                     key,
                     newValue,
                     targetAccount.address,
+                    helper.maxFee,
                 )
                 .toPromise();
 
@@ -173,15 +172,15 @@ describe('MetadataTransactionService', () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const updateValue = newValue + 'delta';
             const transaction = (await metaDataService
-                .createMetadataTransaction(
+                .createMosaicMetadataTransaction(
                     deadline,
                     networkType,
-                    MetadataType.Mosaic,
                     targetAccount.address,
+                    mosaicId,
                     key,
                     updateValue,
                     targetAccount.address,
-                    mosaicId,
+                    helper.maxFee,
                 )
                 .toPromise()) as MosaicMetadataTransaction;
             expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
@@ -200,15 +199,15 @@ describe('MetadataTransactionService', () => {
 
             const updateValue = newValue + 'delta';
             const transaction = (await metaDataService
-                .createMetadataTransaction(
+                .createNamespaceMetadataTransaction(
                     deadline,
                     networkType,
-                    MetadataType.Namespace,
                     targetAccount.address,
+                    namespaceId,
                     key,
                     updateValue,
                     targetAccount.address,
-                    namespaceId,
+                    helper.maxFee,
                 )
                 .toPromise()) as NamespaceMetadataTransaction;
 
@@ -227,15 +226,14 @@ describe('MetadataTransactionService', () => {
         it('should create MosaicMetadataTransaction and announce', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const transaction = await metaDataService
-                .createMetadataTransaction(
+                .createMosaicMetadataTransaction(
                     deadline,
                     networkType,
-                    MetadataType.Mosaic,
                     targetAccount.address,
+                    mosaicId,
                     key,
                     newValue + 'delta',
                     targetAccount.address,
-                    mosaicId,
                     helper.maxFee,
                 )
                 .toPromise();
@@ -256,15 +254,14 @@ describe('MetadataTransactionService', () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const transaction = await metaDataService
-                .createMetadataTransaction(
+                .createMosaicMetadataTransaction(
                     deadline,
                     networkType,
-                    MetadataType.Mosaic,
                     targetAccount.address,
+                    mosaicId,
                     key,
                     newValue + 'delta' + 'extra delta',
                     targetAccount.address,
-                    mosaicId,
                     helper.maxFee,
                 )
                 .toPromise();
@@ -285,15 +282,15 @@ describe('MetadataTransactionService', () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const transaction = await metaDataService
-                .createMetadataTransaction(
+                .createMosaicMetadataTransaction(
                     deadline,
                     networkType,
-                    MetadataType.Mosaic,
                     targetAccount.address,
+                    mosaicId,
                     key,
                     newValue,
                     targetAccount.address,
-                    mosaicId,
+                    helper.maxFee,
                 )
                 .toPromise();
             const aggregateTransaction = AggregateTransaction.createComplete(
