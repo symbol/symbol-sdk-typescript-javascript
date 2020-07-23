@@ -19,7 +19,7 @@ import { ReceiptPaginationStreamer } from '../../../src/infrastructure/paginatio
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 import { ReceiptRepository } from '../../../src/infrastructure/ReceiptRepository';
 
-describe('ReceiptPaginationStreamer', () => {
+describe('ReceiptPaginationStreamer - transaction', () => {
     it('basicMultiPageTest', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
         const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
@@ -52,6 +52,130 @@ describe('ReceiptPaginationStreamer', () => {
         const receiptRepositoryMock: ReceiptRepository = mock();
         const streamer = ReceiptPaginationStreamer.transactionStatements(instance(receiptRepositoryMock));
         const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: receiptRepositoryMock.searchReceipts }, {});
+        return tester.limitToThreePages();
+    });
+});
+
+describe('ReceiptPaginationStreamer - addressResolution', () => {
+    it('basicMultiPageTest', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.addressResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchAddressResolutionStatements },
+            {},
+        );
+        return tester.basicMultiPageTest();
+    });
+
+    it('basicSinglePageTest', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.addressResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchAddressResolutionStatements },
+            {},
+        );
+        return tester.basicSinglePageTest();
+    });
+
+    it('limitToTwoPages', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.addressResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchAddressResolutionStatements },
+            {},
+        );
+        return tester.limitToTwoPages();
+    });
+
+    it('multipageWithLimit', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.addressResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchAddressResolutionStatements },
+            {},
+        );
+        return tester.multipageWithLimit();
+    });
+
+    it('limitToThreePages', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.addressResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchAddressResolutionStatements },
+            {},
+        );
+        return tester.limitToThreePages();
+    });
+});
+
+describe('ReceiptPaginationStreamer - mosaicResolution', () => {
+    it('basicMultiPageTest', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.mosaicResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchMosaicResolutionStatements },
+            {},
+        );
+        return tester.basicMultiPageTest();
+    });
+
+    it('basicSinglePageTest', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.mosaicResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchMosaicResolutionStatements },
+            {},
+        );
+        return tester.basicSinglePageTest();
+    });
+
+    it('limitToTwoPages', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.mosaicResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchMosaicResolutionStatements },
+            {},
+        );
+        return tester.limitToTwoPages();
+    });
+
+    it('multipageWithLimit', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.mosaicResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchMosaicResolutionStatements },
+            {},
+        );
+        return tester.multipageWithLimit();
+    });
+
+    it('limitToThreePages', () => {
+        const receiptRepositoryMock: ReceiptRepository = mock();
+        const streamer = ReceiptPaginationStreamer.mosaicResolutionStatements(instance(receiptRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(
+            streamer,
+            mock(),
+            { search: receiptRepositoryMock.searchMosaicResolutionStatements },
+            {},
+        );
         return tester.limitToThreePages();
     });
 });

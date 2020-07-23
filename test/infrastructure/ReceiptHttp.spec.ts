@@ -16,15 +16,15 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    AccountRestrictionDTO,
-    AccountRestrictionFlagsEnum,
-    AccountRestrictionsDTO,
-    AccountRestrictionsInfoDTO,
     ReceiptRoutesApi,
     ResolutionStatementDTO,
     ResolutionEntryDTO,
     SourceDTO,
     ResolutionStatementPage,
+    TransactionStatementDTO,
+    BalanceChangeReceiptDTO,
+    ReceiptTypeEnum,
+    TransactionStatementPage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -34,6 +34,10 @@ import { UInt64, NamespaceId, MosaicId, ResolutionType } from '../../src/model/m
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { ResolutionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Pagination } from 'symbol-openapi-typescript-fetch-client';
+import { RawAddress } from '../../src/core/format/RawAddress';
+import { Convert } from '../../src/core/format/Convert';
+import { TransactionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { BalanceChangeReceipt } from '../../src/model/receipt/BalanceChangeReceipt';
 
 describe('ReceiptHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -48,22 +52,12 @@ describe('ReceiptHttp', () => {
         receiptRoutesApi: instance(receiptRoutesApi),
     });
 
-    const restrictionInfo = {} as AccountRestrictionsInfoDTO;
-    const restrictionsDto = {} as AccountRestrictionsDTO;
-    const restriction = {} as AccountRestrictionDTO;
-    restriction.restrictionFlags = AccountRestrictionFlagsEnum.NUMBER_1;
-    restriction.values = [address.encoded()];
-    restrictionsDto.restrictions = [restriction];
-    restrictionsDto.address = address.encoded();
-
-    restrictionInfo.accountRestrictions = restrictionsDto;
-
     before(() => {
         reset(response);
         reset(receiptRoutesApi);
     });
 
-    it('getBlockReceipt', async () => {
+    it('Search Receipt - Mosaic', async () => {
         const resolutionStatementInfoDto = {} as ResolutionStatementInfoDTO;
         resolutionStatementInfoDto.id = '1';
         const resolutionStatementDto = {} as ResolutionStatementDTO;
@@ -102,7 +96,101 @@ describe('ReceiptHttp', () => {
         expect((statement.data[0].unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('test').toHex());
     });
 
-    it('getBlockReceipt - Error', async () => {
+    it('Search Receipt - Address', async () => {
+        const resolutionStatementInfoDto = {} as ResolutionStatementInfoDTO;
+        resolutionStatementInfoDto.id = '1';
+        const resolutionStatementDto = {} as ResolutionStatementDTO;
+        resolutionStatementDto.height = '1';
+        resolutionStatementDto.unresolved = Convert.uint8ToHex(
+            RawAddress.aliasToRecipient(Convert.hexToUint8(new NamespaceId('test').toHex()), NetworkType.MIJIN_TEST),
+        );
+        const resolutionEntry = {} as ResolutionEntryDTO;
+        resolutionEntry.resolved = address.encoded();
+        const source = {} as SourceDTO;
+        source.primaryId = 1;
+        source.secondaryId = 1;
+        resolutionEntry.source = source;
+        resolutionStatementDto.resolutionEntries = [resolutionEntry];
+        resolutionStatementInfoDto.statement = resolutionStatementDto;
+
+        const resolutionPage = {} as ResolutionStatementPage;
+        resolutionPage.data = [resolutionStatementInfoDto];
+        const pagination = {} as Pagination;
+        pagination.pageNumber = 1;
+        pagination.pageSize = 20;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
+        resolutionPage.pagination = pagination;
+
+        when(receiptRoutesApi.searchAddressResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReturn(
+            Promise.resolve(resolutionPage),
+        );
+
+        const statement = await receiptRepository
+            .searchAddressResolutionStatements({
+                height: UInt64.fromUint(1),
+            })
+            .toPromise();
+        expect(statement).to.be.not.null;
+        expect(statement.data[0].height.toString()).to.be.equal('1');
+        expect(statement.data[0].resolutionType.valueOf()).to.be.equal(ResolutionType.Address);
+        expect((statement.data[0].unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('test').toHex());
+        expect(statement.data[0].resolutionEntries[0].resolved.plain()).to.be.equal(address.plain());
+    });
+
+    it('Search Receipt - Transaction', async () => {
+        const transactionStatementInfoDto = {} as TransactionStatementInfoDTO;
+        transactionStatementInfoDto.id = '1';
+        const transactionStatementDto = {} as TransactionStatementDTO;
+        transactionStatementDto.height = '1';
+        const receipt = {} as BalanceChangeReceiptDTO;
+        receipt.amount = '100';
+        receipt.mosaicId = '85BBEA6CC462B244';
+        receipt.targetAddress = address.encoded();
+        receipt.type = ReceiptTypeEnum.NUMBER_20803;
+        receipt.version = 1;
+        transactionStatementDto.receipts = [receipt];
+        const source = {} as SourceDTO;
+        source.primaryId = 1;
+        source.secondaryId = 1;
+        transactionStatementDto.source = source;
+        transactionStatementInfoDto.statement = transactionStatementDto;
+
+        const resolutionPage = {} as TransactionStatementPage;
+        resolutionPage.data = [transactionStatementInfoDto];
+        const pagination = {} as Pagination;
+        pagination.pageNumber = 1;
+        pagination.pageSize = 20;
+        pagination.totalEntries = 1;
+        pagination.totalPages = 1;
+        resolutionPage.pagination = pagination;
+
+        when(
+            receiptRoutesApi.searchReceipts(
+                '1',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(resolutionPage));
+
+        const statement = await receiptRepository
+            .searchReceipts({
+                height: UInt64.fromUint(1),
+            })
+            .toPromise();
+        expect(statement).to.be.not.null;
+        expect(statement.data[0].height.toString()).to.be.equal('1');
+        expect((statement.data[0].receipts[0] as BalanceChangeReceipt).amount.toString()).to.be.equal('100');
+    });
+
+    it('searchResolutionTransaction - Error', async () => {
         when(
             receiptRoutesApi.searchReceipts(
                 '1',
@@ -119,6 +207,26 @@ describe('ReceiptHttp', () => {
         ).thenReject(new Error('Mocked Error'));
         await receiptRepository
             .searchReceipts({ height: UInt64.fromUint(1) })
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('searchResolutionMosaic - Error', async () => {
+        when(receiptRoutesApi.searchMosaicResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReject(
+            new Error('Mocked Error'),
+        );
+        await receiptRepository
+            .searchMosaicResolutionStatements({ height: UInt64.fromUint(1) })
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('searchResolutionAddress - Error', async () => {
+        when(receiptRoutesApi.searchAddressResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReject(
+            new Error('Mocked Error'),
+        );
+        await receiptRepository
+            .searchAddressResolutionStatements({ height: UInt64.fromUint(1) })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });
