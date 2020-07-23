@@ -108,6 +108,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_blockrepository_.blockrepository.html#getblockbyheight" class="tsd-kind-icon">get<wbr>Block<wbr>ByHeight</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_blockrepository_.blockrepository.html#getmerklereceipts" class="tsd-kind-icon">get<wbr>Merkle<wbr>Receipts</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_blockrepository_.blockrepository.html#getmerkletransaction" class="tsd-kind-icon">get<wbr>Merkle<wbr>Transaction</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_infrastructure_blockrepository_.blockrepository.html#search" class="tsd-kind-icon">search</a></li>
 							</ul>
@@ -127,7 +128,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eed355d/src/infrastructure/BlockRepository.ts#L35">infrastructure/BlockRepository.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/BlockRepository.ts#L35">infrastructure/BlockRepository.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -150,6 +151,48 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getmerklereceipts" class="tsd-anchor"></a>
+					<h3>get<wbr>Merkle<wbr>Receipts</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Merkle<wbr>Receipts<span class="tsd-signature-symbol">(</span>height<span class="tsd-signature-symbol">: </span><a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_merkleproofinfo_.merkleproofinfo.html" class="tsd-signature-type">MerkleProofInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/BlockRepository.ts#L59">infrastructure/BlockRepository.ts:59</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the merkle path for a given a receipt statement hash and block
+										Returns the merkle path for a <a href="https://nemtech.github.io/concepts/receipt.html">receipt statement or resolution</a>
+										linked to a block. The path is the complementary data needed to calculate the merkle root.
+										A client can compare if the calculated root equals the one recorded in the block header,
+									verifying that the receipt was linked with the block.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>height: <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The height of the block.</p>
+									</div>
+								</li>
+								<li>
+									<h5>hash: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The hash of the receipt statement or resolution.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_merkleproofinfo_.merkleproofinfo.html" class="tsd-signature-type">MerkleProofInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>Observable<MerkleProofInfo></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="getmerkletransaction" class="tsd-anchor"></a>
 					<h3>get<wbr>Merkle<wbr>Transaction</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -159,7 +202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eed355d/src/infrastructure/BlockRepository.ts#L47">infrastructure/BlockRepository.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/BlockRepository.ts#L47">infrastructure/BlockRepository.ts:47</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,7 +245,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_paginationstreamer_searcher_.searcher.html">Searcher</a>.<a href="_infrastructure_paginationstreamer_searcher_.searcher.html#search">search</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eed355d/src/infrastructure/paginationStreamer/Searcher.ts#L33">infrastructure/paginationStreamer/Searcher.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/paginationStreamer/Searcher.ts#L33">infrastructure/paginationStreamer/Searcher.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -246,6 +289,9 @@
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_infrastructure_blockrepository_.blockrepository.html#getblockbyheight" class="tsd-kind-icon">get<wbr>Block<wbr>ByHeight</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_infrastructure_blockrepository_.blockrepository.html#getmerklereceipts" class="tsd-kind-icon">get<wbr>Merkle<wbr>Receipts</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_infrastructure_blockrepository_.blockrepository.html#getmerkletransaction" class="tsd-kind-icon">get<wbr>Merkle<wbr>Transaction</a>

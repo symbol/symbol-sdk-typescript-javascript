@@ -102,8 +102,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_receiptrepository_.receiptrepository.html#getblockreceipts" class="tsd-kind-icon">get<wbr>Block<wbr>Receipts</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_receiptrepository_.receiptrepository.html#getmerklereceipts" class="tsd-kind-icon">get<wbr>Merkle<wbr>Receipts</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_receiptrepository_.receiptrepository.html#searchaddressresolutionstatements" class="tsd-kind-icon">search<wbr>Address<wbr>Resolution<wbr>Statements</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_receiptrepository_.receiptrepository.html#searchmosaicresolutionstatements" class="tsd-kind-icon">search<wbr>Mosaic<wbr>Resolution<wbr>Statements</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_receiptrepository_.receiptrepository.html#searchreceipts" class="tsd-kind-icon">search<wbr>Receipts</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,77 +113,98 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getblockreceipts" class="tsd-anchor"></a>
-					<h3>get<wbr>Block<wbr>Receipts</h3>
+					<a name="searchaddressresolutionstatements" class="tsd-anchor"></a>
+					<h3>search<wbr>Address<wbr>Resolution<wbr>Statements</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Block<wbr>Receipts<span class="tsd-signature-symbol">(</span>height<span class="tsd-signature-symbol">: </span><a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_receipt_statement_.statement.html" class="tsd-signature-type">Statement</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">search<wbr>Address<wbr>Resolution<wbr>Statements<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_infrastructure_searchcriteria_resolutionstatementsearchcriteria_.resolutionstatementsearchcriteria.html" class="tsd-signature-type">ResolutionStatementSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_model_receipt_resolutionstatement_.html#addressresolutionstatement" class="tsd-signature-type">AddressResolutionStatement</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eed355d/src/infrastructure/ReceiptRepository.ts#L34">infrastructure/ReceiptRepository.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/ReceiptRepository.ts#L46">infrastructure/ReceiptRepository.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get receipts from a block
-									Returns the receipts linked to a block.</p>
+									<p>Returns an addresses resolution statements page based on the criteria.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>height: <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+									<h5>criteria: <a href="_infrastructure_searchcriteria_resolutionstatementsearchcriteria_.resolutionstatementsearchcriteria.html" class="tsd-signature-type">ResolutionStatementSearchCriteria</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The height of the block.</p>
+										<p>the criteria</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_receipt_statement_.statement.html" class="tsd-signature-type">Statement</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable<Statement></p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_model_receipt_resolutionstatement_.html#addressresolutionstatement" class="tsd-signature-type">AddressResolutionStatement</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a page of <a href="../modules/_model_receipt_resolutionstatement_.html#addressresolutionstatement">AddressResolutionStatement</a></p>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmerklereceipts" class="tsd-anchor"></a>
-					<h3>get<wbr>Merkle<wbr>Receipts</h3>
+					<a name="searchmosaicresolutionstatements" class="tsd-anchor"></a>
+					<h3>search<wbr>Mosaic<wbr>Resolution<wbr>Statements</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Merkle<wbr>Receipts<span class="tsd-signature-symbol">(</span>height<span class="tsd-signature-symbol">: </span><a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_merkleproofinfo_.merkleproofinfo.html" class="tsd-signature-type">MerkleProofInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">search<wbr>Mosaic<wbr>Resolution<wbr>Statements<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_infrastructure_searchcriteria_resolutionstatementsearchcriteria_.resolutionstatementsearchcriteria.html" class="tsd-signature-type">ResolutionStatementSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_model_receipt_resolutionstatement_.html#mosaicidresolutionstatement" class="tsd-signature-type">MosaicIdResolutionStatement</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eed355d/src/infrastructure/ReceiptRepository.ts#L46">infrastructure/ReceiptRepository.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/ReceiptRepository.ts#L54">infrastructure/ReceiptRepository.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the merkle path for a given a receipt statement hash and block
-										Returns the merkle path for a <a href="https://nemtech.github.io/concepts/receipt.html">receipt statement or resolution</a>
-										linked to a block. The path is the complementary data needed to calculate the merkle root.
-										A client can compare if the calculated root equals the one recorded in the block header,
-									verifying that the receipt was linked with the block.</p>
+									<p>Returns an mosaic resoslution statements page based on the criteria.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>height: <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+									<h5>criteria: <a href="_infrastructure_searchcriteria_resolutionstatementsearchcriteria_.resolutionstatementsearchcriteria.html" class="tsd-signature-type">ResolutionStatementSearchCriteria</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The height of the block.</p>
-									</div>
-								</li>
-								<li>
-									<h5>hash: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The hash of the receipt statement or resolution.</p>
+										<p>the criteria</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_merkleproofinfo_.merkleproofinfo.html" class="tsd-signature-type">MerkleProofInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable<MerkleProofInfo></p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_model_receipt_resolutionstatement_.html#mosaicidresolutionstatement" class="tsd-signature-type">MosaicIdResolutionStatement</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a page of <a href="../modules/_model_receipt_resolutionstatement_.html#mosaicidresolutionstatement">MosaicIdResolutionStatement</a></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="searchreceipts" class="tsd-anchor"></a>
+					<h3>search<wbr>Receipts</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">search<wbr>Receipts<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_infrastructure_searchcriteria_transactionstatementsearchcriteria_.transactionstatementsearchcriteria.html" class="tsd-signature-type">TransactionStatementSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_receipt_transactionstatement_.transactionstatement.html" class="tsd-signature-type">TransactionStatement</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/212e777/src/infrastructure/ReceiptRepository.ts#L38">infrastructure/ReceiptRepository.ts:38</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a transaction statements page based on the criteria.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>criteria: <a href="_infrastructure_searchcriteria_transactionstatementsearchcriteria_.transactionstatementsearchcriteria.html" class="tsd-signature-type">TransactionStatementSearchCriteria</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the criteria</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_receipt_transactionstatement_.transactionstatement.html" class="tsd-signature-type">TransactionStatement</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a page of <a href="../classes/_model_receipt_transactionstatement_.transactionstatement.html">TransactionStatement</a></p>
 						</li>
 					</ul>
 				</section>
@@ -207,10 +229,13 @@
 						<a href="_infrastructure_receiptrepository_.receiptrepository.html" class="tsd-kind-icon">Receipt<wbr>Repository</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_receiptrepository_.receiptrepository.html#getblockreceipts" class="tsd-kind-icon">get<wbr>Block<wbr>Receipts</a>
+								<a href="_infrastructure_receiptrepository_.receiptrepository.html#searchaddressresolutionstatements" class="tsd-kind-icon">search<wbr>Address<wbr>Resolution<wbr>Statements</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_receiptrepository_.receiptrepository.html#getmerklereceipts" class="tsd-kind-icon">get<wbr>Merkle<wbr>Receipts</a>
+								<a href="_infrastructure_receiptrepository_.receiptrepository.html#searchmosaicresolutionstatements" class="tsd-kind-icon">search<wbr>Mosaic<wbr>Resolution<wbr>Statements</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_infrastructure_receiptrepository_.receiptrepository.html#searchreceipts" class="tsd-kind-icon">search<wbr>Receipts</a>
 							</li>
 						</ul>
 					</li>
