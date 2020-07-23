@@ -123,9 +123,9 @@ export abstract class Transaction {
     /**
      * Generate transaction hash hex
      *
-     * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L32
-     * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L35
-     * @see https://github.com/nemtech/catapult-server/blob/master/sdk/src/extensions/TransactionExtensions.cpp#L46
+     * @see https://github.com/nemtech/catapult-server/blob/main/src/catapult/model/EntityHasher.cpp#L32
+     * @see https://github.com/nemtech/catapult-server/blob/main/src/catapult/model/EntityHasher.cpp#L35
+     * @see https://github.com/nemtech/catapult-server/blob/main/sdk/src/extensions/TransactionExtensions.cpp#L46
      * @param {string} transactionPayload HexString Payload
      * @param {Array<number>} generationHashBuffer Network generation hash byte
      * @returns {string} Returns Transaction Payload hash
@@ -155,7 +155,7 @@ export abstract class Transaction {
         const generationHash: Uint8Array = Uint8Array.from(generationHashBuffer);
 
         // 4) add transaction data without header (EntityDataBuffer)
-        // @link https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/EntityHasher.cpp#L30
+        // @link https://github.com/nemtech/catapult-server/blob/main/src/catapult/model/EntityHasher.cpp#L30
         const transactionBodyIdx: number = generationHashIdx + generationHash.length;
         let transactionBody: Uint8Array = transactionBytes.slice(Transaction.Header_Size);
 

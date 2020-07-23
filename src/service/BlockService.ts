@@ -18,7 +18,6 @@ import { sha3_256 } from 'js-sha3';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';
-import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { UInt64 } from '../model/UInt64';
@@ -31,15 +30,12 @@ import { MerklePosition } from '../model/blockchain/MerklePosition';
 export class BlockService implements IBlockService {
     private readonly blockRepository: BlockRepository;
 
-    private readonly receiptRepository: ReceiptRepository;
-
     /**
      * Constructor
      * @param repositoryFactory
      */
     constructor(public readonly repositoryFactory: RepositoryFactory) {
         this.blockRepository = repositoryFactory.createBlockRepository();
-        this.receiptRepository = repositoryFactory.createReceiptRepository();
     }
 
     /**
@@ -62,7 +58,7 @@ export class BlockService implements IBlockService {
      */
     public validateStatementInBlock(leaf: string, height: UInt64): Observable<boolean> {
         const rootHashObservable = this.blockRepository.getBlockByHeight(height);
-        const merklePathItemObservable = this.receiptRepository.getMerkleReceipts(height, leaf);
+        const merklePathItemObservable = this.blockRepository.getMerkleReceipts(height, leaf);
         return combineLatest([rootHashObservable, merklePathItemObservable])
             .pipe(map((combined) => this.validateInBlock(leaf, combined[1].merklePath, combined[0].blockReceiptsHash)))
             .pipe(catchError(() => of(false)));

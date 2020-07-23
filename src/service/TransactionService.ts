@@ -37,6 +37,9 @@ import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { ITransactionService } from './interfaces/ITransactionService';
 import { TransactionGroup } from '../infrastructure/TransactionGroup';
+import { ReceiptPaginationStreamer } from '../infrastructure/paginationStreamer/ReceiptPaginationStreamer';
+import { Statement } from '../model/receipt/Statement';
+import { combineLatest } from 'rxjs';
 
 /**
  * Transaction Service
@@ -56,7 +59,9 @@ export class TransactionService implements ITransactionService {
      */
     public resolveAliases(transationHashes: string[]): Observable<Transaction[]> {
         return this.transactionRepository.getTransactionsById(transationHashes, TransactionGroup.Confirmed).pipe(
-            mergeMap((_) => _),
+            mergeMap((_) => {
+                return _;
+            }),
             mergeMap((transaction) => this.resolveTransaction(transaction)),
             toArray(),
         );
@@ -230,8 +235,18 @@ export class TransactionService implements ITransactionService {
      * @return {Observable<Transaction>}
      */
     private resolvedFromReceipt(transaction: Transaction, aggregateIndex: number): Observable<Transaction> {
-        return this.receiptRepository
-            .getBlockReceipts(transaction.transactionInfo!.height)
+        const addressResolution = ReceiptPaginationStreamer.addressResolutionStatements(this.receiptRepository)
+            .search({ height: transaction.transactionInfo!.height })
+            .pipe(toArray());
+        const mosaicResolution = ReceiptPaginationStreamer.mosaicResolutionStatements(this.receiptRepository)
+            .search({ height: transaction.transactionInfo!.height })
+            .pipe(toArray());
+        return combineLatest(mosaicResolution, addressResolution)
+            .pipe(
+                map(([mosaic, address]) => {
+                    return new Statement([], address, mosaic);
+                }),
+            )
             .pipe(map((statement) => transaction.resolveAliases(statement, aggregateIndex)));
     }
 }

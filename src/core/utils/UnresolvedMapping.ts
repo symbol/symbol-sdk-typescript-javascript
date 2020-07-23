@@ -74,7 +74,7 @@ export class UnresolvedMapping {
      * Return unresolved address bytes of the unresolved address
      * @internal
      * @param {UnresolvedAddress} unresolvedAddress The unresolved address
-     * @param {networkType} the network type serialized in the output.
+     * @param {networkType} networkType the network type serialized in the output.
      * @return {Uint8Array}
      */
     public static toUnresolvedAddressBytes(unresolvedAddress: UnresolvedAddress, networkType: NetworkType): Uint8Array {

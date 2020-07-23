@@ -14,34 +14,42 @@
  * limitations under the License.
  */
 
+import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
+import { TransactionStatement } from '../model/receipt/TransactionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from '../model/receipt/ResolutionStatement';
 import { Observable } from 'rxjs';
-import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { Statement } from '../model/receipt/Statement';
-import { UInt64 } from '../model/UInt64';
+import { Page } from './Page';
+import { TransactionStatementSearchCriteria } from './searchCriteria/TransactionStatementSearchCriteria';
 
 /**
  * Receipt interface repository.
  *
  * @since 1.0
  */
+// export type ReceiptRepository = Searcher<ResolutionStatement | TransactionStatement, ReceiptSearchCriteria>;
+
 export interface ReceiptRepository {
     /**
-     * Get receipts from a block
-     * Returns the receipts linked to a block.
-     * @param {UInt64} height The height of the block.
-     * @return Observable<Statement>
+     * Returns a transaction statements page based on the criteria.
+     *
+     * @param criteria the criteria
+     * @return a page of {@link TransactionStatement}
      */
-    getBlockReceipts(height: UInt64): Observable<Statement>;
+    searchReceipts(criteria: TransactionStatementSearchCriteria): Observable<Page<TransactionStatement>>;
 
     /**
-     * Get the merkle path for a given a receipt statement hash and block
-     * Returns the merkle path for a [receipt statement or resolution](https://nemtech.github.io/concepts/receipt.html)
-     * linked to a block. The path is the complementary data needed to calculate the merkle root.
-     * A client can compare if the calculated root equals the one recorded in the block header,
-     * verifying that the receipt was linked with the block.
-     * @param height The height of the block.
-     * @param hash The hash of the receipt statement or resolution.
-     * @return Observable<MerkleProofInfo>
+     * Returns an addresses resolution statements page based on the criteria.
+     *
+     * @param criteria the criteria
+     * @return a page of {@link AddressResolutionStatement}
      */
-    getMerkleReceipts(height: UInt64, hash: string): Observable<MerkleProofInfo>;
+    searchAddressResolutionStatements(criteria: ResolutionStatementSearchCriteria): Observable<Page<AddressResolutionStatement>>;
+
+    /**
+     * Returns an mosaic resoslution statements page based on the criteria.
+     *
+     * @param criteria the criteria
+     * @return a page of {@link MosaicIdResolutionStatement}
+     */
+    searchMosaicResolutionStatements(criteria: ResolutionStatementSearchCriteria): Observable<Page<MosaicIdResolutionStatement>>;
 }

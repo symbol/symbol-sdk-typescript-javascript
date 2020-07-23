@@ -27,6 +27,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { TransactionStatement } from '../../src/model/receipt/TransactionStatement';
 
 describe('BlockService', () => {
     const helper = new IntegrationTestHelper();
@@ -86,7 +87,7 @@ describe('BlockService', () => {
      * =========================
      */
 
-    describe('Validate transansaction', () => {
+    describe('Validate transactions', () => {
         it('call block service', async () => {
             const transaction = await transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed).toPromise();
             const transactionInfo = transaction.transactionInfo;
@@ -101,8 +102,8 @@ describe('BlockService', () => {
 
     describe('Validate receipt', () => {
         it('call block service', async () => {
-            const statements = await receiptRepository.getBlockReceipts(UInt64.fromUint(1)).toPromise();
-            const statement = statements.transactionStatements[0];
+            const statements = await receiptRepository.searchReceipts({ height: UInt64.fromUint(1) }).toPromise();
+            const statement = statements.data[0] as TransactionStatement;
             const validationResult = await blockService.validateStatementInBlock(statement.generateHash(), UInt64.fromUint(1)).toPromise();
             expect(validationResult).to.be.true;
         });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { Metadata } from '../model/metadata/Metadata';
-import { Searcher } from './paginationStreamer/Searcher';
-import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
+import { SearchCriteria } from './SearchCriteria';
+import { UInt64 } from '../../model/UInt64';
 
 /**
- * Metadata interface repository.
- *
- * @since 1.0
+ * Defines the params used to search resolution statement receipts. With this criteria, you can sort and filter
+ * receipt queries using rest.
  */
-export type MetadataRepository = Searcher<Metadata, MetadataSearchCriteria>;
+export interface ResolutionStatementSearchCriteria extends SearchCriteria {
+    /**
+     * Block height. (optional)
+     */
+    height?: UInt64;
+}

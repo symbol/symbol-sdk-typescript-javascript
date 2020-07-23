@@ -17,8 +17,8 @@
 /**
  * Receipt type enums.
  *
- * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
- * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
+ * @see https://github.com/nemtech/catapult-server/blob/main/src/catapult/model/ReceiptType.h
+ * @see https://github.com/nemtech/catapult-server/blob/main/src/catapult/model/ReceiptType.cpp
  */
 export enum ReceiptType {
     /**

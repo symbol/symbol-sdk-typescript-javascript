@@ -16,13 +16,19 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { ResolutionStatementInfoDTO, TransactionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import {
+    createAddressResolutionStatement,
+    createMosaicResolutionStatement,
+    createTransactionStatement,
+} from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
+import { Statement } from '../../../src/model/receipt/Statement';
 import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Receipt - CreateStatementFromDTO', () => {
@@ -34,6 +40,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         statementDto = {
             transactionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -52,6 +59,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -71,6 +79,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -87,6 +96,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -103,6 +113,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -119,6 +130,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '52',
                         source: {
@@ -138,6 +150,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
             ],
             addressResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
                         unresolved: '9103B60AAF27626883000000000000000000000000000000',
@@ -153,6 +166,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
                         unresolved: '917E7E29A01014C2F3000000000000000000000000000000',
@@ -170,6 +184,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
             ],
             mosaicResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1506',
                         unresolved: '85BBEA6CC462B244',
@@ -185,6 +200,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                     },
                 },
                 {
+                    id: '1',
                     statement: {
                         height: '1506',
                         unresolved: '85BBEA6CC462B244',
@@ -203,7 +219,12 @@ describe('Receipt - CreateStatementFromDTO', () => {
         };
     });
     it('should create Statement', () => {
-        const statement = CreateStatementFromDTO(statementDto);
+        const statement = new Statement(
+            statementDto.transactionStatements.map(createTransactionStatement),
+            statementDto.addressResolutionStatements.map(createAddressResolutionStatement),
+            statementDto.mosaicResolutionStatements.map(createMosaicResolutionStatement),
+        );
+
         const unresolvedAddress = statement.addressResolutionStatements[0].unresolved as NamespaceId;
         const unresolvedMosaicId = statement.mosaicResolutionStatements[0].unresolved as NamespaceId;
 
@@ -265,9 +286,10 @@ describe('Receipt - CreateStatementFromDTO', () => {
             transactionStatements: [],
             addressResolutionStatements: [
                 {
+                    id: '1',
                     statement: {
                         height: '1488',
-                        unresolved: account.address,
+                        unresolved: account.address.encoded(),
                         resolutionEntries: [
                             {
                                 source: {
@@ -282,123 +304,93 @@ describe('Receipt - CreateStatementFromDTO', () => {
             ],
             mosaicResolutionStatements: [],
         };
-        const statement = CreateStatementFromDTO(dto);
-        expect(statement.addressResolutionStatements.length).to.be.equal(1);
-        expect((statement.addressResolutionStatements[0].unresolved as Address).plain()).to.be.equal(account.address.plain());
+        const statement = createAddressResolutionStatement(dto.addressResolutionStatements[0]);
+        expect((statement.unresolved as Address).plain()).to.be.equal(account.address.plain());
 
-        const dtoJson = {
-            transactionStatements: [],
-            addressResolutionStatements: [
-                {
-                    statement: {
-                        height: '1488',
-                        unresolved: {
-                            address: account.address.plain(),
-                            networkType: 152,
+        const dtoJson: ResolutionStatementInfoDTO = {
+            id: '1',
+            statement: {
+                height: '1488',
+                unresolved: account.address.encoded(),
+                resolutionEntries: [
+                    {
+                        source: {
+                            primaryId: 4,
+                            secondaryId: 0,
                         },
-                        resolutionEntries: [
-                            {
-                                source: {
-                                    primaryId: 4,
-                                    secondaryId: 0,
-                                },
-                                resolved: '917E7E29A01014C2F3000000000000000000000000000000',
-                            },
-                        ],
+                        resolved: '917E7E29A01014C2F3000000000000000000000000000000',
                     },
-                },
-            ],
-            mosaicResolutionStatements: [],
+                ],
+            },
         };
 
-        const statementJson = CreateStatementFromDTO(dtoJson);
-        expect(statementJson.addressResolutionStatements.length).to.be.equal(1);
-        expect((statementJson.addressResolutionStatements[0].unresolved as Address).plain()).to.be.equal(account.address.plain());
+        const statementJson = createAddressResolutionStatement(dtoJson);
+        expect((statementJson.unresolved as Address).plain()).to.be.equal(account.address.plain());
 
         const dtoId = {
-            transactionStatements: [],
-            addressResolutionStatements: [
-                {
-                    statement: {
-                        height: '1488',
-                        unresolved: {
-                            id: new NamespaceId('name').toHex(),
-                            name: 'name',
+            id: '1',
+            statement: {
+                height: '1488',
+                unresolved: '9103B60AAF27626883000000000000000000000000000000',
+                resolutionEntries: [
+                    {
+                        source: {
+                            primaryId: 4,
+                            secondaryId: 0,
                         },
-                        resolutionEntries: [
-                            {
-                                source: {
-                                    primaryId: 4,
-                                    secondaryId: 0,
-                                },
-                                resolved: '917E7E29A01014C2F3000000000000000000000000000000',
-                            },
-                        ],
+                        resolved: '903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3',
                     },
-                },
-            ],
-            mosaicResolutionStatements: [],
+                ],
+            },
         };
 
-        const statementId = CreateStatementFromDTO(dtoId);
-        expect(statementId.addressResolutionStatements.length).to.be.equal(1);
-        expect((statementId.addressResolutionStatements[0].unresolved as NamespaceId).toHex()).to.be.equal(new NamespaceId('name').toHex());
+        const statementId = createAddressResolutionStatement(dtoId);
+        expect((statementId.unresolved as NamespaceId).toHex()).to.be.equal('83686227AF0AB603');
+        expect(statementId.resolutionEntries[0].resolved.encoded()).to.be.equal('903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3');
 
-        const dtoError = {
-            transactionStatements: [],
-            addressResolutionStatements: [
-                {
-                    statement: {
-                        height: '1488',
-                        unresolved: {
-                            error: 'error',
+        const dtoError: ResolutionStatementInfoDTO = {
+            id: 'abc',
+            statement: {
+                height: '1488',
+                unresolved: '',
+                resolutionEntries: [
+                    {
+                        source: {
+                            primaryId: 4,
+                            secondaryId: 0,
                         },
-                        resolutionEntries: [
-                            {
-                                source: {
-                                    primaryId: 4,
-                                    secondaryId: 0,
-                                },
-                                resolved: '917E7E29A01014C2F3000000000000000000000000000000',
-                            },
-                        ],
+                        resolved: '917E7E29A01014C2F3000000000000000000000000000000',
                     },
-                },
-            ],
-            mosaicResolutionStatements: [],
+                ],
+            },
         };
 
         expect(() => {
-            CreateStatementFromDTO(dtoError);
+            createAddressResolutionStatement(dtoError);
         }).to.throw();
     });
 
     it('Statement - Error', () => {
-        const dtoError = {
-            transactionStatements: [
-                {
-                    statement: {
-                        height: '52',
-                        source: {
-                            primaryId: 0,
-                            secondaryId: 0,
-                        },
-                        receipts: [
-                            {
-                                version: 1,
-                                type: 99999,
-                                artifactId: '85BBEA6CC462B244',
-                            },
-                        ],
-                    },
+        const dtoError: TransactionStatementInfoDTO = {
+            id: 'ABC',
+            statement: {
+                height: '52',
+                source: {
+                    primaryId: 0,
+                    secondaryId: 0,
                 },
-            ],
-            addressResolutionStatements: [],
-            mosaicResolutionStatements: [],
+                receipts: [
+                    {
+                        version: 1,
+                        type: 99999,
+                        artifactId: '85BBEA6CC462B244',
+                    },
+                ],
+            },
         };
 
         expect(() => {
-            CreateStatementFromDTO(dtoError);
+            createTransactionStatement(dtoError);
         }).to.throw();
     });
 });

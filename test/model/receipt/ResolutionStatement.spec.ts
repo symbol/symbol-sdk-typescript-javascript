@@ -15,43 +15,24 @@
  */
 
 import { expect } from 'chai';
-import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import { Account } from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/network/NetworkType';
+import { ResolutionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import {
+    createAddressResolutionStatement,
+    createMosaicResolutionStatement,
+} from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 
 describe('ResolutionStatement', () => {
-    let account: Account;
-    let transactionStatementsDTO;
-    let addressResolutionStatementsDTO;
-    let mosaicResolutionStatementsDTO;
-    let statementDTO;
+    let address: Address;
+    let addressResolutionStatements: ResolutionStatementInfoDTO[];
+    let mosaicResolutionStatements: ResolutionStatementInfoDTO[];
 
     before(() => {
-        account = Account.createFromPrivateKey('81C18245507F9C15B61BDEDAFA2C10D9DC2C4E401E573A10935D45AA2A461FD5', NetworkType.MIJIN_TEST);
-        transactionStatementsDTO = [
+        address = Address.createFromEncoded('903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3');
+        addressResolutionStatements = [
             {
-                statement: {
-                    height: '1473',
-                    source: {
-                        primaryId: 0,
-                        secondaryId: 0,
-                    },
-                    receipts: [
-                        {
-                            version: 1,
-                            type: 8515,
-                            targetAddress: account.address.encoded(),
-                            mosaicId: '504677C3281108DB',
-                            amount: '0',
-                        },
-                    ],
-                },
-            },
-        ];
-        addressResolutionStatementsDTO = [
-            {
+                id: '1',
                 statement: {
                     height: '1473',
                     unresolved: '9156258DE356F030A5000000000000000000000000000000',
@@ -61,14 +42,15 @@ describe('ResolutionStatement', () => {
                                 primaryId: 1,
                                 secondaryId: 0,
                             },
-                            resolved: account.address.encoded(),
+                            resolved: '903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3',
                         },
                     ],
                 },
             },
         ];
-        mosaicResolutionStatementsDTO = [
+        mosaicResolutionStatements = [
             {
+                id: '2',
                 statement: {
                     height: '1473',
                     unresolved: '85BBEA6CC462B244',
@@ -91,6 +73,7 @@ describe('ResolutionStatement', () => {
                 },
             },
             {
+                id: '3',
                 statement: {
                     height: '1473',
                     unresolved: 'E81F622A5B11A340',
@@ -106,6 +89,7 @@ describe('ResolutionStatement', () => {
                 },
             },
             {
+                id: '4',
                 statement: {
                     height: '1500',
                     unresolved: '85BBEA6CC462B244',
@@ -142,25 +126,20 @@ describe('ResolutionStatement', () => {
                 },
             },
         ];
-
-        statementDTO = {
-            transactionStatements: transactionStatementsDTO,
-            addressResolutionStatements: addressResolutionStatementsDTO,
-            mosaicResolutionStatements: mosaicResolutionStatementsDTO,
-        };
     });
 
     it('should get resolve entry when both primaryId and secondaryId matched', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const entry = statement.addressResolutionStatements[0].getResolutionEntryById(1, 0);
+        const resolution = createAddressResolutionStatement(addressResolutionStatements[0]);
+
+        const entry = resolution.getResolutionEntryById(1, 0);
 
         expect(entry!.resolved instanceof Address).to.be.true;
-        expect((entry!.resolved as Address).equals(account.address)).to.be.true;
+        expect((entry!.resolved as Address).equals(address)).to.be.true;
     });
 
     it('should get resolved entry when primaryId is greater than max', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const entry = statement.mosaicResolutionStatements[0].getResolutionEntryById(4, 0);
+        const resolution = createMosaicResolutionStatement(mosaicResolutionStatements[0]);
+        const entry = resolution.getResolutionEntryById(4, 0);
         expect(entry!.source.primaryId).to.be.equal(3);
         expect(entry!.source.secondaryId).to.be.equal(5);
         expect(entry!.resolved instanceof MosaicId).to.be.true;
@@ -168,8 +147,8 @@ describe('ResolutionStatement', () => {
     });
 
     it('should get resolved entry when primaryId is in middle of 2 pirmaryIds', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const entry = statement.mosaicResolutionStatements[0].getResolutionEntryById(2, 1);
+        const resolution = createMosaicResolutionStatement(mosaicResolutionStatements[0]);
+        const entry = resolution.getResolutionEntryById(2, 1);
         expect(entry!.source.primaryId).to.be.equal(1);
         expect(entry!.source.secondaryId).to.be.equal(0);
         expect(entry!.resolved instanceof MosaicId).to.be.true;
@@ -177,8 +156,8 @@ describe('ResolutionStatement', () => {
     });
 
     it('should get resolved entry when primaryId matches but not secondaryId', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const entry = statement.mosaicResolutionStatements[0].getResolutionEntryById(3, 6);
+        const resolution = createMosaicResolutionStatement(mosaicResolutionStatements[0]);
+        const entry = resolution.getResolutionEntryById(3, 6);
         expect(entry!.source.primaryId).to.be.equal(3);
         expect(entry!.source.secondaryId).to.be.equal(5);
         expect(entry!.resolved instanceof MosaicId).to.be.true;
@@ -186,8 +165,8 @@ describe('ResolutionStatement', () => {
     });
 
     it('should get resolved entry when primaryId matches but secondaryId less than minimum', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const entry = statement.mosaicResolutionStatements[0].getResolutionEntryById(3, 1);
+        const resolution = createMosaicResolutionStatement(mosaicResolutionStatements[0]);
+        const entry = resolution.getResolutionEntryById(3, 1);
         expect(entry!.source.primaryId).to.be.equal(1);
         expect(entry!.source.secondaryId).to.be.equal(0);
         expect(entry!.resolved instanceof MosaicId).to.be.true;
@@ -195,14 +174,13 @@ describe('ResolutionStatement', () => {
     });
 
     it('should return undefined', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const entry = statement.addressResolutionStatements[0].getResolutionEntryById(0, 0);
+        const statement = createMosaicResolutionStatement(mosaicResolutionStatements[0]);
+        const entry = statement.getResolutionEntryById(0, 0);
         expect(entry).to.be.undefined;
     });
 
     it('resolution change in the block (more than one AGGREGATE)', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const resolution = statement.mosaicResolutionStatements[2];
+        const resolution = createMosaicResolutionStatement(mosaicResolutionStatements[2]);
         expect((resolution.getResolutionEntryById(1, 1)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');
         expect((resolution.getResolutionEntryById(1, 4)!.resolved as MosaicId).toHex()).to.be.equal('7CDF3B117A3C40CC');
         expect((resolution.getResolutionEntryById(1, 7)!.resolved as MosaicId).toHex()).to.be.equal('0DC67FBE1CAD29E5');

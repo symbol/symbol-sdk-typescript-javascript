@@ -16,7 +16,12 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { CreateReceiptFromDTO, CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import {
+    createAddressResolutionStatement,
+    createMosaicResolutionStatement,
+    CreateReceiptFromDTO,
+    createTransactionStatement,
+} from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -339,22 +344,19 @@ describe('Receipt', () => {
     });
 
     it('should generate hash for MosaicResolutionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const receipt = statement.mosaicResolutionStatements[0];
+        const receipt = createMosaicResolutionStatement(statementDTO.mosaicResolutionStatements[0]);
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('DE29FB6356530E5D1FBEE0A84202520C155D882C46EA74456752D6C75F0707B3');
     });
 
     it('should generate hash for AddressResolutionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const receipt = statement.addressResolutionStatements[0];
+        const receipt = createAddressResolutionStatement(statementDTO.addressResolutionStatements[0]);
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('AA9B667C37C8A19902F3E1098FCEE681318455551CC2FBE9B81E8FA47007CA79');
     });
 
     it('should generate hash for TransactionStatement', () => {
-        const statement = CreateStatementFromDTO(statementDTO);
-        const receipt = statement.transactionStatements[0];
+        const receipt = createTransactionStatement(statementDTO.transactionStatements[0]);
         const hash = receipt.generateHash();
         expect(hash).to.be.equal('E73E67382162C38AED77D5D5D67F96AA590DC12FF13AE263AA50932896AC4801');
     });

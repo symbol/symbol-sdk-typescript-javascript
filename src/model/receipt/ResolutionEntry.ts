@@ -24,7 +24,7 @@ import { ReceiptSource } from './ReceiptSource';
 /**
  * The receipt source object.
  */
-export class ResolutionEntry {
+export class ResolutionEntry<R extends Address | MosaicId> {
     /**
      * @constructor
      * @param resolved - A resolved address or resolved mosaicId (alias).
@@ -34,7 +34,7 @@ export class ResolutionEntry {
         /**
          * A resolved address or resolved mosaicId (alias).
          */
-        public readonly resolved: Address | MosaicId,
+        public readonly resolved: R,
         /**
          * The receipt source.
          */
@@ -49,7 +49,7 @@ export class ResolutionEntry {
     public serialize(): Uint8Array {
         let resolvedBytes: Uint8Array;
         if (this.resolved instanceof Address) {
-            resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
+            resolvedBytes = RawAddress.stringToAddress(this.resolved.plain());
         } else {
             resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
         }

@@ -15,7 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { MetadataDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { MetadataRoutesApi, MetadataInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
@@ -25,8 +25,10 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
+import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
+import { Page } from './Page';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { MetadataRepository } from './MetadataRepository';
-import { QueryParams } from './QueryParams';
 
 /**
  * Metadata http repository.
@@ -51,133 +53,24 @@ export class MetadataHttp extends Http implements MetadataRepository {
     }
 
     /**
-     * Returns the account metadata given an account id.
-     * @param address - Account address to be created from PublicKey or RawAddress
-     * @param queryParams - Optional query parameters
-     * @returns Observable<Metadata[]>
+     * Gets an array of metadata.
+     * @param criteria - Metadata search criteria
+     * @returns Observable<Page<Metadata>>
      */
-    public getAccountMetadata(address: Address, queryParams?: QueryParams): Observable<Metadata[]> {
+    public search(criteria: MetadataSearchCriteria): Observable<Page<Metadata>> {
         return this.call(
-            this.metadataRoutesApi.getAccountMetadata(
-                address.plain(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).ordering,
-                this.queryParams(queryParams).id,
+            this.metadataRoutesApi.searchMetadataEntries(
+                criteria.sourceAddress?.plain(),
+                criteria.targetAddress?.plain(),
+                criteria.scopedMetadataKey,
+                criteria.targetId?.toHex(),
+                criteria.metadataType?.valueOf(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
             ),
-            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
-        );
-    }
-
-    /**
-     * Returns the account metadata given an account id and a key
-     * @param address - Account address to be created from PublicKey or RawAddress
-     * @param key - Metadata key
-     * @returns Observable<Metadata[]>
-     */
-    getAccountMetadataByKey(address: Address, key: string): Observable<Metadata[]> {
-        return this.call(this.metadataRoutesApi.getAccountMetadataByKey(address.plain(), key), (body) =>
-            body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
-        );
-    }
-
-    /**
-     * Returns the account metadata given an account id and a key
-     * @param address - Account address to be created from PublicKey or RawAddress
-     * @param key - Metadata key
-     * @param sourceAddress - Sender address
-     * @returns Observable<Metadata>
-     */
-    getAccountMetadataByKeyAndSender(address: Address, key: string, sourceAddress: Address): Observable<Metadata> {
-        return this.call(this.metadataRoutesApi.getAccountMetadataByKeyAndSender(address.plain(), key, sourceAddress.plain()), (body) =>
-            this.buildMetadata(body),
-        );
-    }
-
-    /**
-     * Returns the mosaic metadata given a mosaic id.
-     * @param mosaicId - Mosaic identifier.
-     * @param queryParams - Optional query parameters
-     * @returns Observable<Metadata[]>
-     */
-    getMosaicMetadata(mosaicId: MosaicId, queryParams?: QueryParams): Observable<Metadata[]> {
-        return this.call(
-            this.metadataRoutesApi.getMosaicMetadata(
-                mosaicId.toHex(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering,
-            ),
-            (body) => body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
-        );
-    }
-
-    /**
-     * Returns the mosaic metadata given a mosaic id and metadata key.
-     * @param mosaicId - Mosaic identifier.
-     * @param key - Metadata key.
-     * @returns Observable<Metadata[]>
-     */
-    getMosaicMetadataByKey(mosaicId: MosaicId, key: string): Observable<Metadata[]> {
-        return this.call(this.metadataRoutesApi.getMosaicMetadataByKey(mosaicId.toHex(), key), (body) =>
-            body.metadataEntries.map((metadataEntry) => this.buildMetadata(metadataEntry)),
-        );
-    }
-
-    /**
-     * Returns the mosaic metadata given a mosaic id and metadata key.
-     * @param mosaicId - Mosaic identifier.
-     * @param key - Metadata key.
-     * @param sourceAddress - Sender address
-     * @returns Observable<Metadata>
-     */
-    getMosaicMetadataByKeyAndSender(mosaicId: MosaicId, key: string, sourceAddress: Address): Observable<Metadata> {
-        return this.call(
-            this.metadataRoutesApi.getMosaicMetadataByKeyAndSender(mosaicId.toHex(), key, sourceAddress.plain()),
-            this.buildMetadata,
-        );
-    }
-
-    /**
-     * Returns the mosaic metadata given a mosaic id.
-     * @param namespaceId - Namespace identifier.
-     * @param queryParams - Optional query parameters
-     * @returns Observable<Metadata[]>
-     */
-    public getNamespaceMetadata(namespaceId: NamespaceId, queryParams?: QueryParams): Observable<Metadata[]> {
-        return this.call(
-            this.metadataRoutesApi.getNamespaceMetadata(
-                namespaceId.toHex(),
-                this.queryParams(queryParams).pageSize,
-                this.queryParams(queryParams).id,
-                this.queryParams(queryParams).ordering,
-            ),
-            (body) => body.metadataEntries.map(this.buildMetadata),
-        );
-    }
-
-    /**
-     * Returns the mosaic metadata given a mosaic id and metadata key.
-     * @param namespaceId - Namespace identifier.
-     * @param key - Metadata key.
-     * @returns Observable<Metadata[]>
-     */
-    public getNamespaceMetadataByKey(namespaceId: NamespaceId, key: string): Observable<Metadata[]> {
-        return this.call(this.metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), key), (body) =>
-            body.metadataEntries.map(this.buildMetadata),
-        );
-    }
-
-    /**
-     * Returns the namespace metadata given a mosaic id and metadata key.
-     * @param namespaceId - Namespace identifier.
-     * @param key - Metadata key.
-     * @param sourceAddress - Sender address
-     * @returns Observable<Metadata>
-     */
-    public getNamespaceMetadataByKeyAndSender(namespaceId: NamespaceId, key: string, sourceAddress: Address): Observable<Metadata> {
-        return this.call(
-            this.metadataRoutesApi.getNamespaceMetadataByKeyAndSender(namespaceId.toHex(), key, sourceAddress.plain()),
-            this.buildMetadata,
+            (body) => super.toPage(body.pagination, body.data, this.toMetadata),
         );
     }
 
@@ -186,7 +79,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
      * @param metadata - the dto
      * @returns the model Metadata.
      */
-    private buildMetadata(metadata: MetadataDTO): Metadata {
+    private toMetadata(metadata: MetadataInfoDTO): Metadata {
         const metadataEntry = metadata.metadataEntry;
         let targetId;
 
