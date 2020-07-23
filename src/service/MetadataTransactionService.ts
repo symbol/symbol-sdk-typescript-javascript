@@ -42,7 +42,7 @@ export class MetadataTransactionService {
     constructor(private readonly metadataRepository: MetadataRepository) {}
 
     /**
-     * @internal
+     * Create an Account Metadata Transaction object without knowing previous metadata value
      * @param deadline - Deadline
      * @param networkType - Network identifier
      * @param targetAddress - Target address
@@ -97,7 +97,7 @@ export class MetadataTransactionService {
     }
 
     /**
-     * @internal
+     * Create a Mosaic Metadata Transaction object without knowing previous metadata value
      * @param deadline - Deadline
      * @param networkType - Network identifier
      * @param targetAddress - Target Address
@@ -156,7 +156,7 @@ export class MetadataTransactionService {
     }
 
     /**
-     * @internal
+     * Create a Namespace Metadata Transaction object without knowing previous metadata value
      * @param deadline - Deadline
      * @param networkType - Network identifier
      * @param targetAddress - Target address

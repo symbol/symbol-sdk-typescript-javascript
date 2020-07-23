@@ -171,7 +171,7 @@ describe('MetadataTransactionService', () => {
         it('should create MosaicMetadataTransaction', async () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const updateValue = newValue + 'delta';
-            const transaction = (await metaDataService
+            const transaction = await metaDataService
                 .createMosaicMetadataTransaction(
                     deadline,
                     networkType,
@@ -182,7 +182,7 @@ describe('MetadataTransactionService', () => {
                     targetAccount.address,
                     helper.maxFee,
                 )
-                .toPromise()) as MosaicMetadataTransaction;
+                .toPromise();
             expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
             expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
             expect(transaction.valueSizeDelta).to.be.equal(5);
@@ -198,7 +198,7 @@ describe('MetadataTransactionService', () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
             const updateValue = newValue + 'delta';
-            const transaction = (await metaDataService
+            const transaction = await metaDataService
                 .createNamespaceMetadataTransaction(
                     deadline,
                     networkType,
@@ -209,7 +209,7 @@ describe('MetadataTransactionService', () => {
                     targetAccount.address,
                     helper.maxFee,
                 )
-                .toPromise()) as NamespaceMetadataTransaction;
+                .toPromise();
 
             expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
             expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
