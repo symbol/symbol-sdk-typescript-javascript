@@ -26,7 +26,7 @@ import { SearchCriteria } from './SearchCriteria';
  */
 export interface TransactionSearchCriteria extends SearchCriteria {
     /**
-     * The group of transaction (optional, default is confirmed)
+     * The group of transaction.
      */
     group: TransactionGroup;
     /**
