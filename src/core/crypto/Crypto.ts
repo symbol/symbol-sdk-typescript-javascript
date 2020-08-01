@@ -21,6 +21,7 @@ import * as crypto from 'crypto';
 import * as CryptoJS from 'crypto-js';
 
 export class Crypto {
+    private static AES_ALGO = 'aes-256-gcm';
     /**
      * Encrypt data
      * @param {string} data
@@ -93,19 +94,18 @@ export class Crypto {
         }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv);
-        const pk = convert.hexToUint8(recipientPub);
-        const encKey = utility.ua2words(utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, pk), 32);
-        const encIv = {
-            iv: utility.ua2words(iv, 16),
-        };
-        const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Hex.parse(msg), encKey, encIv);
+        const encKey = Buffer.from(utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, convert.hexToUint8(recipientPub)), 32);
+        const encIv = Buffer.from(iv);
+        const cipher = crypto.createCipheriv(Crypto.AES_ALGO, encKey, encIv);
+        const encrypted = Buffer.concat([cipher.update(Buffer.from(convert.hexToUint8(msg))), cipher.final()]);
+        const tag = cipher.getAuthTag();
         // Result
-        const result = convert.uint8ToHex(iv) + CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
+        const result = tag.toString('hex') + encIv.toString('hex') + encrypted.toString('hex');
         return result;
     };
 
     /**
-     * Encode a message
+     * Encode a message using AES-GCM algorithm
      *
      * @param {string} senderPriv - A sender private key
      * @param {string} recipientPub - A recipient public key
@@ -119,7 +119,7 @@ export class Crypto {
             throw new Error('Missing argument !');
         }
         // Processing
-        const iv = Crypto.randomBytes(16);
+        const iv = Crypto.randomBytes(12);
         const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv);
         // Result
         return encoded;
@@ -131,31 +131,28 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {Uint8Array} payload - An encrypted message payload in bytes
-     * @param {Uint8Array} iv - 16-byte AES initialization vector
+     * @param {Uint8Array} tagAndIv - 16-bytes AES auth tag and 12-byte AES initialization vector
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate: string, senderPublic: string, payload: Uint8Array, iv: Uint8Array): string => {
+    public static _decode = (recipientPrivate: string, senderPublic: string, payload: Uint8Array, tagAndIv: Uint8Array): string => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) {
             throw new Error('Missing argument !');
         }
         // Processing
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate);
-        const pk = convert.hexToUint8(senderPublic);
-        const encKey = utility.ua2words(utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, pk), 32);
-        const encIv = {
-            iv: utility.ua2words(iv, 16),
-        };
-        const encrypted = {
-            ciphertext: utility.ua2words(payload, payload.length),
-        };
-        const plain = CryptoJS.AES.decrypt(encrypted, encKey, encIv);
+        const encKey = Buffer.from(utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, convert.hexToUint8(senderPublic)), 32);
+        const encIv = Buffer.from(new Uint8Array(tagAndIv.buffer, 16, 12));
+        const encTag = Buffer.from(new Uint8Array(tagAndIv.buffer, 0, 16));
+        const cipher = crypto.createDecipheriv(Crypto.AES_ALGO, encKey, encIv);
+        cipher.setAuthTag(encTag);
+        const decrypted = Buffer.concat([cipher.update(Buffer.from(payload)), cipher.final()]);
         // Result
-        return CryptoJS.enc.Hex.stringify(plain);
+        return decrypted.toString('hex');
     };
 
     /**
-     * Decode an encrypted message payload
+     * Decode an encrypted (AES-GCM algorithm) message payload
      *
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
@@ -169,10 +166,15 @@ export class Crypto {
         }
         // Processing
         const binPayload = convert.hexToUint8(payload);
-        const payloadBuffer = new Uint8Array(binPayload.buffer, 16);
-        const iv = new Uint8Array(binPayload.buffer, 0, 16);
-        const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv);
-        return decoded.toUpperCase();
+        const payloadBuffer = new Uint8Array(binPayload.buffer, 16 + 12); //tag + iv
+        const tagAndIv = new Uint8Array(binPayload.buffer, 0, 16 + 12);
+        try {
+            const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, tagAndIv);
+            return decoded.toUpperCase();
+        } catch {
+            // To return empty string rather than error throwing if authentication failed
+            return '';
+        }
     };
 
     /**
