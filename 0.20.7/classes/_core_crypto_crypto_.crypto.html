@@ -81,6 +81,12 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="_core_crypto_crypto_.crypto.html#aes_algo" class="tsd-kind-icon">AES_<wbr>ALGO</a></li>
+							</ul>
+						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
@@ -96,19 +102,32 @@
 					</div>
 				</section>
 			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
+					<a name="aes_algo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> AES_<wbr>ALGO</h3>
+					<div class="tsd-signature tsd-kind-icon">AES_<wbr>ALGO<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;aes-256-gcm&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L24">core/crypto/Crypto.ts:24</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="_decode" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> _decode</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">_decode<span class="tsd-signature-symbol">(</span>recipientPrivate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, senderPublic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span>, iv<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">_decode<span class="tsd-signature-symbol">(</span>recipientPrivate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, senderPublic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span>, tagAndIv<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L137">core/crypto/Crypto.ts:137</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L137">core/crypto/Crypto.ts:137</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -143,10 +162,10 @@
 									</div>
 								</li>
 								<li>
-									<h5>iv: <span class="tsd-signature-type">Uint8Array</span></h5>
+									<h5>tagAndIv: <span class="tsd-signature-type">Uint8Array</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>16-byte AES initialization vector</p>
+											<p>16-bytes AES auth tag and 12-byte AES initialization vector</p>
 										</div>
 									</div>
 								</li>
@@ -168,7 +187,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L89">core/crypto/Crypto.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L90">core/crypto/Crypto.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -228,12 +247,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L165">core/crypto/Crypto.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L162">core/crypto/Crypto.ts:162</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Decode an encrypted message payload</p>
+									<p>Decode an encrypted (AES-GCM algorithm) message payload</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -280,7 +299,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L58">core/crypto/Crypto.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L59">core/crypto/Crypto.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -313,12 +332,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L116">core/crypto/Crypto.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L116">core/crypto/Crypto.ts:116</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Encode a message</p>
+									<p>Encode a message using AES-GCM algorithm</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -373,7 +392,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L30">core/crypto/Crypto.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L31">core/crypto/Crypto.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -406,7 +425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/ffca22d/src/core/crypto/Crypto.ts#L184">core/crypto/Crypto.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/core/crypto/Crypto.ts#L186">core/crypto/Crypto.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -449,6 +468,9 @@
 					<li class="current tsd-kind-class tsd-parent-kind-module">
 						<a href="_core_crypto_crypto_.crypto.html" class="tsd-kind-icon">Crypto</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
+								<a href="_core_crypto_crypto_.crypto.html#aes_algo" class="tsd-kind-icon">AES_<wbr>ALGO</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_core_crypto_crypto_.crypto.html#_decode" class="tsd-kind-icon">_decode</a>
 							</li>
