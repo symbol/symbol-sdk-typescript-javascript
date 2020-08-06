@@ -68,7 +68,7 @@ describe('PersistentDelegationRequestTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(persistentDelegationRequestTransaction.message.payload.length).to.be.equal(192 + messageMarker.length);
+        expect(persistentDelegationRequestTransaction.message.payload.length).to.be.equal(184 + messageMarker.length);
         expect(persistentDelegationRequestTransaction.message.payload.includes(messageMarker)).to.be.true;
         expect(persistentDelegationRequestTransaction.mosaics.length).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.recipientAddress).to.be.instanceof(Address);

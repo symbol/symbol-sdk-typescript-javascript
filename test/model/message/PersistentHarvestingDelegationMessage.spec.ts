@@ -45,7 +45,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             recipient.publicKey,
             NetworkType.MIJIN_TEST,
         );
-        expect(encryptedMessage.payload.length).to.be.equal(208);
+        expect(encryptedMessage.payload.length).to.be.equal(200);
         expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
     });
 
