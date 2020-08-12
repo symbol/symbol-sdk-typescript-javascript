@@ -171,7 +171,7 @@ export class TransferTransaction extends Transaction {
         if (this.message.type === MessageType.PersistentHarvestingDelegationMessage) {
             if (this.mosaics.length > 0) {
                 throw new Error('PersistentDelegationRequestTransaction should be created without Mosaic');
-            } else if (!/^[0-9a-fA-F]{200}$/.test(this.message.payload)) {
+            } else if (!/^[0-9a-fA-F]{264}$/.test(this.message.payload)) {
                 throw new Error('PersistentDelegationRequestTransaction message is invalid');
             }
         }

@@ -31,22 +31,23 @@ export class PersistentHarvestingDelegationMessage extends Message {
     }
 
     /**
-     *
-     * @param delegatedPrivateKey - Private key of delegated account
-     * @param recipientPublicKey - Recipient public key
+     * @param signingPrivateKey - Remote harvester signing private key linked to the main account
+     * @param vrfPrivateKey - VRF private key linked to the main account
+     * @param nodePublicKey - Node certificate public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
     public static create(
-        delegatedPrivateKey: string,
-        recipientPublicKey: string,
+        signingPrivateKey: string,
+        vrfPrivateKey: string,
+        nodePublicKey: string,
         networkType: NetworkType,
     ): PersistentHarvestingDelegationMessage {
         const ephemeralKeypair = Account.generateNewAccount(networkType);
         const encrypted =
             MessageMarker.PersistentDelegationUnlock +
             ephemeralKeypair.publicKey +
-            Crypto.encode(ephemeralKeypair.privateKey, recipientPublicKey, delegatedPrivateKey, true).toUpperCase();
+            Crypto.encode(ephemeralKeypair.privateKey, nodePublicKey, signingPrivateKey + vrfPrivateKey, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
 
@@ -62,7 +63,7 @@ export class PersistentHarvestingDelegationMessage extends Message {
     /**
      *
      * @param encryptMessage - Encrypted message to be decrypted
-     * @param privateKey - Recipient private key
+     * @param privateKey - Node certificate private key
      * @return {string}
      */
     public static decrypt(encryptMessage: PersistentHarvestingDelegationMessage, privateKey: string): string {
