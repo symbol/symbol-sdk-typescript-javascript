@@ -118,7 +118,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/service/interfaces/ITransactionService.ts#L55">service/interfaces/ITransactionService.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/service/interfaces/ITransactionService.ts#L55">service/interfaces/ITransactionService.ts:55</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -128,10 +128,15 @@
 									socket, the TransactionStatusError is raised.</p>
 								</div>
 								<p>Steps:</p>
-								<p>1) It announces the transaction to the TransactionRepository</p>
-								<p>2) It calls the IListener&#39;s confirmed method waiting for the transaction to be
-								confirmed.</p>
-								<p>3) It calls the IListener&#39;s status method waiting for an error to occurred.</p>
+								<ol>
+									<li><p>It announces the transaction to the TransactionRepository</p>
+									</li>
+									<li><p>It calls the IListener&#39;s confirmed method waiting for the transaction to be
+										confirmed.</p>
+									</li>
+									<li><p>It calls the IListener&#39;s status method waiting for an error to occurred.</p>
+									</li>
+								</ol>
 								<p>The observable will resolve the transaction from 2) or it will raise an error from 3).</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -164,7 +169,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/service/interfaces/ITransactionService.ts#L78">service/interfaces/ITransactionService.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/service/interfaces/ITransactionService.ts#L78">service/interfaces/ITransactionService.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -175,10 +180,15 @@
 									is raised.</p>
 								</div>
 								<p>Steps:</p>
-								<p>1) It announceAggregateBonded the transaction to the TransactionRepository</p>
-								<p>2) It calls the IListener&#39;s aggregateBondedAdded method waiting for the transaction to
-								be confirmed.</p>
-								<p>3) It calls the IListener&#39;s status method waiting for an error to occurred.</p>
+								<ol>
+									<li><p>It announceAggregateBonded the transaction to the TransactionRepository</p>
+									</li>
+									<li><p>It calls the IListener&#39;s aggregateBondedAdded method waiting for the transaction to
+										be confirmed.</p>
+									</li>
+									<li><p>It calls the IListener&#39;s status method waiting for an error to occurred.</p>
+									</li>
+								</ol>
 								<p>The observable will resolve the transaction from 2) or it will raise an error from 3)</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -210,7 +220,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/service/interfaces/ITransactionService.ts#L92">service/interfaces/ITransactionService.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/service/interfaces/ITransactionService.ts#L92">service/interfaces/ITransactionService.ts:92</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -256,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/service/interfaces/ITransactionService.ts#L31">service/interfaces/ITransactionService.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/service/interfaces/ITransactionService.ts#L31">service/interfaces/ITransactionService.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

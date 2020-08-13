@@ -124,7 +124,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Message.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/PersistentHarvestingDelegationMessage.ts#L25">model/message/PersistentHarvestingDelegationMessage.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/PersistentHarvestingDelegationMessage.ts#L25">model/message/PersistentHarvestingDelegationMessage.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -147,7 +147,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_model_message_message_.message.html">Message</a>.<a href="_model_message_message_.message.html#payload">payload</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/Message.ts#L45">model/message/Message.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/Message.ts#L45">model/message/Message.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -162,7 +162,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_model_message_message_.message.html">Message</a>.<a href="_model_message_message_.message.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/Message.ts#L41">model/message/Message.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/Message.ts#L41">model/message/Message.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -185,7 +185,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_model_message_message_.message.html">Message</a>.<a href="_model_message_message_.message.html#todto">toDTO</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/Message.ts#L51">model/message/Message.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/Message.ts#L51">model/message/Message.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -201,13 +201,13 @@
 					<a name="create" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>delegatedPrivateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, recipientPublicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_message_persistentharvestingdelegationmessage_.persistentharvestingdelegationmessage.html" class="tsd-signature-type">PersistentHarvestingDelegationMessage</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>signingPrivateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, vrfPrivateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, nodePublicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_message_persistentharvestingdelegationmessage_.persistentharvestingdelegationmessage.html" class="tsd-signature-type">PersistentHarvestingDelegationMessage</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/PersistentHarvestingDelegationMessage.ts#L40">model/message/PersistentHarvestingDelegationMessage.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/PersistentHarvestingDelegationMessage.ts#L40">model/message/PersistentHarvestingDelegationMessage.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -215,15 +215,21 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>delegatedPrivateKey: <span class="tsd-signature-type">string</span></h5>
+									<h5>signingPrivateKey: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Private key of delegated account</p>
+										<p>Remote harvester signing private key linked to the main account</p>
 									</div>
 								</li>
 								<li>
-									<h5>recipientPublicKey: <span class="tsd-signature-type">string</span></h5>
+									<h5>vrfPrivateKey: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Recipient public key</p>
+										<p>VRF private key linked to the main account</p>
+									</div>
+								</li>
+								<li>
+									<h5>nodePublicKey: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Node certificate public key</p>
 									</div>
 								</li>
 								<li>
@@ -247,7 +253,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/PersistentHarvestingDelegationMessage.ts#L57">model/message/PersistentHarvestingDelegationMessage.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/PersistentHarvestingDelegationMessage.ts#L58">model/message/PersistentHarvestingDelegationMessage.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -277,7 +283,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/57fcb26/src/model/message/PersistentHarvestingDelegationMessage.ts#L68">model/message/PersistentHarvestingDelegationMessage.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/b4e993f/src/model/message/PersistentHarvestingDelegationMessage.ts#L69">model/message/PersistentHarvestingDelegationMessage.ts:69</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -293,7 +299,7 @@
 								<li>
 									<h5>privateKey: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Recipient private key</p>
+										<p>Node certificate private key</p>
 									</div>
 								</li>
 							</ul>
