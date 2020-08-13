@@ -26,7 +26,8 @@ describe('PersistentHarvestingDelegationMessage', () => {
     let sender: Account;
     let recipient: Account;
     let recipient_nis: Account;
-    const delegatedPrivateKey = 'F0AB1010EFEE19EE5373719881DF5123C13E643C519655F7E97347BFF77175BF';
+    const signingPrivateKey = 'F0AB1010EFEE19EE5373719881DF5123C13E643C519655F7E97347BFF77175BF';
+    const vrfPrivateKey = '800F35F1CC66C2B62CE9DD9F31003B9B3E5C7A2F381FB8952A294277A1015D83';
     before(() => {
         sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.MIJIN_TEST);
         recipient = Account.createFromPrivateKey(
@@ -41,11 +42,12 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     it('should create a PersistentHarvestingDelegation message', () => {
         const encryptedMessage = PersistentHarvestingDelegationMessage.create(
-            delegatedPrivateKey,
+            signingPrivateKey,
+            vrfPrivateKey,
             recipient.publicKey,
             NetworkType.MIJIN_TEST,
         );
-        expect(encryptedMessage.payload.length).to.be.equal(200);
+        expect(encryptedMessage.payload.length).to.be.equal(264);
         expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
     });
 
@@ -68,19 +70,21 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     it('should create and decrypt message', () => {
         const encryptedMessage = PersistentHarvestingDelegationMessage.create(
-            delegatedPrivateKey,
+            signingPrivateKey,
+            vrfPrivateKey,
             recipient.publicKey,
             NetworkType.MIJIN_TEST,
         );
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey);
-        expect(plainMessage).to.be.equal(delegatedPrivateKey);
+        expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
     });
 
     it('return decrepted message reading from message payload', () => {
         const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const tx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
             Deadline.create(),
-            delegatedPrivateKey,
+            signingPrivateKey,
+            vrfPrivateKey,
             recipient.publicKey,
             NetworkType.MIJIN_TEST,
         );
@@ -89,16 +93,17 @@ describe('PersistentHarvestingDelegationMessage', () => {
             signedTransaction.payload.substring(322, signedTransaction.payload.length),
         );
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey);
-        expect(plainMessage).to.be.equal(delegatedPrivateKey);
+        expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
     });
 
     it('should encrypt and decrypt message using NIS1 schema', () => {
         const encryptedMessage = PersistentHarvestingDelegationMessage.create(
-            delegatedPrivateKey,
+            signingPrivateKey,
+            vrfPrivateKey,
             recipient_nis.publicKey,
             NetworkType.TEST_NET,
         );
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient_nis.privateKey);
-        expect(plainMessage).to.be.equal(delegatedPrivateKey);
+        expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
     });
 });
