@@ -13,9 +13,9 @@ SDK Core| v0.20.7 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
 Catbuffer | v0.0.21 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.9.6  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
-- **[BREAKING CHANGE]** Refactored `Namespace`, `Receipt` and `Metadata` endpoints. Added new search endpoint and removed old endpoints.
+- **[BREAKING CHANGE]** Refactored `Account`, `Namespace`, `Receipt` and `Metadata` endpoints. Added new search endpoints and removed old endpoints.
 - **[BREAKING CHANGE]** Updated encryption / decryption algorithm from `AES-CBC` to `AES-GCM` to meet the security standard.
-- **[BREAKING CHANGE]** Updated PersistentDelegatedHarvesting message marker. Also added VRF private key paramter in PersistentDelegatedHarvesting message & trsnaction creation.
+- **[BREAKING CHANGE]** Updated PersistentDelegatedHarvesting message marker. Also added VRF private key parameter in PersistentDelegatedHarvesting message & transaction creation.
 - Added optional parameter `TransactionHash` in `AggregateTransaction.signWith` method.
 - Updated encoding methods to support emoji in message payload.
 
