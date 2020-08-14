@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.20.7] - 14-Aug-2020
+
+**Milestone**: Gorilla.1(0.9.6.4)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.20.7 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.21 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.9.6  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- **[BREAKING CHANGE]** Refactored `Namespace`, `Receipt` and `Metadata` endpoints. Added new search endpoint and removed old endpoints.
+- **[BREAKING CHANGE]** Updated encryption / decryption algorithm from `AES-CBC` to `AES-GCM` to meet the security standard.
+- **[BREAKING CHANGE]** Updated PersistentDelegatedHarvesting message marker. Also added VRF private key paramter in PersistentDelegatedHarvesting message & trsnaction creation.
+- Added optional parameter `TransactionHash` in `AggregateTransaction.signWith` method.
+- Updated encoding methods to support emoji in message payload.
+
 ## [0.20.6] - 02-Jul-2020
 
 **Milestone**: Gorilla.1(0.9.6.2)
@@ -625,6 +640,7 @@ Client Library | v0.7.20-alpha.6  | [nem2-sdk-openapi-typescript-node-client](ht
 
 - Initial code release.
 
+[0.20.7]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.6...v0.20.7
 [0.20.6]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.5...v0.20.6
 [0.20.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.4...v0.20.5
 [0.20.4]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.3...v0.20.4

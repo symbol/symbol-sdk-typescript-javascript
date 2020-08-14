@@ -9,9 +9,9 @@ The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, an
 
 ## Important Notes
 
-### _Gorilla.1_ Network Compatibility (catapult-server@0.9.6.2)
+### _Gorilla.1_ Network Compatibility (catapult-server@0.9.6.4)
 
-Due to a network upgrade with [catapult-server@Gorilla](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.2) version, **it is recommended to use this package's 0.20.6 version and upwards to use this package with Fushicho versioned networks**.
+Due to a network upgrade with [catapult-server@Gorilla](https://github.com/nemtech/catapult-server/releases/tag/v0.9.6.4) version, **it is recommended to use this package's 0.20.7 version and upwards to use this package with Fushicho versioned networks**.
 
 The upgrade to this package's [version v0.20.6](https://github.com/nemtech/symbol-sdk-typescript-javascript/releases/tag/v0.20.6) is mandatory for **_Gorilla compatibility**.
 
