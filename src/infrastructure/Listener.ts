@@ -133,6 +133,7 @@ export class Listener implements IListener {
         if (message.uid) {
             this.uid = message.uid;
             resolve();
+            return;
         }
         const topic = message.topic as string;
         const channelName = topic.indexOf('/') >= 0 ? topic.substr(0, topic.indexOf('/')) : topic;
