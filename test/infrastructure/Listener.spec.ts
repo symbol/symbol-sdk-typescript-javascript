@@ -61,6 +61,45 @@ describe('Listener', () => {
         });
     });
 
+    describe('Invalid Channel', () => {
+        it('should throw error if channel is not supported', () => {
+            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+
+            const errorAddress = Address.createFromEncoded(errorEncodedAddress);
+
+            class WebSocketMock {
+                constructor(public readonly url: string) {}
+
+                send(payload: string): void {
+                    expect(payload).to.be.eq(`{"subscribe":"status/${errorAddress.plain()}"}`);
+                }
+            }
+
+            const statusInfoErrorDTO = {
+                topic: 'invalidChannel',
+                data: {
+                    address: errorEncodedAddress,
+                    deadline: '1010',
+                    hash: 'transaction-hash',
+                    code: 'error-message',
+                },
+            };
+            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+
+            listener.open();
+
+            const reportedStatus: TransactionStatusError[] = [];
+
+            listener.status(errorAddress).subscribe((error) => {
+                reportedStatus.push(error);
+            });
+
+            expect(() => {
+                listener.handleMessage(statusInfoErrorDTO, null);
+            }).throw();
+        });
+    });
+
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
             const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
@@ -76,12 +115,14 @@ describe('Listener', () => {
             }
 
             const statusInfoErrorDTO = {
-                address: errorEncodedAddress,
-                deadline: '1010',
-                hash: 'transaction-hash',
-                code: 'error-message',
+                topic: 'status',
+                data: {
+                    address: errorEncodedAddress,
+                    deadline: '1010',
+                    hash: 'transaction-hash',
+                    code: 'error-message',
+                },
             };
-
             const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
 
             listener.open();
@@ -97,9 +138,9 @@ describe('Listener', () => {
             expect(reportedStatus.length).to.be.equal(1);
             const transactionStatusError = reportedStatus[0];
             expect(transactionStatusError.address).to.deep.equal(errorAddress);
-            expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
-            expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
-            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
+            expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.data.hash);
+            expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.data.code);
+            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.data.deadline).toDTO());
         });
     });
 
@@ -118,10 +159,13 @@ describe('Listener', () => {
             }
 
             const statusInfoErrorDTO = {
-                address: errorEncodedAddress,
-                deadline: '1010',
-                hash: 'transaction-hash',
-                code: 'error-message',
+                topic: 'status',
+                data: {
+                    address: errorEncodedAddress,
+                    deadline: '1010',
+                    hash: 'transaction-hash',
+                    code: 'error-message',
+                },
             };
 
             const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -139,9 +183,9 @@ describe('Listener', () => {
             expect(reportedStatus.length).to.be.equal(1);
             const transactionStatusError = reportedStatus[0];
             expect(transactionStatusError.address).to.deep.equal(errorAddress);
-            expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
-            expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.code);
-            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
+            expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.data.hash);
+            expect(transactionStatusError.code).to.be.equal(statusInfoErrorDTO.data.code);
+            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.data.deadline).toDTO());
         });
     });
 
@@ -207,8 +251,20 @@ describe('Listener', () => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
-                listener.handleMessage(transferTransactionDTO, null);
-                listener.handleMessage(transferTransactionDTO, null);
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
 
                 verify(namespaceRepoMock.getAccountsNames(deepEqualParam([subscribedAddress]))).times(2);
                 expect(reportedTransactions.length).to.be.equal(2);
@@ -240,8 +296,20 @@ describe('Listener', () => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
-                listener.handleMessage(transferTransactionDTO, null);
-                listener.handleMessage(transferTransactionDTO, null);
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
 
                 expect(reportedTransactions.length).to.be.equal(0);
                 verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(0);
@@ -272,9 +340,20 @@ describe('Listener', () => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
-                listener.handleMessage(transferTransactionDTO, null);
-                listener.handleMessage(transferTransactionDTO, null);
-
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
                 expect(reportedTransactions.length).to.be.equal(2);
                 verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(2);
             });
@@ -306,8 +385,20 @@ describe('Listener', () => {
                     reportedTransactions.push(unconfirmedTransaction);
                 });
 
-                listener.handleMessage(transferTransactionDTO, null);
-                listener.handleMessage(transferTransactionDTO, null);
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
 
                 expect(reportedTransactions.length).to.be.equal(0);
                 verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(2);
@@ -343,8 +434,20 @@ describe('Listener', () => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
-                listener.handleMessage(transferTransactionDTO, null);
-                listener.handleMessage(transferTransactionDTO, null);
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
 
                 expect(reportedTransactions.length).to.be.equal(2);
                 //There is no need for the extra call, it finish when the signer is finer
@@ -376,7 +479,7 @@ describe('Listener', () => {
         describe(`${name} transaction hash subscription`, () => {
             it('Using valid hash', () => {
                 const hash = 'abc';
-                const message = { meta: { channelName: name, height: '1', hash: hash } };
+                const message = { topic: name.toString(), data: { meta: { channelName: name, height: '1', hash: hash } } };
 
                 const reportedTransactions: string[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -393,7 +496,7 @@ describe('Listener', () => {
 
             it('Using valid no hash', () => {
                 const hash = 'abc';
-                const message = { meta: { channelName: name, height: '1', hash: hash } };
+                const message = { topic: name.toString(), data: { meta: { channelName: name, height: '1', hash: hash } } };
 
                 const reportedTransactions: string[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -410,7 +513,7 @@ describe('Listener', () => {
 
             it('Using invalid hash', () => {
                 const hash = 'abc';
-                const message = { meta: { channelName: name, height: '1', hash: hash } };
+                const message = { topic: name.toString(), data: { meta: { channelName: name, height: '1', hash: hash } } };
 
                 const reportedTransactions: string[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -438,32 +541,35 @@ describe('Listener', () => {
             }
 
             const blockDTO = {
-                block: {
-                    transactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
-                    receiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
-                    stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
-                    difficulty: '1',
-                    proofGamma: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
-                    proofScalar: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
-                    proofVerificationHash: 'AC1A6E1D8DE5B17D2C6B1293F1CAD382',
-                    feeMultiplier: 1,
-                    height: '100',
-                    previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
-                    signature:
-                        '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
-                        'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
-                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    beneficiaryAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
-                    timestamp: '0',
-                    type: 32768,
-                    version: 1,
-                    network: 144,
-                    generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
-                    hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
-                },
-                meta: {
-                    generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
-                    hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
+                topic: 'block',
+                data: {
+                    block: {
+                        transactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
+                        receiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
+                        stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
+                        difficulty: '1',
+                        proofGamma: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
+                        proofScalar: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
+                        proofVerificationHash: 'AC1A6E1D8DE5B17D2C6B1293F1CAD382',
+                        feeMultiplier: 1,
+                        height: '100',
+                        previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
+                        signature:
+                            '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
+                            'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
+                        signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                        beneficiaryAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                        timestamp: '0',
+                        type: 32768,
+                        version: 1,
+                        network: 144,
+                        generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+                        hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
+                    },
+                    meta: {
+                        generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+                        hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
+                    },
                 },
             };
 
@@ -480,25 +586,25 @@ describe('Listener', () => {
             listener.handleMessage(blockDTO, null);
 
             expect(reportedStatus.length).to.be.equal(1);
-            expect(reportedStatus[0].hash).to.be.equal(blockDTO.meta.hash);
-            expect(reportedStatus[0].generationHash).to.be.equal(blockDTO.meta.generationHash);
-            expect(reportedStatus[0].signature).to.be.equal(blockDTO.block.signature);
-            expect(reportedStatus[0].signer.publicKey).to.be.equal(blockDTO.block.signerPublicKey);
-            expect(reportedStatus[0].networkType).to.be.equal(blockDTO.block.network);
-            expect(reportedStatus[0].version).to.be.equal(blockDTO.block.version);
-            expect(reportedStatus[0].type).to.be.equal(blockDTO.block.type);
-            deepEqual(reportedStatus[0].height.toString(), blockDTO.block.height);
-            deepEqual(reportedStatus[0].timestamp.toString(), blockDTO.block.timestamp);
-            deepEqual(reportedStatus[0].difficulty.toString(), blockDTO.block.difficulty);
-            expect(reportedStatus[0].feeMultiplier).to.be.equal(blockDTO.block.feeMultiplier);
-            expect(reportedStatus[0].previousBlockHash).to.be.equal(blockDTO.block.previousBlockHash);
-            expect(reportedStatus[0].blockTransactionsHash).to.be.equal(blockDTO.block.transactionsHash);
-            expect(reportedStatus[0].blockReceiptsHash).to.be.equal(blockDTO.block.receiptsHash);
-            expect(reportedStatus[0].stateHash).to.be.equal(blockDTO.block.stateHash);
-            expect(reportedStatus[0].beneficiaryAddress?.encoded()).to.be.equal(blockDTO.block.beneficiaryAddress);
-            expect(reportedStatus[0].proofGamma).to.be.equal(blockDTO.block.proofGamma);
-            expect(reportedStatus[0].proofScalar).to.be.equal(blockDTO.block.proofScalar);
-            expect(reportedStatus[0].proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);
+            expect(reportedStatus[0].hash).to.be.equal(blockDTO.data.meta.hash);
+            expect(reportedStatus[0].generationHash).to.be.equal(blockDTO.data.meta.generationHash);
+            expect(reportedStatus[0].signature).to.be.equal(blockDTO.data.block.signature);
+            expect(reportedStatus[0].signer.publicKey).to.be.equal(blockDTO.data.block.signerPublicKey);
+            expect(reportedStatus[0].networkType).to.be.equal(blockDTO.data.block.network);
+            expect(reportedStatus[0].version).to.be.equal(blockDTO.data.block.version);
+            expect(reportedStatus[0].type).to.be.equal(blockDTO.data.block.type);
+            deepEqual(reportedStatus[0].height.toString(), blockDTO.data.block.height);
+            deepEqual(reportedStatus[0].timestamp.toString(), blockDTO.data.block.timestamp);
+            deepEqual(reportedStatus[0].difficulty.toString(), blockDTO.data.block.difficulty);
+            expect(reportedStatus[0].feeMultiplier).to.be.equal(blockDTO.data.block.feeMultiplier);
+            expect(reportedStatus[0].previousBlockHash).to.be.equal(blockDTO.data.block.previousBlockHash);
+            expect(reportedStatus[0].blockTransactionsHash).to.be.equal(blockDTO.data.block.transactionsHash);
+            expect(reportedStatus[0].blockReceiptsHash).to.be.equal(blockDTO.data.block.receiptsHash);
+            expect(reportedStatus[0].stateHash).to.be.equal(blockDTO.data.block.stateHash);
+            expect(reportedStatus[0].beneficiaryAddress?.encoded()).to.be.equal(blockDTO.data.block.beneficiaryAddress);
+            expect(reportedStatus[0].proofGamma).to.be.equal(blockDTO.data.block.proofGamma);
+            expect(reportedStatus[0].proofScalar).to.be.equal(blockDTO.data.block.proofScalar);
+            expect(reportedStatus[0].proofVerificationHash).to.be.equal(blockDTO.data.block.proofVerificationHash);
         });
     });
 });

@@ -46,6 +46,7 @@ export enum ListenerChannelName {
 
 interface ListenerMessage {
     readonly channelName: ListenerChannelName;
+    readonly channelParam: string;
     readonly message: Transaction | string | NewBlock | TransactionStatusError | CosignatureSignedTransaction;
 }
 
@@ -132,36 +133,60 @@ export class Listener implements IListener {
         if (message.uid) {
             this.uid = message.uid;
             resolve();
-        } else if (message.transaction) {
-            this.messageSubject.next({
-                channelName: message.meta.channelName,
-                message: CreateTransactionFromDTO(message),
-            });
-        } else if (message.block) {
-            this.messageSubject.next({
-                channelName: ListenerChannelName.block,
-                message: this.toNewBlock(message),
-            });
-        } else if (message.code) {
-            this.messageSubject.next({
-                channelName: ListenerChannelName.status,
-                message: new TransactionStatusError(
-                    Address.createFromEncoded(message.address),
-                    message.hash,
-                    message.code,
-                    Deadline.createFromDTO(message.deadline),
-                ),
-            });
-        } else if (message.parentHash) {
-            this.messageSubject.next({
-                channelName: ListenerChannelName.cosignature,
-                message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
-            });
-        } else if (message.meta && message.meta.hash) {
-            this.messageSubject.next({
-                channelName: message.meta.channelName,
-                message: message.meta.hash,
-            });
+        }
+        const topic = message.topic as string;
+        const channelName = topic.indexOf('/') >= 0 ? topic.substr(0, topic.indexOf('/')) : topic;
+        const channelParam = topic.indexOf('/') >= 0 ? topic.split('/')[1] : '';
+        switch (channelName) {
+            case ListenerChannelName.confirmedAdded:
+            case ListenerChannelName.unconfirmedAdded:
+            case ListenerChannelName.partialAdded:
+                this.messageSubject.next({
+                    channelName: ListenerChannelName[channelName],
+                    channelParam: channelParam,
+                    message: CreateTransactionFromDTO(message.data),
+                });
+                break;
+            case ListenerChannelName.block:
+                this.messageSubject.next({
+                    channelName: ListenerChannelName[channelName],
+                    channelParam: channelParam,
+                    message: this.toNewBlock(message.data),
+                });
+                break;
+            case ListenerChannelName.status:
+                this.messageSubject.next({
+                    channelName: ListenerChannelName[channelName],
+                    channelParam: channelParam,
+                    message: new TransactionStatusError(
+                        Address.createFromEncoded(message.data.address),
+                        message.data.hash,
+                        message.data.code,
+                        Deadline.createFromDTO(message.data.deadline),
+                    ),
+                });
+                break;
+            case ListenerChannelName.cosignature:
+                this.messageSubject.next({
+                    channelName: ListenerChannelName[channelName],
+                    channelParam: channelParam,
+                    message: new CosignatureSignedTransaction(
+                        message.data.parentHash,
+                        message.data.signature,
+                        message.data.signerPublicKey,
+                    ),
+                });
+                break;
+            case ListenerChannelName.partialRemoved:
+            case ListenerChannelName.unconfirmedRemoved:
+                this.messageSubject.next({
+                    channelName: ListenerChannelName[channelName],
+                    channelParam: channelParam,
+                    message: message.data.meta.hash,
+                });
+                break;
+            default:
+                throw new Error(`Channel: ${channelName} is not supported.`);
         }
     }
 
