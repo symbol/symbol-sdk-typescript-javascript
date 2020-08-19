@@ -15,7 +15,7 @@
  */
 
 import { Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { filter, flatMap, map, share } from 'rxjs/operators';
+import { filter, flatMap, map, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
@@ -284,9 +284,16 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((listenerMessage) => listenerMessage.channelName === channel),
             filter((listenerMessage) => listenerMessage.message instanceof Transaction),
-            map((listenerMessage) => listenerMessage.message as T),
-            filter((transaction) => this.filterHash(transaction, transactionHash)),
-            this.filterByNotifyAccount(address),
+            switchMap((_) => {
+                const transactionObservable = of(_.message as T).pipe(
+                    filter((transaction) => this.filterHash(transaction, transactionHash)),
+                );
+                if (_.channelParam.toUpperCase() === address.plain()) {
+                    return transactionObservable;
+                } else {
+                    return transactionObservable.pipe(this.filterByNotifyAccount(address));
+                }
+            }),
         );
     }
 
