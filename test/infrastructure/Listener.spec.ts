@@ -242,7 +242,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { topic: `name`, height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
