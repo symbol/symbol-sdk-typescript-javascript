@@ -115,7 +115,7 @@ describe('Listener', () => {
             }
 
             const statusInfoErrorDTO = {
-                topic: 'status',
+                topic: `status/${errorAddress.plain()}`,
                 data: {
                     address: errorEncodedAddress,
                     deadline: '1010',
@@ -159,7 +159,7 @@ describe('Listener', () => {
             }
 
             const statusInfoErrorDTO = {
-                topic: 'status',
+                topic: `status/${errorAddress.plain()}`,
                 data: {
                     address: errorEncodedAddress,
                     deadline: '1010',

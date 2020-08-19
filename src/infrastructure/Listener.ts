@@ -351,9 +351,9 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.status),
             filter((_) => _.message instanceof TransactionStatusError),
+            filter((_) => _.channelParam.toUpperCase() === address.plain()),
             map((_) => _.message as TransactionStatusError),
             filter((_) => !transactionHash || _.hash.toUpperCase() == transactionHash.toUpperCase()),
-            filter((_) => address.equals(_.address)),
         );
     }
 
@@ -417,6 +417,7 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
             filter((_) => _.message instanceof CosignatureSignedTransaction),
+            filter((_) => _.channelParam.toUpperCase() === address.plain()),
             map((_) => _.message as CosignatureSignedTransaction),
         );
     }
