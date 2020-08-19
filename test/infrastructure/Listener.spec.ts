@@ -242,7 +242,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { channelName: name, height: '1', hash: hash };
+                transferTransactionDTO.meta = { topic: `name`, height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -287,7 +287,7 @@ describe('Listener', () => {
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
                 const hash2 = 'abc2';
-                transferTransactionDTO.meta = { channelName: name, height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -331,7 +331,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { channelName: name, height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -375,7 +375,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { channelName: name, height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
 
@@ -424,7 +424,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { channelName: name, height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
 
@@ -481,7 +481,7 @@ describe('Listener', () => {
                 const hash = 'abc';
                 const message = {
                     topic: `${name.toString()}/${subscribedAddress.plain()}`,
-                    data: { meta: { channelName: name, height: '1', hash: hash } },
+                    data: { meta: { height: '1', hash: hash } },
                 };
 
                 const reportedTransactions: string[] = [];
@@ -501,7 +501,7 @@ describe('Listener', () => {
                 const hash = 'abc';
                 const message = {
                     topic: `${name.toString()}/${subscribedAddress.plain()}`,
-                    data: { meta: { channelName: name, height: '1', hash: hash } },
+                    data: { meta: { height: '1', hash: hash } },
                 };
 
                 const reportedTransactions: string[] = [];
@@ -521,7 +521,7 @@ describe('Listener', () => {
                 const hash = 'abc';
                 const message = {
                     topic: `${name.toString()}/${subscribedAddress.plain()}`,
-                    data: { meta: { channelName: name, height: '1', hash: hash } },
+                    data: { meta: { height: '1', hash: hash } },
                 };
 
                 const reportedTransactions: string[] = [];
