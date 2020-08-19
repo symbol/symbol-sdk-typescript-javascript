@@ -479,7 +479,10 @@ describe('Listener', () => {
         describe(`${name} transaction hash subscription`, () => {
             it('Using valid hash', () => {
                 const hash = 'abc';
-                const message = { topic: name.toString(), data: { meta: { channelName: name, height: '1', hash: hash } } };
+                const message = {
+                    topic: `${name.toString()}/${subscribedAddress.plain()}`,
+                    data: { meta: { channelName: name, height: '1', hash: hash } },
+                };
 
                 const reportedTransactions: string[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -496,7 +499,10 @@ describe('Listener', () => {
 
             it('Using valid no hash', () => {
                 const hash = 'abc';
-                const message = { topic: name.toString(), data: { meta: { channelName: name, height: '1', hash: hash } } };
+                const message = {
+                    topic: `${name.toString()}/${subscribedAddress.plain()}`,
+                    data: { meta: { channelName: name, height: '1', hash: hash } },
+                };
 
                 const reportedTransactions: string[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -513,7 +519,10 @@ describe('Listener', () => {
 
             it('Using invalid hash', () => {
                 const hash = 'abc';
-                const message = { topic: name.toString(), data: { meta: { channelName: name, height: '1', hash: hash } } };
+                const message = {
+                    topic: `${name.toString()}/${subscribedAddress.plain()}`,
+                    data: { meta: { channelName: name, height: '1', hash: hash } },
+                };
 
                 const reportedTransactions: string[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);

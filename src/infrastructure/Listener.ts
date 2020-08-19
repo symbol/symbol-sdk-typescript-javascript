@@ -339,6 +339,7 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === channel),
             filter((_) => typeof _.message === 'string'),
+            filter((_) => _.channelParam.toUpperCase() === address.plain()),
             map((_) => _.message as string),
             filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
         );
