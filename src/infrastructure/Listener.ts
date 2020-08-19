@@ -160,7 +160,7 @@ export class Listener implements IListener {
                     channelName: ListenerChannelName[channelName],
                     channelParam: channelParam,
                     message: new TransactionStatusError(
-                        Address.createFromEncoded(message.data.address),
+                        Address.createFromRawAddress(channelParam),
                         message.data.hash,
                         message.data.code,
                         Deadline.createFromDTO(message.data.deadline),
