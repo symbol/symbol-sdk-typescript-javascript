@@ -51,7 +51,7 @@ describe('TransactionService - AggregateBonded', () => {
     let NetworkCurrencyLocalId: MosaicId;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             account2 = helper.account2;
             multisigAccount = helper.multisigAccount;
@@ -67,12 +67,9 @@ describe('TransactionService - AggregateBonded', () => {
             );
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     const createSignedAggregatedBondTransaction = (aggregatedTo: Account, signer: Account, recipient: Address): SignedTransaction => {

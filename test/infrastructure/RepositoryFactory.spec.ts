@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { of as observableOf } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { of, of as observableOf } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { instance, mock, when } from 'ts-mockito';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
@@ -34,6 +34,7 @@ import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
 import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -226,5 +227,34 @@ describe('RepositoryFactory', () => {
         expect(factory.createRestrictionMosaicRepository() instanceof RestrictionMosaicHttp).to.be.true;
         expect(factory.createTransactionRepository() instanceof TransactionHttp).to.be.true;
         expect(factory.createTransactionStatusRepository() instanceof TransactionStatusHttp).to.be.true;
+    });
+
+    it('Fail remote call ', async () => {
+        const factory = new RepositoryFactoryHttp('http://localhost:2000');
+        try {
+            await factory.getGenerationHash().toPromise();
+            expect(true).eq(false);
+        } catch (e) {
+            expect(e.message).contains('request to http://localhost:2000');
+        }
+    });
+
+    it('Fail remote call invalid transaction', async () => {
+        const factory = new RepositoryFactoryHttp('http://localhost:3000');
+        try {
+            await factory.createTransactionRepository().getTransaction('abc', TransactionGroup.Confirmed).toPromise();
+            expect(true).eq(false);
+        } catch (e) {
+            if (
+                await factory
+                    .getGenerationHash()
+                    .pipe(catchError(() => of(false)))
+                    .toPromise()
+            ) {
+                expect(e.message).contains('"statusCode":500,"statusMessage":"Internal Server Error"');
+            } else {
+                expect(e.message).contains('request to http://localhost:3000');
+            }
+        }
     });
 });

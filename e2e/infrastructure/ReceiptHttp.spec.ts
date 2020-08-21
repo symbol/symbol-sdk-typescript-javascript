@@ -27,13 +27,17 @@ describe('ReceiptHttp', () => {
     let receiptRepository: ReceiptRepository;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: false }).then(() => {
             receiptRepository = helper.repositoryFactory.createReceiptRepository();
         });
     });
 
+    after(() => {
+        return helper.close();
+    });
+
     describe('searchReceipt with streamer and recipient type type', () => {
-        async function searchByRecipientType(receiptTypes: ReceiptType[], empty: boolean) {
+        async function searchByRecipientType(receiptTypes: ReceiptType[], empty: boolean): Promise<void> {
             const streamer = ReceiptPaginationStreamer.transactionStatements(receiptRepository);
 
             const infos = await streamer

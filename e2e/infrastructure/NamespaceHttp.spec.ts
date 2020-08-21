@@ -38,7 +38,7 @@ describe('NamespaceHttp', () => {
     const helper = new IntegrationTestHelper();
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             generationHash = helper.generationHash;
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
@@ -46,12 +46,8 @@ describe('NamespaceHttp', () => {
         });
     });
 
-    before(() => {
-        return helper.listener.open();
-    });
-
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     describe('NamespaceRegistrationTransaction', () => {

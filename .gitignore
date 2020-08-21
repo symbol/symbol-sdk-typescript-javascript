@@ -90,3 +90,4 @@ dist/
 ts-docs
 docs/
 .vscode/launch.json
+/target/

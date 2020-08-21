@@ -30,7 +30,7 @@ describe('MultisigAccounts', () => {
     let networkType: NetworkType;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             multisigAccount = helper.multisigAccount;
             cosignAccount1 = helper.cosignAccount1;
             cosignAccount2 = helper.cosignAccount2;
@@ -39,12 +39,9 @@ describe('MultisigAccounts', () => {
             networkType = helper.networkType;
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     describe('Setup test multisig account', () => {
