@@ -16,7 +16,7 @@
 
 import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
 import { TransactionStatement } from '../model/receipt/TransactionStatement';
-import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from '../model/receipt/ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../model/receipt/ResolutionStatement';
 import { Observable } from 'rxjs';
 import { Page } from './Page';
 import { TransactionStatementSearchCriteria } from './searchCriteria/TransactionStatementSearchCriteria';

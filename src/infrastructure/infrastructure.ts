@@ -23,7 +23,6 @@ export * from './MetadataHttp';
 export * from './NamespaceHttp';
 export * from './TransactionHttp';
 export * from './Listener';
-export * from './QueryParams';
 export * from './NetworkHttp';
 export * from './NodeHttp';
 export * from './RestrictionAccountHttp';

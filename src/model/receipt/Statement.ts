@@ -18,7 +18,7 @@ import { Address } from '../account/Address';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
-import { AddressResolutionStatement, MosaicIdResolutionStatement, ResolutionStatement } from './ResolutionStatement';
+import { AddressResolutionStatement, MosaicIdResolutionStatement } from './ResolutionStatement';
 import { ResolutionType } from './ResolutionType';
 import { TransactionStatement } from './TransactionStatement';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
@@ -139,7 +139,7 @@ export class Statement {
         const list: (AddressResolutionStatement | MosaicIdResolutionStatement)[] =
             resolutionType === ResolutionType.Address ? this.addressResolutionStatements : this.mosaicResolutionStatements;
 
-        const filter = (resolution: AddressResolutionStatement | MosaicIdResolutionStatement) =>
+        const filter = (resolution: AddressResolutionStatement | MosaicIdResolutionStatement): boolean =>
             resolution.height.toString() === height && (resolution.unresolved as NamespaceId).equals(unresolved);
 
         const resolutionStatement = list.find(filter);
