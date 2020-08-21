@@ -11,9 +11,7 @@ before_script:
   - if [ "$TRAVIS_NODE_VERSION" = "10" ] || [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi
 script:
   - npm run test:cov
-  - npm install --global typedoc typescript
-  - CURRENT_VERSION=$(npm run version --silent)
-  - typedoc --out "ts-docs/$CURRENT_VERSION" src
+  - npm run doc
   - touch ./ts-docs/.nojekyll
   - if [ "$TRAVIS_NODE_VERSION" = "10" ]; then npm run coveralls-report; fi
 deploy:

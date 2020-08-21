@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { decode } from 'utf8';
-
 /**
  * An abstract message class that serves as the base class of all message types.
  */

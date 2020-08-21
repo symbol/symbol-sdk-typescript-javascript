@@ -16,7 +16,8 @@
         "prettier": "prettier --write ./src ./test ./e2e",
         "lint": "eslint --cache src/ test/ e2e/ --ext .ts",
         "lint:fix": "eslint src/ test/ e2e/ --ext .ts --fix",
-        "style:fix": "npm run prettier && npm run lint:fix"
+        "style:fix": "npm run prettier && npm run lint:fix",
+        "doc": "typedoc --out \"ts-docs/$(npm run version --silent)\" src"
     },
     "pre-commit": [
         "lint"
@@ -78,6 +79,7 @@
         "ts-mockito": "^2.4.0",
         "ts-node": "^8.6.2",
         "typescript": "^3.7.5",
+        "typedoc": "^0.18.0",
         "typescript-require": "^0.2.10"
     },
     "dependencies": {

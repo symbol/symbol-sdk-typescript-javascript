@@ -19,7 +19,6 @@ import { catchError, flatMap, map } from 'rxjs/operators';
 import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
 import { NetworkType } from '../model/network/NetworkType';
 import { Page } from './Page';
-import { QueryParams } from './QueryParams';
 import { RepositoryCallError } from './RepositoryCallError';
 import fetch from 'node-fetch';
 
@@ -91,14 +90,6 @@ export abstract class Http {
         }
     }
 
-    queryParams(queryParams?: QueryParams): any {
-        return {
-            pageSize: queryParams ? queryParams.pageSize : undefined,
-            id: queryParams ? queryParams.id : undefined,
-            ordering: queryParams ? queryParams.order : undefined,
-        };
-    }
-
     public config(): Configuration {
         const fetchApi = this.fetchApi || (typeof window !== 'undefined' && window.fetch.bind(window)) || fetch;
         return new Configuration({ basePath: this.url, fetchApi: fetchApi, queryParamsStringify: querystring });
@@ -110,8 +101,20 @@ export abstract class Http {
      * @param mapper the mapper from dto to the model object.
      */
     protected call<D, M>(remoteCall: Promise<D>, mapper: (value: D) => M): Observable<M> {
-        return observableFrom(remoteCall).pipe(
-            map((body) => mapper(body)),
+        return observableFrom(
+            remoteCall.catch((e) => {
+                if (e instanceof Error) {
+                    return Promise.resolve(e);
+                }
+                return Promise.reject(e);
+            }),
+        ).pipe(
+            map((body) => {
+                if (body instanceof Error) {
+                    throw body;
+                }
+                return mapper(body);
+            }),
             catchError(Http.errorHandling),
         );
     }
