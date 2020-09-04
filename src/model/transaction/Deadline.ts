@@ -53,7 +53,6 @@ export class Deadline {
     }
 
     /**
-     * @internal
      * @param value
      * @returns {Deadline}
      */
