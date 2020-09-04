@@ -27,16 +27,8 @@ export class Page<T> {
      * @param data the page data
      * @param pageNumber the current page number starting from 1.
      * @param pageSize the page size.
-     * @param totalEntries the total entries.
-     * @param totalPages the total pages for the given criteria.
      */
-    constructor(
-        public readonly data: T[],
-        public readonly pageNumber: number,
-        public readonly pageSize: number,
-        public readonly totalEntries: number,
-        public readonly totalPages: number,
-    ) {
-        this.isLastPage = this.pageNumber >= this.totalPages;
+    constructor(public readonly data: T[], public readonly pageNumber: number, public readonly pageSize: number) {
+        this.isLastPage = !this.data.length || this.pageSize > this.data.length;
     }
 }

@@ -49,8 +49,6 @@ describe('MetadataHttp', () => {
     const pagination = {} as Pagination;
     pagination.pageNumber = 1;
     pagination.pageSize = 1;
-    pagination.totalEntries = 1;
-    pagination.totalPages = 1;
 
     const metadataDTOMosaic = {} as MetadataInfoDTO;
     metadataDTOMosaic.id = 'aaa';

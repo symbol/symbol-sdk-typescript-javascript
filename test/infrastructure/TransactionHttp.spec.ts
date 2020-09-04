@@ -94,8 +94,6 @@ describe('TransactionHttp', () => {
         const paginationDto = {} as Pagination;
         paginationDto.pageNumber = 1;
         paginationDto.pageSize = 1;
-        paginationDto.totalEntries = 1;
-        paginationDto.totalPages = 1;
 
         const transactionInfoDto = {} as TransactionInfoDTO;
         const metaDto = {} as TransactionMetaDTO;
@@ -177,8 +175,6 @@ describe('TransactionHttp', () => {
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
-        expect(transactions.totalEntries).to.be.equal(1);
-        expect(transactions.totalPages).to.be.equal(1);
 
         transactions = await transactionHttp.search({ group: TransactionGroup.Unconfirmed, address: account.address }).toPromise();
 
@@ -192,8 +188,6 @@ describe('TransactionHttp', () => {
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
-        expect(transactions.totalEntries).to.be.equal(1);
-        expect(transactions.totalPages).to.be.equal(1);
 
         transactions = await transactionHttp.search({ group: TransactionGroup.Partial, address: account.address }).toPromise();
 
@@ -207,8 +201,6 @@ describe('TransactionHttp', () => {
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
-        expect(transactions.totalEntries).to.be.equal(1);
-        expect(transactions.totalPages).to.be.equal(1);
     });
 
     it('Test getTransaction method', async () => {
