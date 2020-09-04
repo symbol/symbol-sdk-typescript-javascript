@@ -31,6 +31,7 @@ import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
+import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 
 export enum ListenerChannelName {
     block = 'block',
@@ -42,12 +43,13 @@ export enum ListenerChannelName {
     cosignature = 'cosignature',
     modifyMultisigAccount = 'modifyMultisigAccount',
     status = 'status',
+    finalizedBlock = 'finalizedBlock',
 }
 
 interface ListenerMessage {
     readonly channelName: ListenerChannelName;
     readonly channelParam: string;
-    readonly message: Transaction | string | NewBlock | TransactionStatusError | CosignatureSignedTransaction;
+    readonly message: Transaction | string | NewBlock | TransactionStatusError | CosignatureSignedTransaction | FinalizedBlock;
 }
 
 /**
@@ -186,6 +188,17 @@ export class Listener implements IListener {
                     message: message.data.meta.hash,
                 });
                 break;
+            case ListenerChannelName.finalizedBlock:
+                this.messageSubject.next({
+                    channelName: ListenerChannelName[channelName],
+                    channelParam: channelParam,
+                    message: new FinalizedBlock(
+                        UInt64.fromNumericString(message.data.height),
+                        message.data.hash,
+                        UInt64.fromNumericString(message.data.finalizationPoint),
+                    ),
+                });
+                break;
             default:
                 throw new Error(`Channel: ${channelName} is not supported.`);
         }
@@ -226,6 +239,23 @@ export class Listener implements IListener {
             filter((_) => _.channelName === ListenerChannelName.block),
             filter((_) => _.message instanceof NewBlock),
             map((_) => _.message as NewBlock),
+        );
+    }
+
+    /**
+     * Returns an observable stream of finalized block info.
+     * Each time a new Block is finalized into the blockchain,
+     * it emits a new FinalizedBlock in the event stream.
+     *
+     * @return an observable stream of BlockInfo
+     */
+    public finalizedBlock(): Observable<FinalizedBlock> {
+        this.subscribeTo('finalizedBlock');
+        return this.messageSubject.asObservable().pipe(
+            share(),
+            filter((_) => _.channelName === ListenerChannelName.finalizedBlock),
+            filter((_) => _.message instanceof FinalizedBlock),
+            map((_) => _.message as FinalizedBlock),
         );
     }
 

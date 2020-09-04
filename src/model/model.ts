@@ -42,6 +42,7 @@ export * from './blockchain/MerklePathItem';
 export * from './blockchain/MerkleProofInfo';
 export * from './blockchain/NewBlock';
 export * from './blockchain/MerklePosition';
+export * from './blockchain/FinalizedBlock';
 
 // Diagnostic
 export * from './node/ServerInfo';
