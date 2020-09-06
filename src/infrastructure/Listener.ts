@@ -100,7 +100,7 @@ export class Listener implements IListener {
      */
     public open(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this.webSocket === undefined || this.webSocket.readyState === WebSocket.CLOSED) {
+            if (this.webSocket === undefined || this.webSocket.readyState === this.webSocket.CLOSED) {
                 if (this.websocketInjected) {
                     this.webSocket = new this.websocketInjected(this.url);
                 } else {
@@ -197,7 +197,7 @@ export class Listener implements IListener {
      */
     public isOpen(): boolean {
         if (this.webSocket) {
-            return this.webSocket.readyState === WebSocket.OPEN;
+            return this.webSocket.readyState === this.webSocket.OPEN;
         }
         return false;
     }
@@ -207,7 +207,10 @@ export class Listener implements IListener {
      * @returns void
      */
     public close(): void {
-        if (this.webSocket && (this.webSocket.readyState === WebSocket.OPEN || this.webSocket.readyState === WebSocket.CONNECTING)) {
+        if (
+            this.webSocket &&
+            (this.webSocket.readyState === this.webSocket.OPEN || this.webSocket.readyState === this.webSocket.CONNECTING)
+        ) {
             this.webSocket.close();
         }
     }
