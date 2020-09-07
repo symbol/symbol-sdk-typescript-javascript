@@ -30,22 +30,20 @@ describe('Page', () => {
             [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
             1,
             1,
-            1,
-            1,
         );
         expect(page.data.length).to.be.equal(1);
         expect(page.pageNumber).to.be.equal(1);
         expect(page.pageSize).to.be.equal(1);
-        expect(page.totalEntries).to.be.equal(1);
-        expect(page.isLastPage).to.be.true;
+        expect(page.isLastPage).to.be.false;
 
         page = new Page<Transaction>(
             [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
-            1,
-            1,
-            1,
-            3,
+            2,
+            2,
         );
-        expect(page.isLastPage).to.be.false;
+        expect(page.isLastPage).to.be.true;
+
+        page = new Page<Transaction>([], 2, 2);
+        expect(page.isLastPage).to.be.true;
     });
 });

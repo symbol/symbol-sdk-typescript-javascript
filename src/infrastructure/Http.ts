@@ -139,8 +139,6 @@ export abstract class Http {
             data.map((d) => mapper(d, networkType)),
             pagination?.pageNumber,
             pagination?.pageSize,
-            pagination?.totalEntries,
-            pagination?.totalPages,
         );
     }
 }

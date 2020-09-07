@@ -99,8 +99,6 @@ describe('MosaicHttp', () => {
         const pagination = {} as Pagination;
         pagination.pageNumber = 1;
         pagination.pageSize = 1;
-        pagination.totalEntries = 1;
-        pagination.totalPages = 1;
 
         const body = {} as MosaicPage;
         body.data = [mosaicInfoDto];

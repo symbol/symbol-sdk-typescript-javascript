@@ -80,7 +80,7 @@ describe('MetadataTransactionService', () => {
                     metadataType: MetadataType.Account,
                 }),
             ),
-        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Account)], 1, 20, 1, 1)));
+        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Account)], 1, 20)));
 
         when(
             mockMetadataRepository.search(
@@ -91,7 +91,7 @@ describe('MetadataTransactionService', () => {
                     metadataType: MetadataType.Mosaic,
                 }),
             ),
-        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Mosaic)], 1, 20, 1, 1)));
+        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Mosaic)], 1, 20)));
 
         when(
             mockMetadataRepository.search(
@@ -102,7 +102,7 @@ describe('MetadataTransactionService', () => {
                     metadataType: MetadataType.Namespace,
                 }),
             ),
-        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Namespace)], 1, 20, 1, 1)));
+        ).thenReturn(observableOf(new Page<Metadata>([mockMetadata(MetadataType.Namespace)], 1, 20)));
 
         const metadataRepository = instance(mockMetadataRepository);
         metadataTransactionService = new MetadataTransactionService(metadataRepository);

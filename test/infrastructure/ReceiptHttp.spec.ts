@@ -77,8 +77,6 @@ describe('ReceiptHttp', () => {
         const pagination = {} as Pagination;
         pagination.pageNumber = 1;
         pagination.pageSize = 20;
-        pagination.totalEntries = 1;
-        pagination.totalPages = 1;
         resolutionPage.pagination = pagination;
 
         when(receiptRoutesApi.searchMosaicResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReturn(
@@ -118,8 +116,6 @@ describe('ReceiptHttp', () => {
         const pagination = {} as Pagination;
         pagination.pageNumber = 1;
         pagination.pageSize = 20;
-        pagination.totalEntries = 1;
-        pagination.totalPages = 1;
         resolutionPage.pagination = pagination;
 
         when(receiptRoutesApi.searchAddressResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReturn(
@@ -161,8 +157,6 @@ describe('ReceiptHttp', () => {
         const pagination = {} as Pagination;
         pagination.pageNumber = 1;
         pagination.pageSize = 20;
-        pagination.totalEntries = 1;
-        pagination.totalPages = 1;
         resolutionPage.pagination = pagination;
 
         when(

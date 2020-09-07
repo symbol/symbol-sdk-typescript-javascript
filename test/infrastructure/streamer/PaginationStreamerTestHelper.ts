@@ -68,6 +68,6 @@ export class PaginationStreamerTestHelper<E, C extends SearchCriteria> {
             partitions.push(infos.slice(i, i + pageSize));
         }
         let pageNumber = 0;
-        return partitions.map((pageData) => of(new Page<T>(pageData, ++pageNumber, pageSize, infos.length, partitions.length)));
+        return partitions.map((pageData) => of(new Page<T>(pageData, ++pageNumber, pageSize)));
     }
 }

@@ -133,10 +133,10 @@ describe('AccountService', () => {
                     pageNumber: 1,
                 }),
             ),
-        ).thenReturn(observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20, 3, 1)));
+        ).thenReturn(observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20)));
 
         when(mockNamespaceRepository.search(deepEqual({ ownerAddress: account.address, pageNumber: 1 }))).thenReturn(
-            observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20, 3, 1)),
+            observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20)),
         );
 
         when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyLocal.NAMESPACE_ID]))).thenReturn(
