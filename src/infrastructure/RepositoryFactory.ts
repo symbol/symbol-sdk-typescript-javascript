@@ -31,6 +31,8 @@ import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
+import { HashLockRepository } from './HashLockRepository';
+import { SecretLockRepository } from './SecretLockRepository';
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing
@@ -119,6 +121,16 @@ export interface RepositoryFactory {
      * @returns a newly created {@link RestrictionMosaicRepository}
      */
     createRestrictionMosaicRepository(): RestrictionMosaicRepository;
+
+    /**
+     * @returns a newly created {@link HashLockRepository}
+     */
+    createHashLockRepository(): HashLockRepository;
+
+    /**
+     * @returns a newly created {@link SecretLockRepository}
+     */
+    createSecretLockRepository(): SecretLockRepository;
 
     /**
      * @returns a newly created {@link IListener}

@@ -17,7 +17,7 @@ import { expect } from 'chai';
 import { Crypto } from '../../../src/core/crypto';
 import { sha3_256 } from 'js-sha3';
 import { LockHashUtils } from '../../../src/core/utils/LockHashUtils';
-import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { Convert } from '../../../src/core/format/Convert';
 import * as ripemd160 from 'ripemd160';
 import { sha256 } from 'js-sha256';

@@ -36,7 +36,7 @@ import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { LockHashAlgorithmLengthValidator, LockHashAlgorithm } from './LockHashAlgorithm';
+import { LockHashAlgorithmLengthValidator, LockHashAlgorithm } from '../lock/LockHashAlgorithm';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';

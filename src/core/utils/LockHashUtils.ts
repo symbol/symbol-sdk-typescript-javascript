@@ -15,7 +15,7 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import { LockHashAlgorithm } from '../../model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm } from '../../model/lock/LockHashAlgorithm';
 import * as ripemd160 from 'ripemd160';
 import { sha256 } from 'js-sha256';
 /**
