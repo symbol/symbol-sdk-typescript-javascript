@@ -35,6 +35,7 @@ import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 
 describe('RestrictionHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -203,66 +204,15 @@ describe('RestrictionHttp', () => {
         });
     });
 
-    describe('getAccountRestrictionsFromAccounts', () => {
-        it('should call getAccountRestrictionsFromAccounts successfully', async () => {
-            const accountRestrictions = await restrictionAccountRepository.getAccountRestrictionsFromAccounts([accountAddress]).toPromise();
-            deepEqual(accountRestrictions[0]!.address, accountAddress);
-        });
-    });
-
-    describe('getMosaicAddressRestriction', () => {
-        it('should call getMosaicAddressRestriction successfully', async () => {
-            const mosaicRestriction = await restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, account3.address).toPromise();
-            deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
-            deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
-            deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
-            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
-        });
-    });
-
-    describe('getMosaicAddressRestrictions', () => {
-        it('should call getMosaicAddressRestrictions successfully', async () => {
-            const mosaicRestriction = await restrictionMosaicRepository
-                .getMosaicAddressRestrictions(mosaicId, [account3.address])
+    describe('search', () => {
+        it('should call search successfully', async () => {
+            const mosaicRestrictionPage = await restrictionMosaicRepository
+                .searchMosaicRestrictions({ mosaicId, targetAddress: account3.address })
                 .toPromise();
-            deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
-            deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-            deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
-            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
-        });
-    });
-
-    describe('getMosaicGlobalRestriction', () => {
-        it('should call getMosaicGlobalRestriction successfully', async () => {
-            const mosaicRestriction = await restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).toPromise();
-            deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
-            deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
-            deepEqual(
-                mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                new MosaicId(UInt64.fromUint(0).toHex()).toHex(),
-            );
-            deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType, MosaicRestrictionType.GE);
-            deepEqual(
-                mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                UInt64.fromUint(0).toString(),
-            );
-        });
-    });
-
-    describe('getMosaicGlobalRestrictions', () => {
-        it('should call getMosaicGlobalRestrictions successfully', async () => {
-            const mosaicRestriction = await restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).toPromise();
-            deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
-            deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
-            deepEqual(
-                mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
-                new MosaicId(UInt64.fromUint(0).toHex()).toHex(),
-            );
-            deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType, MosaicRestrictionType.GE);
-            deepEqual(
-                mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
-                UInt64.fromUint(0).toString(),
-            );
+            deepEqual(mosaicRestrictionPage.data[0].mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(mosaicRestrictionPage.data[0].entryType, MosaicRestrictionEntryType.ADDRESS);
+            deepEqual((mosaicRestrictionPage.data[0] as MosaicAddressRestriction).targetAddress.plain(), account3.address.plain());
+            deepEqual(mosaicRestrictionPage.data[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
         });
     });
 

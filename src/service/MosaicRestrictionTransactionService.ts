@@ -31,6 +31,8 @@ import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
 import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
 import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
+import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
+import { Page } from '../infrastructure/Page';
 
 /**
  * MosaicRestrictionTransactionService service
@@ -156,9 +158,9 @@ export class MosaicRestrictionTransactionService {
      * @return {Observable<string | undefined>}
      */
     private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<string | undefined> {
-        return this.restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, targetAddress).pipe(
+        return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId, targetAddress }).pipe(
             map((mosaicRestriction) => {
-                return mosaicRestriction.restrictions.get(restrictionKey.toString());
+                return (mosaicRestriction.data[0] as MosaicAddressRestriction).restrictions.get(restrictionKey.toString());
             }),
             catchError((err: Error) => {
                 const error = JSON.parse(err.message);
@@ -177,9 +179,14 @@ export class MosaicRestrictionTransactionService {
      * @return {Observable<MosaicGlobalRestrictionItem | undefined>}
      */
     private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
-        return this.restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).pipe(
-            map((mosaicRestriction: MosaicGlobalRestriction) => {
-                return mosaicRestriction.restrictions.get(restrictionKey.toString());
+        return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId }).pipe(
+            map((mosaicRestrictionPage: Page<MosaicGlobalRestriction>) => {
+                const globalRestriction = mosaicRestrictionPage.data.find((r) => r instanceof MosaicGlobalRestriction);
+                console.log(globalRestriction);
+                if (globalRestriction !== undefined) {
+                    return globalRestriction.restrictions.get(restrictionKey.toString());
+                }
+                throw new Error('No global restriction found for mosaic' + mosaicId.toHex());
             }),
             catchError((err: Error) => {
                 const error = JSON.parse(err.message);

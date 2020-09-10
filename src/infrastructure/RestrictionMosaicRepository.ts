@@ -15,43 +15,19 @@
  */
 
 import { Observable } from 'rxjs/internal/Observable';
-import { Address } from '../model/account/Address';
-import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
+import { RestrictionMosaicSearchCriteria } from './searchCriteria/RestrictionMosaicSearchCriteria';
+import { Page } from './Page';
 
 export interface RestrictionMosaicRepository {
     /**
-     * Get mosaic address restriction.
-     * @summary Get mosaic address restrictions for a given mosaic and account identifier.
-     * @param mosaicId Mosaic identifier.
-     * @param address address
-     * @returns Observable<MosaicAddressRestriction>
+     * Returns a mosaic restrictions page based on the criteria.
+     *
+     * @param criteria the criteria
+     * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
      */
-    getMosaicAddressRestriction(mosaicId: MosaicId, address: Address): Observable<MosaicAddressRestriction>;
-
-    /**
-     * Get mosaic address restrictions.
-     * @summary Get mosaic address restrictions for a given mosaic and account identifiers array
-     * @param mosaicId Mosaic identifier.
-     * @param addresses list of addresses
-     * @returns Observable<MosaicAddressRestriction[]>
-     */
-    getMosaicAddressRestrictions(mosaicId: MosaicId, address: Address[]): Observable<MosaicAddressRestriction[]>;
-
-    /**
-     * Get mosaic global restriction.
-     * @summary Get mosaic global restrictions for a given mosaic identifier.
-     * @param mosaicId Mosaic identifier.
-     * @returns Observable<MosaicGlobalRestriction>
-     */
-    getMosaicGlobalRestriction(mosaicId: MosaicId): Observable<MosaicGlobalRestriction>;
-
-    /**
-     * Get mosaic global restrictions.
-     * @summary Get mosaic global restrictions for a given list of mosaics.
-     * @param mosaicIds List of mosaic identifier.
-     * @returns Observable<MosaicGlobalRestriction[]>
-     */
-    getMosaicGlobalRestrictions(mosaicIds: MosaicId[]): Observable<MosaicGlobalRestriction[]>;
+    searchMosaicRestrictions(
+        criteria: RestrictionMosaicSearchCriteria,
+    ): Observable<Page<MosaicAddressRestriction | MosaicGlobalRestriction>>;
 }
