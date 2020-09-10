@@ -41,7 +41,7 @@ import { AccountRestrictionTransaction } from '../../../src/model/transaction/Ac
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';

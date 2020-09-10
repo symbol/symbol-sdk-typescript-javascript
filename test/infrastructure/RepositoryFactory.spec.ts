@@ -38,6 +38,8 @@ import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
+import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
+import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -59,6 +61,8 @@ describe('RepositoryFactory', () => {
         expect(repositoryFactory.createRestrictionAccountRepository()).to.be.not.null;
         expect(repositoryFactory.createRestrictionMosaicRepository()).to.be.not.null;
         expect(repositoryFactory.createTransactionRepository()).to.be.not.null;
+        expect(repositoryFactory.createHashLockRepository()).to.be.not.null;
+        expect(repositoryFactory.createSecretLockRepository()).to.be.not.null;
     });
 
     it('Should get GenerationHash from cache', (done) => {
@@ -226,5 +230,7 @@ describe('RepositoryFactory', () => {
         expect(factory.createRestrictionMosaicRepository() instanceof RestrictionMosaicHttp).to.be.true;
         expect(factory.createTransactionRepository() instanceof TransactionHttp).to.be.true;
         expect(factory.createTransactionStatusRepository() instanceof TransactionStatusHttp).to.be.true;
+        expect(factory.createHashLockRepository() instanceof HashLockHttp).to.be.true;
+        expect(factory.createSecretLockRepository() instanceof SecretLockHttp).to.be.true;
     });
 });

@@ -39,7 +39,7 @@ import { AggregateTransaction } from '../../src/model/transaction/AggregateTrans
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { LockHashAlgorithm } from '../../src/model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';

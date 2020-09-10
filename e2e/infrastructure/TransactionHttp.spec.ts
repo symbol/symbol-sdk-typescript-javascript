@@ -46,7 +46,7 @@ import { CosignatureSignedTransaction } from '../../src/model/transaction/Cosign
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
-import { LockHashAlgorithm } from '../../src/model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';

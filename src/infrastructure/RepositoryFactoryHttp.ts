@@ -49,6 +49,10 @@ import { TransactionHttp } from './TransactionHttp';
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusHttp } from './TransactionStatusHttp';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
+import { HashLockRepository } from './HashLockRepository';
+import { SecretLockRepository } from './SecretLockRepository';
+import { SecretLockHttp } from './SecretLockHttp';
+import { HashLockHttp } from './HashLockHttp';
 /**
  * Receipt http repository.
  *
@@ -136,6 +140,14 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     createTransactionStatusRepository(): TransactionStatusRepository {
         return new TransactionStatusHttp(this.url, this.fetchApi);
+    }
+
+    createHashLockRepository(): HashLockRepository {
+        return new HashLockHttp(this.url, this.fetchApi);
+    }
+
+    createSecretLockRepository(): SecretLockRepository {
+        return new SecretLockHttp(this.url, this.fetchApi);
     }
 
     getGenerationHash(): Observable<string> {

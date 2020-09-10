@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import { sha3_256, sha3_512 } from 'js-sha3';
-import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../../../src/model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../../../src/model/lock/LockHashAlgorithm';
 import * as CryptoJS from 'crypto-js';
 
 describe('LockHashAlgorithmLengthValidator', () => {

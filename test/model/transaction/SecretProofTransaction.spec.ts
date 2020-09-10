@@ -26,7 +26,7 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LockHashAlgorithm } from '../../../src/model/transaction/LockHashAlgorithm';
+import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { SecretProofTransaction } from '../../../src/model/transaction/SecretProofTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';

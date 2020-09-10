@@ -51,6 +51,10 @@ export * from './TransactionStatusRepository';
 export * from './TransactionGroup';
 export * from './RepositoryCallError';
 export * from './MetadataRepository';
+export * from './HashLockRepository';
+export * from './HashLockHttp';
+export * from './SecretLockRepository';
+export * from './SecretLockHttp';
 
 // Pagination
 export * from './Page';
@@ -64,6 +68,8 @@ export * from './searchCriteria/TransactionSearchCriteria';
 export * from './searchCriteria/MetadataSearchCriteria';
 export * from './searchCriteria/ResolutionStatementSearchCriteria';
 export * from './searchCriteria/TransactionStatementSearchCriteria';
+export * from './searchCriteria/HashLockSearchCriteria';
+export * from './searchCriteria/SecretLockSearchCriteria';
 
 export * from './paginationStreamer/BlockPaginationStreamer';
 export * from './paginationStreamer/MosaicPaginationStreamer';
@@ -74,3 +80,5 @@ export * from './paginationStreamer/AccountPaginationStreamer';
 export * from './paginationStreamer/NamespacePaginationStreamer';
 export * from './paginationStreamer/MetadataPaginationStreamer';
 export * from './paginationStreamer/ReceiptPaginationStreamer';
+export * from './paginationStreamer/HashLockPaginationStreamer';
+export * from './paginationStreamer/SecretLockPaginationStreamer';

@@ -139,4 +139,22 @@ describe('AccountHttp', () => {
         const infos = await accountRepository.search({ mosaicId: new MosaicId(mosaic.id) }).toPromise();
         assertAccountInfo(infos.data[0]);
     });
+
+    it('getAccountInfo - Error', async () => {
+        when(accountRoutesApi.getAccountInfo(address.plain())).thenReject(new Error('Mocked Error'));
+        await accountRepository
+            .getAccountInfo(address)
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('getAccountsInfo - Error', async () => {
+        const accountIds = {} as AccountIds;
+        accountIds.addresses = [address.plain()];
+        when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReject(new Error('Mocked Error'));
+        await accountRepository
+            .getAccountsInfo([address])
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
 });
