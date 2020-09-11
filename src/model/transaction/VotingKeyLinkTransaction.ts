@@ -37,15 +37,15 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { Address } from '../account/Address';
-import { FinalizationPointDto } from 'catbuffer-typescript/dist/FinalizationPointDto';
+import { FinalizationEpochDto } from 'catbuffer-typescript/dist/FinalizationEpochDto';
 
 export class VotingKeyLinkTransaction extends Transaction {
     /**
      * Create a voting key link transaction object
      * @param deadline - The deadline to include the transaction.
      * @param linkedPublicKey - The public key for voting (48 bytes).
-     * @param startPoint - The start finalization point.
-     * @param endPoint - The end finalization point.
+     * @param startEpoch - The start finalization point.
+     * @param endEpoch - The end finalization point.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
@@ -55,8 +55,8 @@ export class VotingKeyLinkTransaction extends Transaction {
     public static create(
         deadline: Deadline,
         linkedPublicKey: string,
-        startPoint: UInt64,
-        endPoint: UInt64,
+        startEpoch: number,
+        endEpoch: number,
         linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
@@ -69,8 +69,8 @@ export class VotingKeyLinkTransaction extends Transaction {
             deadline,
             maxFee,
             linkedPublicKey,
-            startPoint,
-            endPoint,
+            startEpoch,
+            endEpoch,
             linkAction,
             signature,
             signer,
@@ -83,8 +83,8 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @param deadline
      * @param maxFee
      * @param linkedPublicKey
-     * @param startPoint
-     * @param endPoint
+     * @param startEpoch
+     * @param endEpoch
      * @param linkAction
      * @param signature
      * @param signer
@@ -102,11 +102,11 @@ export class VotingKeyLinkTransaction extends Transaction {
         /**
          * The start finalization point.
          */
-        public readonly startPoint: UInt64,
+        public readonly startEpoch: number,
         /**
          * The start finalization point.
          */
-        public readonly endPoint: UInt64,
+        public readonly endEpoch: number,
         /**
          * The account link action.
          */
@@ -134,8 +134,8 @@ export class VotingKeyLinkTransaction extends Transaction {
         const transaction = VotingKeyLinkTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getLinkedPublicKey().votingKey),
-            new UInt64(builder.getStartPoint().finalizationPoint),
-            new UInt64(builder.getEndPoint().finalizationPoint),
+            builder.getStartEpoch().finalizationEpoch,
+            builder.getEndEpoch().finalizationEpoch,
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VotingKeyLinkTransactionBuilder).fee.amount),
@@ -162,8 +162,8 @@ export class VotingKeyLinkTransaction extends Transaction {
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new VotingKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
-            new FinalizationPointDto(this.startPoint.toDTO()),
-            new FinalizationPointDto(this.endPoint.toDTO()),
+            new FinalizationEpochDto(this.startEpoch),
+            new FinalizationEpochDto(this.endEpoch),
             this.linkAction.valueOf(),
         );
         return transactionBuilder;
@@ -180,8 +180,8 @@ export class VotingKeyLinkTransaction extends Transaction {
             this.networkType.valueOf(),
             TransactionType.VOTING_KEY_LINK.valueOf(),
             new VotingKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
-            new FinalizationPointDto(this.startPoint.toDTO()),
-            new FinalizationPointDto(this.endPoint.toDTO()),
+            new FinalizationEpochDto(this.startEpoch),
+            new FinalizationEpochDto(this.endEpoch),
             this.linkAction.valueOf(),
         );
     }

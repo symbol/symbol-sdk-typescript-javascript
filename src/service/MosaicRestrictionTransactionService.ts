@@ -182,7 +182,6 @@ export class MosaicRestrictionTransactionService {
         return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId }).pipe(
             map((mosaicRestrictionPage: Page<MosaicGlobalRestriction>) => {
                 const globalRestriction = mosaicRestrictionPage.data.find((r) => r instanceof MosaicGlobalRestriction);
-                console.log(globalRestriction);
                 if (globalRestriction !== undefined) {
                     return globalRestriction.restrictions.get(restrictionKey.toString());
                 }

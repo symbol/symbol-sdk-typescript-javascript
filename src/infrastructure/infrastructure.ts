@@ -70,6 +70,7 @@ export * from './searchCriteria/ResolutionStatementSearchCriteria';
 export * from './searchCriteria/TransactionStatementSearchCriteria';
 export * from './searchCriteria/HashLockSearchCriteria';
 export * from './searchCriteria/SecretLockSearchCriteria';
+export * from './searchCriteria/RestrictionMosaicSearchCriteria';
 
 export * from './paginationStreamer/BlockPaginationStreamer';
 export * from './paginationStreamer/MosaicPaginationStreamer';
@@ -82,3 +83,4 @@ export * from './paginationStreamer/MetadataPaginationStreamer';
 export * from './paginationStreamer/ReceiptPaginationStreamer';
 export * from './paginationStreamer/HashLockPaginationStreamer';
 export * from './paginationStreamer/SecretLockPaginationStreamer';
+export * from './paginationStreamer/RestrictionMosaicPaginationStreamer';

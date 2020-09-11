@@ -88,7 +88,7 @@ describe('MosaicRestrictionTransactionService', () => {
         const mockNamespaceRepository = mock<NamespaceRepository>();
 
         when(mockRestrictionRepository.searchMosaicRestrictions(deepEqual({ mosaicId }))).thenReturn(observableOf(mockGlobalRestriction()));
-        when(mockRestrictionRepository.searchMosaicRestrictions(deepEqual({ mosaicId, address: account.address }))).thenReturn(
+        when(mockRestrictionRepository.searchMosaicRestrictions(deepEqual({ mosaicId, targetAddress: account.address }))).thenReturn(
             observableOf(mockAddressRestriction()),
         );
         when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedMosaicId))).thenReturn(observableOf(mosaicId));

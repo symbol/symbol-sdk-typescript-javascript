@@ -49,7 +49,7 @@ export interface NetworkRepository {
     getNetworkType(): Observable<NetworkType>;
 
     /**
-     * Returns the estimated effective rental fees for namespaces and mosaics. This endpoint is only available
+     * Returns the estimated effective rental fees for namespaces and mosaics. This endEpoch is only available
      * if the REST instance has access to catapult-server ``resources/config-network.properties`` file.
      * To activate this feature, add the setting \"network.propertiesFilePath\" in the configuration file (rest/resources/rest.json).
      * @summary Get rental fees information

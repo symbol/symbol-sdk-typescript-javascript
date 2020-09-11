@@ -58,7 +58,7 @@ describe('AccountHttp', () => {
     accountDTO.importanceHeight = '333';
     accountDTO.publicKeyHeight = '444';
     const accountKeyDto: AccountLinkPublicKeyDTO = { publicKey: 'abc' };
-    const accountVotingKeyDto: AccountLinkVotingKeyDTO = { publicKey: 'abc', startPoint: '1', endPoint: '3' };
+    const accountVotingKeyDto: AccountLinkVotingKeyDTO = { publicKey: 'abc', startEpoch: 1, endEpoch: 3 };
     accountDTO.supplementalPublicKeys = {
         linked: accountKeyDto,
         node: accountKeyDto,
@@ -98,8 +98,8 @@ describe('AccountHttp', () => {
         expect(accountInfo.supplementalPublicKeys.vrf?.publicKey).to.be.equals('abc');
         expect(accountInfo.supplementalPublicKeys.voting?.length).to.be.equals(1);
         expect(accountInfo.supplementalPublicKeys.voting![0].publicKey).to.be.equals('abc');
-        expect(accountInfo.supplementalPublicKeys.voting![0].endPoint.toString()).to.be.equals('3');
-        expect(accountInfo.supplementalPublicKeys.voting![0].startPoint.toString()).to.be.equals('1');
+        expect(accountInfo.supplementalPublicKeys.voting![0].endEpoch.toString()).to.be.equals('3');
+        expect(accountInfo.supplementalPublicKeys.voting![0].startEpoch.toString()).to.be.equals('1');
         expect(accountInfo.mosaics.length).to.be.equals(1);
         expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);
         expect(accountInfo.mosaics[0].amount.toString()).to.be.equals(mosaic.amount);
