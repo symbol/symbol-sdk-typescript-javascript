@@ -499,8 +499,8 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             Convert.uint8ToHex(Crypto.randomBytes(48)),
-            UInt64.fromUint(1),
-            UInt64.fromUint(3),
+            1,
+            3,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
@@ -769,8 +769,8 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             key,
-            UInt64.fromUint(1),
-            UInt64.fromUint(3),
+            1,
+            3,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
             undefined,
@@ -783,8 +783,8 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(key);
-        expect(transaction.startPoint.toString()).to.be.equal('1');
-        expect(transaction.endPoint.toString()).to.be.equal('3');
+        expect(transaction.startEpoch.toString()).to.be.equal('1');
+        expect(transaction.endEpoch.toString()).to.be.equal('3');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 

@@ -418,8 +418,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             Convert.uint8ToHex(Crypto.randomBytes(48)),
-            UInt64.fromUint(1),
-            UInt64.fromUint(3),
+            1,
+            3,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
@@ -616,8 +616,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             key,
-            UInt64.fromUint(1),
-            UInt64.fromUint(3),
+            1,
+            3,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
@@ -626,8 +626,8 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VotingKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
-        expect(transaction.startPoint.toString()).to.be.equal('1');
-        expect(transaction.endPoint.toString()).to.be.equal('3');
+        expect(transaction.startEpoch.toString()).to.be.equal('1');
+        expect(transaction.endEpoch.toString()).to.be.equal('3');
         expect(transaction.linkedPublicKey).to.be.equal(key);
     });
 
@@ -920,8 +920,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             key,
-            UInt64.fromUint(1),
-            UInt64.fromUint(3),
+            1,
+            3,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
@@ -929,8 +929,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(key);
-        expect(transaction.startPoint.toString()).to.be.equal('1');
-        expect(transaction.endPoint.toString()).to.be.equal('3');
+        expect(transaction.startEpoch.toString()).to.be.equal('1');
+        expect(transaction.endEpoch.toString()).to.be.equal('3');
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
     it('should create AccountRestrictionAddressTransaction', () => {

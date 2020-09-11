@@ -119,12 +119,7 @@ export class AccountHttp extends Http implements AccountRepository {
                     : undefined,
                 dto.account.supplementalPublicKeys.voting
                     ? dto.account.supplementalPublicKeys.voting?.publicKeys.map(
-                          (v) =>
-                              new AccountLinkVotingKey(
-                                  v.publicKey,
-                                  UInt64.fromNumericString(v.startPoint),
-                                  UInt64.fromNumericString(v.endPoint),
-                              ),
+                          (v) => new AccountLinkVotingKey(v.publicKey, v.startEpoch, v.endEpoch),
                       )
                     : undefined,
             ),

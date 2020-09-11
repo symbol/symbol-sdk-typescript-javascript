@@ -26,13 +26,16 @@ import {
     MosaicRestrictionEntryTypeEnum,
     MosaicRestrictionTypeEnum,
     RestrictionMosaicRoutesApi,
+    MosaicRestrictionsPage,
+    Pagination,
 } from 'symbol-openapi-typescript-fetch-client';
-import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
+import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 
 describe('RestrictionMosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -80,99 +83,61 @@ describe('RestrictionMosaicHttp', () => {
 
     mosaicGlobalRestrictionDto.mosaicRestrictionEntry = mosaicGlobalRestrictionEntryWrapperDto;
 
+    const pagination = {} as Pagination;
+    pagination.pageNumber = 1;
+    pagination.pageSize = 1;
+
+    const body = {} as MosaicRestrictionsPage;
+    body.data = [mosaicGlobalRestrictionDto, mosaicAddressRestrictionDto];
+    body.pagination = pagination;
+
     before(() => {
         reset(response);
         reset(restrictionMosaicRoutesApi);
     });
 
-    it('getMosaicAddressRestriction', async () => {
-        when(restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).thenReturn(
-            Promise.resolve(mosaicAddressRestrictionDto),
-        );
-
-        const restrictions = await restrictionMosaicRepository.getMosaicAddressRestriction(mosaicId, address).toPromise();
-        expect(restrictions).to.be.not.null;
-        expect(restrictions.compositeHash).to.be.equal('hash');
-        expect(restrictions.entryType.valueOf()).to.be.equal(0);
-        expect(restrictions.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
-        expect(restrictions.targetAddress.plain()).to.be.equal(address.plain());
-        expect(restrictions.restrictions.get('key')).not.to.be.undefined;
-    });
-
-    it('getMosaicAddressRestrictions', async () => {
+    it('search', async () => {
         when(
-            restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), deepEqual({ addresses: [address.plain()] })),
-        ).thenReturn(Promise.resolve([mosaicAddressRestrictionDto]));
+            restrictionMosaicRoutesApi.searchMosaicRestriction(
+                mosaicId.toHex(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
+        ).thenReturn(Promise.resolve(body));
 
-        const restrictions = await restrictionMosaicRepository.getMosaicAddressRestrictions(mosaicId, [address]).toPromise();
-        expect(restrictions).to.be.not.null;
-        expect(restrictions[0].compositeHash).to.be.equal('hash');
-        expect(restrictions[0].entryType.valueOf()).to.be.equal(0);
-        expect(restrictions[0].mosaicId.toHex()).to.be.equal(mosaicId.toHex());
-        expect(restrictions[0].targetAddress.plain()).to.be.equal(address.plain());
-        expect(restrictions[0].restrictions.get('key')).not.to.be.undefined;
+        const page = await restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId: mosaicId }).toPromise();
+        expect(page).to.be.not.null;
+        expect(page.data.length).to.be.equal(2);
+        expect(page.data[1].compositeHash).to.be.equal('hash');
+        expect(page.data[1].entryType.valueOf()).to.be.equal(0);
+        expect(page.data[1].mosaicId.toHex()).to.be.equal(mosaicId.toHex());
+        expect((page.data[1] as MosaicAddressRestriction).targetAddress.plain()).to.be.equal(address.plain());
+        expect(page.data[1].restrictions.get('key')).not.to.be.undefined;
+        expect(page.data[0]).to.be.not.null;
+        expect(page.data[0].compositeHash).to.be.equal('hash');
+        expect(page.data[0].entryType.valueOf()).to.be.equal(0);
+        expect(page.data[0].mosaicId.toHex()).to.be.equal(mosaicId.toHex());
+        expect(page.data[0].restrictions.get('key')).not.to.be.undefined;
     });
 
-    it('getMosaicGlobalRestriction', async () => {
-        when(restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).thenReturn(
-            Promise.resolve(mosaicGlobalRestrictionDto),
-        );
-
-        const restrictions = await restrictionMosaicRepository.getMosaicGlobalRestriction(mosaicId).toPromise();
-        expect(restrictions).to.be.not.null;
-        expect(restrictions.compositeHash).to.be.equal('hash');
-        expect(restrictions.entryType.valueOf()).to.be.equal(0);
-        expect(restrictions.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
-        expect(restrictions.restrictions.get('key')).not.to.be.undefined;
-    });
-
-    it('getMosaicGlobalRestrictions', async () => {
-        when(restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(deepEqual({ mosaicIds: [mosaicId.toHex()] }))).thenReturn(
-            Promise.resolve([mosaicGlobalRestrictionDto]),
-        );
-
-        const restrictions = await restrictionMosaicRepository.getMosaicGlobalRestrictions([mosaicId]).toPromise();
-        expect(restrictions).to.be.not.null;
-        expect(restrictions[0].compositeHash).to.be.equal('hash');
-        expect(restrictions[0].entryType.valueOf()).to.be.equal(0);
-        expect(restrictions[0].mosaicId.toHex()).to.be.equal(mosaicId.toHex());
-        expect(restrictions[0].restrictions.get('key')).not.to.be.undefined;
-    });
-
-    it('getMosaicAddressRestriction - Error', async () => {
-        when(restrictionMosaicRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).thenReject(
-            new Error('Mocked Error'),
-        );
-        await restrictionMosaicRepository
-            .getMosaicAddressRestriction(mosaicId, address)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
-    });
-
-    it('getMosaicAddressRestrictions - Error', async () => {
+    it('search - Error', async () => {
         when(
-            restrictionMosaicRoutesApi.getMosaicAddressRestrictions(mosaicId.toHex(), deepEqual({ addresses: [address.plain()] })),
+            restrictionMosaicRoutesApi.searchMosaicRestriction(
+                mosaicId.toHex(),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+            ),
         ).thenReject(new Error('Mocked Error'));
         await restrictionMosaicRepository
-            .getMosaicAddressRestrictions(mosaicId, [address])
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
-    });
-
-    it('getMosaicGlobalRestriction - Error', async () => {
-        when(restrictionMosaicRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).thenReject(new Error('Mocked Error'));
-        await restrictionMosaicRepository
-            .getMosaicGlobalRestriction(mosaicId)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
-    });
-
-    it('getMosaicGlobalRestriction - Error', async () => {
-        when(restrictionMosaicRoutesApi.getMosaicGlobalRestrictions(deepEqual({ mosaicIds: [mosaicId.toHex()] }))).thenReject(
-            new Error('Mocked Error'),
-        );
-        await restrictionMosaicRepository
-            .getMosaicGlobalRestrictions([mosaicId])
+            .searchMosaicRestrictions({ mosaicId: mosaicId })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });

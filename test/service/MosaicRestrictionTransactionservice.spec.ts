@@ -36,6 +36,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
+import { Page } from '../../src/infrastructure/Page';
 
 describe('MosaicRestrictionTransactionService', () => {
     let account: Account;
@@ -51,8 +52,8 @@ describe('MosaicRestrictionTransactionService', () => {
     const globalRestrictionType = MosaicRestrictionType.LE;
     const addressRestrictionValue = '10';
 
-    function mockGlobalRestriction(): MosaicGlobalRestriction {
-        return new MosaicGlobalRestriction(
+    function mockGlobalRestriction(): Page<MosaicGlobalRestriction> {
+        const restriction = new MosaicGlobalRestriction(
             '59DFBA84B2E9E7000135E80C',
             MosaicRestrictionEntryType.GLOBAL,
             mosaicId,
@@ -61,16 +62,19 @@ describe('MosaicRestrictionTransactionService', () => {
                 new MosaicGlobalRestrictionItem(referenceMosaicId, globalRestrictionValue, globalRestrictionType),
             ),
         );
+
+        return new Page<MosaicGlobalRestriction>([restriction], 1, 1);
     }
 
-    function mockAddressRestriction(): MosaicAddressRestriction {
-        return new MosaicAddressRestriction(
+    function mockAddressRestriction(): Page<MosaicAddressRestriction> {
+        const restriction = new MosaicAddressRestriction(
             '59DFBA84B2E9E7000135E80C',
             MosaicRestrictionEntryType.GLOBAL,
             mosaicId,
             account.address,
             new Map<string, string>().set(key.toString(), addressRestrictionValue),
         );
+        return new Page<MosaicAddressRestriction>([restriction], 1, 1);
     }
 
     before(() => {
@@ -83,9 +87,8 @@ describe('MosaicRestrictionTransactionService', () => {
         const mockRestrictionRepository = mock<RestrictionMosaicRepository>();
         const mockNamespaceRepository = mock<NamespaceRepository>();
 
-        when(mockRestrictionRepository.getMosaicGlobalRestriction(deepEqual(mosaicId))).thenReturn(observableOf(mockGlobalRestriction()));
-        when(mockRestrictionRepository.getMosaicGlobalRestriction(deepEqual(mosaicIdWrongKey))).thenThrow(new Error('Wrong mosaicId'));
-        when(mockRestrictionRepository.getMosaicAddressRestriction(deepEqual(mosaicId), deepEqual(account.address))).thenReturn(
+        when(mockRestrictionRepository.searchMosaicRestrictions(deepEqual({ mosaicId }))).thenReturn(observableOf(mockGlobalRestriction()));
+        when(mockRestrictionRepository.searchMosaicRestrictions(deepEqual({ mosaicId, targetAddress: account.address }))).thenReturn(
             observableOf(mockAddressRestriction()),
         );
         when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedMosaicId))).thenReturn(observableOf(mosaicId));

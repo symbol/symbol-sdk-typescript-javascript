@@ -45,8 +45,8 @@ describe('AccountInfo', () => {
                         publicKeys: [
                             {
                                 publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
-                                startPoint: '1',
-                                endpoint: '3',
+                                startEpoch: 1,
+                                endEpoch: 3,
                             },
                         ],
                     },
@@ -88,12 +88,7 @@ describe('AccountInfo', () => {
                     : undefined,
                 accountInfoDTO.account.supplementalPublicKeys.voting
                     ? accountInfoDTO.account.supplementalPublicKeys.voting?.publicKeys.map(
-                          (v) =>
-                              new AccountLinkVotingKey(
-                                  v.publicKey,
-                                  UInt64.fromNumericString(v.startPoint),
-                                  UInt64.fromNumericString(v.startPoint),
-                              ),
+                          (v) => new AccountLinkVotingKey(v.publicKey, v.startEpoch, v.endEpoch),
                       )
                     : undefined,
             ),

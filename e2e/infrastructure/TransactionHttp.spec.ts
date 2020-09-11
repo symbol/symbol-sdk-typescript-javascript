@@ -732,8 +732,8 @@ describe('TransactionHttp', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
                 Deadline.create(),
                 votingKey,
-                UInt64.fromUint(100),
-                UInt64.fromUint(300),
+                100,
+                300,
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
@@ -742,8 +742,8 @@ describe('TransactionHttp', () => {
 
             return helper.announce(signedTransaction).then((transaction: VotingKeyLinkTransaction) => {
                 expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
-                expect(transaction.startPoint, 'StartPoint').not.to.be.undefined;
-                expect(transaction.endPoint, 'EndPoint').not.to.be.undefined;
+                expect(transaction.startEpoch, 'startEpoch').not.to.be.undefined;
+                expect(transaction.endEpoch, 'endEpoch').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 return signedTransaction;
             });
@@ -754,8 +754,8 @@ describe('TransactionHttp', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
                 Deadline.create(),
                 votingKey,
-                UInt64.fromUint(100),
-                UInt64.fromUint(300),
+                100,
+                300,
                 LinkAction.Unlink,
                 networkType,
                 helper.maxFee,

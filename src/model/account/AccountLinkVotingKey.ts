@@ -27,12 +27,12 @@ export class AccountLinkVotingKey {
          */
         public readonly publicKey: string,
         /**
-         * Start point
+         * Start epoch
          */
-        public readonly startPoint: UInt64,
+        public readonly startEpoch: number,
         /**
-         * End point
+         * End epoch
          */
-        public readonly endPoint: UInt64,
+        public readonly endEpoch: number,
     ) {}
 }
