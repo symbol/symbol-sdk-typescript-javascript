@@ -405,4 +405,22 @@ describe('Listener', () => {
             helper.announce(transferTransaction.signWith(account, generationHash));
         });
     });
+
+    describe('Finalized Block', () => {
+        it('finalizedBlock', (done) => {
+            helper.listener.finalizedBlock().subscribe(() => {
+                done();
+            });
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [],
+                PlainMessage.create('test-message'),
+                networkType,
+                helper.maxFee,
+            );
+
+            helper.announce(transferTransaction.signWith(account, generationHash));
+        });
+    });
 });

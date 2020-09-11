@@ -33,6 +33,7 @@ import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
@@ -614,6 +615,46 @@ describe('Listener', () => {
             expect(reportedStatus[0].proofGamma).to.be.equal(blockDTO.data.block.proofGamma);
             expect(reportedStatus[0].proofScalar).to.be.equal(blockDTO.data.block.proofScalar);
             expect(reportedStatus[0].proofVerificationHash).to.be.equal(blockDTO.data.block.proofVerificationHash);
+        });
+    });
+
+    describe('finalizedBlock', () => {
+        it('Should forward finalizedBlock message', () => {
+            class WebSocketMock {
+                constructor(public readonly url: string) {}
+
+                send(payload: string): void {
+                    expect(payload).to.be.eq(`{"subscribe":"finalizedBlock"}`);
+                }
+            }
+
+            const finalizedBlockDTO = {
+                topic: 'finalizedBlock',
+                data: {
+                    height: '100',
+                    hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
+                    finalizationPoint: 1,
+                    finalizationEpoch: 1,
+                },
+            };
+
+            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+
+            listener.open();
+
+            const reportedStatus: FinalizedBlock[] = [];
+
+            listener.finalizedBlock().subscribe((msg) => {
+                reportedStatus.push(msg);
+            });
+
+            listener.handleMessage(finalizedBlockDTO, null);
+
+            expect(reportedStatus.length).to.be.equal(1);
+            expect(reportedStatus[0].hash).to.be.equal(finalizedBlockDTO.data.hash);
+            deepEqual(reportedStatus[0].height.toString(), finalizedBlockDTO.data.height);
+            deepEqual(reportedStatus[0].finalizationPoint, finalizedBlockDTO.data.finalizationPoint);
+            deepEqual(reportedStatus[0].finalizationEpoch, finalizedBlockDTO.data.finalizationEpoch);
         });
     });
 });

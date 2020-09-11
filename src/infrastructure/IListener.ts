@@ -21,6 +21,7 @@ import { AggregateTransaction } from '../model/transaction/AggregateTransaction'
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
+import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 
 /**
  * Listener service
@@ -56,6 +57,15 @@ export interface IListener {
      * @return an observable stream of NewBlock
      */
     newBlock(): Observable<NewBlock>;
+
+    /**
+     * Returns an observable stream of finalized block info.
+     * Each time a new Block is finalized into the blockchain,
+     * it emits a new FinalizedBlock in the event stream.
+     *
+     * @return an observable stream of BlockInfo
+     */
+    finalizedBlock(): Observable<FinalizedBlock>;
 
     /**
      * Returns an observable stream of Transaction for a specific address.
