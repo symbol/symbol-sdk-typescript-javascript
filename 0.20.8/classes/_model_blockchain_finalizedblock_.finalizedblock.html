@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NetworkName | symbol-sdk</title>
+	<title>FinalizedBlock | symbol-sdk</title>
 	<meta name="description" content="Documentation for symbol-sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_model_network_networkname_.html">&quot;model/network/NetworkName&quot;</a>
+					<a href="../modules/_model_blockchain_finalizedblock_.html">&quot;model/blockchain/FinalizedBlock&quot;</a>
 				</li>
 				<li>
-					<a href="_model_network_networkname_.networkname.html">NetworkName</a>
+					<a href="_model_blockchain_finalizedblock_.finalizedblock.html">FinalizedBlock</a>
 				</li>
 			</ul>
-			<h1>Class NetworkName</h1>
+			<h1>Class FinalizedBlock</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Network Name</p>
+						<p>The finalized block.</p>
 					</div>
 				</div>
 			</section>
@@ -80,7 +80,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">NetworkName</span>
+						<span class="target">FinalizedBlock</span>
 					</li>
 				</ul>
 			</section>
@@ -91,14 +91,16 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_model_network_networkname_.networkname.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_model_blockchain_finalizedblock_.finalizedblock.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_network_networkname_.networkname.html#description" class="tsd-kind-icon">description</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_network_networkname_.networkname.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_finalizedblock_.finalizedblock.html#finalizationepoch" class="tsd-kind-icon">finalization<wbr>Epoch</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_finalizedblock_.finalizedblock.html#finalizationpoint" class="tsd-kind-icon">finalization<wbr>Point</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_finalizedblock_.finalizedblock.html#hash" class="tsd-kind-icon">hash</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_finalizedblock_.finalizedblock.html#height" class="tsd-kind-icon">height</a></li>
 							</ul>
 						</section>
 					</div>
@@ -110,13 +112,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Network<wbr>Name<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_network_networkname_.networkname.html" class="tsd-signature-type">NetworkName</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Finalized<wbr>Block<span class="tsd-signature-symbol">(</span>height<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, finalizationPoint<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, finalizationEpoch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/network/NetworkName.ts#L20">model/network/NetworkName.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/blockchain/FinalizedBlock.ts#L22">model/blockchain/FinalizedBlock.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -124,23 +126,39 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<h5>height: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Network name</p>
+											<p>Block height</p>
 										</div>
 									</div>
 								</li>
 								<li>
-									<h5>description: <span class="tsd-signature-type">string</span></h5>
+									<h5>hash: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Network description</p>
+											<p>Block hash</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>finalizationPoint: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Block finalization point</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>finalizationEpoch: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Block finalization epoch</p>
 										</div>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_model_network_networkname_.networkname.html" class="tsd-signature-type">NetworkName</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -148,32 +166,62 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="description" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> description</h3>
-					<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="finalizationepoch" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> finalization<wbr>Epoch</h3>
+					<div class="tsd-signature tsd-kind-icon">finalization<wbr>Epoch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/network/NetworkName.ts#L25">model/network/NetworkName.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/blockchain/FinalizedBlock.ts#L33">model/blockchain/FinalizedBlock.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Network description</p>
+							<p>Block finalization epoch</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="name" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="finalizationpoint" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> finalization<wbr>Point</h3>
+					<div class="tsd-signature tsd-kind-icon">finalization<wbr>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/network/NetworkName.ts#L25">model/network/NetworkName.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/blockchain/FinalizedBlock.ts#L32">model/blockchain/FinalizedBlock.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Network name</p>
+							<p>Block finalization point</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="hash" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> hash</h3>
+					<div class="tsd-signature tsd-kind-icon">hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/blockchain/FinalizedBlock.ts#L31">model/blockchain/FinalizedBlock.ts:31</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Block hash</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="height" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> height</h3>
+					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4938b3d/src/model/blockchain/FinalizedBlock.ts#L30">model/blockchain/FinalizedBlock.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Block height</p>
 						</div>
 					</div>
 				</section>
@@ -186,7 +234,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_model_network_networkname_.html">&quot;model/network/<wbr>Network<wbr>Name&quot;</a>
+						<a href="../modules/_model_blockchain_finalizedblock_.html">&quot;model/blockchain/<wbr>Finalized<wbr>Block&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -195,16 +243,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_model_network_networkname_.networkname.html" class="tsd-kind-icon">Network<wbr>Name</a>
+						<a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-kind-icon">Finalized<wbr>Block</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_model_network_networkname_.networkname.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_model_blockchain_finalizedblock_.finalizedblock.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_network_networkname_.networkname.html#description" class="tsd-kind-icon">description</a>
+								<a href="_model_blockchain_finalizedblock_.finalizedblock.html#finalizationepoch" class="tsd-kind-icon">finalization<wbr>Epoch</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_network_networkname_.networkname.html#name" class="tsd-kind-icon">name</a>
+								<a href="_model_blockchain_finalizedblock_.finalizedblock.html#finalizationpoint" class="tsd-kind-icon">finalization<wbr>Point</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_blockchain_finalizedblock_.finalizedblock.html#hash" class="tsd-kind-icon">hash</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_blockchain_finalizedblock_.finalizedblock.html#height" class="tsd-kind-icon">height</a>
 							</li>
 						</ul>
 					</li>
