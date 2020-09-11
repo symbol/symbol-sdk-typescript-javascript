@@ -55,7 +55,7 @@ export class NodeInfo {
          */
         public readonly roles: RoleType,
         /**
-         * The IP address of the endEpoch.
+         * The IP address of the endpoint.
          */
         public readonly host: string,
         /**
