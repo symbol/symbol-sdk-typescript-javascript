@@ -15,16 +15,25 @@
  */
 
 import { UInt64 } from '../UInt64';
+import { FinalizedBlock } from './FinalizedBlock';
 
 /**
- * The blockchain score structure describes blockchain difficulty.
+ * The chain information.
  */
-export class BlockchainScore {
+export class ChainInfo {
     /**
      * @param scoreLow
      * @param scoreHigh
      */
     constructor(
+        /**
+         * Current chain height.
+         */
+        public readonly height: UInt64,
+        /**
+         * Current finalized chain height.
+         */
+        public readonly finalizedHeight: UInt64,
         /**
          * Low part of the blockchain score.
          */
@@ -33,5 +42,9 @@ export class BlockchainScore {
          * High part of the blockchain score.
          */
         public readonly scoreHigh: UInt64,
+        /**
+         * Latest finalized block.
+         */
+        public readonly latestFinalizedBlock: FinalizedBlock,
     ) {}
 }

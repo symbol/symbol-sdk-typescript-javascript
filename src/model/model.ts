@@ -35,7 +35,7 @@ export * from './account/SupplementalPublicKeys';
 export * from './account/UnresolvedAddress';
 
 // Blockchain
-export * from './blockchain/BlockchainScore';
+export * from './blockchain/ChainInfo';
 export * from './blockchain/StorageInfo';
 export * from './blockchain/BlockInfo';
 export * from './blockchain/MerklePathItem';
