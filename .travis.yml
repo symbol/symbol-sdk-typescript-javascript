@@ -6,6 +6,11 @@ cache:
   directories:
     - "node_modules"
     - .eslintcache
+jobs:
+  include:
+    - stage: e2e
+      script: npm run test:e2e
+      if: branch = e2e
 before_script:
   - npm run build
   - if [ "$TRAVIS_NODE_VERSION" = "10" ] || [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi

@@ -24,10 +24,14 @@ describe('NetworkHttp', () => {
     let networkType: NetworkType;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: false }).then(() => {
             networkRepository = helper.repositoryFactory.createNetworkRepository();
             networkType = helper.networkType;
         });
+    });
+
+    after(() => {
+        return helper.close();
     });
 
     describe('getNetworkType', () => {

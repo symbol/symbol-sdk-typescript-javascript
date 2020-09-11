@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { combineLatest } from 'rxjs';
+import * as fs from 'fs';
+import * as path from 'path';
 import { map } from 'rxjs/operators';
+import { BootstrapService, BootstrapUtils, ConfigPreset, Preset, StartParams } from 'symbol-bootstrap';
 import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { Account } from '../../src/model/account/Account';
+import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
+import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import * as yaml from 'js-yaml';
-import * as path from 'path';
-import * as fs from 'fs';
 
 export class IntegrationTestHelper {
     public apiUrl: string;
@@ -50,83 +49,95 @@ export class IntegrationTestHelper {
     public transactionService: TransactionService;
     public networkCurrencyNamespaceId: NamespaceId;
     public networkCurrencyDivisibility: number;
+    public service = new BootstrapService();
+    public config: StartParams;
+    public startEachTime = true;
 
-    start(): Promise<IntegrationTestHelper> {
-        return new Promise<IntegrationTestHelper>((resolve, reject) => {
-            fs.readFile(path.resolve(__dirname, '../conf/network.conf'), (err, jsonData: any) => {
-                if (err) {
-                    return reject(err);
-                }
-                const json = JSON.parse(jsonData);
-                console.log(`Running tests against: ${json.apiUrl}`);
-                this.apiUrl = json.apiUrl;
-                this.repositoryFactory = new RepositoryFactoryHttp(json.apiUrl);
-                this.transactionService = new TransactionService(
-                    this.repositoryFactory.createTransactionRepository(),
-                    this.repositoryFactory.createReceiptRepository(),
-                );
-                combineLatest(this.repositoryFactory.getGenerationHash(), this.repositoryFactory.getNetworkType()).subscribe(
-                    ([generationHash, networkType]) => {
-                        this.networkType = networkType;
-                        this.generationHash = generationHash;
-                        this.account = this.createAccount(json.testAccount);
-                        this.account2 = this.createAccount(json.testAccount2);
-                        this.account3 = this.createAccount(json.testAccount3);
-                        this.multisigAccount = this.createAccount(json.multisigAccount);
-                        this.cosignAccount1 = this.createAccount(json.cosignatoryAccount);
-                        this.cosignAccount2 = this.createAccount(json.cosignatory2Account);
-                        this.cosignAccount3 = this.createAccount(json.cosignatory3Account);
-                        this.cosignAccount4 = this.createAccount(json.cosignatory4Account);
-                        this.harvestingAccount = this.createAccount(json.harvestingAccount);
-                        this.listener = this.repositoryFactory.createListener();
+    private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string }> {
+        this.config = {
+            preset: Preset.bootstrap,
+            reset: this.startEachTime,
+            customPreset: './e2e/e2e-preset.yml',
+            timeout: 60000 * 3,
+            target: 'target/bootstrap-test',
+            daemon: false,
+            user: 'current',
+        };
 
-                        // What would be the best maxFee? In the future we will load the fee multiplier from rest.
-                        this.maxFee = UInt64.fromUint(1000000);
-
-                        // network Currency
-                        this.networkCurrencyNamespaceId = this.apiUrl.toLowerCase().includes('localhost')
-                            ? NetworkCurrencyLocal.NAMESPACE_ID
-                            : NetworkCurrencyPublic.NAMESPACE_ID;
-                        this.networkCurrencyDivisibility = this.apiUrl.toLowerCase().includes('localhost')
-                            ? NetworkCurrencyLocal.DIVISIBILITY
-                            : NetworkCurrencyPublic.DIVISIBILITY;
-
-                        const bootstrapRoot =
-                            process.env.CATAPULT_SERVICE_BOOTSTRAP || path.resolve(__dirname, '../../../../catapult-service-bootstrap');
-                        const bootstrapPath = `${bootstrapRoot}/build/generated-addresses/addresses.yaml`;
-                        fs.readFile(bootstrapPath, (error: any, yamlData: any) => {
-                            if (error) {
-                                console.log(
-                                    `catapult-service-bootstrap generated address could not be loaded from path ${bootstrapPath}. Ignoring and using accounts from network.conf.`,
-                                );
-                                return resolve(this);
-                            } else {
-                                console.log(`catapult-service-bootstrap generated address loaded from path ${bootstrapPath}.`);
-                                const parsedYaml = yaml.safeLoad(yamlData);
-                                this.account = this.createAccount(parsedYaml.nemesis_addresses[0]);
-                                this.account2 = this.createAccount(parsedYaml.nemesis_addresses[1]);
-                                this.account3 = this.createAccount(parsedYaml.nemesis_addresses[2]);
-                                this.multisigAccount = this.createAccount(parsedYaml.nemesis_addresses[3]);
-                                this.cosignAccount1 = this.createAccount(parsedYaml.nemesis_addresses[4]);
-                                this.cosignAccount2 = this.createAccount(parsedYaml.nemesis_addresses[5]);
-                                this.cosignAccount3 = this.createAccount(parsedYaml.nemesis_addresses[6]);
-                                this.cosignAccount4 = this.createAccount(parsedYaml.nemesis_addresses[7]);
-                                this.harvestingAccount = this.createAccount(parsedYaml.nemesis_addresses_harvesting[0]);
-                                return resolve(this);
-                            }
-                        });
-                    },
-                    (error) => {
-                        console.log('There has been an error loading the configuration. ', error);
-                        return reject(error);
-                    },
-                );
-            });
-        });
+        console.log('Starting bootstrap server');
+        const configResult = await this.service.start({ ...this.config, daemon: true });
+        const accounts = configResult.addresses?.mosaics?.['currency'].map((n) => n.privateKey);
+        if (!accounts) {
+            throw new Error('Nemesis accounts could not be loaded!');
+        }
+        return { accounts, apiUrl: 'http://localhost:3000' };
     }
 
-    createAccount(data): Account {
-        return Account.createFromPrivateKey(data.privateKey ? data.privateKey : data.private, this.networkType);
+    async close(): Promise<void> {
+        if (this.listener && this.listener.isOpen()) await this.listener.close();
+        if (this.config && this.startEachTime) {
+            console.log('Stopping bootstrap server....');
+            await this.service.stop(this.config);
+            await BootstrapUtils.sleep(2000);
+        }
+    }
+
+    private async connectToExternalServer(): Promise<{ accounts: string[]; apiUrl: string }> {
+        const json = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../conf/network.conf'), 'utf8'));
+        const accounts = [
+            json.testAccount.privateKey,
+            json.testAccount2.privateKey,
+            json.testAccount3.privateKey,
+            json.multisigAccount.privateKey,
+            json.cosignatoryAccount.privateKey,
+            json.cosignatory2Account.privateKey,
+            json.cosignatory3Account.privateKey,
+            json.cosignatory4Account.privateKey,
+            json.harvestingAccount.privateKey,
+        ];
+        return { accounts, apiUrl: json.apiUrl };
+    }
+
+    async start({ openListener }: { openListener: boolean }): Promise<IntegrationTestHelper> {
+        // await this.service.stop(this.config);
+        const config = await this.startBootstrapServer();
+        const accounts = config.accounts;
+        this.apiUrl = config.apiUrl;
+        this.repositoryFactory = new RepositoryFactoryHttp(this.apiUrl);
+        this.transactionService = new TransactionService(
+            this.repositoryFactory.createTransactionRepository(),
+            this.repositoryFactory.createReceiptRepository(),
+        );
+
+        this.networkType = await this.repositoryFactory.getNetworkType().toPromise();
+        this.generationHash = await this.repositoryFactory.getGenerationHash().toPromise();
+
+        let index = 0;
+        this.account = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.account2 = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.account3 = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.multisigAccount = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.cosignAccount1 = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.cosignAccount2 = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.cosignAccount3 = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.cosignAccount4 = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.harvestingAccount = Account.createFromPrivateKey(accounts[index++], this.networkType);
+
+        this.listener = this.repositoryFactory.createListener();
+
+        // What would be the best maxFee? In the future we will load the fee multiplier from rest.
+        this.maxFee = UInt64.fromUint(1000000);
+        this.networkCurrencyNamespaceId = this.apiUrl.toLowerCase().includes('localhost')
+            ? NetworkCurrencyLocal.NAMESPACE_ID
+            : NetworkCurrencyPublic.NAMESPACE_ID;
+        this.networkCurrencyDivisibility = this.apiUrl.toLowerCase().includes('localhost')
+            ? NetworkCurrencyLocal.DIVISIBILITY
+            : NetworkCurrencyPublic.DIVISIBILITY;
+
+        if (openListener) {
+            await this.listener.open();
+        }
+        return this;
     }
 
     createNetworkCurrency(amount: number, isRelative = true): NetworkCurrencyPublic | NetworkCurrencyLocal {

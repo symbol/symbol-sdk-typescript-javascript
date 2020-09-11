@@ -36,7 +36,7 @@ describe('PersistentHarvesting', () => {
     );
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             remoteAccount = Account.generateNewAccount(helper.networkType);
             console.log(remoteAccount.privateKey, remoteAccount.publicAccount);
             account = helper.harvestingAccount;
@@ -44,12 +44,9 @@ describe('PersistentHarvesting', () => {
             networkType = helper.networkType;
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

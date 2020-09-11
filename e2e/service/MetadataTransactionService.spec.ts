@@ -33,7 +33,7 @@ describe('MetadataTransactionService', () => {
     let generationHash: string;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             targetAccount = helper.account;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
@@ -41,12 +41,8 @@ describe('MetadataTransactionService', () => {
         });
     });
 
-    before(() => {
-        return helper.listener.open();
-    });
-
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

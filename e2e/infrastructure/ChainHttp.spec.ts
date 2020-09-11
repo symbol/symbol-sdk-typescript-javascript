@@ -23,9 +23,13 @@ describe('ChainHttp', () => {
     let chainRepository: ChainRepository;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: false }).then(() => {
             chainRepository = helper.repositoryFactory.createChainRepository();
         });
+    });
+
+    after(() => {
+        return helper.close();
     });
 
     describe('getBlockchainHeight', () => {

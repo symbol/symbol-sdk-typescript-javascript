@@ -34,19 +34,16 @@ describe('AccountService', () => {
     const name = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             accountService = new AccountService(helper.repositoryFactory);
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

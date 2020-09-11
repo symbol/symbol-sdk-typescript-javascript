@@ -27,12 +27,17 @@ describe('MosaicService', () => {
     const helper = new IntegrationTestHelper();
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: false }).then(() => {
             accountAddress = helper.account.address;
             accountRepository = helper.repositoryFactory.createAccountRepository();
             mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });
     });
+
+    after(() => {
+        return helper.close();
+    });
+
     it('should return the mosaic list skipping the expired mosaics', () => {
         const mosaicService = new MosaicService(accountRepository, mosaicRepository);
         return mosaicService

@@ -50,7 +50,7 @@ describe('RestrictionHttp', () => {
     let restrictionAccountRepository: RestrictionAccountRepository;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             account3 = helper.account3;
             accountAddress = helper.account.address;
@@ -60,12 +60,9 @@ describe('RestrictionHttp', () => {
             restrictionAccountRepository = helper.repositoryFactory.createRestrictionAccountRepository();
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

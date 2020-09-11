@@ -61,7 +61,7 @@ describe('TransactionService', () => {
     let transactionRepository: TransactionRepository;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             account2 = helper.account2;
             account3 = helper.account3;
@@ -77,12 +77,9 @@ describe('TransactionService', () => {
             );
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     function buildAggregateTransaction(): AggregateTransaction {

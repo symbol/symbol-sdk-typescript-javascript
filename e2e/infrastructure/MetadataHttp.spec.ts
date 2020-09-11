@@ -48,7 +48,7 @@ describe('MetadataHttp', () => {
     let metadataRepository: MetadataRepository;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             accountAddress = helper.account.address;
             generationHash = helper.generationHash;
@@ -57,12 +57,8 @@ describe('MetadataHttp', () => {
         });
     });
 
-    before(() => {
-        return helper.listener.open();
-    });
-
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

@@ -57,7 +57,7 @@ describe('AccountHttp', () => {
     let networkType: NetworkType;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             account2 = helper.account2;
             multisigAccount = helper.multisigAccount;
@@ -73,12 +73,9 @@ describe('AccountHttp', () => {
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

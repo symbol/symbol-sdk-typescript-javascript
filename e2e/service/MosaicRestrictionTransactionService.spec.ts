@@ -37,7 +37,7 @@ describe('MosaicRestrictionTransactionService', () => {
     let namespaceIdMosaic: NamespaceId;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
@@ -46,12 +46,8 @@ describe('MosaicRestrictionTransactionService', () => {
         });
     });
 
-    before(() => {
-        return helper.listener.open();
-    });
-
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

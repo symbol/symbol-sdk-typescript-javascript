@@ -45,7 +45,7 @@ describe('MosaicHttp', () => {
     let networkType: NetworkType;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
@@ -53,12 +53,9 @@ describe('MosaicHttp', () => {
             mosaicRepository = helper.repositoryFactory.createMosaicRepository();
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

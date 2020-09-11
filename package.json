@@ -6,7 +6,7 @@
         "pretest": "npm run build",
         "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
         "e2econfigcopy": "gulp",
-        "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
+        "test:e2e": "npm run bootstrap-clean && npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
         "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
         "build": "shx rm -rf dist/ && tsc && npm run e2econfigcopy",
         "test:cov": "nyc --reporter=lcov --reporter=text-summary npm t",
@@ -17,7 +17,13 @@
         "lint": "eslint --cache src/ test/ e2e/ --ext .ts",
         "lint:fix": "eslint src/ test/ e2e/ --ext .ts --fix",
         "style:fix": "npm run prettier && npm run lint:fix",
-        "doc": "typedoc --out \"ts-docs/$(npm run version --silent)\" src"
+        "doc": "typedoc --out \"ts-docs/$(npm run version --silent)\" src",
+        "bootstrap-clean": "symbol-bootstrap clean -t target/bootstrap-test",
+        "bootstrap-start": "symbol-bootstrap start -p bootstrap -c ./e2e/e2e-preset.yml -t target/bootstrap-test -u current",
+        "bootstrap-stop": "symbol-bootstrap stop -t target/bootstrap-test",
+        "bootstrap-run": "symbol-bootstrap run -t target/bootstrap-test",
+        "bootstrap-compose": "symbol-bootstrap compose -t target/bootstrap-test",
+        "bootstrap-config": "symbol-bootstrap config -p bootstrap -c ./e2e/e2e-preset.yml -t target/bootstrap-test"
     },
     "pre-commit": [
         "lint"
@@ -76,6 +82,7 @@
         "prettier": "^2.0.4",
         "secure-random": "^1.1.1",
         "shx": "^0.3.2",
+        "symbol-bootstrap": "0.0.0-alpha-202008261328",
         "ts-mockito": "^2.4.0",
         "ts-node": "^8.6.2",
         "typescript": "^3.7.5",

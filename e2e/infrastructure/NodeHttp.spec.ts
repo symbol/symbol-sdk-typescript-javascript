@@ -23,13 +23,17 @@ describe('NodeHttp', () => {
     const helper = new IntegrationTestHelper();
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: false }).then(() => {
             nodeRepository = helper.repositoryFactory.createNodeRepository();
         });
     });
 
+    after(() => {
+        return helper.close();
+    });
+
     describe('getNodeInfo', () => {
-        it('should return node info', async () => {
+        it('should return node info FER', async () => {
             const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
             expect(nodeInfo.friendlyName).not.to.be.undefined;
             expect(nodeInfo.host).not.to.be.undefined;

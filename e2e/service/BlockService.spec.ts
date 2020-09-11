@@ -41,7 +41,7 @@ describe('BlockService', () => {
     let receiptRepository: ReceiptRepository;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             account2 = helper.account2;
             generationHash = helper.generationHash;
@@ -51,12 +51,9 @@ describe('BlockService', () => {
             blockService = new BlockService(helper.repositoryFactory);
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**
