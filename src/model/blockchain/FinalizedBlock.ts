@@ -24,6 +24,12 @@ export class FinalizedBlock {
      * @param height Block height
      * @param hash Block hash
      * @param finalizationPoint Block finalization point
+     * @param finalizationEpoch Block finalization epoch
      */
-    constructor(public readonly height: UInt64, public readonly hash: string, public readonly finalizationPoint: UInt64) {}
+    constructor(
+        public readonly height: UInt64,
+        public readonly hash: string,
+        public readonly finalizationPoint: number,
+        public readonly finalizationEpoch: number,
+    ) {}
 }

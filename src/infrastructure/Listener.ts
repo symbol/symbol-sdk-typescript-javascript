@@ -195,7 +195,8 @@ export class Listener implements IListener {
                     message: new FinalizedBlock(
                         UInt64.fromNumericString(message.data.height),
                         message.data.hash,
-                        UInt64.fromNumericString(message.data.finalizationPoint),
+                        message.data.finalizationPoint,
+                        message.data.finalizationEpoch,
                     ),
                 });
                 break;

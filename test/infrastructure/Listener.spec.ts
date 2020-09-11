@@ -633,7 +633,8 @@ describe('Listener', () => {
                 data: {
                     height: '100',
                     hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
-                    finalizationPoint: '1',
+                    finalizationPoint: 1,
+                    finalizationEpoch: 1,
                 },
             };
 
@@ -652,7 +653,8 @@ describe('Listener', () => {
             expect(reportedStatus.length).to.be.equal(1);
             expect(reportedStatus[0].hash).to.be.equal(finalizedBlockDTO.data.hash);
             deepEqual(reportedStatus[0].height.toString(), finalizedBlockDTO.data.height);
-            deepEqual(reportedStatus[0].finalizationPoint.toString(), finalizedBlockDTO.data.finalizationPoint);
+            deepEqual(reportedStatus[0].finalizationPoint, finalizedBlockDTO.data.finalizationPoint);
+            deepEqual(reportedStatus[0].finalizationEpoch, finalizedBlockDTO.data.finalizationEpoch);
         });
     });
 });
