@@ -39,7 +39,7 @@ describe('SecretLockHttp', () => {
     let secret: string;
 
     before(() => {
-        return helper.start().then(() => {
+        return helper.start({ openListener: true }).then(() => {
             account = helper.account;
             account2 = helper.account2;
             networkType = helper.networkType;
@@ -47,12 +47,9 @@ describe('SecretLockHttp', () => {
             secret = sha3_256.create().update(Crypto.randomBytes(20)).hex();
         });
     });
-    before(() => {
-        return helper.listener.open();
-    });
 
     after(() => {
-        helper.listener.close();
+        return helper.close();
     });
 
     /**

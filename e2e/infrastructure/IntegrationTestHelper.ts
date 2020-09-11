@@ -16,7 +16,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { map } from 'rxjs/operators';
-import { BootstrapService, BootstrapUtils, ConfigPreset, Preset, StartParams } from 'symbol-bootstrap';
+import { BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
 import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
