@@ -62,7 +62,7 @@ export interface TransactionSearchCriteria extends SearchCriteria {
     type?: TransactionType[];
 
     /**
-     * When true, the endEpoch also returns all the embedded aggregate transactions. When
+     * When true, the endpoint also returns all the embedded aggregate transactions. When
      * false, only top-level transactions used to calculate the block transactionsHash are
      * returned.  (optional, default to false)
      */
