@@ -97,9 +97,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#endpoint" class="tsd-kind-icon">end<wbr>Point</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#endepoch" class="tsd-kind-icon">end<wbr>Epoch</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#startpoint" class="tsd-kind-icon">start<wbr>Point</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#startepoch" class="tsd-kind-icon">start<wbr>Epoch</a></li>
 							</ul>
 						</section>
 					</div>
@@ -111,13 +111,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Link<wbr>Voting<wbr>Key<span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, startPoint<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, endPoint<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html" class="tsd-signature-type">AccountLinkVotingKey</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Link<wbr>Voting<wbr>Key<span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, startEpoch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endEpoch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html" class="tsd-signature-type">AccountLinkVotingKey</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/model/account/AccountLinkVotingKey.ts#L20">model/account/AccountLinkVotingKey.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4075634/src/model/account/AccountLinkVotingKey.ts#L20">model/account/AccountLinkVotingKey.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -126,10 +126,10 @@
 									<h5>publicKey: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>startPoint: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+									<h5>startEpoch: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
-									<h5>endPoint: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+									<h5>endEpoch: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html" class="tsd-signature-type">AccountLinkVotingKey</a></h4>
@@ -140,17 +140,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="endpoint" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> end<wbr>Point</h3>
-					<div class="tsd-signature tsd-kind-icon">end<wbr>Point<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<a name="endepoch" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> end<wbr>Epoch</h3>
+					<div class="tsd-signature tsd-kind-icon">end<wbr>Epoch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/model/account/AccountLinkVotingKey.ts#L36">model/account/AccountLinkVotingKey.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4075634/src/model/account/AccountLinkVotingKey.ts#L36">model/account/AccountLinkVotingKey.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>End point</p>
+							<p>End epoch</p>
 						</div>
 					</div>
 				</section>
@@ -160,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/model/account/AccountLinkVotingKey.ts#L28">model/account/AccountLinkVotingKey.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4075634/src/model/account/AccountLinkVotingKey.ts#L28">model/account/AccountLinkVotingKey.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -170,17 +170,17 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="startpoint" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> start<wbr>Point</h3>
-					<div class="tsd-signature tsd-kind-icon">start<wbr>Point<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<a name="startepoch" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> start<wbr>Epoch</h3>
+					<div class="tsd-signature tsd-kind-icon">start<wbr>Epoch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/model/account/AccountLinkVotingKey.ts#L32">model/account/AccountLinkVotingKey.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4075634/src/model/account/AccountLinkVotingKey.ts#L32">model/account/AccountLinkVotingKey.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Start point</p>
+							<p>Start epoch</p>
 						</div>
 					</div>
 				</section>
@@ -208,13 +208,13 @@
 								<a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#endpoint" class="tsd-kind-icon">end<wbr>Point</a>
+								<a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#endepoch" class="tsd-kind-icon">end<wbr>Epoch</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#startpoint" class="tsd-kind-icon">start<wbr>Point</a>
+								<a href="_model_account_accountlinkvotingkey_.accountlinkvotingkey.html#startepoch" class="tsd-kind-icon">start<wbr>Epoch</a>
 							</li>
 						</ul>
 					</li>

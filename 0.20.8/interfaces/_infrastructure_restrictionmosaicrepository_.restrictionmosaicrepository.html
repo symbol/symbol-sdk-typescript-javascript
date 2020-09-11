@@ -90,10 +90,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicaddressrestriction" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Address<wbr>Restriction</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicaddressrestrictions" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Address<wbr>Restrictions</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicglobalrestriction" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Global<wbr>Restriction</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicglobalrestrictions" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Global<wbr>Restrictions</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#searchmosaicrestrictions" class="tsd-kind-icon">search<wbr>Mosaic<wbr>Restrictions</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,159 +99,34 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmosaicaddressrestriction" class="tsd-anchor"></a>
-					<h3>get<wbr>Mosaic<wbr>Address<wbr>Restriction</h3>
+					<a name="searchmosaicrestrictions" class="tsd-anchor"></a>
+					<h3>search<wbr>Mosaic<wbr>Restrictions</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaic<wbr>Address<wbr>Restriction<span class="tsd-signature-symbol">(</span>mosaicId<span class="tsd-signature-symbol">: </span><a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a>, address<span class="tsd-signature-symbol">: </span><a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">search<wbr>Mosaic<wbr>Restrictions<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/infrastructure/RestrictionMosaicRepository.ts#L31">infrastructure/RestrictionMosaicRepository.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/4075634/src/infrastructure/RestrictionMosaicRepository.ts#L30">infrastructure/RestrictionMosaicRepository.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get mosaic address restriction.</p>
+									<p>Returns a mosaic restrictions page based on the criteria.</p>
 								</div>
-								<dl class="tsd-comment-tags">
-									<dt>summary</dt>
-									<dd><p>Get mosaic address restrictions for a given mosaic and account identifier.</p>
-									</dd>
-								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>mosaicId: <a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></h5>
+									<h5>criteria: <a href="_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Mosaic identifier.</p>
-									</div>
-								</li>
-								<li>
-									<h5>address: <a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>address</p>
+										<p>the criteria</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable<MosaicAddressRestriction></p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmosaicaddressrestrictions" class="tsd-anchor"></a>
-					<h3>get<wbr>Mosaic<wbr>Address<wbr>Restrictions</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaic<wbr>Address<wbr>Restrictions<span class="tsd-signature-symbol">(</span>mosaicId<span class="tsd-signature-symbol">: </span><a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a>, address<span class="tsd-signature-symbol">: </span><a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/infrastructure/RestrictionMosaicRepository.ts#L40">infrastructure/RestrictionMosaicRepository.ts:40</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get mosaic address restrictions.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>summary</dt>
-									<dd><p>Get mosaic address restrictions for a given mosaic and account identifiers array</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>mosaicId: <a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Mosaic identifier.</p>
-									</div>
-								</li>
-								<li>
-									<h5>address: <a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">[]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable&lt;MosaicAddressRestriction[]&gt;</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmosaicglobalrestriction" class="tsd-anchor"></a>
-					<h3>get<wbr>Mosaic<wbr>Global<wbr>Restriction</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaic<wbr>Global<wbr>Restriction<span class="tsd-signature-symbol">(</span>mosaicId<span class="tsd-signature-symbol">: </span><a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/infrastructure/RestrictionMosaicRepository.ts#L48">infrastructure/RestrictionMosaicRepository.ts:48</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get mosaic global restriction.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>summary</dt>
-									<dd><p>Get mosaic global restrictions for a given mosaic identifier.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>mosaicId: <a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Mosaic identifier.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable<MosaicGlobalRestriction></p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getmosaicglobalrestrictions" class="tsd-anchor"></a>
-					<h3>get<wbr>Mosaic<wbr>Global<wbr>Restrictions</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaic<wbr>Global<wbr>Restrictions<span class="tsd-signature-symbol">(</span>mosaicIds<span class="tsd-signature-symbol">: </span><a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/90de311/src/infrastructure/RestrictionMosaicRepository.ts#L56">infrastructure/RestrictionMosaicRepository.ts:56</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get mosaic global restrictions.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>summary</dt>
-									<dd><p>Get mosaic global restrictions for a given list of mosaics.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>mosaicIds: <a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>List of mosaic identifier.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable&lt;MosaicGlobalRestriction[]&gt;</p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a page of <a href="../classes/_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html">MosaicGlobalRestriction</a></p>
 						</li>
 					</ul>
 				</section>
@@ -279,16 +151,7 @@
 						<a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html" class="tsd-kind-icon">Restriction<wbr>Mosaic<wbr>Repository</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicaddressrestriction" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Address<wbr>Restriction</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicaddressrestrictions" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Address<wbr>Restrictions</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicglobalrestriction" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Global<wbr>Restriction</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicglobalrestrictions" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Global<wbr>Restrictions</a>
+								<a href="_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#searchmosaicrestrictions" class="tsd-kind-icon">search<wbr>Mosaic<wbr>Restrictions</a>
 							</li>
 						</ul>
 					</li>
