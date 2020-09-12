@@ -132,8 +132,8 @@ describe('MetadataHttp', () => {
                 Deadline.create(),
                 account.address,
                 UInt64.fromUint(6),
-                0,
-                `Test account mett value`,
+                23,
+                `Test account meta value`,
                 networkType,
                 helper.maxFee,
             );
