@@ -126,30 +126,6 @@ describe('MetadataHttp', () => {
         });
     });
 
-    describe('AccountMetadataTransaction', () => {
-        it('aggregate', () => {
-            const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(),
-                account.address,
-                UInt64.fromUint(6),
-                23,
-                `Test account meta value`,
-                networkType,
-                helper.maxFee,
-            );
-
-            const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
-                [accountMetadataTransaction.toAggregate(account.publicAccount)],
-                networkType,
-                [],
-                helper.maxFee,
-            );
-            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            return helper.announce(signedTransaction);
-        });
-    });
-
     describe('MosaicMetadataTransaction', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
