@@ -20,6 +20,7 @@ import { StorageInfo } from '../model/blockchain/StorageInfo';
 import { NodeHealth } from '../model/node/NodeHealth';
 import { NodeInfo } from '../model/node/NodeInfo';
 import { NodeTime } from '../model/node/NodeTime';
+import { RoleType } from '../model/node/RoleType';
 import { ServerInfo } from '../model/node/ServerInfo';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
@@ -123,9 +124,27 @@ export class NodeHttp extends Http implements NodeRepository {
             nodeInfo.port,
             nodeInfo.networkIdentifier,
             nodeInfo.version,
-            nodeInfo.roles as number,
+            this.getNodeRoles(nodeInfo.roles.valueOf()),
             nodeInfo.host,
             nodeInfo.friendlyName,
         );
+    }
+
+    /**
+     * Return user friendly role type list
+     * @param roleType combined node role types
+     */
+    public getNodeRoles(roleType: number): RoleType[] {
+        const roles: RoleType[] = [];
+        if ((RoleType.ApiNode.valueOf() & roleType) != 0) {
+            roles.push(RoleType.ApiNode);
+        }
+        if ((RoleType.PeerNode.valueOf() & roleType) != 0) {
+            roles.push(RoleType.PeerNode);
+        }
+        if ((RoleType.VotingNode.valueOf() & roleType) != 0) {
+            roles.push(RoleType.VotingNode);
+        }
+        return roles;
     }
 }

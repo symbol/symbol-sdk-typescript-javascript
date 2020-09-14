@@ -17,5 +17,9 @@
 export enum RoleType {
     PeerNode = 1,
     ApiNode = 2,
-    DualNode = 3,
+    DualNode = PeerNode | ApiNode,
+    VotingNode = 4,
+    PeerVotingNode = PeerNode | VotingNode,
+    ApiVotingNode = ApiNode | VotingNode,
+    DualVotingNode = ApiNode | PeerNode | VotingNode,
 }
