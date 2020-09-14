@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { ChainInfoDTO, ChainInfoDTOLatestFinalizedBlock } from 'symbol-openapi-typescript-fetch-client';
+import { ChainInfoDTO, FinalizedBlockDTO } from 'symbol-openapi-typescript-fetch-client';
 import { ChainInfo } from '../../../src/model/blockchain/ChainInfo';
 import { FinalizedBlock } from '../../../src/model/blockchain/FinalizedBlock';
 import { UInt64 } from '../../../src/model/UInt64';
@@ -24,10 +24,9 @@ describe('ChainInfo', () => {
     it('should createComplete an ChainInfo object', () => {
         const chainInfoDTO = {} as ChainInfoDTO;
         chainInfoDTO.height = '1';
-        chainInfoDTO.finalizedHeight = '1';
         chainInfoDTO.scoreLow = '2';
         chainInfoDTO.scoreHigh = '3';
-        const finalizedBlockDto = {} as ChainInfoDTOLatestFinalizedBlock;
+        const finalizedBlockDto = {} as FinalizedBlockDTO;
         finalizedBlockDto.finalizationEpoch = 1;
         finalizedBlockDto.finalizationPoint = 1;
         finalizedBlockDto.hash = 'hash';
@@ -36,7 +35,6 @@ describe('ChainInfo', () => {
 
         const info = new ChainInfo(
             UInt64.fromNumericString(chainInfoDTO.height),
-            UInt64.fromNumericString(chainInfoDTO.finalizedHeight),
             UInt64.fromNumericString(chainInfoDTO.scoreLow),
             UInt64.fromNumericString(chainInfoDTO.scoreHigh),
             new FinalizedBlock(
@@ -49,7 +47,6 @@ describe('ChainInfo', () => {
 
         expect(info).to.be.not.null;
         expect(info.height.toString()).to.be.equals('1');
-        expect(info.finalizedHeight.toString()).to.be.equals('1');
         expect(info.scoreLow.toString()).to.be.equals('2');
         expect(info.scoreHigh.toString()).to.be.equals('3');
         expect(info.latestFinalizedBlock.height.toString()).to.be.equals('1');

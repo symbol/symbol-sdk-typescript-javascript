@@ -54,7 +54,6 @@ export class ChainHttp extends Http implements ChainRepository {
             (body: ChainInfoDTO) =>
                 new ChainInfo(
                     UInt64.fromNumericString(body.height),
-                    UInt64.fromNumericString(body.finalizedHeight),
                     UInt64.fromNumericString(body.scoreLow),
                     UInt64.fromNumericString(body.scoreHigh),
                     new FinalizedBlock(

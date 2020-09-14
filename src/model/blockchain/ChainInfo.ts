@@ -22,18 +22,16 @@ import { FinalizedBlock } from './FinalizedBlock';
  */
 export class ChainInfo {
     /**
+     * @param height
      * @param scoreLow
      * @param scoreHigh
+     * @param latestFinalizedBlock
      */
     constructor(
         /**
          * Current chain height.
          */
         public readonly height: UInt64,
-        /**
-         * Current finalized chain height.
-         */
-        public readonly finalizedHeight: UInt64,
         /**
          * Low part of the blockchain score.
          */
