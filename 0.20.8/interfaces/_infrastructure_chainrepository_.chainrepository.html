@@ -102,8 +102,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_chainrepository_.chainrepository.html#getblockchainheight" class="tsd-kind-icon">get<wbr>Blockchain<wbr>Height</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_chainrepository_.chainrepository.html#getchainscore" class="tsd-kind-icon">get<wbr>Chain<wbr>Score</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_infrastructure_chainrepository_.chainrepository.html#getchaininfo" class="tsd-kind-icon">get<wbr>Chain<wbr>Info</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,47 +111,24 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getblockchainheight" class="tsd-anchor"></a>
-					<h3>get<wbr>Blockchain<wbr>Height</h3>
+					<a name="getchaininfo" class="tsd-anchor"></a>
+					<h3>get<wbr>Chain<wbr>Info</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Blockchain<wbr>Height<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Chain<wbr>Info<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_chaininfo_.chaininfo.html" class="tsd-signature-type">ChainInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/08d954e/src/infrastructure/ChainRepository.ts#L31">infrastructure/ChainRepository.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/infrastructure/ChainRepository.ts#L30">infrastructure/ChainRepository.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Gets current blockchain height</p>
+									<p>Gets current blockchain infomation</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable<UInt64></p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getchainscore" class="tsd-anchor"></a>
-					<h3>get<wbr>Chain<wbr>Score</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Chain<wbr>Score<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_blockchainscore_.blockchainscore.html" class="tsd-signature-type">BlockchainScore</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/08d954e/src/infrastructure/ChainRepository.ts#L37">infrastructure/ChainRepository.ts:37</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Gets current blockchain score</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_blockchainscore_.blockchainscore.html" class="tsd-signature-type">BlockchainScore</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_blockchain_chaininfo_.chaininfo.html" class="tsd-signature-type">ChainInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Observable<BlockchainScore></p>
 						</li>
 					</ul>
@@ -178,10 +154,7 @@
 						<a href="_infrastructure_chainrepository_.chainrepository.html" class="tsd-kind-icon">Chain<wbr>Repository</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_chainrepository_.chainrepository.html#getblockchainheight" class="tsd-kind-icon">get<wbr>Blockchain<wbr>Height</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="_infrastructure_chainrepository_.chainrepository.html#getchainscore" class="tsd-kind-icon">get<wbr>Chain<wbr>Score</a>
+								<a href="_infrastructure_chainrepository_.chainrepository.html#getchaininfo" class="tsd-kind-icon">get<wbr>Chain<wbr>Info</a>
 							</li>
 						</ul>
 					</li>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AccountRestrictionsInfo | symbol-sdk</title>
+	<title>ChainInfo | symbol-sdk</title>
 	<meta name="description" content="Documentation for symbol-sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_model_restriction_accountrestrictionsinfo_.html">&quot;model/restriction/AccountRestrictionsInfo&quot;</a>
+					<a href="../modules/_model_blockchain_chaininfo_.html">&quot;model/blockchain/ChainInfo&quot;</a>
 				</li>
 				<li>
-					<a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html">AccountRestrictionsInfo</a>
+					<a href="_model_blockchain_chaininfo_.chaininfo.html">ChainInfo</a>
 				</li>
 			</ul>
-			<h1>Class AccountRestrictionsInfo</h1>
+			<h1>Class ChainInfo</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Account restrictions structure describes restriction information for an account.</p>
+						<p>The chain information.</p>
 					</div>
 				</div>
 			</section>
@@ -80,7 +80,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AccountRestrictionsInfo</span>
+						<span class="target">ChainInfo</span>
 					</li>
 				</ul>
 			</section>
@@ -91,14 +91,16 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_model_blockchain_chaininfo_.chaininfo.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html#accountrestrictions" class="tsd-kind-icon">account<wbr>Restrictions</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html#meta" class="tsd-kind-icon">meta</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_chaininfo_.chaininfo.html#height" class="tsd-kind-icon">height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_chaininfo_.chaininfo.html#latestfinalizedblock" class="tsd-kind-icon">latest<wbr>Finalized<wbr>Block</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_chaininfo_.chaininfo.html#scorehigh" class="tsd-kind-icon">score<wbr>High</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_blockchain_chaininfo_.chaininfo.html#scorelow" class="tsd-kind-icon">score<wbr>Low</a></li>
 							</ul>
 						</section>
 					</div>
@@ -110,34 +112,37 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Restrictions<wbr>Info<span class="tsd-signature-symbol">(</span>meta<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, accountRestrictions<span class="tsd-signature-symbol">: </span><a href="_model_restriction_accountrestrictions_.accountrestrictions.html" class="tsd-signature-type">AccountRestrictions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html" class="tsd-signature-type">AccountRestrictionsInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Chain<wbr>Info<span class="tsd-signature-symbol">(</span>height<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, scoreLow<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, scoreHigh<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, latestFinalizedBlock<span class="tsd-signature-symbol">: </span><a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_blockchain_chaininfo_.chaininfo.html" class="tsd-signature-type">ChainInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/restriction/AccountRestrictionsInfo.ts#L20">model/restriction/AccountRestrictionsInfo.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/blockchain/ChainInfo.ts#L23">model/blockchain/ChainInfo.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Constructor</p>
-								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>meta: <span class="tsd-signature-type">any</span></h5>
+									<h5>height: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
 								</li>
 								<li>
-									<h5>accountRestrictions: <a href="_model_restriction_accountrestrictions_.accountrestrictions.html" class="tsd-signature-type">AccountRestrictions</a></h5>
+									<h5>scoreLow: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+								</li>
+								<li>
+									<h5>scoreHigh: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+								</li>
+								<li>
+									<h5>latestFinalizedBlock: <a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 										</div>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html" class="tsd-signature-type">AccountRestrictionsInfo</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_model_blockchain_chaininfo_.chaininfo.html" class="tsd-signature-type">ChainInfo</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -145,12 +150,27 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="accountrestrictions" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> account<wbr>Restrictions</h3>
-					<div class="tsd-signature tsd-kind-icon">account<wbr>Restrictions<span class="tsd-signature-symbol">:</span> <a href="_model_restriction_accountrestrictions_.accountrestrictions.html" class="tsd-signature-type">AccountRestrictions</a></div>
+					<a name="height" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> height</h3>
+					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/restriction/AccountRestrictionsInfo.ts#L34">model/restriction/AccountRestrictionsInfo.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/blockchain/ChainInfo.ts#L34">model/blockchain/ChainInfo.ts:34</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Current chain height.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="latestfinalizedblock" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> latest<wbr>Finalized<wbr>Block</h3>
+					<div class="tsd-signature tsd-kind-icon">latest<wbr>Finalized<wbr>Block<span class="tsd-signature-symbol">:</span> <a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/blockchain/ChainInfo.ts#L46">model/blockchain/ChainInfo.ts:46</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -159,17 +179,32 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="meta" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> meta</h3>
-					<div class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="scorehigh" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> score<wbr>High</h3>
+					<div class="tsd-signature tsd-kind-icon">score<wbr>High<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/restriction/AccountRestrictionsInfo.ts#L30">model/restriction/AccountRestrictionsInfo.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/blockchain/ChainInfo.ts#L42">model/blockchain/ChainInfo.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>meta</p>
+							<p>High part of the blockchain score.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="scorelow" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> score<wbr>Low</h3>
+					<div class="tsd-signature tsd-kind-icon">score<wbr>Low<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/cb691b3/src/model/blockchain/ChainInfo.ts#L38">model/blockchain/ChainInfo.ts:38</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Low part of the blockchain score.</p>
 						</div>
 					</div>
 				</section>
@@ -182,7 +217,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_model_restriction_accountrestrictionsinfo_.html">&quot;model/restriction/<wbr>Account<wbr>Restrictions<wbr>Info&quot;</a>
+						<a href="../modules/_model_blockchain_chaininfo_.html">&quot;model/blockchain/<wbr>Chain<wbr>Info&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -191,16 +226,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html" class="tsd-kind-icon">Account<wbr>Restrictions<wbr>Info</a>
+						<a href="_model_blockchain_chaininfo_.chaininfo.html" class="tsd-kind-icon">Chain<wbr>Info</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_model_blockchain_chaininfo_.chaininfo.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html#accountrestrictions" class="tsd-kind-icon">account<wbr>Restrictions</a>
+								<a href="_model_blockchain_chaininfo_.chaininfo.html#height" class="tsd-kind-icon">height</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_restriction_accountrestrictionsinfo_.accountrestrictionsinfo.html#meta" class="tsd-kind-icon">meta</a>
+								<a href="_model_blockchain_chaininfo_.chaininfo.html#latestfinalizedblock" class="tsd-kind-icon">latest<wbr>Finalized<wbr>Block</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_blockchain_chaininfo_.chaininfo.html#scorehigh" class="tsd-kind-icon">score<wbr>High</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_blockchain_chaininfo_.chaininfo.html#scorelow" class="tsd-kind-icon">score<wbr>Low</a>
 							</li>
 						</ul>
 					</li>
