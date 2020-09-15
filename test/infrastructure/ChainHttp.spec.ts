@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { ChainRoutesApi, ChainScoreDTO, HeightInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { ChainInfoDTO, FinalizedBlockDTO, ChainRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
@@ -34,23 +34,26 @@ describe('ChainHttp', () => {
         reset(chainRoutesApi);
     });
 
-    it('getBlockchainHeight', async () => {
-        const heightInfoDTO = {} as HeightInfoDTO;
-        heightInfoDTO.height = '3';
-        when(chainRoutesApi.getChainHeight()).thenReturn(Promise.resolve(heightInfoDTO));
-        const heightInfo = await chainRepository.getBlockchainHeight().toPromise();
-        expect(heightInfo).to.be.not.null;
-        expect(heightInfo.toString()).to.be.equals('3');
-    });
-
-    it('getChainScore', async () => {
-        const chainScoreDTO = {} as ChainScoreDTO;
-        chainScoreDTO.scoreLow = '2';
-        chainScoreDTO.scoreHigh = '3';
-        when(chainRoutesApi.getChainScore()).thenReturn(Promise.resolve(chainScoreDTO));
-        const chainScore = await chainRepository.getChainScore().toPromise();
-        expect(chainScore).to.be.not.null;
-        expect(chainScore.scoreLow.toString()).to.be.equals('2');
-        expect(chainScore.scoreHigh.toString()).to.be.equals('3');
+    it('getChainInfo', async () => {
+        const chainInfoDTO = {} as ChainInfoDTO;
+        chainInfoDTO.height = '1';
+        chainInfoDTO.scoreLow = '2';
+        chainInfoDTO.scoreHigh = '3';
+        const finalizedBlockDto = {} as FinalizedBlockDTO;
+        finalizedBlockDto.finalizationEpoch = 1;
+        finalizedBlockDto.finalizationPoint = 1;
+        finalizedBlockDto.hash = 'hash';
+        finalizedBlockDto.height = '1';
+        chainInfoDTO.latestFinalizedBlock = finalizedBlockDto;
+        when(chainRoutesApi.getChainInfo()).thenReturn(Promise.resolve(chainInfoDTO));
+        const info = await chainRepository.getChainInfo().toPromise();
+        expect(info).to.be.not.null;
+        expect(info.height.toString()).to.be.equals('1');
+        expect(info.scoreLow.toString()).to.be.equals('2');
+        expect(info.scoreHigh.toString()).to.be.equals('3');
+        expect(info.latestFinalizedBlock.height.toString()).to.be.equals('1');
+        expect(info.latestFinalizedBlock.hash).to.be.equals('hash');
+        expect(info.latestFinalizedBlock.finalizationPoint).to.be.equals(1);
+        expect(info.latestFinalizedBlock.finalizationEpoch).to.be.equals(1);
     });
 });

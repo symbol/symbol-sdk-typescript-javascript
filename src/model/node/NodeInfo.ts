@@ -53,7 +53,7 @@ export class NodeInfo {
         /**
          * The roles of the application.
          */
-        public readonly roles: RoleType,
+        public readonly roles: RoleType[],
         /**
          * The IP address of the endpoint.
          */

@@ -43,6 +43,7 @@ describe('SecretLockHttp', () => {
             account = helper.account;
             account2 = helper.account2;
             networkType = helper.networkType;
+            generationHash = helper.generationHash;
             SecretLockRepo = helper.repositoryFactory.createSecretLockRepository();
             secret = sha3_256.create().update(Crypto.randomBytes(20)).hex();
         });
@@ -71,13 +72,7 @@ describe('SecretLockHttp', () => {
                 helper.maxFee,
             );
             const signedTransaction = secretLockTransaction.signWith(account, generationHash);
-            return helper.announce(signedTransaction).then((transaction: SecretLockTransaction) => {
-                expect(transaction.mosaic, 'Mosaic').not.to.be.undefined;
-                expect(transaction.duration, 'Duration').not.to.be.undefined;
-                expect(transaction.hashAlgorithm, 'HashAlgorithm').not.to.be.undefined;
-                expect(transaction.secret, 'Secret').not.to.be.undefined;
-                expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
-            });
+            return helper.announce(signedTransaction);
         });
     });
 
@@ -89,10 +84,11 @@ describe('SecretLockHttp', () => {
 
     describe('getSecretLock', () => {
         it('should return hash lock info given hash', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
             const info = await SecretLockRepo.getSecretLock(secret).toPromise();
             expect(info.ownerAddress.plain()).to.be.equal(account.address.plain());
             expect(info.recipientAddress.plain()).to.be.equal(account2.address.plain());
-            expect(info.amount.toString()).to.be.equal('100');
+            expect(info.amount.toString()).to.be.equal('10');
         });
     });
 

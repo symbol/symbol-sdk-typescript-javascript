@@ -90,7 +90,7 @@ describe('HashLockHttp', () => {
         signedAggregatedTransaction: SignedTransaction,
         signer: Account,
         mosaicId: UnresolvedMosaicId,
-    ): void => {
+    ): any => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
             new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
@@ -100,8 +100,7 @@ describe('HashLockHttp', () => {
             helper.maxFee,
         );
         const signedLockFundsTransaction = signer.sign(lockFundsTransaction, generationHash);
-        hash = signedLockFundsTransaction.hash;
-        helper.announce(signedLockFundsTransaction);
+        return helper.announce(signedLockFundsTransaction);
     };
 
     /**
@@ -152,17 +151,11 @@ describe('HashLockHttp', () => {
      * =========================
      */
 
-    describe('getHashLock', () => {
-        it('should return hash lock info given hash', async () => {
-            const info = await hashLockRepo.getHashLock(hash).toPromise();
-            expect(info.ownerAddress.plain()).to.be.equal(account.address.plain());
-            expect(info.amount.toString()).to.be.equal('1000');
-        });
-    });
-
     describe('searchHashLock', () => {
         it('should return hash lock page info', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
             const info = await hashLockRepo.search({ address: account.address }).toPromise();
+            hash = info.data[0].hash;
             expect(info.data.length).to.be.greaterThan(0);
         });
     });
@@ -177,6 +170,14 @@ describe('HashLockHttp', () => {
             const info = await hashLockRepo.search({ address: account.address, pageSize: 20, order: Order.Asc }).toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
+        });
+    });
+
+    describe('getHashLock', () => {
+        it('should return hash lock info given hash', async () => {
+            const info = await hashLockRepo.getHashLock(hash).toPromise();
+            expect(info.ownerAddress.plain()).to.be.equal(account.address.plain());
+            expect(info.amount.toString()).to.be.equal('10000000');
         });
     });
 

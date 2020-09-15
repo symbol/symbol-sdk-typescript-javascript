@@ -31,6 +31,7 @@ import {
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NodeHttp } from '../../src/infrastructure/NodeHttp';
+import { RoleType } from '../../src/model/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('NodeHttp', () => {
@@ -87,7 +88,54 @@ describe('NodeHttp', () => {
 
         const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
         expect(nodeInfo).to.be.not.null;
-        expect(nodeInfo).to.deep.equal(body);
+        expect(nodeInfo.friendlyName).to.be.equal(body.friendlyName);
+        expect(nodeInfo.host).to.be.equal(body.host);
+        expect(nodeInfo.networkGenerationHashSeed).to.be.equal(body.networkGenerationHashSeed);
+        expect(nodeInfo.networkIdentifier).to.deep.equal(body.networkIdentifier);
+        expect(nodeInfo.port).to.be.equal(body.port);
+        expect(nodeInfo.publicKey).to.be.equal(body.publicKey);
+        expect(nodeInfo.version).to.be.equal(body.version);
+        expect(
+            nodeInfo.roles
+                .map((r) => r.valueOf())
+                .reduce(function (a, b) {
+                    return a | b;
+                }, 0),
+        ).to.be.equal(body.roles);
+    });
+
+    it('getNodeInfo - Full node', async () => {
+        const body = {} as NodeInfoDTO;
+        body.networkIdentifier = NetworkType.TEST_NET;
+        body.friendlyName = 'Some Friendly name';
+        body.networkGenerationHashSeed = 'Some Gen Hash';
+        body.host = 'Some Host';
+        body.port = 1234;
+        body.publicKey = 'Some Public Key';
+        body.roles = RolesTypeEnum.NUMBER_7;
+        body.version = 4567;
+
+        when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
+
+        const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+        expect(nodeInfo).to.be.not.null;
+        expect(nodeInfo.friendlyName).to.be.equal(body.friendlyName);
+        expect(nodeInfo.host).to.be.equal(body.host);
+        expect(nodeInfo.networkGenerationHashSeed).to.be.equal(body.networkGenerationHashSeed);
+        expect(nodeInfo.networkIdentifier).to.deep.equal(body.networkIdentifier);
+        expect(nodeInfo.port).to.be.equal(body.port);
+        expect(nodeInfo.publicKey).to.be.equal(body.publicKey);
+        expect(nodeInfo.version).to.be.equal(body.version);
+        expect(
+            nodeInfo.roles
+                .map((r) => r.valueOf())
+                .reduce(function (a, b) {
+                    return a | b;
+                }, 0),
+        ).to.be.equal(body.roles);
+        expect(nodeInfo.roles.indexOf(RoleType.ApiNode) !== -1).to.be.true;
+        expect(nodeInfo.roles.indexOf(RoleType.PeerNode) !== -1).to.be.true;
+        expect(nodeInfo.roles.indexOf(RoleType.VotingNode) !== -1).to.be.true;
     });
 
     it('getNodePeers', async () => {
@@ -106,7 +154,20 @@ describe('NodeHttp', () => {
         const nodeInfoList = await nodeRepository.getNodePeers().toPromise();
         const nodeInfo = nodeInfoList[0];
         expect(nodeInfo).to.be.not.null;
-        expect(nodeInfo).to.deep.equal(body);
+        expect(nodeInfo.friendlyName).to.be.equal(body.friendlyName);
+        expect(nodeInfo.host).to.be.equal(body.host);
+        expect(nodeInfo.networkGenerationHashSeed).to.be.equal(body.networkGenerationHashSeed);
+        expect(nodeInfo.networkIdentifier).to.deep.equal(body.networkIdentifier);
+        expect(nodeInfo.port).to.be.equal(body.port);
+        expect(nodeInfo.publicKey).to.be.equal(body.publicKey);
+        expect(nodeInfo.version).to.be.equal(body.version);
+        expect(
+            nodeInfo.roles
+                .map((r) => r.valueOf())
+                .reduce(function (a, b) {
+                    return a | b;
+                }, 0),
+        ).to.be.equal(body.roles);
     });
 
     it('getNodeTime', async () => {

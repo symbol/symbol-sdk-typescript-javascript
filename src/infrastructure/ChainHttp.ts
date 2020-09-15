@@ -15,11 +15,12 @@
  */
 
 import { Observable } from 'rxjs';
-import { ChainRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { BlockchainScore } from '../model/blockchain/BlockchainScore';
+import { ChainRoutesApi, ChainInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { ChainInfo } from '../model/blockchain/ChainInfo';
 import { UInt64 } from '../model/UInt64';
 import { ChainRepository } from './ChainRepository';
 import { Http } from './Http';
+import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 
 /**
  * Chian http repository.
@@ -44,21 +45,24 @@ export class ChainHttp extends Http implements ChainRepository {
     }
 
     /**
-     * Gets current blockchain height
-     * @returns Observable<UInt64>
+     * Gets current blockchain info
+     * @returns Observable<ChainInfo>
      */
-    public getBlockchainHeight(): Observable<UInt64> {
-        return this.call(this.chainRoutesApi.getChainHeight(), (body) => UInt64.fromNumericString(body.height));
-    }
-
-    /**
-     * Gets current blockchain score
-     * @returns Observable<BlockchainScore>
-     */
-    public getChainScore(): Observable<BlockchainScore> {
+    public getChainInfo(): Observable<ChainInfo> {
         return this.call(
-            this.chainRoutesApi.getChainScore(),
-            (body) => new BlockchainScore(UInt64.fromNumericString(body.scoreLow), UInt64.fromNumericString(body.scoreHigh)),
+            this.chainRoutesApi.getChainInfo(),
+            (body: ChainInfoDTO) =>
+                new ChainInfo(
+                    UInt64.fromNumericString(body.height),
+                    UInt64.fromNumericString(body.scoreLow),
+                    UInt64.fromNumericString(body.scoreHigh),
+                    new FinalizedBlock(
+                        UInt64.fromNumericString(body.latestFinalizedBlock.height),
+                        body.latestFinalizedBlock.hash,
+                        body.latestFinalizedBlock.finalizationPoint,
+                        body.latestFinalizedBlock.finalizationPoint,
+                    ),
+                ),
         );
     }
 }

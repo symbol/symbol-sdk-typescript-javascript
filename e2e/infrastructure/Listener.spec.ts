@@ -379,7 +379,7 @@ describe('Listener', () => {
                     throw new Error('Transaction should have failed!!');
                 },
                 (error) => {
-                    expect(error.code).to.be.equal('Failure_Core_Insufficient_Balance');
+                    expect(error.message).to.be.equal('Failure_Core_Insufficient_Balance');
                 },
             );
         });
@@ -390,16 +390,6 @@ describe('Listener', () => {
             helper.listener.newBlock().subscribe(() => {
                 done();
             });
-            const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
-                account2.address,
-                [],
-                PlainMessage.create('test-message'),
-                networkType,
-                helper.maxFee,
-            );
-
-            helper.announce(transferTransaction.signWith(account, generationHash));
         });
     });
 
@@ -408,16 +398,6 @@ describe('Listener', () => {
             helper.listener.finalizedBlock().subscribe(() => {
                 done();
             });
-            const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
-                account2.address,
-                [],
-                PlainMessage.create('test-message'),
-                networkType,
-                helper.maxFee,
-            );
-
-            helper.announce(transferTransaction.signWith(account, generationHash));
         });
     });
 });
