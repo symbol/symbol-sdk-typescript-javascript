@@ -47,6 +47,13 @@ export * from './blockchain/FinalizedBlock';
 // Diagnostic
 export * from './node/ServerInfo';
 
+// Finalization
+export * from './finalization/BmTreeSignature';
+export * from './finalization/FinalizationProof';
+export * from './finalization/MessageGroup';
+export * from './finalization/ParentPublicKeySignaturePair';
+export * from './finalization/Stage';
+
 // Mosaic
 export * from './mosaic/Mosaic';
 export * from './mosaic/MosaicInfo';

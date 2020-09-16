@@ -106,7 +106,7 @@
         "ripemd160": "^2.0.2",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.3",
-        "symbol-openapi-typescript-fetch-client": "0.10.0-3",
+        "symbol-openapi-typescript-fetch-client": "0.9.7-SNAPSHOT.202009161826",
         "tweetnacl": "^1.0.3",
         "ws": "^7.3.1"
     },

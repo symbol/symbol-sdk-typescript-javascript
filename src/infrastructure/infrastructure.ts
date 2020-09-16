@@ -55,6 +55,8 @@ export * from './HashLockRepository';
 export * from './HashLockHttp';
 export * from './SecretLockRepository';
 export * from './SecretLockHttp';
+export * from './FinalizationHttp';
+export * from './FinalizationRepository';
 
 // Pagination
 export * from './Page';
