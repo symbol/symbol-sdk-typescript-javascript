@@ -67,4 +67,14 @@ export interface TransactionSearchCriteria extends SearchCriteria {
      * returned.  (optional, default to false)
      */
     embedded?: boolean;
+
+    /*
+     * Only blocks with height greater or equal than this one are returned.
+     */
+    fromHeight?: UInt64;
+
+    /*
+     * Only blocks with height smaller or equal than this one are returned.
+     */
+    toHeight?: UInt64;
 }
