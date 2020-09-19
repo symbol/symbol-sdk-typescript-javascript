@@ -47,8 +47,8 @@ export interface RepositoryFactory {
     getNetworkType(): Observable<NetworkType>;
 
     /**
-     * @returns the generation hash used to sign transactions. Value retrieved from the block/1
-     * endEpoch. This method is cached, the server is only called the first time.
+     * @returns the generation hash used to sign transactions. Value retrieved from the blocks/1
+     * endpoint. This method is cached, the server is only called the first time.
      */
     getGenerationHash(): Observable<string>;
 
