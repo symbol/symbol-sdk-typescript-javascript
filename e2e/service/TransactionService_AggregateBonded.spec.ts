@@ -160,7 +160,7 @@ describe('TransactionService - AggregateBonded', () => {
                 .then((tx: TransferTransaction) => {
                     expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
                     expect((tx.recipientAddress as Address).equals(account2.address)).to.be.true;
-                    expect(tx.message.payload).to.be.equal('test-message');
+                    expect(tx.message?.payload).to.be.equal('test-message');
                 });
         });
     });
