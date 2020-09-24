@@ -151,7 +151,7 @@ export class TransferTransaction extends Transaction {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
                 return new Mosaic(UnresolvedMapping.toUnresolvedMosaic(id), new UInt64(mosaic.amount.amount));
             }),
-            TransferTransaction.createFromBuffer(builder.getMessage()),
+            TransferTransaction.createMessageFromBuffer(builder.getMessage()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
             isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
@@ -302,7 +302,7 @@ export class TransferTransaction extends Transaction {
     /**
      * @internal
      */
-    private static createFromBuffer(messageBuffer: Uint8Array): Message {
+    private static createMessageFromBuffer(messageBuffer: Uint8Array): Message {
         if (!messageBuffer.length) {
             return EmptyMessage;
         }
