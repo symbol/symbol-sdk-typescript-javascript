@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.0] - 25-Sep-2020
+
+**Milestone**: Catapult-server finality(0.10.0.3)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.21.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.22 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.10.0-3  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- **[BREAKING CHANGE]** Updated `MetadataRepository` replacing old endpoints with new search endpoint.
+- **[BREAKING CHANGE]** Updated `ReceiptRepository` replacing old endpoints with new search endpoint.
+- **[BREAKING CHANGE]** Updated `ChainRepository` merging Height and Score into Info object. Added finalized block information.
+- **[BREAKING CHANGE]** Updated `RestrictionMosaicRepository` replacing old endpoints with new search endpoint.
+- **[BREAKING CHANGE]** Updated `RestrictionAccountRepository` removed `getAccountRestrictionsFromAccounts` endpoint.
+- **[BREAKING CHANGE]** Updated `TransactionRepository` search endpoint. Added `fromHeith` and `toHeight` search criteria.
+- **[BREAKING CHANGE]** Updated `toDTO` method in `Message` class. Removed `payload` and `type` returns only message string in hexadecimal format.
+- **[BREAKING CHANGE]** Updated property names in `BlockInfo`:
+    1. Changed ``numTransactions`` to ``totalTransactionsCount``.
+    2. Changed ``numStatements`` to ``statementsCount``.
+    3. Added ``transactionsCount``.
+- **[BREAKING CHANGE]** Removed `totalPages` and `TotalEntries` from 'Page' object for all pagination endpoints.
+- Added `SecretLockRepository` and `HashLockRepository`
+- Added support for topic/data payload wrapper in WS Listener allowing users to reuse the connection for different channels.
+- Added `finalizedBlock` WS Listener subscription
+- Added [symbol-bootstrap](https://github.com/nemtech/symbol-bootstrap) integration for automated e2e testing.
+- Fixed bug in websocket listener's `isOpen()` method for injected ws instance.
+- Updated `message` extraction method (internal) which now takes message string (hex) rather than object from rest response payload.
+
 ## [0.20.7] - 14-Aug-2020
 
 **Milestone**: Gorilla.1(0.9.6.4)
@@ -640,6 +668,7 @@ Client Library | v0.7.20-alpha.6  | [nem2-sdk-openapi-typescript-node-client](ht
 
 - Initial code release.
 
+[0.21.0]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.7...v0.21.0
 [0.20.7]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.6...v0.20.7
 [0.20.6]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.5...v0.20.6
 [0.20.5]: https://github.com/nemtech/symbol-sdk-typescript-javascript/compare/v0.20.4...v0.20.5
