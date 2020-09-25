@@ -368,8 +368,9 @@ describe('TransactionHttp', () => {
         const blockMetaDTO = {} as BlockMetaDTO;
         blockMetaDTO.generationHash = 'abc';
         blockMetaDTO.hash = 'aHash';
-        blockMetaDTO.numStatements = 10;
-        blockMetaDTO.numTransactions = 20;
+        blockMetaDTO.statementsCount = 10;
+        blockMetaDTO.transactionsCount = 20;
+        blockMetaDTO.totalTransactionsCount = 30;
         blockMetaDTO.totalFee = '30';
         blockMetaDTO.stateHashSubCacheMerkleRoots = ['a', 'b', 'c'];
 
@@ -381,7 +382,7 @@ describe('TransactionHttp', () => {
         when(blockRoutesApi.getBlockByHeight(deepEqual(UInt64.fromUint(1).toString()))).thenReturn(Promise.resolve(blockInfoDto));
 
         const fees = await transactionHttp.getTransactionEffectiveFee(generationHash).toPromise();
-        expect(fees).to.be.equal(483);
+        expect(fees).to.be.equal(480);
     });
 
     it('Test announce', async () => {

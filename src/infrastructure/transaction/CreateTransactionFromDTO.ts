@@ -18,6 +18,7 @@ import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
 import { PublicAccount } from '../../model/account/PublicAccount';
 import { EncryptedMessage } from '../../model/message/EncryptedMessage';
+import { Message } from '../../model/message/Message';
 import { MessageType } from '../../model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../model/message/PersistentHarvestingDelegationMessage';
 import { EmptyMessage, PlainMessage } from '../../model/message/PlainMessage';
@@ -104,19 +105,20 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
  * Extract message from either JSON payload (unencoded) or DTO (encoded)
  *
  * @param message - message payload
- * @return {PlainMessage}
+ * @return {Message}
  */
-const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
+const extractMessage = (message: any): Message => {
     let msgObj = EmptyMessage;
     if (message) {
-        if (message.type === MessageType.PlainMessage) {
-            msgObj = convert.isHexString(message.payload)
-                ? PlainMessage.createFromPayload(message.payload)
-                : PlainMessage.create(message.payload);
-        } else if (message.type === MessageType.EncryptedMessage) {
-            msgObj = EncryptedMessage.createFromPayload(message.payload);
-        } else if (message.type === MessageType.PersistentHarvestingDelegationMessage) {
-            msgObj = PersistentHarvestingDelegationMessage.createFromPayload(message.payload);
+        const messagePayload = message.payload ? message.payload : message.substring(2);
+        const messageType = message.type !== undefined ? message.type : convert.hexToUint8(message.substring(0, 2))[0];
+
+        if (messageType === MessageType.PlainMessage) {
+            msgObj = PlainMessage.createFromPayload(messagePayload);
+        } else if (messageType === MessageType.EncryptedMessage) {
+            msgObj = EncryptedMessage.createFromPayload(messagePayload);
+        } else if (messageType === MessageType.PersistentHarvestingDelegationMessage) {
+            msgObj = PersistentHarvestingDelegationMessage.createFromPayload(messagePayload);
         }
     }
     return msgObj;

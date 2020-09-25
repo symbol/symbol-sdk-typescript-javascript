@@ -225,8 +225,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = transferTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.TRANSFER);
-        expect(json.transaction.message.payload).to.be.equal('test-message');
-        expect(json.transaction.message.type).to.be.equal(0);
+        expect(json.transaction.message).to.be.equal('00746573742D6D657373616765');
     });
 
     it('should create SecretLockTransaction', () => {

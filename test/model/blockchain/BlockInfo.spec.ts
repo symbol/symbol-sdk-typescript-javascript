@@ -50,8 +50,9 @@ describe('BlockInfo', () => {
             meta: {
                 generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
                 hash: '24E92B511B54EDB48A4850F9B42485FDD1A30589D92C775632DDDD71D7D1D691',
-                numTransactions: 25,
-                numStatements: 1,
+                totalTransactionsCount: 35,
+                transactionsCount: 25,
+                statementsCount: 1,
                 totalFee: new UInt64([0, 0]),
                 stateHashSubCacheMerkleRoots: ['45FF761839D7219296341925EBA3BF4832BA9B3E29C854B83E6445D5F3E1DAB7'],
             },
@@ -64,7 +65,7 @@ describe('BlockInfo', () => {
             blockDTO.meta.generationHash,
             blockDTO.meta.totalFee,
             blockDTO.meta.stateHashSubCacheMerkleRoots,
-            blockDTO.meta.numTransactions,
+            blockDTO.meta.totalTransactionsCount,
             blockDTO.block.signature,
             PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, blockDTO.block.network),
             blockDTO.block.network,
@@ -82,7 +83,8 @@ describe('BlockInfo', () => {
             blockDTO.block.proofScalar,
             blockDTO.block.proofVerificationHash,
             Address.createFromEncoded(blockDTO.block.beneficiaryAddress),
-            blockDTO.meta.numStatements,
+            blockDTO.meta.transactionsCount,
+            blockDTO.meta.statementsCount,
         );
 
         expect(blockInfo.recordId).to.be.equal(blockDTO.id);
@@ -90,7 +92,7 @@ describe('BlockInfo', () => {
         expect(blockInfo.hash).to.be.equal(blockDTO.meta.hash);
         expect(blockInfo.generationHash).to.be.equal(blockDTO.meta.generationHash);
         deepEqual(blockInfo.totalFee, blockDTO.meta.totalFee);
-        expect(blockInfo.numTransactions).to.be.equal(blockDTO.meta.numTransactions);
+        expect(blockInfo.totalTransactionsCount).to.be.equal(blockDTO.meta.totalTransactionsCount);
         expect(blockInfo.signature).to.be.equal(blockDTO.block.signature);
         expect(blockInfo.signer.publicKey).to.be.equal(blockDTO.block.signerPublicKey);
         expect(blockInfo.networkType).to.be.equal(blockDTO.block.network);
@@ -105,8 +107,8 @@ describe('BlockInfo', () => {
         expect(blockInfo.blockReceiptsHash).to.be.equal(blockDTO.block.blockReceiptsHash);
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
         expect(blockInfo.beneficiaryAddress?.plain()).to.be.equal(Address.createFromEncoded(blockDTO.block.beneficiaryAddress).plain());
-        expect(blockInfo.numStatements).to.be.equal(blockDTO.meta.numStatements);
-        expect(blockInfo.proofGamma).to.be.equal(blockDTO.block.proofGamma);
+        expect(blockInfo.statementsCount).to.be.equal(blockDTO.meta.statementsCount);
+        expect(blockInfo.transactionsCount).to.be.equal(blockDTO.meta.transactionsCount);
         expect(blockInfo.proofScalar).to.be.equal(blockDTO.block.proofScalar);
         expect(blockInfo.proofVerificationHash).to.be.equal(blockDTO.block.proofVerificationHash);
         expect(blockInfo.stateHashSubCacheMerkleRoots.length).to.be.equal(1);
