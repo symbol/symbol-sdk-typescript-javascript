@@ -202,7 +202,6 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 mosaics: transferTx.mosaics.map((mosaic) => {
                     return mosaic.toDTO();
                 }),
-                message: transferTx.message.toDTO(),
             };
             if (transferTx.message.toDTO().length) {
                 Object.assign(messageObject, {
