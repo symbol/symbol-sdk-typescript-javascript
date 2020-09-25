@@ -197,13 +197,19 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.TRANSFER:
             const transferTx = transaction as TransferTransaction;
-            return {
+            const messageObject = {
                 recipientAddress: transferTx.recipientAddress.toDTO(),
                 mosaics: transferTx.mosaics.map((mosaic) => {
                     return mosaic.toDTO();
                 }),
                 message: transferTx.message.toDTO(),
             };
+            if (transferTx.message.toDTO().length) {
+                Object.assign(messageObject, {
+                    message: transferTx.message.toDTO(),
+                });
+            }
+            return messageObject;
         case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
             const mosaicGlobalRestrictionTx = transaction as MosaicGlobalRestrictionTransaction;
             return {

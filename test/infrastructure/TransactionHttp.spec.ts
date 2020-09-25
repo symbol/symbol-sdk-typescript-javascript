@@ -368,8 +368,9 @@ describe('TransactionHttp', () => {
         const blockMetaDTO = {} as BlockMetaDTO;
         blockMetaDTO.generationHash = 'abc';
         blockMetaDTO.hash = 'aHash';
-        blockMetaDTO.numStatements = 10;
-        blockMetaDTO.numTransactions = 20;
+        blockMetaDTO.statementsCount = 10;
+        blockMetaDTO.transactionsCount = 20;
+        blockMetaDTO.totalTransactionsCount = 30;
         blockMetaDTO.totalFee = '30';
         blockMetaDTO.stateHashSubCacheMerkleRoots = ['a', 'b', 'c'];
 

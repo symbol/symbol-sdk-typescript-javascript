@@ -105,7 +105,7 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
  * Extract message from either JSON payload (unencoded) or DTO (encoded)
  *
  * @param message - message payload
- * @return {PlainMessage}
+ * @return {Message}
  */
 const extractMessage = (message: any): Message => {
     let msgObj = EmptyMessage;
@@ -114,9 +114,7 @@ const extractMessage = (message: any): Message => {
         const messageType = message.type !== undefined ? message.type : convert.hexToUint8(message.substring(0, 2))[0];
 
         if (messageType === MessageType.PlainMessage) {
-            msgObj = convert.isHexString(messagePayload)
-                ? PlainMessage.createFromPayload(messagePayload)
-                : PlainMessage.create(messagePayload);
+            msgObj = PlainMessage.createFromPayload(messagePayload);
         } else if (messageType === MessageType.EncryptedMessage) {
             msgObj = EncryptedMessage.createFromPayload(messagePayload);
         } else if (messageType === MessageType.PersistentHarvestingDelegationMessage) {
