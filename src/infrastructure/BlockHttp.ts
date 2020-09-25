@@ -95,7 +95,7 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.meta.generationHash,
             UInt64.fromNumericString(dto.meta.totalFee),
             dto.meta.stateHashSubCacheMerkleRoots,
-            dto.meta.numTransactions,
+            dto.meta.totalTransactionsCount,
             dto.block.signature,
             PublicAccount.createFromPublicKey(dto.block.signerPublicKey, networkType),
             networkType,
@@ -112,8 +112,9 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.block.proofGamma,
             dto.block.proofScalar,
             dto.block.proofVerificationHash,
-            dto.block.beneficiaryAddress ? Address.createFromEncoded(dto.block.beneficiaryAddress) : undefined,
-            dto.meta.numStatements,
+            Address.createFromEncoded(dto.block.beneficiaryAddress),
+            dto.meta.transactionsCount,
+            dto.meta.statementsCount,
         );
     }
 

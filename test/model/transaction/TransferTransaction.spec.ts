@@ -22,7 +22,7 @@ import { Address } from '../../../src/model/account/Address';
 import { MessageMarker } from '../../../src/model/message/MessageMarker';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
-import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { EmptyMessage, PlainMessage } from '../../../src/model/message/PlainMessage';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
@@ -116,6 +116,27 @@ describe('TransferTransaction', () => {
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
             '9026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20D0000000000000000746573742D6D657373616765',
+        );
+    });
+
+    it('should createComplete an TransferTransaction object with empty message', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            [],
+            EmptyMessage,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.message.payload).to.be.equal('');
+        expect(transferTransaction.mosaics.length).to.be.equal(0);
+        expect(transferTransaction.recipientAddress).to.be.instanceof(Address);
+        expect((transferTransaction.recipientAddress as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
+            '9026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20000000000000000',
         );
     });
 

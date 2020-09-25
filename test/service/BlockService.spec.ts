@@ -62,7 +62,9 @@ describe('BlockService', () => {
                 'fakeHash',
                 'fakeHash',
                 'stateHash',
-                undefined,
+                account.address,
+                0,
+                0,
             );
         }
         return new BlockInfo(
@@ -89,7 +91,9 @@ describe('BlockService', () => {
             'fakeHash',
             'fakeHash',
             'stateHash',
-            undefined,
+            account.address,
+            0,
+            0,
         );
     }
 
