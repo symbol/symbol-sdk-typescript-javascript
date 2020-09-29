@@ -51,6 +51,11 @@ describe('Deadline', () => {
         expect(deadline.toDTO()[1]).to.be.equal(11);
     });
 
+    it('should createComplete empty deadline', () => {
+        const deadline = Deadline.createEmtpy();
+        expect(deadline.value).to.be.equal(LocalDateTime.MIN);
+    });
+
     it('make sure epochAdjustment is correct', () => {
         const epochAdjustment = new Date(Deadline.timestampNemesisBlock * 1000);
 

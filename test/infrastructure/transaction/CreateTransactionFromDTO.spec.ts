@@ -19,6 +19,7 @@ import { CreateTransactionFromDTO } from '../../../src/infrastructure/transactio
 import { Address } from '../../../src/model/account/Address';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import ValidateTransaction from './ValidateTransaction';
+import { LocalDateTime } from 'js-joda';
 
 describe('CreateTransactionFromDTO', () => {
     describe('TransferTransaction', () => {
@@ -159,6 +160,43 @@ describe('CreateTransactionFromDTO', () => {
             const aggregateTransferTransaction = CreateTransactionFromDTO(aggregateTransferTransactionDTO);
             expect(aggregateTransferTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(aggregateTransferTransaction, aggregateTransferTransactionDTO);
+        });
+    });
+
+    describe('Embedded transaction only', () => {
+        it('standalone', () => {
+            const transferTransactionDTO = {
+                id: '5CD2B76B2B3F0F0001751380',
+                meta: {
+                    height: '78',
+                    aggregateHash: 'D6A48BFD66920825D748D2CF92B025588F3A030C98633C442B4704BF407160B9',
+                    aggregateId: '5F729AA24655A25B54840CB7',
+                    index: 0,
+                },
+                transaction: {
+                    signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
+                    version: 1,
+                    network: 144,
+                    type: 16724,
+                    recipientAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                    message: {
+                        payload: '746573742D6D657373616765',
+                        type: 0,
+                    },
+                    mosaics: [
+                        {
+                            id: '85BBEA6CC462B244',
+                            amount: '10',
+                        },
+                    ],
+                },
+            };
+
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
+            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
+            expect(transferTransaction.message.payload).to.be.equal('test-message');
+            expect(transferTransaction.deadline.value).to.be.equal(LocalDateTime.MIN);
+            expect(transferTransaction.maxFee.toString()).to.be.equal('0');
         });
     });
 
