@@ -1,0 +1,946 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Listener | symbol-sdk</title>
+	<meta name="description" content="Documentation for symbol-sdk">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">symbol-sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_infrastructure_listener_.html">&quot;infrastructure/Listener&quot;</a>
+				</li>
+				<li>
+					<a href="_infrastructure_listener_.listener.html">Listener</a>
+				</li>
+			</ul>
+			<h1>Class Listener</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Listener service</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Listener</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_infrastructure_ilistener_.ilistener.html" class="tsd-signature-type">IListener</a></li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_infrastructure_listener_.listener.html#namespacerepository" class="tsd-kind-icon">namespace<wbr>Repository</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#url" class="tsd-kind-icon">url</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_infrastructure_listener_.listener.html#websocketinjected" class="tsd-kind-icon">websocket<wbr>Injected</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#aggregatebondedadded" class="tsd-kind-icon">aggregate<wbr>Bonded<wbr>Added</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#aggregatebondedremoved" class="tsd-kind-icon">aggregate<wbr>Bonded<wbr>Removed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#close" class="tsd-kind-icon">close</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#confirmed" class="tsd-kind-icon">confirmed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#cosignatureadded" class="tsd-kind-icon">cosignature<wbr>Added</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private"><a href="_infrastructure_listener_.listener.html#filterbynotifyaccount" class="tsd-kind-icon">filter<wbr>ByNotify<wbr>Account</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_infrastructure_listener_.listener.html#filterhash" class="tsd-kind-icon">filter<wbr>Hash</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#finalizedblock" class="tsd-kind-icon">finalized<wbr>Block</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#isopen" class="tsd-kind-icon">is<wbr>Open</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#newblock" class="tsd-kind-icon">new<wbr>Block</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#open" class="tsd-kind-icon">open</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#status" class="tsd-kind-icon">status</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_infrastructure_listener_.listener.html#transactionhashsubscription" class="tsd-kind-icon">transaction<wbr>Hash<wbr>Subscription</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private"><a href="_infrastructure_listener_.listener.html#transactionsubscription" class="tsd-kind-icon">transaction<wbr>Subscription</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#unconfirmedadded" class="tsd-kind-icon">unconfirmed<wbr>Added</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_infrastructure_listener_.listener.html#unconfirmedremoved" class="tsd-kind-icon">unconfirmed<wbr>Removed</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Listener<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, namespaceRepository<span class="tsd-signature-symbol">: </span><a href="../interfaces/_infrastructure_namespacerepository_.namespacerepository.html" class="tsd-signature-type">NamespaceRepository</a>, websocketInjected<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_infrastructure_listener_.listener.html" class="tsd-signature-type">Listener</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L73">infrastructure/Listener.ts:73</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Constructor</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>url: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Listener websocket server url. default: rest-gateway&#39;s url with &#39;&#39;/ws&#39;&#39; suffix. (e.g. <a href="http://localhost:3000/ws">http://localhost:3000/ws</a>).</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>namespaceRepository: <a href="../interfaces/_infrastructure_namespacerepository_.namespacerepository.html" class="tsd-signature-type">NamespaceRepository</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>NamespaceRepository interface for resolving alias.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> websocketInjected: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>(Optional) WebSocket injected when using listeners in client.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_infrastructure_listener_.listener.html" class="tsd-signature-type">Listener</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="namespacerepository" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> namespace<wbr>Repository</h3>
+					<div class="tsd-signature tsd-kind-icon">namespace<wbr>Repository<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_infrastructure_namespacerepository_.namespacerepository.html" class="tsd-signature-type">NamespaceRepository</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L89">infrastructure/Listener.ts:89</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>NamespaceRepository interface for resolving alias.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="url" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> url</h3>
+					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#url">url</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L85">infrastructure/Listener.ts:85</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Listener websocket server url. default: rest-gateway&#39;s url with &#39;&#39;/ws&#39;&#39; suffix. (e.g. <a href="http://localhost:3000/ws">http://localhost:3000/ws</a>).</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="websocketinjected" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> websocket<wbr>Injected</h3>
+					<div class="tsd-signature tsd-kind-icon">websocket<wbr>Injected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L93">infrastructure/Listener.ts:93</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>(Optional) WebSocket injected when using listeners in client.</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="aggregatebondedadded" class="tsd-anchor"></a>
+					<h3>aggregate<wbr>Bonded<wbr>Added</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">aggregate<wbr>Bonded<wbr>Added<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#aggregatebondedadded">aggregateBondedAdded</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L301">infrastructure/Listener.ts:301</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return an observable of <a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html">AggregateTransaction</a> for specific address.
+										Each time an aggregate bonded transaction is announced,
+									it emits a new <a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html">AggregateTransaction</a> in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen when a transaction with missing signatures state</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>transactionHash for filtering multiple transactions</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of AggregateTransaction with missing signatures state</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="aggregatebondedremoved" class="tsd-anchor"></a>
+					<h3>aggregate<wbr>Bonded<wbr>Removed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">aggregate<wbr>Bonded<wbr>Removed<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#aggregatebondedremoved">aggregateBondedRemoved</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L356">infrastructure/Listener.ts:356</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of Transaction Hashes for specific address.
+										Each time an aggregate bonded transaction is announced,
+									it emits a new message with the transaction hash in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen when a transaction is confirmed or rejected</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the transaction hash filter.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of Strings with the transaction hash</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="close" class="tsd-anchor"></a>
+					<h3>close</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">close<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#close">close</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L223">infrastructure/Listener.ts:223</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Close web socket connection.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>void</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="confirmed" class="tsd-anchor"></a>
+					<h3>confirmed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">confirmed<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#confirmed">confirmed</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L275">infrastructure/Listener.ts:275</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of Transaction for a specific address.
+										Each time a transaction is in confirmed state an it involves the address,
+									it emits a new Transaction in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen when a transaction is in confirmed state</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>transactionHash for filtering multiple transactions</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of Transaction with state confirmed</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="cosignatureadded" class="tsd-anchor"></a>
+					<h3>cosignature<wbr>Added</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">cosignature<wbr>Added<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#cosignatureadded">cosignatureAdded</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L457">infrastructure/Listener.ts:457</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of <a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html">CosignatureSignedTransaction</a> for specific address.
+										Each time a cosigner signs a transaction the address initialized,
+									it emits a new message with the cosignatory signed transaction in the even stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen when a cosignatory is added to some transaction address sent</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of <a href="_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html">CosignatureSignedTransaction</a></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private">
+					<a name="filterbynotifyaccount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> filter<wbr>ByNotify<wbr>Account</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">filter<wbr>ByNotify<wbr>Account&lt;T&gt;<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OperatorFunction</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L426">infrastructure/Listener.ts:426</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>It filters a transaction by address using the aliases.</p>
+								</div>
+								<p>This method delegates the rest loading as much as possible. It tries to filter by signer first.</p>
+								<p>Note: this filter performs one extra rest call and it should be down in the pipeline.</p>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the address.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OperatorFunction</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable filter.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="filterhash" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> filter<wbr>Hash</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">filter<wbr>Hash<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a>, transactionHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L407">infrastructure/Listener.ts:407</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Filters the transaction by hash if provided.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>transaction: <a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the transaction</p>
+									</div>
+								</li>
+								<li>
+									<h5>transactionHash: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the hash.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="finalizedblock" class="tsd-anchor"></a>
+					<h3>finalized<wbr>Block</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">finalized<wbr>Block<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#finalizedblock">finalizedBlock</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L256">infrastructure/Listener.ts:256</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of finalized block info.
+										Each time a new Block is finalized into the blockchain,
+									it emits a new FinalizedBlock in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_blockchain_finalizedblock_.finalizedblock.html" class="tsd-signature-type">FinalizedBlock</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of BlockInfo</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isopen" class="tsd-anchor"></a>
+					<h3>is<wbr>Open</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Open<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#isopen">isOpen</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L212">infrastructure/Listener.ts:212</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>returns a boolean that repressents the open state</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>a boolean</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="newblock" class="tsd-anchor"></a>
+					<h3>new<wbr>Block</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new<wbr>Block<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_blockchain_newblock_.newblock.html" class="tsd-signature-type">NewBlock</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#newblock">newBlock</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L239">infrastructure/Listener.ts:239</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of BlockInfo.
+										Each time a new Block is added into the blockchain,
+									it emits a new BlockInfo in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_blockchain_newblock_.newblock.html" class="tsd-signature-type">NewBlock</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of BlockInfo</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="open" class="tsd-anchor"></a>
+					<h3>open</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">open<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#open">open</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L103">infrastructure/Listener.ts:103</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Open web socket connection.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>Promise<Void></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="status" class="tsd-anchor"></a>
+					<h3>status</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_transactionstatuserror_.transactionstatuserror.html" class="tsd-signature-type">TransactionStatusError</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#status">status</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L391">infrastructure/Listener.ts:391</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of <a href="_model_transaction_transactionstatuserror_.transactionstatuserror.html">TransactionStatusError</a> for specific address.
+										Each time a transaction contains an error,
+									it emits a new message with the transaction status error in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen to be notified when some error happened</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>transactionHash for filtering multiple transactions</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_transactionstatuserror_.transactionstatuserror.html" class="tsd-signature-type">TransactionStatusError</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of <a href="_model_transaction_transactionstatuserror_.transactionstatuserror.html">TransactionStatusError</a></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="transactionhashsubscription" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> transaction<wbr>Hash<wbr>Subscription</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">transaction<wbr>Hash<wbr>Subscription<span class="tsd-signature-symbol">(</span>channel<span class="tsd-signature-symbol">: </span><a href="../enums/_infrastructure_listener_.listenerchannelname.html" class="tsd-signature-type">ListenerChannelName</a>, address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L367">infrastructure/Listener.ts:367</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generic subscription for all the transaction hash based channels.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>channel: <a href="../enums/_infrastructure_listener_.listenerchannelname.html" class="tsd-signature-type">ListenerChannelName</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the channel</p>
+									</div>
+								</li>
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the address</p>
+									</div>
+								</li>
+								<li>
+									<h5>transactionHash: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the transaction hash (optional)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of Strings with the transaction hash</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private">
+					<a name="transactionsubscription" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> transaction<wbr>Subscription</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">transaction<wbr>Subscription&lt;T&gt;<span class="tsd-signature-symbol">(</span>channel<span class="tsd-signature-symbol">: </span><a href="../enums/_infrastructure_listener_.listenerchannelname.html" class="tsd-signature-type">ListenerChannelName</a>, address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L312">infrastructure/Listener.ts:312</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Basic subscription for all the transactions status.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>channel: <a href="../enums/_infrastructure_listener_.listenerchannelname.html" class="tsd-signature-type">ListenerChannelName</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the transaction based channel</p>
+									</div>
+								</li>
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the address</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the transaction hash filter.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of Transactions</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="unconfirmedadded" class="tsd-anchor"></a>
+					<h3>unconfirmed<wbr>Added</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">unconfirmed<wbr>Added<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#unconfirmedadded">unconfirmedAdded</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L288">infrastructure/Listener.ts:288</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of Transaction for a specific address.
+										Each time a transaction is in unconfirmed state an it involves the address,
+									it emits a new Transaction in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen when a transaction is in unconfirmed state</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>transactionHash for filtering multiple transactions</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of Transaction with state unconfirmed</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="unconfirmedremoved" class="tsd-anchor"></a>
+					<h3>unconfirmed<wbr>Removed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">unconfirmed<wbr>Removed<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_infrastructure_ilistener_.ilistener.html">IListener</a>.<a href="../interfaces/_infrastructure_ilistener_.ilistener.html#unconfirmedremoved">unconfirmedRemoved</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/8916ad9/src/infrastructure/Listener.ts#L343">infrastructure/Listener.ts:343</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an observable stream of Transaction Hashes for specific address.
+										Each time a transaction with state unconfirmed changes its state,
+									it emits a new message with the transaction hash in the event stream.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <a href="_model_account_address_.address.html" class="tsd-signature-type">Address</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>address we listen when a transaction is removed from unconfirmed state</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the transaction hash filter.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>an observable stream of Strings with the transaction hash</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/_infrastructure_listener_.html">&quot;infrastructure/<wbr>Listener&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/_infrastructure_listener_.listenerchannelname.html" class="tsd-kind-icon">Listener<wbr>Channel<wbr>Name</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="_infrastructure_listener_.listener.html" class="tsd-kind-icon">Listener</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_infrastructure_listener_.listener.html#namespacerepository" class="tsd-kind-icon">namespace<wbr>Repository</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#url" class="tsd-kind-icon">url</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_infrastructure_listener_.listener.html#websocketinjected" class="tsd-kind-icon">websocket<wbr>Injected</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#aggregatebondedadded" class="tsd-kind-icon">aggregate<wbr>Bonded<wbr>Added</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#aggregatebondedremoved" class="tsd-kind-icon">aggregate<wbr>Bonded<wbr>Removed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#close" class="tsd-kind-icon">close</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#confirmed" class="tsd-kind-icon">confirmed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#cosignatureadded" class="tsd-kind-icon">cosignature<wbr>Added</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private">
+								<a href="_infrastructure_listener_.listener.html#filterbynotifyaccount" class="tsd-kind-icon">filter<wbr>ByNotify<wbr>Account</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_infrastructure_listener_.listener.html#filterhash" class="tsd-kind-icon">filter<wbr>Hash</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#finalizedblock" class="tsd-kind-icon">finalized<wbr>Block</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#isopen" class="tsd-kind-icon">is<wbr>Open</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#newblock" class="tsd-kind-icon">new<wbr>Block</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#open" class="tsd-kind-icon">open</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#status" class="tsd-kind-icon">status</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_infrastructure_listener_.listener.html#transactionhashsubscription" class="tsd-kind-icon">transaction<wbr>Hash<wbr>Subscription</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private">
+								<a href="_infrastructure_listener_.listener.html#transactionsubscription" class="tsd-kind-icon">transaction<wbr>Subscription</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#unconfirmedadded" class="tsd-kind-icon">unconfirmed<wbr>Added</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_infrastructure_listener_.listener.html#unconfirmedremoved" class="tsd-kind-icon">unconfirmed<wbr>Removed</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../interfaces/_infrastructure_listener_.listenermessage.html" class="tsd-kind-icon">Listener<wbr>Message</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
