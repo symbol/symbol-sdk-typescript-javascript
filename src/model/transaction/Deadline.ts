@@ -53,6 +53,16 @@ export class Deadline {
     }
 
     /**
+     * @internal
+     * Create an empty Deadline object using min local datetime.
+     * This is method is an internal method to cope with undefined deadline for embedded transactions
+     * @returns {Deadline}
+     */
+    public static createEmtpy(): Deadline {
+        return new Deadline(LocalDateTime.MIN);
+    }
+
+    /**
      * @param value
      * @returns {Deadline}
      */
