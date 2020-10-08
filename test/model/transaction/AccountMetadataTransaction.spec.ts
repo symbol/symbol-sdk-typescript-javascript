@@ -37,7 +37,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -51,7 +51,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -66,7 +66,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should create and sign an AccountMetadataTransaction object', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -84,7 +84,7 @@ describe('AccountMetadataTransaction', () => {
     describe('size', () => {
         it('should return 174 for AccountMetadataTransaction byte size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.address,
                 UInt64.fromUint(1000),
                 1,
@@ -101,7 +101,7 @@ describe('AccountMetadataTransaction', () => {
 
         it('should set payload size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.address,
                 UInt64.fromUint(1000),
                 1,
@@ -118,7 +118,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should create EmbeddedTransactionBuilder', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -137,7 +137,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should resolve alias', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -153,7 +153,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('Notify Account', () => {
         const tx = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -175,7 +175,7 @@ describe('AccountMetadataTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,

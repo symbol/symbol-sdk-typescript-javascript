@@ -87,7 +87,7 @@ describe('AccountHttp', () => {
     describe('Make sure test account is not virgin', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account2.address,
                 [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
@@ -104,7 +104,7 @@ describe('AccountHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
@@ -119,7 +119,7 @@ describe('AccountHttp', () => {
     describe('Setup test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
@@ -134,7 +134,7 @@ describe('AccountHttp', () => {
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -144,7 +144,7 @@ describe('AccountHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -249,7 +249,7 @@ describe('AccountHttp', () => {
     describe('Remove test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Unlink,
                 namespaceId,
                 account.address,
@@ -264,7 +264,7 @@ describe('AccountHttp', () => {
     describe('Restore test multisig Accounts', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 -1,
                 0,
                 [],
@@ -273,7 +273,7 @@ describe('AccountHttp', () => {
                 helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 0,
                 0,
                 [],
@@ -283,7 +283,7 @@ describe('AccountHttp', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 -1,
                 -1,
                 [],
@@ -293,7 +293,7 @@ describe('AccountHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),

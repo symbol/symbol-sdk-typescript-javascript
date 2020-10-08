@@ -111,7 +111,7 @@ describe('MetadataTransactionService', () => {
     it('should create AccountMetadataTransaction', (done) => {
         metadataTransactionService
             .createAccountMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkType.MIJIN_TEST,
                 account.address,
                 key,
@@ -134,7 +134,7 @@ describe('MetadataTransactionService', () => {
     it('should create MosaicMetadataTransaction', (done) => {
         metadataTransactionService
             .createMosaicMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkType.MIJIN_TEST,
                 account.address,
                 new MosaicId(targetIdHex),
@@ -159,7 +159,7 @@ describe('MetadataTransactionService', () => {
     it('should create NamespaceMetadataTransaction', (done) => {
         metadataTransactionService
             .createNamespaceMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkType.MIJIN_TEST,
                 account.address,
                 NamespaceId.createFromEncoded(targetIdHex),
@@ -194,7 +194,7 @@ describe('MetadataTransactionService', () => {
         ).thenReject();
         expect(() => {
             metadataTransactionService.createAccountMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkType.MIJIN_TEST,
                 account.address,
                 key,
@@ -218,7 +218,7 @@ describe('MetadataTransactionService', () => {
         ).thenReject();
         expect(() => {
             metadataTransactionService.createMosaicMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkType.MIJIN_TEST,
                 account.address,
                 new MosaicId(targetIdHex),
@@ -243,7 +243,7 @@ describe('MetadataTransactionService', () => {
         ).thenReject();
         expect(() => {
             metadataTransactionService.createNamespaceMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkType.MIJIN_TEST,
                 account.address,
                 NamespaceId.createFromEncoded(targetIdHex),

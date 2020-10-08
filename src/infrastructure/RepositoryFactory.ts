@@ -136,4 +136,9 @@ export interface RepositoryFactory {
      * @returns a newly created {@link IListener}
      */
     createListener(): IListener;
+
+    /**
+     * @returns nemesis block epoch
+     */
+    getNemesisEpoch(): Observable<number>;
 }

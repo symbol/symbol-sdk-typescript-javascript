@@ -47,10 +47,11 @@ export class AggregateTransactionService {
     /**
      * Check if an aggregate complete transaction has all cosignatories attached
      * @param signedTransaction - The signed aggregate transaction (complete) to be verified
+     * @param nemesisEpoch - The nemesis block epoch
      * @returns {Observable<boolean>}
      */
-    public isComplete(signedTransaction: SignedTransaction): Observable<boolean> {
-        const aggregateTransaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
+    public isComplete(signedTransaction: SignedTransaction, nemesisEpoch: number): Observable<boolean> {
+        const aggregateTransaction = TransactionMapping.createFromPayload(signedTransaction.payload, nemesisEpoch) as AggregateTransaction;
         /**
          * Include both initiator & cosigners
          */

@@ -67,7 +67,7 @@ describe('BlockHttp', () => {
     describe('Setup Test Data', () => {
         it('Announce TransferTransaction FER', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account2.address,
                 [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),

@@ -141,10 +141,11 @@ export class MosaicMetadataTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
+     * @param {number} nemesisEpoch Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -152,7 +153,9 @@ export class MosaicMetadataTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = MosaicMetadataTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             new UInt64(builder.getScopedMetadataKey()),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getTargetMosaicId().unresolvedMosaicId).toHex()),

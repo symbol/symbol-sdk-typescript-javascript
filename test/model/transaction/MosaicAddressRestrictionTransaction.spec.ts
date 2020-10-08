@@ -59,7 +59,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
     it('should createComplete an MosaicAddressRestrictionTransaction object and sign', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             UInt64.fromUint(1),
             account.address,
@@ -83,7 +83,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
     it('should createComplete an MosaicAddressRestrictionTransaction use mosaic alias', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             namespacId,
             UInt64.fromUint(1),
             account.address,
@@ -108,7 +108,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             UInt64.fromUint(1),
             namespacId,
@@ -131,7 +131,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
     it('should format targetAddress payload with 8 bytes binary namespaceId - targetAddressToString', () => {
         const transaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(1),
             new NamespaceId('nem.owner'),
@@ -152,7 +152,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const transaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(1),
             new NamespaceId('nem.owner'),
@@ -170,7 +170,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
         const transaction = new MosaicAddressRestrictionTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.createFromDTO('1'),
+            Deadline.createFromDTO('1', 1573430400),
             UInt64.fromUint(0),
             unresolvedMosaicId,
             UInt64.fromUint(8),

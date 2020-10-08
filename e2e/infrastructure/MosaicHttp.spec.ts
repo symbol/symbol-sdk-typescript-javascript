@@ -70,7 +70,7 @@ describe('MosaicHttp', () => {
             expect(nonce.toHex()).to.be.equals('22EA84A6');
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, false),
@@ -100,7 +100,7 @@ describe('MosaicHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 namespaceName,
                 UInt64.fromUint(1000),
                 networkType,
@@ -115,7 +115,7 @@ describe('MosaicHttp', () => {
     describe('Setup test MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
@@ -189,7 +189,7 @@ describe('MosaicHttp', () => {
     describe('Remove test MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Unlink,
                 namespaceId,
                 mosaicId,

@@ -76,7 +76,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -92,7 +92,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -106,7 +106,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -122,7 +122,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -138,7 +138,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -154,14 +154,14 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(() => {
-                transaction.reapplyGiven(Deadline.create());
+                transaction.reapplyGiven(Deadline.create(1573430400));
             }).to.throws("an Announced transaction can't be modified");
         });
         it('should return a new transaction', () => {
@@ -169,13 +169,13 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
-            const newTransaction = transaction.reapplyGiven(Deadline.create());
+            const newTransaction = transaction.reapplyGiven(Deadline.create(1573430400));
             expect(newTransaction).to.not.equal(transaction);
         });
         it('should overide deadline properly', () => {
@@ -183,13 +183,13 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
-            const newDeadline = Deadline.create(3);
+            const newDeadline = Deadline.create(1573430400, 3);
             const newTransaction = transaction.reapplyGiven(newDeadline);
             const equal = newTransaction.deadline.value.equals(transaction.deadline.value);
             const after = newTransaction.deadline.value.isAfter(transaction.deadline.value);
@@ -205,14 +205,14 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 [transaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
@@ -227,7 +227,7 @@ describe('Transaction', () => {
     describe('Transaction serialize', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [],
                 PlainMessage.create('test-message'),
@@ -247,7 +247,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(1573430400),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -378,7 +378,7 @@ describe('Transaction', () => {
 
     it('is signed', () => {
         let tx = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -387,7 +387,7 @@ describe('Transaction', () => {
 
         expect(tx.isSigned(account.address)).to.be.false;
         const signed = tx.signWith(account, '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6');
-        tx = TransactionMapping.createFromPayload(signed.payload) as Transaction;
+        tx = TransactionMapping.createFromPayload(signed.payload, 1573430400) as Transaction;
         expect((tx as Transaction).isSigned(account.address)).to.be.true;
         expect((tx as Transaction).isSigned(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'))).to.be.false;
     });

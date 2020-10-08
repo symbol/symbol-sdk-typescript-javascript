@@ -33,7 +33,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -45,7 +45,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -58,7 +58,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('should createComplete an root NamespaceRegistrationTransaction object and sign it', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -76,7 +76,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('should createComplete an sub NamespaceRegistrationTransaction object and sign it', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,
@@ -91,7 +91,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('should createComplete an sub NamespaceRegistrationTransaction object and sign it - ParentId', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             new NamespaceId([929036875, 2226345261]),
             NetworkType.MIJIN_TEST,
@@ -107,7 +107,7 @@ describe('NamespaceRegistrationTransaction', () => {
     describe('size', () => {
         it('should return 165 for NamespaceRegistrationTransaction with name of 19 bytes', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 'root-test-namespace',
                 UInt64.fromUint(1000),
                 NetworkType.MIJIN_TEST,
@@ -117,7 +117,7 @@ describe('NamespaceRegistrationTransaction', () => {
         });
         it('should set payload size', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 'root-test-namespace',
                 UInt64.fromUint(1000),
                 NetworkType.MIJIN_TEST,
@@ -130,7 +130,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -143,7 +143,7 @@ describe('NamespaceRegistrationTransaction', () => {
 
     it('Notify Account', () => {
         const tx = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,

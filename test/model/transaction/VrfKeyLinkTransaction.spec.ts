@@ -34,7 +34,7 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -46,7 +46,7 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -59,7 +59,7 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should create an VrfKeyLinkTransaction object with link action', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -77,7 +77,7 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should create an VrfKeyLinkTransaction object with unlink action', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
@@ -96,7 +96,7 @@ describe('VrfKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 161 for VrfKeyLinkTransaction byte size', () => {
             const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.publicKey,
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
@@ -108,7 +108,7 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
@@ -120,7 +120,7 @@ describe('VrfKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = VrfKeyLinkTransaction.create(Deadline.create(), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
+        const tx = VrfKeyLinkTransaction.create(Deadline.create(1573430400), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 

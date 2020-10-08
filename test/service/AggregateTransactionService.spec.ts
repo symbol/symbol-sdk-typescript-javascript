@@ -188,7 +188,7 @@ describe('AggregateTransactionService', () => {
          * Expecting complete as Bob needs 2 signatures (account1 && (account2 || account3))
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -196,7 +196,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -204,7 +204,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.true;
@@ -221,7 +221,7 @@ describe('AggregateTransactionService', () => {
          * Expecting incomplete as Bob needs 2 signatures (account1 && (account2 || account3)) but only got account1
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -229,7 +229,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -237,7 +237,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.false;
@@ -254,7 +254,7 @@ describe('AggregateTransactionService', () => {
          * Expecting incomplete as Bob needs 2 signatures (account1 && (account2 || account3)) but got account4
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -262,7 +262,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -270,7 +270,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.false;
@@ -288,7 +288,7 @@ describe('AggregateTransactionService', () => {
          * Expecting incomplete as Bob needs 2 signatures (account1 && (account2 || account3))
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account2.address,
             [],
             PlainMessage.create('test-message'),
@@ -296,7 +296,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const transferTransaction2 = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account2.address,
             [],
             PlainMessage.create('test-message'),
@@ -304,14 +304,14 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig2.publicAccount), transferTransaction2.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.false;
@@ -329,7 +329,7 @@ describe('AggregateTransactionService', () => {
          * Expecting complete
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account2.address,
             [],
             PlainMessage.create('test-message'),
@@ -337,7 +337,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const transferTransaction2 = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account2.address,
             [],
             PlainMessage.create('test-message'),
@@ -345,14 +345,14 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig2.publicAccount), transferTransaction2.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.true;
@@ -367,7 +367,7 @@ describe('AggregateTransactionService', () => {
          * to determine if the act is complete or not
          */
         const modifyMultisigTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             1,
             1,
             [],
@@ -376,14 +376,14 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [modifyMultisigTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
         const signedTransaction = aggregateTransaction.signWith(account2, generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.true;
@@ -398,7 +398,7 @@ describe('AggregateTransactionService', () => {
          * to determine if the act is complete or not
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -406,7 +406,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -414,7 +414,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account1, generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.false;
@@ -430,7 +430,7 @@ describe('AggregateTransactionService', () => {
          * Bob sign
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -438,7 +438,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -446,7 +446,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account4, generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.true;
@@ -468,7 +468,7 @@ describe('AggregateTransactionService', () => {
          * Then the contract should appear as complete
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account1.address,
             [],
             PlainMessage.create('test-message'),
@@ -476,7 +476,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const transferTransaction2 = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account4.address,
             [],
             PlainMessage.create('test-message'),
@@ -484,7 +484,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account4.publicAccount), transferTransaction2.toAggregate(account1.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -492,7 +492,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.true;
@@ -513,7 +513,7 @@ describe('AggregateTransactionService', () => {
          * Then the contract should appear as incomplete
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account1.address,
             [],
             PlainMessage.create('test-message'),
@@ -521,7 +521,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const transferTransaction2 = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account4.address,
             [],
             PlainMessage.create('test-message'),
@@ -529,7 +529,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account4.publicAccount), transferTransaction2.toAggregate(account1.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -537,7 +537,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.false;
@@ -551,7 +551,7 @@ describe('AggregateTransactionService', () => {
          * Bob (multisig3): is a 2/2 multisig account (account2 && account3)
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account4.address,
             [],
             PlainMessage.create('test-message'),
@@ -559,7 +559,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig3.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -567,7 +567,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.true;
@@ -581,7 +581,7 @@ describe('AggregateTransactionService', () => {
          * Bob (multisig3): is a 2/2 multisig account (account2 && account3)
          */
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1, ChronoUnit.HOURS),
+            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
             account4.address,
             [],
             PlainMessage.create('test-message'),
@@ -589,7 +589,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(multisig3.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -597,7 +597,7 @@ describe('AggregateTransactionService', () => {
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [], generationHash);
         aggregateTransactionService
-            .isComplete(signedTransaction)
+            .isComplete(signedTransaction, 1573430400)
             .toPromise()
             .then((isComplete) => {
                 expect(isComplete).to.be.false;

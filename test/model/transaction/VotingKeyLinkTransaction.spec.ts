@@ -38,7 +38,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             votingKey,
             startEpoch,
             endEpoch,
@@ -54,7 +54,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             votingKey,
             startEpoch,
             endEpoch,
@@ -71,7 +71,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should create an votingKeyLinkTransaction object with link action', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             votingKey,
             startEpoch,
             endEpoch,
@@ -93,7 +93,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should create an VotingKeyLinkTransaction object with unlink action', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             votingKey,
             startEpoch,
             endEpoch,
@@ -116,7 +116,7 @@ describe('VotingKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 185 for VotingKeyLinkTransaction byte size', () => {
             const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 votingKey,
                 startEpoch,
                 endEpoch,
@@ -130,7 +130,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             votingKey,
             startEpoch,
             endEpoch,
@@ -145,7 +145,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('Notify Account', () => {
         const tx = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             startEpoch,
             endEpoch,

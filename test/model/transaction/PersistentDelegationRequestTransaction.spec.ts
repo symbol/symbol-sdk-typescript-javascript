@@ -38,7 +38,7 @@ describe('PersistentDelegationRequestTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             delegatedPrivateKey,
             vrfPrivateKey,
             recipientPublicKey,
@@ -51,7 +51,7 @@ describe('PersistentDelegationRequestTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             delegatedPrivateKey,
             vrfPrivateKey,
             recipientPublicKey,
@@ -65,7 +65,7 @@ describe('PersistentDelegationRequestTransaction', () => {
 
     it('should createComplete an persistentDelegationRequestTransaction object and sign it', () => {
         const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             delegatedPrivateKey,
             vrfPrivateKey,
             recipientPublicKey,
@@ -92,7 +92,7 @@ describe('PersistentDelegationRequestTransaction', () => {
     it('should throw exception with invalid harvester publicKey (message)', () => {
         expect(() => {
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 'abc',
                 vrfPrivateKey,
                 recipientPublicKey,

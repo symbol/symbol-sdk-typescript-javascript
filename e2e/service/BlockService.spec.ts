@@ -64,7 +64,7 @@ describe('BlockService', () => {
     describe('Create a transfer', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account2.address,
                 [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),

@@ -29,10 +29,11 @@ import { NIS2_URL } from '../conf/conf.spec';
 describe('TransactionStatusHttp', () => {
     let transactionStatusRoutesApi: TransactionStatusRoutesApi;
     let transactionStatusHttp: TransactionStatusHttp;
+    const nemesisEpoch = 1573430400;
 
     before(() => {
         transactionStatusRoutesApi = mock();
-        transactionStatusHttp = new TransactionStatusHttp(NIS2_URL);
+        transactionStatusHttp = new TransactionStatusHttp(NIS2_URL, nemesisEpoch);
         (transactionStatusHttp as object)['transactionStatusRoutesApi'] = instance(transactionStatusRoutesApi);
     });
 

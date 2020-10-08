@@ -55,7 +55,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -70,7 +70,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -86,7 +86,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('should create and sign an MosaicMetadataTransaction object', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -105,7 +105,7 @@ describe('MosaicMetadataTransaction', () => {
     it('should create and sign an MosaicMetadataTransaction object using alias', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             namespacId,
@@ -124,7 +124,7 @@ describe('MosaicMetadataTransaction', () => {
     describe('size', () => {
         it('should return 182 for MosaicMetadataTransaction byte size', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.address,
                 UInt64.fromUint(1000),
                 new MosaicId([2262289484, 3405110546]),
@@ -138,7 +138,7 @@ describe('MosaicMetadataTransaction', () => {
 
         it('should set payload size', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.address,
                 UInt64.fromUint(1000),
                 new MosaicId([2262289484, 3405110546]),
@@ -154,7 +154,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -172,7 +172,7 @@ describe('MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = new MosaicMetadataTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.createFromDTO('1'),
+            Deadline.createFromDTO('1', 1573430400),
             UInt64.fromUint(0),
             account.address,
             UInt64.fromUint(1000),
@@ -192,7 +192,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('should create EmbeddedTransactionBuilder', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -212,7 +212,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('Notify Account', () => {
         const tx = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -234,7 +234,7 @@ describe('MosaicMetadataTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             alias,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),

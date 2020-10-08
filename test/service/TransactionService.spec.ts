@@ -45,7 +45,7 @@ describe('TransactionService', () => {
     const generationHash = '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950';
     const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
     const transferTransaction = TransferTransaction.create(
-        Deadline.create(1, ChronoUnit.HOURS),
+        Deadline.create(1573430400, 1, ChronoUnit.HOURS),
         Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
         [],
         PlainMessage.create('test-message'),
@@ -53,21 +53,21 @@ describe('TransactionService', () => {
     );
 
     const aggregateCompleteTransaction = AggregateTransaction.createComplete(
-        Deadline.create(),
+        Deadline.create(1573430400),
         [transferTransaction.toAggregate(account.publicAccount)],
         NetworkType.MIJIN_TEST,
         [],
     );
 
     const aggregateBondedTransaction = AggregateTransaction.createBonded(
-        Deadline.create(),
+        Deadline.create(1573430400),
         [transferTransaction.toAggregate(account.publicAccount)],
         NetworkType.MIJIN_TEST,
         [],
     );
 
     const hashLockTransaction = HashLockTransaction.create(
-        Deadline.create(),
+        Deadline.create(1573430400),
         new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
         UInt64.fromUint(10000),
         account.sign(aggregateBondedTransaction, generationHash),
@@ -113,7 +113,7 @@ describe('TransactionService', () => {
         when(transactionRepositoryMock.announce(deepEqual(signedTransaction))).thenReturn(observableOf(transactionAnnounceResponse));
 
         when(listener.confirmed(deepEqual(account.address), deepEqual(signedTransaction.hash))).thenReturn(EMPTY);
-        const statusError = new TransactionStatusError(account.address, signedTransaction.hash, 'Some Error', Deadline.create());
+        const statusError = new TransactionStatusError(account.address, signedTransaction.hash, 'Some Error', Deadline.create(1573430400));
         when(listener.status(deepEqual(account.address), signedTransaction.hash)).thenReturn(observableOf(statusError));
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
@@ -159,7 +159,7 @@ describe('TransactionService', () => {
         );
 
         when(listener.aggregateBondedAdded(deepEqual(account.address), deepEqual(signedTransaction.hash))).thenReturn(EMPTY);
-        const statusError = new TransactionStatusError(account.address, signedTransaction.hash, 'Some Error', Deadline.create());
+        const statusError = new TransactionStatusError(account.address, signedTransaction.hash, 'Some Error', Deadline.create(1573430400));
         when(listener.status(deepEqual(account.address), signedTransaction.hash)).thenReturn(observableOf(statusError));
 
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));

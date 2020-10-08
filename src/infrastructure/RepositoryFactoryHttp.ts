@@ -64,6 +64,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly websocketUrl: string;
     private readonly websocketInjected?: any;
     private readonly fetchApi?: any;
+    private readonly nemesisEpoch: Observable<number>;
 
     /**
      * Constructor
@@ -71,11 +72,20 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      * @param configs optional repository factory configs
      */
     constructor(url: string, configs?: RepositoryFactoryConfig) {
+        const networkRepo = this.createNetworkRepository();
         this.url = url;
         this.fetchApi = configs?.fetchApi;
-        this.networkType = configs?.networkType
-            ? observableOf(configs.networkType)
-            : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
+        this.networkType = configs?.networkType ? observableOf(configs.networkType) : networkRepo.getNetworkType().pipe(shareReplay(1));
+        this.nemesisEpoch = configs?.nemesisEpoch
+            ? observableOf(configs.nemesisEpoch)
+            : networkRepo
+                  .getNetworkProperties()
+                  .pipe(
+                      map((property) => {
+                          return parseInt(property.network.epochAdjustment?.replace('s', '') ?? '0');
+                      }),
+                  )
+                  .pipe(shareReplay(1));
         this.generationHash = configs?.generationHash
             ? observableOf(configs?.generationHash)
             : this.createNodeRepository()
@@ -135,7 +145,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createTransactionRepository(): TransactionRepository {
-        return new TransactionHttp(this.url, this.fetchApi);
+        return new TransactionHttp(this.url, this.nemesisEpoch, this.fetchApi);
     }
 
     createTransactionStatusRepository(): TransactionStatusRepository {
@@ -160,5 +170,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     createListener(): IListener {
         return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
+    }
+
+    getNemesisEpoch(): Observable<number> {
+        return this.nemesisEpoch;
     }
 }

@@ -89,7 +89,7 @@ describe('CosignatureTransaction', () => {
     };
 
     it('should createComplete an TransferTransaction object and sign it', () => {
-        const aggregateTransferTransaction = CreateTransactionFromDTO(aggregateTransferTransactionDTO);
+        const aggregateTransferTransaction = CreateTransactionFromDTO(aggregateTransferTransactionDTO, 1573430400);
 
         const cosignatureTransaction = CosignatureTransaction.create(aggregateTransferTransaction as AggregateTransaction);
 
@@ -106,7 +106,7 @@ describe('CosignatureTransaction', () => {
 
     it('should sign a transaction with transaction payload', () => {
         const txPayload = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             [],
             PlainMessage.create('a to b'),
@@ -122,7 +122,7 @@ describe('CosignatureTransaction', () => {
 
     it('should sign a transaction with provided transactionHash', () => {
         const tx = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             [],
             PlainMessage.create('a to b'),
@@ -130,7 +130,7 @@ describe('CosignatureTransaction', () => {
         );
 
         const aggregate = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [tx.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -149,7 +149,7 @@ describe('CosignatureTransaction', () => {
 
     it('should sign a transaction to throw', () => {
         const tx = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             [],
             PlainMessage.create('a to b'),
@@ -157,7 +157,7 @@ describe('CosignatureTransaction', () => {
         );
 
         const aggregate = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [tx.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -178,7 +178,7 @@ describe('CosignatureTransaction', () => {
                 merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
             },
         });
-        const aggregate = CreateTransactionFromDTO(aggregateTransferTransactionDTO) as AggregateTransaction;
+        const aggregate = CreateTransactionFromDTO(aggregateTransferTransactionDTO, 1573430400) as AggregateTransaction;
         const cosignTx = new CosignatureTransaction(aggregate);
         expect(() => {
             cosignTx.signWith(account);

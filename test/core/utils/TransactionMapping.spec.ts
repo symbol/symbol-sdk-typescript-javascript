@@ -80,7 +80,7 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -89,7 +89,10 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionTransaction;
+        const transaction = TransactionMapping.createFromPayload(
+            signedTransaction.payload,
+            1573430400,
+        ) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
@@ -99,7 +102,7 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
@@ -108,7 +111,10 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountMosaicRestrictionTransaction;
+        const transaction = TransactionMapping.createFromPayload(
+            signedTransaction.payload,
+            1573430400,
+        ) as AccountMosaicRestrictionTransaction;
         expect(transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect((transaction.restrictionAdditions[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
@@ -117,7 +123,7 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create AccountRestrictionOperationTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -126,7 +132,10 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountOperationRestrictionTransaction;
+        const transaction = TransactionMapping.createFromPayload(
+            signedTransaction.payload,
+            1573430400,
+        ) as AccountOperationRestrictionTransaction;
         expect(transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(transaction.restrictionAdditions[0]).to.be.equal(operation);
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
@@ -136,7 +145,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -145,7 +154,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as AddressAliasTransaction;
 
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
@@ -157,7 +166,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -166,7 +175,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicAliasTransaction;
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
@@ -176,7 +185,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -187,7 +196,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.duration!.lower).to.be.equal(1000);
         expect(transaction.duration!.higher).to.be.equal(0);
@@ -199,7 +208,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicDefinitionTransaction - without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -210,7 +219,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
@@ -220,7 +229,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicDefinitionTransaction - without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -231,7 +240,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
@@ -241,7 +250,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicDefinitionTransaction - without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -252,7 +261,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
@@ -262,7 +271,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicDefinitionTransaction - without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -273,7 +282,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
@@ -284,7 +293,7 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -293,7 +302,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicSupplyChangeTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as MosaicSupplyChangeTransaction;
 
         expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(transaction.delta.lower).to.be.equal(10);
@@ -304,7 +313,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
@@ -313,7 +322,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as TransferTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as TransferTransaction;
 
         expect(transaction.message.payload).to.be.equal('test-message');
         expect(transaction.mosaics.length).to.be.equal(1);
@@ -324,7 +333,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -335,7 +344,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretLockTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as SecretLockTransaction;
 
         expect(transaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(transaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
@@ -347,7 +356,7 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
@@ -357,7 +366,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = secretProofTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretProofTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as SecretProofTransaction;
         expect(transaction.hashAlgorithm).to.be.equal(0);
         expect(transaction.secret).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
         expect(transaction.proof).to.be.equal(proof);
@@ -366,7 +375,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create ModifyMultiSigTransaction', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             2,
             1,
             [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
@@ -376,7 +385,10 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MultisigAccountModificationTransaction;
+        const transaction = TransactionMapping.createFromPayload(
+            signedTransaction.payload,
+            1573430400,
+        ) as MultisigAccountModificationTransaction;
 
         expect(transaction.minApprovalDelta).to.be.equal(2);
         expect(transaction.minRemovalDelta).to.be.equal(1);
@@ -390,7 +402,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -398,25 +410,25 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Convert.uint8ToHex(Crypto.randomBytes(48)),
             1,
             3,
@@ -424,13 +436,13 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
         );
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
@@ -440,7 +452,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new NamespaceId('test'),
             UInt64.fromUint(4444),
             account.address,
@@ -449,7 +461,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(0),
         );
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -457,7 +469,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -466,7 +478,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -476,7 +488,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             new NamespaceId([2262289484, 3405110546]),
             new MosaicId([2262289484, 3405110546]),
@@ -484,7 +496,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7')).hex(),
             account.address,
@@ -493,7 +505,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [
                 transferTransaction.toAggregate(account.publicAccount),
                 accountLinkTransaction.toAggregate(account.publicAccount),
@@ -515,7 +527,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as AggregateTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
@@ -524,7 +536,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -532,7 +544,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -540,17 +552,17 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as AggregateTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
     });
 
     it('should create LockFundTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -559,7 +571,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedLockFundTransaction = lockTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedLockFundTransaction.payload) as LockFundsTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedLockFundTransaction.payload, 1573430400) as LockFundsTransaction;
 
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
@@ -568,14 +580,14 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create an AccountKeyLinkTransaction object with link action', () => {
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as AccountKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
@@ -583,14 +595,14 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create an VrfKeyLinkTransaction object with link action', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = vrfKeyLinkTransaction.signWith(account, generationHash);
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VrfKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as VrfKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
@@ -598,14 +610,14 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create an NodeKeyLinkTransaction object with link action', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = nodeKeyLinkTransaction.signWith(account, generationHash);
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as NodeKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as NodeKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
@@ -614,7 +626,7 @@ describe('TransactionMapping - createFromPayload', () => {
     it('should create an VotingKeyLinkTransaction object with link action', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(48));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             key,
             1,
             3,
@@ -623,7 +635,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
 
         const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VotingKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as VotingKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.startEpoch.toString()).to.be.equal('1');
@@ -633,7 +645,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -641,7 +653,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as NamespaceRegistrationTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as NamespaceRegistrationTransaction;
 
         expect(transaction.registrationType).to.be.equal(NamespaceRegistrationType.RootNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
@@ -649,7 +661,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create NamespaceRegistrationTransaction - Sub', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,
@@ -657,7 +669,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as NamespaceRegistrationTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload, 1573430400) as NamespaceRegistrationTransaction;
 
         expect(transaction.registrationType).to.be.equal(NamespaceRegistrationType.SubNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
@@ -665,7 +677,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicGlobalRestrictionTransaction', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
@@ -677,7 +689,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTx = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicGlobalRestrictionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload, 1573430400) as MosaicGlobalRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(1).toDTO()).toHex());
@@ -691,7 +703,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicAddressRestrictionTransaction', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             account.address,
@@ -702,7 +714,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTx = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicAddressRestrictionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload, 1573430400) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(1).toDTO()).toHex());
@@ -714,7 +726,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicAddressRestrictionTransaction - MosaicAlias', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new NamespaceId('test'),
             UInt64.fromUint(4444),
             account.address,
@@ -725,7 +737,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTx = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicAddressRestrictionTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload, 1573430400) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new NamespaceId('test').toHex());
@@ -738,7 +750,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create AddressMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -747,7 +759,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
         const signedTx = accountMetadataTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as AccountMetadataTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload, 1573430400) as AccountMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -758,7 +770,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -769,7 +781,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTx = mosaicMetadataTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicMetadataTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload, 1573430400) as MosaicMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -781,7 +793,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should create NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -792,7 +804,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTx = namespaceMetadataTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as NamespaceMetadataTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload, 1573430400) as NamespaceMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -804,7 +816,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
     it('should throw error with invalid type', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
@@ -815,7 +827,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const wrongType = signedTransaction.payload.substring(0, 219) + '0000' + signedTransaction.payload.substring(224);
 
         expect(() => {
-            TransactionMapping.createFromPayload(wrongType) as TransferTransaction;
+            TransactionMapping.createFromPayload(wrongType, 1573430400) as TransferTransaction;
         }).to.throw();
     });
 });
@@ -829,14 +841,14 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create TransferTransaction - Address', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
+        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON(), 1573430400) as TransferTransaction;
 
         expect((transaction.recipientAddress as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         expect(transaction.message.payload).to.be.equal('test-message');
@@ -844,14 +856,14 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create TransferTransaction - NamespaceId', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new NamespaceId([33347626, 3779697293]),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
+        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON(), 1573430400) as TransferTransaction;
         expect((transaction.recipientAddress as NamespaceId).id.toHex().toUpperCase()).to.be.equal(
             new UInt64([33347626, 3779697293]).toHex(),
         );
@@ -860,14 +872,14 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create TransferTransaction - Encrypted Message', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             new EncryptedMessage('12324556'),
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
+        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON(), 1573430400) as TransferTransaction;
 
         expect((transaction.recipientAddress as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         expect(transaction.message.type).to.be.equal(MessageType.EncryptedMessage);
@@ -875,13 +887,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create AccountKeyLinkTransaction', () => {
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON()) as AccountKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON(), 1573430400) as AccountKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
@@ -889,13 +901,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create VrfKeyLinkTransaction', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(vrfKeyLinkTransaction.toJSON()) as VrfKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromDTO(vrfKeyLinkTransaction.toJSON(), 1573430400) as VrfKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
@@ -903,13 +915,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create NodeKeyLinkTransaction', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(nodeKeyLinkTransaction.toJSON()) as NodeKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromDTO(nodeKeyLinkTransaction.toJSON(), 1573430400) as NodeKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
@@ -918,7 +930,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create VotingKeyLinkTransaction', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(48));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             key,
             1,
             3,
@@ -926,7 +938,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
+        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON(), 1573430400) as VotingKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(key);
         expect(transaction.startEpoch.toString()).to.be.equal('1');
@@ -936,7 +948,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -945,6 +957,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const transaction = TransactionMapping.createFromDTO(
             addressRestrictionTransaction.toJSON(),
+            1573430400,
         ) as AccountAddressRestrictionTransaction;
 
         expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
@@ -955,14 +968,17 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
+        const transaction = TransactionMapping.createFromDTO(
+            mosaicRestrictionTransaction.toJSON(),
+            1573430400,
+        ) as AccountMosaicRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
         expect(transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
@@ -972,7 +988,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create AccountRestrictionOperationTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -981,6 +997,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const transaction = TransactionMapping.createFromDTO(
             operationRestrictionTransaction.toJSON(),
+            1573430400,
         ) as AccountMosaicRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
@@ -992,14 +1009,14 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(addressAliasTransaction.toJSON()) as AddressAliasTransaction;
+        const transaction = TransactionMapping.createFromDTO(addressAliasTransaction.toJSON(), 1573430400) as AddressAliasTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -1009,13 +1026,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
         );
-        const transaction = TransactionMapping.createFromDTO(mosaicAliasTransaction.toJSON()) as MosaicAliasTransaction;
+        const transaction = TransactionMapping.createFromDTO(mosaicAliasTransaction.toJSON(), 1573430400) as MosaicAliasTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -1023,7 +1040,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -1032,7 +1049,10 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(mosaicDefinitionTransaction.toJSON()) as MosaicDefinitionTransaction;
+        const transaction = TransactionMapping.createFromDTO(
+            mosaicDefinitionTransaction.toJSON(),
+            1573430400,
+        ) as MosaicDefinitionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
@@ -1044,14 +1064,17 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(mosaicSupplyChangeTransaction.toJSON()) as MosaicSupplyChangeTransaction;
+        const transaction = TransactionMapping.createFromDTO(
+            mosaicSupplyChangeTransaction.toJSON(),
+            1573430400,
+        ) as MosaicSupplyChangeTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
         expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
@@ -1061,7 +1084,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -1070,7 +1093,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
+        const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON(), 1573430400) as SecretLockTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -1080,7 +1103,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -1089,7 +1112,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
+        const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON(), 1573430400) as SecretLockTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -1100,7 +1123,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -1109,7 +1132,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
+        const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON(), 1573430400) as SecretLockTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -1119,7 +1142,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     it('should create SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
@@ -1127,7 +1150,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
+        const transaction = TransactionMapping.createFromDTO(secretProofTransaction.toJSON(), 1573430400) as SecretProofTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -1140,7 +1163,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = new NamespaceId('test');
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -1148,7 +1171,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
+        const transaction = TransactionMapping.createFromDTO(secretProofTransaction.toJSON(), 1573430400) as SecretProofTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -1159,7 +1182,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create ModifyMultiSigTransaction', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             2,
             1,
             [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
@@ -1169,6 +1192,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const transaction = TransactionMapping.createFromDTO(
             modifyMultisigAccountTransaction.toJSON(),
+            1573430400,
         ) as MultisigAccountModificationTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MULTISIG_ACCOUNT_MODIFICATION);
@@ -1178,7 +1202,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -1186,13 +1210,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
 
-        const transaction = TransactionMapping.createFromDTO(aggregateTransaction.toJSON()) as AggregateTransaction;
+        const transaction = TransactionMapping.createFromDTO(aggregateTransaction.toJSON(), 1573430400) as AggregateTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(transaction.innerTransactions.length).to.be.equal(1);
@@ -1200,7 +1224,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -1208,30 +1232,30 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
 
-        const transaction = TransactionMapping.createFromDTO(aggregateTransaction.toJSON()) as AggregateTransaction;
+        const transaction = TransactionMapping.createFromDTO(aggregateTransaction.toJSON(), 1573430400) as AggregateTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(transaction.innerTransactions.length).to.be.equal(1);
     });
 
     it('should create LockFundTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(lockTransaction.toJSON()) as LockFundsTransaction;
+        const transaction = TransactionMapping.createFromDTO(lockTransaction.toJSON(), 1573430400) as LockFundsTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.HASH_LOCK);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
@@ -1239,32 +1263,38 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
+        const transaction = TransactionMapping.createFromDTO(
+            registerNamespaceTransaction.toJSON(),
+            1573430400,
+        ) as NamespaceRegistrationTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
 
     it('should create NamespaceRegistrationTransaction - Sub', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,
         );
-        const transaction = TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
+        const transaction = TransactionMapping.createFromDTO(
+            registerNamespaceTransaction.toJSON(),
+            1573430400,
+        ) as NamespaceRegistrationTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
 
     it('should create MosaicGlobalRestrictionTransaction', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
@@ -1276,6 +1306,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const transaction = TransactionMapping.createFromDTO(
             mosaicGlobalRestrictionTransaction.toJSON(),
+            1573430400,
         ) as MosaicGlobalRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
@@ -1290,7 +1321,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create MosaicAddressRestrictionTransaction', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             account.address,
@@ -1301,6 +1332,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const transaction = TransactionMapping.createFromDTO(
             mosaicAddressRestrictionTransaction.toJSON(),
+            1573430400,
         ) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
@@ -1313,7 +1345,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create AddressMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -1321,7 +1353,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(accountMetadataTransaction.toJSON()) as AccountMetadataTransaction;
+        const transaction = TransactionMapping.createFromDTO(accountMetadataTransaction.toJSON(), 1573430400) as AccountMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -1332,7 +1364,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -1341,7 +1373,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(mosaicMetadataTransaction.toJSON()) as MosaicMetadataTransaction;
+        const transaction = TransactionMapping.createFromDTO(mosaicMetadataTransaction.toJSON(), 1573430400) as MosaicMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -1353,7 +1385,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     it('should create NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -1362,7 +1394,10 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
         );
 
-        const transaction = TransactionMapping.createFromDTO(namespaceMetadataTransaction.toJSON()) as NamespaceMetadataTransaction;
+        const transaction = TransactionMapping.createFromDTO(
+            namespaceMetadataTransaction.toJSON(),
+            1573430400,
+        ) as NamespaceMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;

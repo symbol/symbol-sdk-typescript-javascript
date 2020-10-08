@@ -154,9 +154,10 @@ export class AggregateTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
+     * @param {number} nemesisEpoch Nemesis block epoch
      * @returns {AggregateTransaction}
      */
-    public static createFromPayload(payload: string): AggregateTransaction {
+    public static createFromPayload(payload: string, nemesisEpoch: number): AggregateTransaction {
         /**
          * Get transaction type from the payload hex
          * As buffer uses separate builder class for Complete and bonded
@@ -180,9 +181,9 @@ export class AggregateTransaction extends Transaction {
 
         return type === TransactionType.AGGREGATE_COMPLETE
             ? AggregateTransaction.createComplete(
-                  Deadline.createFromDTO(builder.deadline.timestamp),
+                  Deadline.createFromDTO(builder.deadline.timestamp, nemesisEpoch),
                   innerTransactions.map((transactionRaw) => {
-                      return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
+                      return CreateTransactionFromPayload(transactionRaw, 1573430400, true) as InnerTransaction;
                   }),
                   networkType,
                   consignatures,
@@ -191,9 +192,9 @@ export class AggregateTransaction extends Transaction {
                   signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
               )
             : AggregateTransaction.createBonded(
-                  Deadline.createFromDTO(builder.deadline.timestamp),
+                  Deadline.createFromDTO(builder.deadline.timestamp, nemesisEpoch),
                   innerTransactions.map((transactionRaw) => {
-                      return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
+                      return CreateTransactionFromPayload(transactionRaw, 1573430400, true) as InnerTransaction;
                   }),
                   networkType,
                   consignatures,

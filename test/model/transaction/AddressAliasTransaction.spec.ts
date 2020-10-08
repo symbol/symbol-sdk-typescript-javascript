@@ -38,7 +38,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -53,7 +53,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -69,7 +69,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -92,7 +92,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AliasTransaction.createForAddress(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -116,7 +116,7 @@ describe('AddressAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Link,
                 namespaceId,
                 address,
@@ -130,7 +130,7 @@ describe('AddressAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Link,
                 namespaceId,
                 address,
@@ -146,7 +146,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -158,7 +158,13 @@ describe('AddressAliasTransaction', () => {
     it('Notify Account', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
-        const tx = AddressAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, address, NetworkType.MIJIN_TEST);
+        const tx = AddressAliasTransaction.create(
+            Deadline.create(1573430400),
+            AliasAction.Link,
+            namespaceId,
+            address,
+            NetworkType.MIJIN_TEST,
+        );
 
         let canNotify = tx.shouldNotifyAccount(address);
         expect(canNotify).to.be.true;

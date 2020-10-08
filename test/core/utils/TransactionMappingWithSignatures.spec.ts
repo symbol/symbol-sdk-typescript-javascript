@@ -80,7 +80,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -91,7 +91,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
         let signedTransaction = addressRestrictionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountAddressRestrictionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
@@ -102,7 +102,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(addressRestrictionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = addressRestrictionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountAddressRestrictionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountAddressRestrictionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -110,7 +110,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
@@ -122,7 +122,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicRestrictionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountMosaicRestrictionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountMosaicRestrictionTransaction;
         expect(transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect((transaction.restrictionAdditions[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
@@ -132,7 +132,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicRestrictionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicRestrictionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountMosaicRestrictionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountMosaicRestrictionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -140,7 +140,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AccountRestrictionOperationTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(1573430400),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -152,7 +152,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = operationRestrictionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountOperationRestrictionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountOperationRestrictionTransaction;
         expect(transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(transaction.restrictionAdditions[0]).to.be.equal(operation);
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
@@ -163,7 +163,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(operationRestrictionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = operationRestrictionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountOperationRestrictionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountOperationRestrictionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -172,7 +172,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             address,
@@ -184,7 +184,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = addressAliasTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AddressAliasTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AddressAliasTransaction;
 
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
@@ -196,7 +196,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(addressAliasTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = addressAliasTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AddressAliasTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AddressAliasTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -205,7 +205,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -217,7 +217,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicAliasTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicAliasTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicAliasTransaction;
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
@@ -229,14 +229,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicAliasTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicAliasTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicAliasTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicAliasTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -250,7 +250,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicDefinitionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicDefinitionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.duration!.lower).to.be.equal(1000);
         expect(transaction.duration!.higher).to.be.equal(0);
@@ -264,14 +264,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicDefinitionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicDefinitionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicDefinitionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicDefinitionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create MosaicDefinitionTransaction - without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -285,7 +285,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicDefinitionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicDefinitionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicDefinitionTransaction;
 
         expect(transaction.divisibility).to.be.equal(3);
         expect(transaction.flags.supplyMutable).to.be.equal(false);
@@ -297,7 +297,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicDefinitionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicDefinitionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicDefinitionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicDefinitionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -305,7 +305,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -317,7 +317,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicSupplyChangeTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicSupplyChangeTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicSupplyChangeTransaction;
 
         expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(transaction.delta.lower).to.be.equal(10);
@@ -330,14 +330,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicSupplyChangeTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicSupplyChangeTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicSupplyChangeTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicSupplyChangeTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
@@ -349,7 +349,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = transferTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as TransferTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as TransferTransaction;
 
         expect(transaction.message.payload).to.be.equal('test-message');
         expect(transaction.mosaics.length).to.be.equal(1);
@@ -360,7 +360,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(transferTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = transferTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as TransferTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as TransferTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -369,7 +369,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -383,7 +383,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = secretLockTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as SecretLockTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as SecretLockTransaction;
 
         expect(transaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(transaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
@@ -396,7 +396,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(secretLockTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = secretLockTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as SecretLockTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as SecretLockTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -404,7 +404,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
@@ -417,7 +417,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = secretProofTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as SecretProofTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as SecretProofTransaction;
         expect(transaction.hashAlgorithm).to.be.equal(0);
         expect(transaction.secret).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
         expect(transaction.proof).to.be.equal(proof);
@@ -428,14 +428,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(secretProofTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = secretProofTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as SecretProofTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as SecretProofTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create ModifyMultiSigTransaction', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             2,
             1,
             [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
@@ -448,7 +448,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = modifyMultisigAccountTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MultisigAccountModificationTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MultisigAccountModificationTransaction;
 
         expect(transaction.minApprovalDelta).to.be.equal(2);
         expect(transaction.minRemovalDelta).to.be.equal(1);
@@ -464,14 +464,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(modifyMultisigAccountTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = modifyMultisigAccountTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MultisigAccountModificationTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MultisigAccountModificationTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -479,25 +479,25 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
         );
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Convert.uint8ToHex(Crypto.randomBytes(48)),
             1,
             3,
@@ -505,13 +505,13 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             NetworkType.MIJIN_TEST,
         );
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
         );
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
@@ -521,7 +521,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             NetworkType.MIJIN_TEST,
         );
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new NamespaceId('test'),
             UInt64.fromUint(4444),
             account.address,
@@ -530,7 +530,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             UInt64.fromUint(0),
         );
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -538,7 +538,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             NetworkType.MIJIN_TEST,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -547,7 +547,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             NetworkType.MIJIN_TEST,
         );
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -557,7 +557,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             AliasAction.Link,
             new NamespaceId([2262289484, 3405110546]),
             new MosaicId([2262289484, 3405110546]),
@@ -565,7 +565,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7')).hex(),
             account.address,
@@ -574,7 +574,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [
                 transferTransaction.toAggregate(account.publicAccount),
                 accountLinkTransaction.toAggregate(account.publicAccount),
@@ -599,7 +599,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = aggregateTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AggregateTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AggregateTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
@@ -610,14 +610,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(aggregateTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = aggregateTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AggregateTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AggregateTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -625,7 +625,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -636,7 +636,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = aggregateTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AggregateTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AggregateTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
@@ -646,16 +646,16 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(aggregateTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = aggregateTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AggregateTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AggregateTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create LockFundTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -667,7 +667,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedLockFundTransaction = lockTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedLockFundTransaction) as LockFundsTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedLockFundTransaction, 1573430400) as LockFundsTransaction;
 
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
@@ -678,14 +678,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(aggregateTransaction, { signature: emtptySignature, signer: undefined });
         signedLockFundTransaction = aggregateTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedLockFundTransaction) as LockFundsTransaction;
+        transaction = TransactionMapping.createFromPayload(signedLockFundTransaction, 1573430400) as LockFundsTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create an AccountKeyLinkTransaction object with link action', () => {
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -695,7 +695,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         let signedTransaction = accountLinkTransaction.serialize();
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountKeyLinkTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
@@ -705,14 +705,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(accountLinkTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = accountLinkTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountKeyLinkTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountKeyLinkTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create an VrfKeyLinkTransaction object with link action', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -722,7 +722,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         let signedTransaction = vrfKeyLinkTransaction.serialize();
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as VrfKeyLinkTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as VrfKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
@@ -732,14 +732,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(vrfKeyLinkTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = vrfKeyLinkTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as VrfKeyLinkTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as VrfKeyLinkTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create an NodeKeyLinkTransaction object with link action', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -749,7 +749,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         let signedTransaction = nodeKeyLinkTransaction.serialize();
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as NodeKeyLinkTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NodeKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
@@ -759,7 +759,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(nodeKeyLinkTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = nodeKeyLinkTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as NodeKeyLinkTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NodeKeyLinkTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
@@ -767,7 +767,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create an VotingKeyLinkTransaction object with link action', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(48));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             key,
             1,
             3,
@@ -779,7 +779,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
 
         let signedTransaction = votingKeyLinkTransaction.serialize();
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as VotingKeyLinkTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as VotingKeyLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.linkedPublicKey).to.be.equal(key);
@@ -791,14 +791,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(votingKeyLinkTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = votingKeyLinkTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as VotingKeyLinkTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as VotingKeyLinkTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -809,7 +809,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = registerNamespaceTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceRegistrationTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NamespaceRegistrationTransaction;
 
         expect(transaction.registrationType).to.be.equal(NamespaceRegistrationType.RootNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
@@ -819,14 +819,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(registerNamespaceTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = registerNamespaceTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceRegistrationTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NamespaceRegistrationTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create NamespaceRegistrationTransaction - Sub', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
-            Deadline.create(),
+            Deadline.create(1573430400),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,
@@ -837,7 +837,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = registerNamespaceTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceRegistrationTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NamespaceRegistrationTransaction;
 
         expect(transaction.registrationType).to.be.equal(NamespaceRegistrationType.SubNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
@@ -847,14 +847,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(registerNamespaceTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = registerNamespaceTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceRegistrationTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NamespaceRegistrationTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create MosaicGlobalRestrictionTransaction', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
@@ -870,7 +870,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicGlobalRestrictionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicGlobalRestrictionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicGlobalRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(1).toDTO()).toHex());
@@ -886,14 +886,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicGlobalRestrictionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicGlobalRestrictionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicGlobalRestrictionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicGlobalRestrictionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create MosaicAddressRestrictionTransaction', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId(UInt64.fromUint(1).toDTO()),
             UInt64.fromUint(4444),
             account.address,
@@ -907,7 +907,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicAddressRestrictionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicAddressRestrictionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(1).toDTO()).toHex());
@@ -921,14 +921,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicAddressRestrictionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicAddressRestrictionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicAddressRestrictionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicAddressRestrictionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create MosaicAddressRestrictionTransaction - MosaicAlias', () => {
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new NamespaceId('test'),
             UInt64.fromUint(4444),
             account.address,
@@ -942,7 +942,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicAddressRestrictionTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicAddressRestrictionTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicAddressRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
         expect(transaction.mosaicId.toHex()).to.be.equal(new NamespaceId('test').toHex());
@@ -957,14 +957,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicAddressRestrictionTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicAddressRestrictionTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicAddressRestrictionTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicAddressRestrictionTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create AddressMetadataTransaction', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -976,7 +976,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         );
         let signedTransaction = accountMetadataTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountMetadataTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -989,14 +989,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(accountMetadataTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = accountMetadataTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountMetadataTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as AccountMetadataTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create MosaicMetadataTransaction', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
@@ -1010,7 +1010,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = mosaicMetadataTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicMetadataTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -1024,14 +1024,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(mosaicMetadataTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = mosaicMetadataTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as MosaicMetadataTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as MosaicMetadataTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should create NamespaceMetadataTransaction', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -1045,7 +1045,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let signedTransaction = namespaceMetadataTransaction.serialize();
 
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceMetadataTransaction;
+        let transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NamespaceMetadataTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
@@ -1059,14 +1059,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         Object.assign(namespaceMetadataTransaction, { signature: emtptySignature, signer: undefined });
         signedTransaction = namespaceMetadataTransaction.serialize();
 
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as NamespaceMetadataTransaction;
+        transaction = TransactionMapping.createFromPayload(signedTransaction, 1573430400) as NamespaceMetadataTransaction;
         expect(transaction.signature).to.be.undefined;
         expect(transaction.signer).to.be.undefined;
     });
 
     it('should throw error with invalid type', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
@@ -1080,7 +1080,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const wrongType = signedTransaction.substring(0, 219) + '0000' + signedTransaction.substring(224);
 
         expect(() => {
-            TransactionMapping.createFromPayload(wrongType) as TransferTransaction;
+            TransactionMapping.createFromPayload(wrongType, 1573430400) as TransferTransaction;
         }).to.throw();
     });
 });

@@ -27,10 +27,10 @@ describe('HashLockTransaction', () => {
     const account = TestingAccount;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     it('creation with an aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = HashLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -43,11 +43,11 @@ describe('HashLockTransaction', () => {
     });
 
     it('should throw exception if it is not a aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             HashLockTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
@@ -57,10 +57,10 @@ describe('HashLockTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const tx = HashLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,

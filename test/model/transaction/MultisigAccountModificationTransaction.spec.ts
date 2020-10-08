@@ -42,7 +42,7 @@ describe('MultisigAccountModificationTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             2,
             1,
             [address1, address2],
@@ -56,7 +56,7 @@ describe('MultisigAccountModificationTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             2,
             1,
             [address1, address2],
@@ -71,7 +71,7 @@ describe('MultisigAccountModificationTransaction', () => {
 
     it('should createComplete an MultisigAccountModificationTransaction object and sign it', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             2,
             1,
             [address1, address2],
@@ -96,7 +96,7 @@ describe('MultisigAccountModificationTransaction', () => {
     describe('size', () => {
         it('should return 160 for MultisigAccountModificationTransaction transaction byte size with 1 modification', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 1,
                 1,
                 [address1],
@@ -110,7 +110,7 @@ describe('MultisigAccountModificationTransaction', () => {
         });
         it('should set payload size', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 1,
                 1,
                 [address1],
@@ -127,7 +127,7 @@ describe('MultisigAccountModificationTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             1,
             1,
             [address1],
@@ -141,7 +141,14 @@ describe('MultisigAccountModificationTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const txAddition = MultisigAccountModificationTransaction.create(Deadline.create(), 1, 1, [address1], [], NetworkType.MIJIN_TEST);
+        const txAddition = MultisigAccountModificationTransaction.create(
+            Deadline.create(1573430400),
+            1,
+            1,
+            [address1],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
 
         let canNotify = txAddition.shouldNotifyAccount(address1, []);
         expect(canNotify).to.be.true;
@@ -152,7 +159,14 @@ describe('MultisigAccountModificationTransaction', () => {
         Object.assign(txAddition, { signer: account.publicAccount });
         expect(txAddition.shouldNotifyAccount(account.address, [])).to.be.true;
 
-        const txDeletion = MultisigAccountModificationTransaction.create(Deadline.create(), 1, 1, [], [address1], NetworkType.MIJIN_TEST);
+        const txDeletion = MultisigAccountModificationTransaction.create(
+            Deadline.create(1573430400),
+            1,
+            1,
+            [],
+            [address1],
+            NetworkType.MIJIN_TEST,
+        );
 
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, []);
         expect(canNotifyDeletion).to.be.true;
@@ -167,7 +181,14 @@ describe('MultisigAccountModificationTransaction', () => {
     it('Notify Account with alias', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
-        const txAddition = MultisigAccountModificationTransaction.create(Deadline.create(), 1, 1, [alias], [], NetworkType.MIJIN_TEST);
+        const txAddition = MultisigAccountModificationTransaction.create(
+            Deadline.create(1573430400),
+            1,
+            1,
+            [alias],
+            [],
+            NetworkType.MIJIN_TEST,
+        );
 
         let canNotify = txAddition.shouldNotifyAccount(address1, [alias]);
         expect(canNotify).to.be.true;
@@ -181,7 +202,14 @@ describe('MultisigAccountModificationTransaction', () => {
         Object.assign(txAddition, { signer: account.publicAccount });
         expect(txAddition.shouldNotifyAccount(account.address, [])).to.be.true;
 
-        const txDeletion = MultisigAccountModificationTransaction.create(Deadline.create(), 1, 1, [], [alias], NetworkType.MIJIN_TEST);
+        const txDeletion = MultisigAccountModificationTransaction.create(
+            Deadline.create(1573430400),
+            1,
+            1,
+            [],
+            [alias],
+            NetworkType.MIJIN_TEST,
+        );
 
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, [alias]);
         expect(canNotifyDeletion).to.be.true;

@@ -119,10 +119,11 @@ export class SecretProofTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
+     * @param {number} nemesisEpoch Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedSecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -130,7 +131,9 @@ export class SecretProofTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = SecretProofTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretProofTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as SecretProofTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),

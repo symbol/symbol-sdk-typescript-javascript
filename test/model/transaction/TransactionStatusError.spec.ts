@@ -33,7 +33,7 @@ describe('TransactionStatusError', () => {
             statusInfoErrorDTO.address,
             statusInfoErrorDTO.hash,
             statusInfoErrorDTO.code,
-            Deadline.createFromDTO(statusInfoErrorDTO.deadline),
+            Deadline.createFromDTO(statusInfoErrorDTO.deadline, 1573430400),
         );
 
         expect(transactionStatusError.address).to.be.equal(statusInfoErrorDTO.address);

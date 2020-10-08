@@ -54,7 +54,7 @@ describe('NamespaceHttp', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 namespaceName,
                 UInt64.fromUint(1000),
                 helper.networkType,
@@ -68,7 +68,7 @@ describe('NamespaceHttp', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AliasAction.Link,
                 namespaceId,
                 account.address,

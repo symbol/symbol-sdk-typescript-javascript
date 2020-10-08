@@ -20,7 +20,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 
 describe('Deadline', () => {
     it('should createComplete timestamp today', () => {
-        const deadline = Deadline.create();
+        const deadline = Deadline.create(1573430400);
 
         // avoid SYSTEM and UTC differences
         const networkTimeStamp = new Date().getTime();
@@ -34,18 +34,18 @@ describe('Deadline', () => {
 
     it('should throw error deadline smaller than timeStamp', () => {
         expect(() => {
-            Deadline.create(-3);
+            Deadline.create(1573430400, -3);
         }).to.throw(Error);
     });
 
     it('should throw error deadline greater than 24h', () => {
         expect(() => {
-            Deadline.create(2, ChronoUnit.DAYS);
+            Deadline.create(1573430400, 2, ChronoUnit.DAYS);
         }).to.throw(Error);
     });
 
     it('should createComplete date with Deadline array', () => {
-        const deadline = Deadline.createFromDTO('51110867862');
+        const deadline = Deadline.createFromDTO('51110867862', 1573430400);
 
         expect(deadline.toDTO()[0]).to.be.equal(3866227606);
         expect(deadline.toDTO()[1]).to.be.equal(11);
@@ -57,7 +57,7 @@ describe('Deadline', () => {
     });
 
     it('make sure epochAdjustment is correct', () => {
-        const epochAdjustment = new Date(Deadline.timestampNemesisBlock * 1000);
+        const epochAdjustment = new Date(1573430400 * 1000);
 
         expect(epochAdjustment.getUTCFullYear()).to.be.equal(2019);
         expect(epochAdjustment.getUTCMonth() + 1).to.be.equal(11);

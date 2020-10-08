@@ -54,7 +54,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -68,7 +68,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -83,7 +83,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('should createComplete an MosaicSupplyChangeTransaction object and sign it', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -107,7 +107,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         it('should return 145 for MosaicSupplyChange transaction byte size', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
@@ -119,7 +119,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         it('should set payload size', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
@@ -134,7 +134,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('Test set maxFee using multiplier', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -149,7 +149,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         const mosaicSupplyChangeTransaction = new MosaicSupplyChangeTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.createFromDTO('1'),
+            Deadline.createFromDTO('1', 1573430400),
             UInt64.fromUint(0),
             unresolvedMosaicId,
             MosaicSupplyChangeAction.Increase,
@@ -167,7 +167,7 @@ describe('MosaicSupplyChangeTransaction', () => {
 
     it('Notify Account', () => {
         const tx = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             new MosaicId([2262289484, 3405110546]),
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),

@@ -34,7 +34,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -46,7 +46,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -59,7 +59,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should create an NodeKeyLinkTransaction object with link action', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -77,7 +77,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should create an NodeKeyLinkTransaction object with unlink action', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
@@ -96,7 +96,7 @@ describe('NodeKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 161 for NodeKeyLinkTransaction byte size', () => {
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.publicKey,
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
@@ -106,7 +106,7 @@ describe('NodeKeyLinkTransaction', () => {
         });
         it('should set payload size', () => {
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.publicKey,
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
@@ -119,7 +119,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.publicKey,
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
@@ -131,7 +131,7 @@ describe('NodeKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = NodeKeyLinkTransaction.create(Deadline.create(), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
+        const tx = NodeKeyLinkTransaction.create(Deadline.create(1573430400), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 

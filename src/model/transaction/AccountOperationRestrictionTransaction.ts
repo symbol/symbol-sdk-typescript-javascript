@@ -103,10 +103,11 @@ export class AccountOperationRestrictionTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
+     * @param {number} nemesisEpoch Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -115,8 +116,8 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = AccountOperationRestrictionTransaction.create(
             isEmbedded
-                ? Deadline.create()
-                : Deadline.createFromDTO((builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions(),
             builder.getRestrictionDeletions(),

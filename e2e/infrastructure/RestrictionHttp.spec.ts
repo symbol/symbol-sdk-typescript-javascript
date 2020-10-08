@@ -75,7 +75,7 @@ describe('RestrictionHttp', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -94,7 +94,7 @@ describe('RestrictionHttp', () => {
             const nonce = MosaicNonce.createRandom();
             referenceMosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 nonce,
                 referenceMosaicId,
                 MosaicFlags.create(true, true, true),
@@ -111,7 +111,7 @@ describe('RestrictionHttp', () => {
     describe('Setup Test AccountAddressRestriction', () => {
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [account3.address],
                 [],
@@ -126,7 +126,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicGlobalRestrictionTransaction - Reference', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 referenceMosaicId,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -146,7 +146,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicGlobalRestrictionTransaction - with referenceMosaicId', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 mosaicId,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -167,7 +167,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicAddressRestrictionTransaction', () => {
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 mosaicId,
                 UInt64.fromUint(60641),
                 account3.address,
@@ -177,7 +177,7 @@ describe('RestrictionHttp', () => {
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -221,7 +221,7 @@ describe('RestrictionHttp', () => {
     describe('Remove test AccountRestriction - Address', () => {
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [],
                 [account3.address],

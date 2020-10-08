@@ -72,14 +72,14 @@ describe('Account', () => {
         const account2 = Account.generateNewAccount(NetworkType.TEST_NET);
         const generationHash = 'C422CC3C9257A1568036E1726E64EB5923C8363A13D4344F9E66CD89C8789BC7';
         const aliceTransferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account2.address,
             [sendAmount],
             PlainMessage.create('payout'),
             NetworkType.TEST_NET,
         );
         const bobTransferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             [backAmount],
             PlainMessage.create('payout'),
@@ -88,7 +88,7 @@ describe('Account', () => {
 
         // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(1573430400),
             [aliceTransferTransaction.toAggregate(account.publicAccount), bobTransferTransaction.toAggregate(account2.publicAccount)],
             NetworkType.TEST_NET,
             [],
@@ -103,7 +103,7 @@ describe('Account', () => {
         const cosignatureSignedTransactions = [
             new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
         ];
-        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
+        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload, 1573430400) as AggregateTransaction;
 
         const signedTransaction = account.signTransactionGivenSignatures(recreatedTx, cosignatureSignedTransactions, generationHash);
 

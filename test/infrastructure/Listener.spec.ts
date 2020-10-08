@@ -43,20 +43,21 @@ describe('Listener', () => {
 
     let namespaceRepoMock: NamespaceRepository;
     let namespaceRepo: NamespaceRepository;
+    const nemesisEpoch = 1573430400;
     beforeEach(() => {
         namespaceRepoMock = mock();
         namespaceRepo = instance(namespaceRepoMock);
     });
 
     it('should createComplete a WebSocket instance given url parameter', () => {
-        const listener = new Listener('http://localhost:3000/ws', namespaceRepo);
+        const listener = new Listener('http://localhost:3000/ws', namespaceRepo, nemesisEpoch);
         expect('http://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
 
     describe('isOpen', () => {
         it('should return false when listener is created and not opened', () => {
-            const listener = new Listener('http://localhost:3000', namespaceRepo);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch);
             expect(listener.isOpen()).to.be.false;
             listener.close();
         });
@@ -85,7 +86,7 @@ describe('Listener', () => {
                     code: 'error-message',
                 },
             };
-            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
 
             listener.open();
 
@@ -124,7 +125,7 @@ describe('Listener', () => {
                     code: 'error-message',
                 },
             };
-            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
 
             listener.open();
 
@@ -169,7 +170,7 @@ describe('Listener', () => {
                 },
             };
 
-            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
 
             listener.open();
 
@@ -192,7 +193,7 @@ describe('Listener', () => {
 
     describe('onerror', () => {
         it('should reject because of wrong server url', async () => {
-            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo);
+            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo, nemesisEpoch);
             await listener
                 .open()
                 .then(() => {
@@ -235,7 +236,7 @@ describe('Listener', () => {
                 );
 
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(1573430400),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
@@ -246,7 +247,7 @@ describe('Listener', () => {
                 transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress, hash).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
@@ -279,7 +280,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(1573430400),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
@@ -291,7 +292,7 @@ describe('Listener', () => {
                 transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress, hash2).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
@@ -324,7 +325,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(1573430400),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
@@ -335,7 +336,7 @@ describe('Listener', () => {
                 transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
@@ -368,7 +369,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(1573430400),
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
@@ -380,7 +381,7 @@ describe('Listener', () => {
 
                 const reportedTransactions: Transaction[] = [];
 
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress, hash).subscribe((unconfirmedTransaction) => {
                     reportedTransactions.push(unconfirmedTransaction);
@@ -414,7 +415,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(1573430400),
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
@@ -429,7 +430,7 @@ describe('Listener', () => {
 
                 const reportedTransactions: Transaction[] = [];
 
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress, hash).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
@@ -486,7 +487,7 @@ describe('Listener', () => {
                 };
 
                 const reportedTransactions: string[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress, hash).subscribe((confirmedHash) => {
                     reportedTransactions.push(confirmedHash);
@@ -506,7 +507,7 @@ describe('Listener', () => {
                 };
 
                 const reportedTransactions: string[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress).subscribe((confirmedHash) => {
                     reportedTransactions.push(confirmedHash);
@@ -526,7 +527,7 @@ describe('Listener', () => {
                 };
 
                 const reportedTransactions: string[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
                 listener.open();
                 subscriptionMethod(listener, subscribedAddress, 'invalid!').subscribe((confirmedHash) => {
                     reportedTransactions.push(confirmedHash);
@@ -583,7 +584,7 @@ describe('Listener', () => {
                 },
             };
 
-            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
 
             listener.open();
 
@@ -638,7 +639,7 @@ describe('Listener', () => {
                 },
             };
 
-            const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, nemesisEpoch, WebSocketMock);
 
             listener.open();
 

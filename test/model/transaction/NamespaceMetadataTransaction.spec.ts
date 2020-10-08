@@ -37,7 +37,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -52,7 +52,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -68,7 +68,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should create and sign an NamespaceMetadataTransaction object', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -87,7 +87,7 @@ describe('NamespaceMetadataTransaction', () => {
     describe('size', () => {
         it('should return 182 for NamespaceMetadataTransaction byte size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.address,
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
@@ -101,7 +101,7 @@ describe('NamespaceMetadataTransaction', () => {
 
         it('should set payload size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 account.address,
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
@@ -117,7 +117,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -133,7 +133,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should create EmbeddedTransactionBuilder', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -153,7 +153,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should resolve alias', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -169,7 +169,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('Notify Account', () => {
         const tx = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -191,7 +191,7 @@ describe('NamespaceMetadataTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             alias,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),

@@ -56,7 +56,7 @@ describe('SecretProofTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -71,7 +71,7 @@ describe('SecretProofTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -87,7 +87,7 @@ describe('SecretProofTransaction', () => {
     it('should be created with LockHashAlgorithm: Op_Sha3_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -103,7 +103,7 @@ describe('SecretProofTransaction', () => {
         expect(() => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             SecretProofTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 LockHashAlgorithm.Op_Sha3_256,
                 'non valid hash',
                 account.address,
@@ -116,7 +116,7 @@ describe('SecretProofTransaction', () => {
     it('should be created with LockHashAlgorithm: Op_Hash_160 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Hash_160,
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             account.address,
@@ -132,7 +132,7 @@ describe('SecretProofTransaction', () => {
         expect(() => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             SecretProofTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 LockHashAlgorithm.Op_Hash_160,
                 'non valid hash',
                 account.address,
@@ -145,7 +145,7 @@ describe('SecretProofTransaction', () => {
     it('should be created with LockHashAlgorithm: Op_Hash_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Hash_256,
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             account.address,
@@ -161,7 +161,7 @@ describe('SecretProofTransaction', () => {
         expect(() => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             SecretProofTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 LockHashAlgorithm.Op_Hash_256,
                 'non valid hash',
                 account.address,
@@ -175,7 +175,7 @@ describe('SecretProofTransaction', () => {
         it('should return 219 for SecretProofTransaction with proof and secret both 32 bytes', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 LockHashAlgorithm.Op_Hash_256,
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
                 account.address,
@@ -190,7 +190,7 @@ describe('SecretProofTransaction', () => {
     it('should create and sign SecretProof Transaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -209,7 +209,7 @@ describe('SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = new NamespaceId('test');
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
@@ -225,7 +225,7 @@ describe('SecretProofTransaction', () => {
     it('Test set maxFee using multiplier', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -242,7 +242,7 @@ describe('SecretProofTransaction', () => {
         const transferTransaction = new SecretProofTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.create(),
+            Deadline.create(1573430400),
             UInt64.fromUint(0),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
@@ -264,7 +264,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = new SecretProofTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.create(),
+            Deadline.create(1573430400),
             UInt64.fromUint(0),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
@@ -286,7 +286,7 @@ describe('SecretProofTransaction', () => {
     it('should return secret bytes', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -301,7 +301,7 @@ describe('SecretProofTransaction', () => {
     it('Notify Account', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const tx = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -322,7 +322,7 @@ describe('SecretProofTransaction', () => {
         const namespaceId = new NamespaceId('test');
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const canNotify = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(1573430400),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,

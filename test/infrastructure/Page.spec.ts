@@ -27,7 +27,7 @@ describe('Page', () => {
     it('should create Page', () => {
         const account = TestingAccount;
         let page = new Page<Transaction>(
-            [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            [TransferTransaction.create(Deadline.create(1573430400), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
             1,
             1,
         );
@@ -37,7 +37,7 @@ describe('Page', () => {
         expect(page.isLastPage).to.be.false;
 
         page = new Page<Transaction>(
-            [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            [TransferTransaction.create(Deadline.create(1573430400), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
             2,
             2,
         );

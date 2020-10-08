@@ -25,7 +25,7 @@ export class Deadline {
     /**
      * @type {number}
      */
-    public static timestampNemesisBlock = 1573430400;
+    private nemesisEpoch: number;
 
     /**
      * Deadline value
@@ -34,11 +34,12 @@ export class Deadline {
 
     /**
      * Create deadline model
+     * @param nemesisEpoch
      * @param deadline
      * @param chronoUnit
      * @returns {Deadline}
      */
-    public static create(deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
+    public static create(nemesisEpoch: number, deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
         const networkTimeStamp = new Date().getTime();
         const timeStampDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(networkTimeStamp), ZoneId.SYSTEM);
         const deadlineDateTime = timeStampDateTime.plus(deadline, chronoUnit);
@@ -49,7 +50,7 @@ export class Deadline {
             throw new Error('deadline should be less than 24 hours');
         }
 
-        return new Deadline(deadlineDateTime);
+        return new Deadline(deadlineDateTime, nemesisEpoch);
     }
 
     /**
@@ -59,43 +60,39 @@ export class Deadline {
      * @returns {Deadline}
      */
     public static createEmtpy(): Deadline {
-        return new Deadline(LocalDateTime.MIN);
+        return new Deadline(LocalDateTime.MIN, 0);
     }
 
     /**
      * @param value
      * @returns {Deadline}
      */
-    public static createFromDTO(value: string | number[]): Deadline {
+    public static createFromDTO(value: string | number[], nemesisEpoch: number): Deadline {
         const uint64Value = 'string' === typeof value ? UInt64.fromNumericString(value) : new UInt64(value);
         const dateSeconds = uint64Value.compact();
-        const deadline = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
-            ZoneId.SYSTEM,
-        );
-        return new Deadline(deadline);
+        const deadline = LocalDateTime.ofInstant(Instant.ofEpochMilli(Math.round(dateSeconds + nemesisEpoch * 1000)), ZoneId.SYSTEM);
+        return new Deadline(deadline, nemesisEpoch);
     }
 
     /**
      * @param deadline
      */
-    private constructor(deadline: LocalDateTime) {
+    private constructor(deadline: LocalDateTime, nemesisEpoch: number) {
         this.value = deadline;
+        this.nemesisEpoch = nemesisEpoch;
     }
 
     /**
      * @internal
      */
     public toDTO(): number[] {
-        return UInt64.fromUint(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000).toDTO();
+        return UInt64.fromUint(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - this.nemesisEpoch * 1000).toDTO();
     }
 
     /**
      * @internal
      */
     public toString(): string {
-        return UInt64.fromUint(
-            this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000,
-        ).toString();
+        return UInt64.fromUint(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - this.nemesisEpoch * 1000).toString();
     }
 }

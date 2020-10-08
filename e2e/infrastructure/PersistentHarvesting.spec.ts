@@ -58,7 +58,7 @@ describe('PersistentHarvesting', () => {
     describe('AccountKeyLinkTransaction', () => {
         it('standalone', () => {
             const accountLinkTransaction = AccountKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 remoteAccount.publicKey,
                 LinkAction.Link,
                 networkType,
@@ -73,7 +73,7 @@ describe('PersistentHarvesting', () => {
     describe('VrfKeyLinkTransaction', () => {
         it('standalone', () => {
             const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 vrfKeyPair.publicKey,
                 LinkAction.Link,
                 networkType,
@@ -88,7 +88,7 @@ describe('PersistentHarvesting', () => {
     describe('NodeKeyLinkTransaction', () => {
         it('standalone', () => {
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',
                 LinkAction.Link,
                 networkType,
@@ -108,7 +108,7 @@ describe('PersistentHarvesting', () => {
     describe('transactions', () => {
         it('should create delegated harvesting transaction', () => {
             const tx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
+                Deadline.create(1573430400),
                 remoteAccount.privateKey,
                 vrfKeyPair.privateKey,
                 'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',

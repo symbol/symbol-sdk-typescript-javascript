@@ -15,6 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { TransactionStatusDTO, TransactionStatusRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Deadline } from '../model/transaction/Deadline';
 import { TransactionStatus } from '../model/transaction/TransactionStatus';
@@ -35,13 +36,21 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
     private transactionStatusRoutesApi: TransactionStatusRoutesApi;
 
     /**
+     * @internal
+     * nemesis block creation epoch
+     */
+    private readonly nemesisEpochObservable: Observable<number>;
+
+    /**
      * Constructor
      * @param url Base catapult-rest url
+     * @param nemesisEpoch Nemesis block epoch
      * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string, fetchApi?: any) {
+    constructor(url: string, nemesisEpoch?: number | Observable<number>, fetchApi?: any) {
         super(url, fetchApi);
         this.transactionStatusRoutesApi = new TransactionStatusRoutesApi(this.config());
+        this.nemesisEpochObservable = this.createNemesisEpochObservable(nemesisEpoch);
     }
 
     /**
@@ -50,7 +59,13 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
      * @returns Observable<TransactionStatus>
      */
     public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
-        return this.call(this.transactionStatusRoutesApi.getTransactionStatus(transactionHash), (body) => this.toTransactionStatus(body));
+        return this.nemesisEpochObservable.pipe(
+            mergeMap((nemesisEpoch) =>
+                this.call(this.transactionStatusRoutesApi.getTransactionStatus(transactionHash), (body) =>
+                    this.toTransactionStatus(body, nemesisEpoch),
+                ),
+            ),
+        );
     }
 
     /**
@@ -62,8 +77,12 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
         const transactionHashesBody = {
             hashes: transactionHashes,
         };
-        return this.call(this.transactionStatusRoutesApi.getTransactionStatuses(transactionHashesBody), (body) =>
-            body.map(this.toTransactionStatus),
+        return this.nemesisEpochObservable.pipe(
+            mergeMap((nemesisEpoch) =>
+                this.call(this.transactionStatusRoutesApi.getTransactionStatuses(transactionHashesBody), (body) =>
+                    body.map((b) => this.toTransactionStatus(b, nemesisEpoch)),
+                ),
+            ),
         );
     }
 
@@ -72,13 +91,14 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
      *
      * @internal
      * @param {TransactionStatusDTO} dto the TransactionStatusDTO object from rest.
+     * @param {number} nemesisEpoch the Nemesis block epoch
      * @returns {TransactionStatus} a TransactionStatus model
      */
-    private toTransactionStatus(dto: TransactionStatusDTO): TransactionStatus {
+    private toTransactionStatus(dto: TransactionStatusDTO, nemesisEpoch): TransactionStatus {
         return new TransactionStatus(
             dto.group,
             dto.hash,
-            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO()),
+            Deadline.createFromDTO(UInt64.fromNumericString(dto.deadline).toDTO(), nemesisEpoch ?? 0),
             dto.code,
             dto.height ? UInt64.fromNumericString(dto.height) : undefined,
         );
