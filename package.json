@@ -60,8 +60,6 @@
         "@types/lodash": "^4.14.161",
         "@types/long": "^4.0.1",
         "@types/mocha": "^2.2.48",
-        "@types/request": "^2.48.5",
-        "@types/request-promise-native": "^1.0.17",
         "@types/ripemd160": "^2.0.0",
         "@types/utf8": "^2.1.6",
         "@types/ws": "^3.2.1",
