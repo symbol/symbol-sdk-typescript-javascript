@@ -101,11 +101,11 @@ export const throwInvalidFqn = (reason: any, name: any): void => {
 
 export const extractPartName = (name: string, start: number, size: number): string => {
     if (0 === size) {
-        this.throwInvalidFqn('empty part', name);
+        throwInvalidFqn('empty part', name);
     }
     const partName = name.substr(start, size);
     if (!idGeneratorConst.name_pattern.test(partName)) {
-        this.throwInvalidFqn(`invalid part name [${partName}]`, name);
+        throwInvalidFqn(`invalid part name [${partName}]`, name);
     }
     return partName;
 };

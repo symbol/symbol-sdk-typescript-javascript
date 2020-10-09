@@ -54,6 +54,7 @@ import { SecretLockRepository } from './SecretLockRepository';
 import { SecretLockHttp } from './SecretLockHttp';
 import { HashLockHttp } from './HashLockHttp';
 import { Duration } from 'js-joda';
+import { DtoMapping } from '../core/utils/DtoMapping';
 /**
  * Receipt http repository.
  *
@@ -83,7 +84,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
                   .getNetworkProperties()
                   .pipe(
                       map((property) => {
-                          return Duration.ofSeconds(parseInt(property.network.epochAdjustment?.replace('s', '') ?? '0'));
+                          return DtoMapping.parseServerDuration(property.network.epochAdjustment ?? '-');
                       }),
                   )
                   .pipe(shareReplay(1));
