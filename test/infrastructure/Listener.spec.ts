@@ -34,6 +34,7 @@ import { TransactionStatusError } from '../../src/model/transaction/TransactionS
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
+import { Duration } from 'js-joda';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
@@ -43,20 +44,21 @@ describe('Listener', () => {
 
     let namespaceRepoMock: NamespaceRepository;
     let namespaceRepo: NamespaceRepository;
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     beforeEach(() => {
         namespaceRepoMock = mock();
         namespaceRepo = instance(namespaceRepoMock);
     });
 
     it('should createComplete a WebSocket instance given url parameter', () => {
-        const listener = new Listener('http://localhost:3000/ws', namespaceRepo);
+        const listener = new Listener('http://localhost:3000/ws', namespaceRepo, epochAdjustment);
         expect('http://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
 
     describe('isOpen', () => {
         it('should return false when listener is created and not opened', () => {
-            const listener = new Listener('http://localhost:3000', namespaceRepo);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, epochAdjustment);
             expect(listener.isOpen()).to.be.false;
             listener.close();
         });
@@ -192,7 +194,7 @@ describe('Listener', () => {
 
     describe('onerror', () => {
         it('should reject because of wrong server url', async () => {
-            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo);
+            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo, epochAdjustment);
             await listener
                 .open()
                 .then(() => {
@@ -235,7 +237,7 @@ describe('Listener', () => {
                 );
 
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
@@ -279,7 +281,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
@@ -324,7 +326,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
@@ -368,7 +370,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
@@ -414,7 +416,7 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias2,
                     [],
                     PlainMessage.create('test-message'),

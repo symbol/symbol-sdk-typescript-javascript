@@ -54,17 +54,18 @@ import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyL
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
+import { Duration } from 'js-joda';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
-
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
 
     it('should create AccountKeyLinkTransaction', () => {
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -79,7 +80,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -96,7 +97,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
@@ -113,7 +114,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AccountRestrictionOperationTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -131,7 +132,7 @@ describe('SerializeTransactionToJSON', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
@@ -148,7 +149,7 @@ describe('SerializeTransactionToJSON', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -162,7 +163,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
@@ -181,7 +182,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create MosaicDefinitionTransaction without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, false),
@@ -200,7 +201,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -215,7 +216,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
@@ -232,7 +233,7 @@ describe('SerializeTransactionToJSON', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -250,7 +251,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
@@ -268,7 +269,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create ModifyMultiSigTransaction', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             2,
             1,
             [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
@@ -285,7 +286,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -293,7 +294,7 @@ describe('SerializeTransactionToJSON', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -307,7 +308,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -315,7 +316,7 @@ describe('SerializeTransactionToJSON', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -329,10 +330,10 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create LockFundTransaction', () => {
         const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -347,7 +348,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -360,7 +361,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create NamespaceRegistrationTransaction - Sub', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,
@@ -373,7 +374,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create VrfKeyLinkTransaction', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -386,7 +387,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create NodeKeyLinkTransaction', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -400,7 +401,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create VotingKeyLinkTransaction', () => {
         const votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             1,
             3,

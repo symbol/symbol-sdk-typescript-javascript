@@ -31,10 +31,12 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
 import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
+import { Duration } from 'js-joda';
 
 describe('AccountRestrictionTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
@@ -67,7 +69,7 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 160 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [address],
                 [],
@@ -81,7 +83,7 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 144 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
@@ -92,7 +94,7 @@ describe('AccountRestrictionTransaction', () => {
         it('should set payload size', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
@@ -105,7 +107,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should return 138 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -117,7 +119,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -131,7 +133,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -146,7 +148,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should create allow incmoing address restriction transaction', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
@@ -163,7 +165,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should create mosaic restriction transaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
@@ -178,7 +180,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should create operation restriction transaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -193,7 +195,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should create outgoing address restriction transaction', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         let addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
@@ -207,7 +209,7 @@ describe('AccountRestrictionTransaction', () => {
         );
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.BlockOutgoingAddress,
             [address],
             [],
@@ -224,7 +226,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should create outgoing operation restriction transaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         let operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
@@ -236,7 +238,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal('04400100000000004E42');
 
         operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             OperationRestrictionFlag.BlockOutgoingTransactionType,
             [operation],
             [],
@@ -251,7 +253,7 @@ describe('AccountRestrictionTransaction', () => {
     it('Notify Account', () => {
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
@@ -267,7 +269,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [address],
@@ -287,7 +289,7 @@ describe('AccountRestrictionTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [alias],
             [],
@@ -303,7 +305,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [alias],

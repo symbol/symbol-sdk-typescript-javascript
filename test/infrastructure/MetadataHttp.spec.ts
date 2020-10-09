@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import {
     MetadataEntryDTO,
     MetadataRoutesApi,
@@ -42,6 +43,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 
 describe('MetadataHttp', () => {
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');
@@ -361,7 +363,7 @@ describe('MetadataHttp', () => {
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
             .createAccountMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkType.MIJIN_TEST,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -394,7 +396,7 @@ describe('MetadataHttp', () => {
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
             .createMosaicMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkType.MIJIN_TEST,
                 address,
                 mosaicId,
@@ -428,7 +430,7 @@ describe('MetadataHttp', () => {
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         metadataTransactionService
             .createNamespaceMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkType.MIJIN_TEST,
                 address,
                 namespaceId,
@@ -461,7 +463,7 @@ describe('MetadataHttp', () => {
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
             .createAccountMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkType.MIJIN_TEST,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -490,7 +492,7 @@ describe('MetadataHttp', () => {
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
             .createMosaicMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkType.MIJIN_TEST,
                 address,
                 mosaicId,
@@ -520,7 +522,7 @@ describe('MetadataHttp', () => {
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
         await metadataTransactionService
             .createNamespaceMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkType.MIJIN_TEST,
                 address,
                 namespaceId,

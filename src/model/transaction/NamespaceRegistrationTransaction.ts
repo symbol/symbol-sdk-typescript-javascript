@@ -189,7 +189,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             registrationType === NamespaceRegistrationType.RootNamespace
                 ? NamespaceRegistrationTransaction.createRootNamespace(
                       isEmbedded
-                          ? Deadline.create()
+                          ? Deadline.createEmtpy()
                           : Deadline.createFromDTO((builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new UInt64(builder.getDuration()!.blockDuration),
@@ -200,7 +200,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                   )
                 : NamespaceRegistrationTransaction.createSubNamespace(
                       isEmbedded
-                          ? Deadline.create()
+                          ? Deadline.createEmtpy()
                           : Deadline.createFromDTO((builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new NamespaceId(builder.getParentId()!.namespaceId),

@@ -133,7 +133,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = MosaicSupplyChangeTransaction.create(
             isEmbedded
-                ? Deadline.create()
+                ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             builder.getAction().valueOf(),

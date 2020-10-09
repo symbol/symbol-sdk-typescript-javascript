@@ -114,7 +114,7 @@ export class VrfKeyLinkTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = VrfKeyLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,

@@ -33,6 +33,7 @@ import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
 import { HashLockRepository } from './HashLockRepository';
 import { SecretLockRepository } from './SecretLockRepository';
+import { Duration } from 'js-joda';
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing
@@ -136,4 +137,9 @@ export interface RepositoryFactory {
      * @returns a newly created {@link IListener}
      */
     createListener(): IListener;
+
+    /**
+     * @returns nemesis block epoch
+     */
+    getEpochAdjustment(): Observable<Duration>;
 }

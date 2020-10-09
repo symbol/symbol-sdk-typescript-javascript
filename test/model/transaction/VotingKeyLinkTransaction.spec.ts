@@ -24,6 +24,7 @@ import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { Address } from '../../../src/model/account/Address';
+import { Duration } from 'js-joda';
 
 describe('VotingKeyLinkTransaction', () => {
     let account: Account;
@@ -31,6 +32,7 @@ describe('VotingKeyLinkTransaction', () => {
     const startEpoch = 1;
     const endEpoch = 10;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
         votingKey = '344B9146A1F8DBBD8AFC830A2AAB7A83692E73AD775159B811355B1D2C0C27120243B10A16D4B5001B2AF0ED456C82D0';
@@ -38,7 +40,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
@@ -54,7 +56,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
@@ -71,7 +73,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should create an votingKeyLinkTransaction object with link action', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
@@ -93,7 +95,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should create an VotingKeyLinkTransaction object with unlink action', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
@@ -116,7 +118,7 @@ describe('VotingKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 185 for VotingKeyLinkTransaction byte size', () => {
             const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 votingKey,
                 startEpoch,
                 endEpoch,
@@ -130,7 +132,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
@@ -145,7 +147,7 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('Notify Account', () => {
         const tx = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             startEpoch,
             endEpoch,

@@ -195,7 +195,7 @@ describe('CreateTransactionFromDTO', () => {
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
             deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('test-message');
-            expect(transferTransaction.deadline.value).to.be.equal(LocalDateTime.MIN);
+            expect(transferTransaction.deadline.adjustedValue).to.be.equal(LocalDateTime.MIN.second());
             expect(transferTransaction.maxFee.toString()).to.be.equal('0');
         });
     });

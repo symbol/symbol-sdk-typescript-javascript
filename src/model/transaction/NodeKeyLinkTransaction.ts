@@ -114,7 +114,9 @@ export class NodeKeyLinkTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = NodeKeyLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as NodeKeyLinkTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as NodeKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,

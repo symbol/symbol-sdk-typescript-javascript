@@ -26,10 +26,12 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { AliasTransaction } from '../../../src/model/model';
+import { Duration } from 'js-joda';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
@@ -38,7 +40,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
@@ -53,7 +55,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
@@ -69,7 +71,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
@@ -92,7 +94,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AliasTransaction.createForAddress(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
@@ -116,7 +118,7 @@ describe('AddressAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 address,
@@ -130,7 +132,7 @@ describe('AddressAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 address,
@@ -146,7 +148,7 @@ describe('AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
@@ -158,7 +160,13 @@ describe('AddressAliasTransaction', () => {
     it('Notify Account', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
-        const tx = AddressAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, address, NetworkType.MIJIN_TEST);
+        const tx = AddressAliasTransaction.create(
+            Deadline.create(epochAdjustment),
+            AliasAction.Link,
+            namespaceId,
+            address,
+            NetworkType.MIJIN_TEST,
+        );
 
         let canNotify = tx.shouldNotifyAccount(address);
         expect(canNotify).to.be.true;

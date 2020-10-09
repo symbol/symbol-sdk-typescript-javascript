@@ -130,7 +130,9 @@ export class SecretProofTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = SecretProofTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretProofTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as SecretProofTransactionBuilder).getDeadline().timestamp),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),

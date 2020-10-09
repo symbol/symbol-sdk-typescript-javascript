@@ -63,4 +63,32 @@ describe('DtoMapping', () => {
         expect(result).not.to.be.undefined;
         expect((result.accountRestrictions.restrictions[0].values[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
     });
+
+    it('parseServerDuration', () => {
+        const epochS = '12345s';
+        expect(DtoMapping.parseServerDuration(epochS).seconds()).to.be.equal(12345);
+        const epochM = '12345m';
+        expect(DtoMapping.parseServerDuration(epochM).toMinutes()).to.be.equal(12345);
+        const epochH = '12345h';
+        expect(DtoMapping.parseServerDuration(epochH).toHours()).to.be.equal(12345);
+        const epochMS = '12345ms';
+        expect(DtoMapping.parseServerDuration(epochMS).toMillis()).to.be.equal(12345);
+        const epochD = '12345d';
+        expect(DtoMapping.parseServerDuration(epochD).toDays()).to.be.equal(12345);
+    });
+
+    it('parseServerDuration - exception', () => {
+        expect(() => {
+            const epochS = '12345g';
+            DtoMapping.parseServerDuration(epochS).seconds();
+        }).to.throw();
+        expect(() => {
+            const epochS = 'adfs';
+            DtoMapping.parseServerDuration(epochS).seconds();
+        }).to.throw();
+        expect(() => {
+            const epochS = '123s45';
+            DtoMapping.parseServerDuration(epochS).seconds();
+        }).to.throw();
+    });
 });

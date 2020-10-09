@@ -31,6 +31,7 @@ import { take } from 'rxjs/operators';
 import { TransactionStatement } from '../../src/model/model';
 import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { Order } from '../../src/infrastructure/infrastructure';
+import { Duration } from 'js-joda';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -42,6 +43,8 @@ describe('BlockHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionHash;
+
+    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -67,7 +70,7 @@ describe('BlockHttp', () => {
     describe('Setup Test Data', () => {
         it('Announce TransferTransaction FER', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account2.address,
                 [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),

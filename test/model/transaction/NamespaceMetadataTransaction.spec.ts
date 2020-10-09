@@ -27,17 +27,19 @@ import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTr
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { deepEqual } from 'assert';
 import { Address } from '../../../src/model/account/Address';
+import { Duration } from 'js-joda';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
 
     it('should default maxFee field be set to 0', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -52,7 +54,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -68,7 +70,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should create and sign an NamespaceMetadataTransaction object', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -87,7 +89,7 @@ describe('NamespaceMetadataTransaction', () => {
     describe('size', () => {
         it('should return 182 for NamespaceMetadataTransaction byte size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
@@ -101,7 +103,7 @@ describe('NamespaceMetadataTransaction', () => {
 
         it('should set payload size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
@@ -117,7 +119,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -133,7 +135,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should create EmbeddedTransactionBuilder', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -153,7 +155,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should resolve alias', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -169,7 +171,7 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('Notify Account', () => {
         const tx = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
@@ -191,7 +193,7 @@ describe('NamespaceMetadataTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             alias,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),

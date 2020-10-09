@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
+import { ChronoUnit, Duration, Instant, LocalDateTime, ZoneId } from 'js-joda';
 import { UInt64 } from '../UInt64';
 
 /**
@@ -23,33 +23,25 @@ import { UInt64 } from '../UInt64';
  */
 export class Deadline {
     /**
-     * @type {number}
+     * Deadline value (without Nemesis epoch adjustment)
      */
-    public static timestampNemesisBlock = 1573430400;
+    public adjustedValue: number;
 
     /**
-     * Deadline value
-     */
-    public value: LocalDateTime;
-
-    /**
-     * Create deadline model
-     * @param deadline
-     * @param chronoUnit
+     * Create deadline model. Default to 2 chrono hours in advance.
+     * @param {Duration} epochAdjustment the network's epoch adjustment (seconds). Defined in the network/properties. e.g. Duration.ofSeconds(1573430400);
+     * @param {number} deadline the deadline unit value.
+     * @param {ChronoUnit} chronoUnit the crhono unit. e.g ChronoUnit.HOURS
      * @returns {Deadline}
      */
-    public static create(deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
-        const networkTimeStamp = new Date().getTime();
-        const timeStampDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(networkTimeStamp), ZoneId.SYSTEM);
-        const deadlineDateTime = timeStampDateTime.plus(deadline, chronoUnit);
+    public static create(epochAdjustment: Duration, deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
+        const now = Instant.now();
+        const deadlineDateTime = now.plus(deadline, chronoUnit);
 
         if (deadline <= 0) {
             throw new Error('deadline should be greater than 0');
-        } else if (timeStampDateTime.plus(24, ChronoUnit.HOURS).compareTo(deadlineDateTime) !== 1) {
-            throw new Error('deadline should be less than 24 hours');
         }
-
-        return new Deadline(deadlineDateTime);
+        return new Deadline(deadlineDateTime.minusMillis(epochAdjustment.toMillis()).toEpochMilli());
     }
 
     /**
@@ -59,7 +51,7 @@ export class Deadline {
      * @returns {Deadline}
      */
     public static createEmtpy(): Deadline {
-        return new Deadline(LocalDateTime.MIN);
+        return new Deadline(0);
     }
 
     /**
@@ -68,34 +60,47 @@ export class Deadline {
      */
     public static createFromDTO(value: string | number[]): Deadline {
         const uint64Value = 'string' === typeof value ? UInt64.fromNumericString(value) : new UInt64(value);
-        const dateSeconds = uint64Value.compact();
-        const deadline = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
-            ZoneId.SYSTEM,
-        );
-        return new Deadline(deadline);
+        return new Deadline(uint64Value.compact());
     }
 
     /**
-     * @param deadline
+     * Constructor
+     * @param adjustedValue Adjusted value. (Local datetime minus nemesis epoch adjustment)
      */
-    private constructor(deadline: LocalDateTime) {
-        this.value = deadline;
+    private constructor(adjustedValue: number) {
+        this.adjustedValue = adjustedValue;
     }
 
     /**
      * @internal
      */
     public toDTO(): number[] {
-        return UInt64.fromUint(this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000).toDTO();
+        return UInt64.fromUint(this.adjustedValue).toDTO();
     }
 
     /**
      * @internal
      */
     public toString(): string {
-        return UInt64.fromUint(
-            this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000,
-        ).toString();
+        return UInt64.fromUint(this.adjustedValue).toString();
+    }
+
+    /**
+     * Returns deadline as local date time.
+     * @param epochAdjustment the network's epoch adjustment. Defined in the network/properties.
+     * @returns {LocalDateTime}
+     */
+    public toLocalDateTime(epochAdjustment: Duration): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.adjustedValue).plusMillis(epochAdjustment.toMillis()), ZoneId.SYSTEM);
+    }
+
+    /**
+     * Returns deadline as local date time.
+     * @param epochAdjustment the network's epoch adjustment. Defined in the network/properties.
+     * @param zoneId the Zone Id.
+     * @returns {LocalDateTime}
+     */
+    public toLocalDateTimeGivenTimeZone(epochAdjustment: Duration, zoneId: ZoneId): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.adjustedValue).plusMillis(epochAdjustment.toMillis()), zoneId);
     }
 }

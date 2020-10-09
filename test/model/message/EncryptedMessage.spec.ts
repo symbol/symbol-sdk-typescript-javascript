@@ -21,6 +21,7 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { Duration } from 'js-joda';
 
 describe('EncryptedMessage', () => {
     let sender: Account;
@@ -28,6 +29,7 @@ describe('EncryptedMessage', () => {
 
     let sender_nis: Account;
     let recipient_nis: Account;
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.MIJIN_TEST);
         recipient = Account.createFromPrivateKey(
@@ -63,7 +65,7 @@ describe('EncryptedMessage', () => {
     it('should return decrepted message reading from message payload', () => {
         const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             recipient.address,
             [NetworkCurrencyLocal.createAbsolute(1)],
             sender.encryptMessage('Testing simple transfer', recipient.publicAccount),

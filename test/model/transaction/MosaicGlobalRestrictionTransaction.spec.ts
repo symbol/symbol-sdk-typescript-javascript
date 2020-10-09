@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -38,6 +39,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
         statement = new Statement(
@@ -55,7 +57,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
@@ -85,7 +87,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             namespacId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
@@ -119,7 +121,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
@@ -149,7 +151,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
@@ -195,7 +197,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const tx = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),

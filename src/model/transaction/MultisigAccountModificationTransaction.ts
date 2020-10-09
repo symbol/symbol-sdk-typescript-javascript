@@ -143,7 +143,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = MultisigAccountModificationTransaction.create(
             isEmbedded
-                ? Deadline.create()
+                ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),

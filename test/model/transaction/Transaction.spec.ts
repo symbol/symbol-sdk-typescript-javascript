@@ -32,10 +32,11 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
+import { Duration } from 'js-joda';
 
 describe('Transaction', () => {
     let account: Account;
-
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
@@ -76,7 +77,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -92,7 +93,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -106,7 +107,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -122,7 +123,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -138,7 +139,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -154,14 +155,14 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(() => {
-                transaction.reapplyGiven(Deadline.create());
+                transaction.reapplyGiven(Deadline.create(epochAdjustment));
             }).to.throws("an Announced transaction can't be modified");
         });
         it('should return a new transaction', () => {
@@ -169,13 +170,13 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
-            const newTransaction = transaction.reapplyGiven(Deadline.create());
+            const newTransaction = transaction.reapplyGiven(Deadline.create(epochAdjustment));
             expect(newTransaction).to.not.equal(transaction);
         });
         it('should overide deadline properly', () => {
@@ -183,16 +184,16 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
-            const newDeadline = Deadline.create(3);
+            const newDeadline = Deadline.create(epochAdjustment, 3);
             const newTransaction = transaction.reapplyGiven(newDeadline);
-            const equal = newTransaction.deadline.value.equals(transaction.deadline.value);
-            const after = newTransaction.deadline.value.isAfter(transaction.deadline.value);
+            const equal = newTransaction.deadline.adjustedValue === transaction.deadline.adjustedValue;
+            const after = newTransaction.deadline.adjustedValue > transaction.deadline.adjustedValue;
             expect(newTransaction.deadline).to.be.equal(newDeadline);
             expect(equal).to.be.equal(false);
             expect(after).to.be.equal(true);
@@ -205,14 +206,14 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
@@ -227,7 +228,7 @@ describe('Transaction', () => {
     describe('Transaction serialize', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [],
                 PlainMessage.create('test-message'),
@@ -247,7 +248,7 @@ describe('Transaction', () => {
                 TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -378,7 +379,7 @@ describe('Transaction', () => {
 
     it('is signed', () => {
         let tx = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),

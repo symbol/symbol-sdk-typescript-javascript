@@ -145,7 +145,7 @@ export class TransferTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = TransferTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();

@@ -15,6 +15,7 @@
  */
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
@@ -40,6 +41,7 @@ describe('LockFundsTransaction', () => {
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
         statement = new Statement(
@@ -54,10 +56,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -70,10 +72,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -86,10 +88,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('creation with an aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -101,11 +103,11 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should throw exception if it is not a aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             LockFundsTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
@@ -115,10 +117,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should create and sign LockFundsTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -133,10 +135,15 @@ describe('LockFundsTransaction', () => {
 
     describe('size', () => {
         it('should return 184 for LockFundsTransaction transaction byte size', () => {
-            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(epochAdjustment),
+                [],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
@@ -146,10 +153,15 @@ describe('LockFundsTransaction', () => {
         });
 
         it('should set payload size', () => {
-            const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(epochAdjustment),
+                [],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
@@ -161,10 +173,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('Test set maxFee using multiplier', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -177,7 +189,7 @@ describe('LockFundsTransaction', () => {
     });
 
     it('Test resolveAlias can resolve', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = new LockFundsTransaction(
             NetworkType.MIJIN_TEST,
@@ -199,10 +211,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const tx = LockFundsTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,

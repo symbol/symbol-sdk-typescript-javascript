@@ -36,6 +36,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
 import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
+import { Duration } from 'js-joda';
 
 describe('RestrictionHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -48,6 +49,7 @@ describe('RestrictionHttp', () => {
     let mosaicId: MosaicId;
     let referenceMosaicId: MosaicId;
     let restrictionAccountRepository: RestrictionAccountRepository;
+    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -75,7 +77,7 @@ describe('RestrictionHttp', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -94,7 +96,7 @@ describe('RestrictionHttp', () => {
             const nonce = MosaicNonce.createRandom();
             referenceMosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 nonce,
                 referenceMosaicId,
                 MosaicFlags.create(true, true, true),
@@ -111,7 +113,7 @@ describe('RestrictionHttp', () => {
     describe('Setup Test AccountAddressRestriction', () => {
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [account3.address],
                 [],
@@ -126,7 +128,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicGlobalRestrictionTransaction - Reference', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 referenceMosaicId,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -146,7 +148,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicGlobalRestrictionTransaction - with referenceMosaicId', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 mosaicId,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -167,7 +169,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicAddressRestrictionTransaction', () => {
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 mosaicId,
                 UInt64.fromUint(60641),
                 account3.address,
@@ -177,7 +179,7 @@ describe('RestrictionHttp', () => {
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -221,7 +223,7 @@ describe('RestrictionHttp', () => {
     describe('Remove test AccountRestriction - Address', () => {
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [],
                 [account3.address],
