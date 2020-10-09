@@ -25,7 +25,6 @@ import { IBlockService } from './interfaces/IBlockService';
 import { MerklePosition } from '../model/blockchain/MerklePosition';
 import { TransactionPaginationStreamer } from '../infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { TransactionGroup } from '../infrastructure/TransactionGroup';
-import { Transaction } from '../model/transaction/Transaction';
 import MerkleTree from 'merkletreejs';
 import { TransactionRepository } from '../infrastructure/TransactionRepository';
 
@@ -80,6 +79,7 @@ export class BlockService implements IBlockService {
         const streamer = new TransactionPaginationStreamer(this.transactionRepository);
         return streamer
             .search({ group: TransactionGroup.Confirmed, height: height })
+            .pipe(map((t) => ({ index: t.transactionInfo!.index, hash: t.transactionInfo!.hash })))
             .pipe(toArray())
             .pipe(map((transactions) => this.getTransacactionMerkleRoot(transactions).toUpperCase()));
     }
@@ -114,11 +114,8 @@ export class BlockService implements IBlockService {
      * @param transactions Block transactions
      * @returns calculated root hash
      */
-    private getTransacactionMerkleRoot(transactions: Transaction[]): string {
-        const leaves = transactions
-            .sort((n1, n2) => n1.transactionInfo!.index - n2.transactionInfo!.index)
-            .map((transaction) => transaction.transactionInfo!.hash);
-
+    private getTransacactionMerkleRoot(transactions: { index: number; hash: string | undefined }[]): string {
+        const leaves = transactions.sort((n1, n2) => n1.index - n2.index).map((transaction) => transaction!.hash);
         const tree = new MerkleTree(leaves, sha3_256, {
             duplicateOdd: true,
             hashLeaves: false,
