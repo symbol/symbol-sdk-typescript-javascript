@@ -16,19 +16,25 @@
 
 import { sha3_256 } from 'js-sha3';
 import { combineLatest, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, toArray } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { UInt64 } from '../model/UInt64';
 import { IBlockService } from './interfaces/IBlockService';
 import { MerklePosition } from '../model/blockchain/MerklePosition';
+import { TransactionPaginationStreamer } from '../infrastructure/paginationStreamer/TransactionPaginationStreamer';
+import { TransactionGroup } from '../infrastructure/TransactionGroup';
+import { Transaction } from '../model/transaction/Transaction';
+import MerkleTree from 'merkletreejs';
+import { TransactionRepository } from '../infrastructure/TransactionRepository';
 
 /**
  * Block Service
  */
 export class BlockService implements IBlockService {
     private readonly blockRepository: BlockRepository;
+    private readonly transactionRepository: TransactionRepository;
 
     /**
      * Constructor
@@ -36,6 +42,7 @@ export class BlockService implements IBlockService {
      */
     constructor(public readonly repositoryFactory: RepositoryFactory) {
         this.blockRepository = repositoryFactory.createBlockRepository();
+        this.transactionRepository = repositoryFactory.createTransactionRepository();
     }
 
     /**
@@ -65,6 +72,19 @@ export class BlockService implements IBlockService {
     }
 
     /**
+     * Calculate transactions merkle root hash from a block
+     * @param height block height
+     * @returns root hash
+     */
+    public calculateTransactionsMerkleRootHash(height: UInt64): Observable<string> {
+        const streamer = new TransactionPaginationStreamer(this.transactionRepository);
+        return streamer
+            .search({ group: TransactionGroup.Confirmed, height: height })
+            .pipe(toArray())
+            .pipe(map((transactions) => this.getTransacactionMerkleRoot(transactions).toUpperCase()));
+    }
+
+    /**
      * @internal
      * Validate leaf against merkle tree in block
      * @param leaf Leaf hash in merkle tree
@@ -86,5 +106,28 @@ export class BlockService implements IBlockService {
             }
         }, leaf);
         return rootToCompare.toUpperCase() === rootHash.toUpperCase();
+    }
+
+    /**
+     * @internal
+     * Create merkle root hash for block transactions
+     * @param transactions Block transactions
+     * @returns calculated root hash
+     */
+    private getTransacactionMerkleRoot(transactions: Transaction[]): string {
+        console.log(transactions);
+        const leaves = transactions
+            .sort((n1, n2) => n1.transactionInfo!.index - n2.transactionInfo!.index)
+            .map((transaction) => transaction.transactionInfo!.hash);
+
+        const tree = new MerkleTree(leaves, sha3_256, {
+            duplicateOdd: true,
+            hashLeaves: false,
+            sort: false,
+            sortLeaves: false,
+            sortPairs: false,
+            isBitcoinTree: false,
+        });
+        return tree.getRoot().toString('hex');
     }
 }
