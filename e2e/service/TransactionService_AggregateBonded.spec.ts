@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { ChronoUnit, Duration } from 'js-joda';
+import { ChronoUnit } from 'js-joda';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
@@ -49,7 +49,6 @@ describe('TransactionService - AggregateBonded', () => {
     let networkType: NetworkType;
     let transactionService: TransactionService;
     let NetworkCurrencyLocalId: MosaicId;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -75,7 +74,7 @@ describe('TransactionService - AggregateBonded', () => {
 
     const createSignedAggregatedBondTransaction = (aggregatedTo: Account, signer: Account, recipient: Address): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             recipient,
             [],
             PlainMessage.create('test-message'),
@@ -84,7 +83,7 @@ describe('TransactionService - AggregateBonded', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
+            Deadline.create(helper.epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             networkType,
             [],
@@ -112,7 +111,7 @@ describe('TransactionService - AggregateBonded', () => {
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -122,7 +121,7 @@ describe('TransactionService - AggregateBonded', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -147,7 +146,7 @@ describe('TransactionService - AggregateBonded', () => {
     describe('should announce transaction', () => {
         it('announce', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
@@ -170,7 +169,7 @@ describe('TransactionService - AggregateBonded', () => {
         it('announce', async () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
@@ -190,7 +189,7 @@ describe('TransactionService - AggregateBonded', () => {
         it('announce', async () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
@@ -217,7 +216,7 @@ describe('TransactionService - AggregateBonded', () => {
     describe('Restore test multisig Accounts', () => {
         it('Announce MultisigAccountModificationTransaction', async () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 0,
                 [],
@@ -226,7 +225,7 @@ describe('TransactionService - AggregateBonded', () => {
                 helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 0,
                 0,
                 [],
@@ -236,7 +235,7 @@ describe('TransactionService - AggregateBonded', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 -1,
                 [],
@@ -246,7 +245,7 @@ describe('TransactionService - AggregateBonded', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),

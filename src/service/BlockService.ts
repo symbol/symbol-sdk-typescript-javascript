@@ -115,7 +115,6 @@ export class BlockService implements IBlockService {
      * @returns calculated root hash
      */
     private getTransacactionMerkleRoot(transactions: Transaction[]): string {
-        console.log(transactions);
         const leaves = transactions
             .sort((n1, n2) => n1.transactionInfo!.index - n2.transactionInfo!.index)
             .map((transaction) => transaction.transactionInfo!.hash);

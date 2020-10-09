@@ -28,7 +28,7 @@ import { BlockService } from '../../src/service/BlockService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionStatement } from '../../src/model/receipt/TransactionStatement';
-import { Duration } from 'js-joda';
+import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 
 describe('BlockService', () => {
     const helper = new IntegrationTestHelper();
@@ -40,7 +40,7 @@ describe('BlockService', () => {
     let blockService: BlockService;
     let transactionRepository: TransactionRepository;
     let receiptRepository: ReceiptRepository;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    let blockRepository: BlockRepository;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -50,6 +50,7 @@ describe('BlockService', () => {
             networkType = helper.networkType;
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
             receiptRepository = helper.repositoryFactory.createReceiptRepository();
+            blockRepository = helper.repositoryFactory.createBlockRepository();
             blockService = new BlockService(helper.repositoryFactory);
         });
     });
@@ -66,7 +67,7 @@ describe('BlockService', () => {
     describe('Create a transfer', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
@@ -105,6 +106,15 @@ describe('BlockService', () => {
             const statement = statements.data[0] as TransactionStatement;
             const validationResult = await blockService.validateStatementInBlock(statement.generateHash(), UInt64.fromUint(1)).toPromise();
             expect(validationResult).to.be.true;
+        });
+    });
+
+    describe('Calculate merkler transaction root hash', () => {
+        it('Calculate merkler transaction root hash', async () => {
+            const calculated = await blockService.calculateTransactionsMerkleRootHash(UInt64.fromUint(1)).toPromise();
+            const block = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
+            const rootHash = block.blockTransactionsHash;
+            expect(rootHash).to.be.equal(calculated);
         });
     });
 });
