@@ -41,12 +41,6 @@ describe('Deadline', () => {
         }).to.throw(Error);
     });
 
-    it('should throw error deadline greater than 24h', () => {
-        expect(() => {
-            Deadline.create(epochAdjustment, 2, ChronoUnit.DAYS);
-        }).to.throw(Error);
-    });
-
     it('should createComplete date with Deadline array', () => {
         const deadline = Deadline.createFromDTO('51110867862');
 

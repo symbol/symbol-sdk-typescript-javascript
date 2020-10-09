@@ -40,10 +40,7 @@ export class Deadline {
 
         if (deadline <= 0) {
             throw new Error('deadline should be greater than 0');
-        } else if (now.plus(24, ChronoUnit.HOURS).compareTo(deadlineDateTime) !== 1) {
-            throw new Error('deadline should be less than 24 hours');
         }
-
         return new Deadline(deadlineDateTime.minusMillis(epochAdjustment.toMillis()).toEpochMilli());
     }
 
