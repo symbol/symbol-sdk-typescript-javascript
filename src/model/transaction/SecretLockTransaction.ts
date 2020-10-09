@@ -142,11 +142,10 @@ export class SecretLockTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -154,9 +153,7 @@ export class SecretLockTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = SecretLockTransaction.create(
-            isEmbedded
-                ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as SecretLockTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+            isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
                 UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaic().mosaicId.unresolvedMosaicId).toHex()),
                 new UInt64(builder.getMosaic().amount.amount),

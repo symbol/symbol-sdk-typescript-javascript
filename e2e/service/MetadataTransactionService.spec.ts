@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import { Convert } from '../../src/core/format';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
@@ -19,7 +20,8 @@ import { MetadataTransactionService } from '../../src/service/MetadataTransactio
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MetadataTransactionService', () => {
-    const deadline = Deadline.create(1573430400);
+    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const deadline = Deadline.create(epochAdjustment);
     const key = UInt64.fromUint(Math.round(Math.random() * 10));
     const newValue = 'new test value';
 
@@ -56,7 +58,7 @@ describe('MetadataTransactionService', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, targetAccount.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -74,7 +76,7 @@ describe('MetadataTransactionService', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
@@ -90,7 +92,7 @@ describe('MetadataTransactionService', () => {
     describe('MosaicMetadataTransaction', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 targetAccount.address,
                 key,
                 mosaicId,
@@ -101,7 +103,7 @@ describe('MetadataTransactionService', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [mosaicMetadataTransaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
@@ -116,7 +118,7 @@ describe('MetadataTransactionService', () => {
     describe('NamespaceMetadataTransaction', () => {
         it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 targetAccount.address,
                 key,
                 namespaceId,
@@ -126,7 +128,7 @@ describe('MetadataTransactionService', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [namespaceMetadataTransaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
@@ -234,7 +236,7 @@ describe('MetadataTransactionService', () => {
                 )
                 .toPromise();
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
@@ -262,7 +264,7 @@ describe('MetadataTransactionService', () => {
                 )
                 .toPromise();
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],
@@ -290,7 +292,7 @@ describe('MetadataTransactionService', () => {
                 )
                 .toPromise();
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(targetAccount.publicAccount)],
                 networkType,
                 [],

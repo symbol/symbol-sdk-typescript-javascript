@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
@@ -29,13 +30,14 @@ import { TestingAccount } from '../../conf/conf.spec';
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
 
     it('should default maxFee field be set to 0', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
@@ -50,7 +52,7 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
@@ -66,7 +68,7 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 7', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
@@ -91,7 +93,7 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 0', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -117,7 +119,7 @@ describe('MosaicDefinitionTransaction', () => {
     describe('size', () => {
         it('should return 150 for MosaicDefinition transaction byte size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
                 new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                 MosaicFlags.create(true, true, false),
@@ -130,7 +132,7 @@ describe('MosaicDefinitionTransaction', () => {
         });
         it('should set payload size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
                 new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                 MosaicFlags.create(true, true, false),
@@ -146,7 +148,7 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it without duration', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -169,7 +171,7 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),
@@ -185,7 +187,7 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('Notify Account', () => {
         const tx = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(false, false, false),

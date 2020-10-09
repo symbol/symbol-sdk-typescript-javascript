@@ -174,11 +174,10 @@ export class NamespaceRegistrationTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -191,10 +190,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 ? NamespaceRegistrationTransaction.createRootNamespace(
                       isEmbedded
                           ? Deadline.createEmtpy()
-                          : Deadline.createFromDTO(
-                                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp,
-                                epochAdjustment,
-                            ),
+                          : Deadline.createFromDTO((builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new UInt64(builder.getDuration()!.blockDuration),
                       networkType,
@@ -205,10 +201,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 : NamespaceRegistrationTransaction.createSubNamespace(
                       isEmbedded
                           ? Deadline.createEmtpy()
-                          : Deadline.createFromDTO(
-                                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp,
-                                epochAdjustment,
-                            ),
+                          : Deadline.createFromDTO((builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new NamespaceId(builder.getParentId()!.namespaceId),
                       networkType,

@@ -19,9 +19,10 @@ import { CreateTransactionFromDTO } from '../../../src/infrastructure/transactio
 import { Address } from '../../../src/model/account/Address';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import ValidateTransaction from './ValidateTransaction';
-import { LocalDateTime } from 'js-joda';
+import { Duration, LocalDateTime } from 'js-joda';
 
 describe('CreateTransactionFromDTO', () => {
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     describe('TransferTransaction', () => {
         it('standalone', () => {
             const transferTransactionDTO = {
@@ -56,7 +57,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO, 1573430400) as TransferTransaction;
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
             deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('test-message');
             expect(transferTransaction.size).to.be.equal(100);
@@ -91,7 +92,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO, 1573430400) as TransferTransaction;
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
             deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('');
             expect(transferTransaction.size).to.be.equal(100);
@@ -157,7 +158,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateTransferTransaction = CreateTransactionFromDTO(aggregateTransferTransactionDTO, 1573430400);
+            const aggregateTransferTransaction = CreateTransactionFromDTO(aggregateTransferTransactionDTO);
             expect(aggregateTransferTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(aggregateTransferTransaction, aggregateTransferTransactionDTO);
         });
@@ -192,10 +193,10 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO, 1573430400) as TransferTransaction;
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
             deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('test-message');
-            expect(transferTransaction.deadline.value).to.be.equal(LocalDateTime.MIN);
+            expect(transferTransaction.deadline.adjustedValue).to.be.equal(LocalDateTime.MIN.second());
             expect(transferTransaction.maxFee.toString()).to.be.equal('0');
         });
     });
@@ -229,7 +230,7 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO, 1573430400);
+                const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO);
                 expect(transferTransaction.size).eq(100);
                 ValidateTransaction.validateStandaloneTx(transferTransaction, registerNamespaceTransactionDTO);
             });
@@ -287,10 +288,7 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
-                    aggregateNamespaceRegistrationTransactionDTO,
-                    1573430400,
-                );
+                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateNamespaceRegistrationTransactionDTO);
                 expect(aggregateNamespaceRegistrationTransaction.size).eq(100);
                 ValidateTransaction.validateAggregateTx(
                     aggregateNamespaceRegistrationTransaction,
@@ -326,7 +324,7 @@ describe('CreateTransactionFromDTO', () => {
                         network: 144,
                     },
                 };
-                const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO, 1573430400);
+                const transferTransaction = CreateTransactionFromDTO(registerNamespaceTransactionDTO);
                 expect(transferTransaction.size).eq(100);
                 ValidateTransaction.validateStandaloneTx(transferTransaction, registerNamespaceTransactionDTO);
             });
@@ -384,10 +382,7 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
-                    aggregateNamespaceRegistrationTransactionDTO,
-                    1573430400,
-                );
+                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateNamespaceRegistrationTransactionDTO);
                 expect(aggregateNamespaceRegistrationTransaction.size).eq(100);
                 ValidateTransaction.validateAggregateTx(
                     aggregateNamespaceRegistrationTransaction,
@@ -426,7 +421,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const mosaicDefinitionTransaction = CreateTransactionFromDTO(mosaicDefinitionTransactionDTO, 1573430400);
+            const mosaicDefinitionTransaction = CreateTransactionFromDTO(mosaicDefinitionTransactionDTO);
             expect(mosaicDefinitionTransaction.size).eq(100);
 
             ValidateTransaction.validateStandaloneTx(mosaicDefinitionTransaction, mosaicDefinitionTransactionDTO);
@@ -486,7 +481,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateMosaicDefinitionTransactionDTO, 1573430400);
+            const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(aggregateMosaicDefinitionTransactionDTO);
             expect(aggregateNamespaceRegistrationTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(aggregateNamespaceRegistrationTransaction, aggregateMosaicDefinitionTransactionDTO);
         });
@@ -519,7 +514,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const mosaicSupplyChangeTransaction = CreateTransactionFromDTO(mosaicSupplyChangeTransactionDTO, 1573430400);
+            const mosaicSupplyChangeTransaction = CreateTransactionFromDTO(mosaicSupplyChangeTransactionDTO);
             expect(mosaicSupplyChangeTransaction.size).eq(100);
             ValidateTransaction.validateStandaloneTx(mosaicSupplyChangeTransaction, mosaicSupplyChangeTransactionDTO);
         });
@@ -576,7 +571,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateMosaicSupplyChangeTransaction = CreateTransactionFromDTO(aggregateMosaicSupplyChangeTransactionDTO, 1573430400);
+            const aggregateMosaicSupplyChangeTransaction = CreateTransactionFromDTO(aggregateMosaicSupplyChangeTransactionDTO);
             expect(aggregateMosaicSupplyChangeTransaction.size).eq(100);
 
             ValidateTransaction.validateAggregateTx(aggregateMosaicSupplyChangeTransaction, aggregateMosaicSupplyChangeTransactionDTO);
@@ -611,7 +606,7 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const modifyMultisigAccountTransaction = CreateTransactionFromDTO(modifyMultisigAccountTransactionDTO, 1573430400);
+            const modifyMultisigAccountTransaction = CreateTransactionFromDTO(modifyMultisigAccountTransactionDTO);
             expect(modifyMultisigAccountTransaction.size).eq(100);
             ValidateTransaction.validateStandaloneTx(modifyMultisigAccountTransaction, modifyMultisigAccountTransactionDTO);
         });
@@ -671,7 +666,6 @@ describe('CreateTransactionFromDTO', () => {
 
             const aggregateMultisigAccountModificationTransaction = CreateTransactionFromDTO(
                 aggregateMultisigAccountModificationTransactionDTO,
-                1573430400,
             );
             expect(aggregateMultisigAccountModificationTransaction.size).eq(100);
             ValidateTransaction.validateAggregateTx(

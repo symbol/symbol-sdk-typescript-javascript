@@ -25,6 +25,7 @@ import { AggregateTransaction } from '../../../src/model/transaction/AggregateTr
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
+import { Duration } from 'js-joda';
 
 describe('Account', () => {
     const accountInformation = {
@@ -33,6 +34,7 @@ describe('Account', () => {
         publicKey: '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6'.toUpperCase(),
     };
 
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     it('should be created via private key', () => {
         const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.MIJIN_TEST);
         expect(account.publicKey).to.be.equal(accountInformation.publicKey);
@@ -72,14 +74,14 @@ describe('Account', () => {
         const account2 = Account.generateNewAccount(NetworkType.TEST_NET);
         const generationHash = 'C422CC3C9257A1568036E1726E64EB5923C8363A13D4344F9E66CD89C8789BC7';
         const aliceTransferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account2.address,
             [sendAmount],
             PlainMessage.create('payout'),
             NetworkType.TEST_NET,
         );
         const bobTransferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             [backAmount],
             PlainMessage.create('payout'),
@@ -88,7 +90,7 @@ describe('Account', () => {
 
         // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [aliceTransferTransaction.toAggregate(account.publicAccount), bobTransferTransaction.toAggregate(account2.publicAccount)],
             NetworkType.TEST_NET,
             [],
@@ -103,7 +105,7 @@ describe('Account', () => {
         const cosignatureSignedTransactions = [
             new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
         ];
-        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload, 1573430400) as AggregateTransaction;
+        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
         const signedTransaction = account.signTransactionGivenSignatures(recreatedTx, cosignatureSignedTransactions, generationHash);
 

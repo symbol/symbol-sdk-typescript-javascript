@@ -27,17 +27,19 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { deepEqual } from 'assert';
 import { Address } from '../../../src/model/account/Address';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { Duration } from 'js-joda';
 
 describe('AccountMetadataTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
 
     it('should default maxFee field be set to 0', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -51,7 +53,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -66,7 +68,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should create and sign an AccountMetadataTransaction object', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -84,7 +86,7 @@ describe('AccountMetadataTransaction', () => {
     describe('size', () => {
         it('should return 174 for AccountMetadataTransaction byte size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(1000),
                 1,
@@ -101,7 +103,7 @@ describe('AccountMetadataTransaction', () => {
 
         it('should set payload size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(1000),
                 1,
@@ -118,7 +120,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should create EmbeddedTransactionBuilder', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -137,7 +139,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('should resolve alias', () => {
         const accountMetadataTransaction = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -153,7 +155,7 @@ describe('AccountMetadataTransaction', () => {
 
     it('Notify Account', () => {
         const tx = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,
@@ -175,7 +177,7 @@ describe('AccountMetadataTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = AccountMetadataTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             1,

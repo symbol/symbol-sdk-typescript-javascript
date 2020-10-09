@@ -36,6 +36,7 @@ import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo'
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import * as CryptoJS from 'crypto-js';
+import { Duration } from 'js-joda';
 
 describe('SecretLockTransaction', () => {
     let account: Account;
@@ -44,6 +45,7 @@ describe('SecretLockTransaction', () => {
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
         statement = new Statement(
@@ -65,7 +67,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -82,7 +84,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -100,7 +102,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -120,7 +122,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -139,7 +141,7 @@ describe('SecretLockTransaction', () => {
         expect(() => {
             const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             SecretLockTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
@@ -154,7 +156,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Hash_160,
@@ -174,7 +176,7 @@ describe('SecretLockTransaction', () => {
         expect(() => {
             const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             SecretLockTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_160,
@@ -188,7 +190,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Hash_256,
@@ -208,7 +210,7 @@ describe('SecretLockTransaction', () => {
         expect(() => {
             const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             SecretLockTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
@@ -224,7 +226,7 @@ describe('SecretLockTransaction', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
@@ -240,7 +242,7 @@ describe('SecretLockTransaction', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
             const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 NetworkCurrencyLocal.createAbsolute(10),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
@@ -258,7 +260,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = new NamespaceId('test');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -278,7 +280,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const secretLockTransaction = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -296,7 +298,7 @@ describe('SecretLockTransaction', () => {
         const secretLockTransaction = new SecretLockTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.createFromDTO('1', 1573430400),
+            Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
             new Mosaic(unresolvedMosaicId, UInt64.fromUint(1)),
             UInt64.fromUint(100),
@@ -320,7 +322,7 @@ describe('SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
         const tx = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
@@ -342,7 +344,7 @@ describe('SecretLockTransaction', () => {
         const namespaceId = new NamespaceId('test');
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const canNotify = SecretLockTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,

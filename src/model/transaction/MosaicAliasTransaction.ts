@@ -116,11 +116,10 @@ export class MosaicAliasTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -130,7 +129,7 @@ export class MosaicAliasTransaction extends Transaction {
         const transaction = MosaicAliasTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+                : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
             new MosaicId(builder.getMosaicId().mosaicId),

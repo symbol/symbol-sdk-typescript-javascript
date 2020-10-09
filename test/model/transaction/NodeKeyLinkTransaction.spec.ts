@@ -24,17 +24,19 @@ import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { Address } from '../../../src/model/account/Address';
+import { Duration } from 'js-joda';
 
 describe('NodeKeyLinkTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
 
     it('should default maxFee field be set to 0', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -46,7 +48,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -59,7 +61,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should create an NodeKeyLinkTransaction object with link action', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
@@ -77,7 +79,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('should create an NodeKeyLinkTransaction object with unlink action', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
@@ -96,7 +98,7 @@ describe('NodeKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 161 for NodeKeyLinkTransaction byte size', () => {
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
@@ -106,7 +108,7 @@ describe('NodeKeyLinkTransaction', () => {
         });
         it('should set payload size', () => {
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
@@ -119,7 +121,7 @@ describe('NodeKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
             NetworkType.MIJIN_TEST,
@@ -131,7 +133,12 @@ describe('NodeKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = NodeKeyLinkTransaction.create(Deadline.create(1573430400), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
+        const tx = NodeKeyLinkTransaction.create(
+            Deadline.create(epochAdjustment),
+            account.publicKey,
+            LinkAction.Unlink,
+            NetworkType.MIJIN_TEST,
+        );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 

@@ -16,7 +16,7 @@
 
 import { from as observableFrom, Observable, of, of as observableOf, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
-import { Configuration, NetworkRoutesApi, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
+import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
 import { NetworkType } from '../model/network/NetworkType';
 import { Page } from './Page';
 import { RepositoryCallError } from './RepositoryCallError';
@@ -87,18 +87,6 @@ export abstract class Http {
             return observableOf(networkType as NetworkType);
         } else {
             return this.call(new NodeRoutesApi(this.config()).getNodeInfo(), (body) => body.networkIdentifier);
-        }
-    }
-
-    createEpochAdjustmentObservable(epochAdjustment?: number | Observable<number>): Observable<number> {
-        if (epochAdjustment && epochAdjustment instanceof Observable) {
-            return epochAdjustment as Observable<number>;
-        } else if (epochAdjustment) {
-            return observableOf(epochAdjustment);
-        } else {
-            return this.call(new NetworkRoutesApi(this.config()).getNetworkProperties(), (body) =>
-                parseInt(body.network.epochAdjustment?.replace('s', '') ?? '0'),
-            );
         }
     }
 

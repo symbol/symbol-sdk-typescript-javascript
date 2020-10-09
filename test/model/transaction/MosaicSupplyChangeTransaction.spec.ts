@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -38,6 +39,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
         statement = new Statement(
@@ -54,7 +56,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -68,7 +70,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -83,7 +85,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('should createComplete an MosaicSupplyChangeTransaction object and sign it', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -107,7 +109,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         it('should return 145 for MosaicSupplyChange transaction byte size', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
@@ -119,7 +121,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         it('should set payload size', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
@@ -134,7 +136,7 @@ describe('MosaicSupplyChangeTransaction', () => {
     it('Test set maxFee using multiplier', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -149,7 +151,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         const mosaicSupplyChangeTransaction = new MosaicSupplyChangeTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.createFromDTO('1', 1573430400),
+            Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
             unresolvedMosaicId,
             MosaicSupplyChangeAction.Increase,
@@ -167,7 +169,7 @@ describe('MosaicSupplyChangeTransaction', () => {
 
     it('Notify Account', () => {
         const tx = MosaicSupplyChangeTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             new MosaicId([2262289484, 3405110546]),
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),

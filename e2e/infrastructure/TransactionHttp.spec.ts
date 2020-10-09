@@ -1394,10 +1394,7 @@ describe('TransactionHttp', () => {
             const cosignatureSignedTransactions = [
                 new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
             ];
-            const recreatedTx = TransactionMapping.createFromPayload(
-                aliceSignedTransaction.payload,
-                helper.epochAdjustment,
-            ) as AggregateTransaction;
+            const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
             const signedTransaction = recreatedTx.signTransactionGivenSignatures(account, cosignatureSignedTransactions, generationHash);
 

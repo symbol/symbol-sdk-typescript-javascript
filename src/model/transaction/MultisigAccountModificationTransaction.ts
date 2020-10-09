@@ -131,11 +131,10 @@ export class MultisigAccountModificationTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -145,10 +144,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const transaction = MultisigAccountModificationTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO(
-                      (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp,
-                      epochAdjustment,
-                  ),
+                : Deadline.createFromDTO((builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
             builder.getMinRemovalDelta(),
             builder.getAddressAdditions().map((addition) => {

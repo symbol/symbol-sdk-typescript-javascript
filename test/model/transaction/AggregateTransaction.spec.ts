@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { ChronoUnit } from 'js-joda';
+import { ChronoUnit, Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
@@ -58,6 +58,7 @@ describe('AggregateTransaction', () => {
     const unresolvedAddress = new NamespaceId('address');
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
@@ -80,7 +81,7 @@ describe('AggregateTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -88,7 +89,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -100,7 +101,7 @@ describe('AggregateTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -108,7 +109,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -121,7 +122,7 @@ describe('AggregateTransaction', () => {
 
     it('should createComplete an AggregateTransaction object with TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -129,7 +130,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -144,14 +145,14 @@ describe('AggregateTransaction', () => {
 
     it('should createComplete an AggregateTransaction object with NamespaceRegistrationTransaction', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [registerNamespaceTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -168,7 +169,7 @@ describe('AggregateTransaction', () => {
 
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicFlags.create(true, true, true),
@@ -178,7 +179,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -196,7 +197,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
@@ -204,7 +205,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -221,7 +222,7 @@ describe('AggregateTransaction', () => {
 
     it('should createComplete an AggregateTransaction object with MultisigAccountModificationTransaction', () => {
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             2,
             1,
             [
@@ -232,7 +233,7 @@ describe('AggregateTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [modifyMultisigAccountTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -249,14 +250,14 @@ describe('AggregateTransaction', () => {
 
     it('should createComplete an AggregateTransaction object with different cosignatories', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -277,7 +278,7 @@ describe('AggregateTransaction', () => {
 
     it('should createBonded an AggregateTransaction object with TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -285,7 +286,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(1573430400, 2, ChronoUnit.MINUTES),
+            Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -357,7 +358,7 @@ describe('AggregateTransaction', () => {
             },
         };
 
-        const aggregateTransaction = CreateTransactionFromDTO(aggregateTransactionDTO, 1573430400) as AggregateTransaction;
+        const aggregateTransaction = CreateTransactionFromDTO(aggregateTransactionDTO) as AggregateTransaction;
         expect(
             aggregateTransaction.signedByAccount(
                 PublicAccount.createFromPublicKey(
@@ -391,20 +392,20 @@ describe('AggregateTransaction', () => {
     });
 
     it("should have type 0x4141 when it's complete", () => {
-        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
 
         expect(aggregateTransaction.type).to.be.equal(0x4141);
     });
 
     it("should have type 0x4241 when it's bonded", () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(1573430400), [], NetworkType.MIJIN_TEST);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST);
 
         expect(aggregateTransaction.type).to.be.equal(0x4241);
     });
 
     it('should throw exception when adding an aggregated transaction as inner transaction', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
@@ -412,7 +413,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -420,7 +421,7 @@ describe('AggregateTransaction', () => {
 
         expect(() => {
             AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [aggregateTransaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
@@ -437,21 +438,21 @@ describe('AggregateTransaction', () => {
         const accountCarol = Cosignatory2Account;
 
         const AtoBTx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             accountBob.address,
             [],
             PlainMessage.create('a to b'),
             NetworkType.MIJIN_TEST,
         );
         const BtoATx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             accountAlice.address,
             [],
             PlainMessage.create('b to a'),
             NetworkType.MIJIN_TEST,
         );
         const CtoATx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             accountAlice.address,
             [],
             PlainMessage.create('c to a'),
@@ -460,7 +461,7 @@ describe('AggregateTransaction', () => {
 
         // 01. Alice creates the aggregated tx and sign it, Then payload send to Bob & Carol
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [
                 AtoBTx.toAggregate(accountAlice.publicAccount),
                 BtoATx.toAggregate(accountBob.publicAccount),
@@ -486,7 +487,7 @@ describe('AggregateTransaction', () => {
             new CosignatureSignedTransaction(signedTxCarol.parentHash, signedTxCarol.signature, signedTxCarol.signerPublicKey),
         ];
 
-        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload, 1573430400) as AggregateTransaction;
+        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
         const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions, generationHash);
 
@@ -507,21 +508,21 @@ describe('AggregateTransaction', () => {
 
     it('Should be able to add innertransactions to current aggregate tx', () => {
         const transferTx1 = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             [],
             PlainMessage.create('a to b'),
             NetworkType.MIJIN_TEST,
         );
         const transferTx2 = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             [],
             PlainMessage.create('b to a'),
             NetworkType.MIJIN_TEST,
         );
         let aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTx1.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -538,14 +539,14 @@ describe('AggregateTransaction', () => {
 
     it('Should be able to add cosignatures to current aggregate tx', () => {
         const transferTx1 = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             account.address,
             [],
             PlainMessage.create('a to b'),
             NetworkType.MIJIN_TEST,
         );
         let aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTx1.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -570,14 +571,14 @@ describe('AggregateTransaction', () => {
     describe('size', () => {
         it('should return 268 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const transaction = TransferTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
@@ -587,14 +588,14 @@ describe('AggregateTransaction', () => {
         });
         it('should set payload size', () => {
             const transaction = TransferTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
@@ -607,7 +608,7 @@ describe('AggregateTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
@@ -615,7 +616,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -628,7 +629,7 @@ describe('AggregateTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
@@ -637,7 +638,7 @@ describe('AggregateTransaction', () => {
 
         expect(() => {
             AggregateTransaction.createComplete(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 [transferTransaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
@@ -649,7 +650,7 @@ describe('AggregateTransaction', () => {
         const transferTransaction = new TransferTransaction(
             NetworkType.MIJIN_TEST,
             1,
-            Deadline.createFromDTO('1', 1573430400),
+            Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
@@ -663,7 +664,7 @@ describe('AggregateTransaction', () => {
             NetworkType.MIJIN_TEST,
             TransactionType.AGGREGATE_COMPLETE,
             1,
-            Deadline.createFromDTO('1', 1573430400),
+            Deadline.createFromDTO('1'),
             UInt64.fromUint(100),
             [transferTransaction.toAggregate(account.publicAccount)],
             [],
@@ -683,14 +684,14 @@ describe('AggregateTransaction', () => {
 
     it('Notify Account', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             account.address,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
         const tx = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -707,14 +708,14 @@ describe('AggregateTransaction', () => {
 
     it('Notify Account with alias', () => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(1573430400, 1, ChronoUnit.HOURS),
+            Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
         const tx = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],

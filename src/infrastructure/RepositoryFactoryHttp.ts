@@ -53,6 +53,7 @@ import { HashLockRepository } from './HashLockRepository';
 import { SecretLockRepository } from './SecretLockRepository';
 import { SecretLockHttp } from './SecretLockHttp';
 import { HashLockHttp } from './HashLockHttp';
+import { Duration } from 'js-joda';
 /**
  * Receipt http repository.
  *
@@ -64,7 +65,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly websocketUrl: string;
     private readonly websocketInjected?: any;
     private readonly fetchApi?: any;
-    private readonly epochAdjustment: Observable<number>;
+    private readonly epochAdjustment: Observable<Duration>;
 
     /**
      * Constructor
@@ -77,12 +78,12 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.fetchApi = configs?.fetchApi;
         this.networkType = configs?.networkType ? observableOf(configs.networkType) : networkRepo.getNetworkType().pipe(shareReplay(1));
         this.epochAdjustment = configs?.epochAdjustment
-            ? observableOf(configs.epochAdjustment)
+            ? observableOf(Duration.ofSeconds(configs.epochAdjustment))
             : networkRepo
                   .getNetworkProperties()
                   .pipe(
                       map((property) => {
-                          return parseInt(property.network.epochAdjustment?.replace('s', '') ?? '0');
+                          return Duration.ofSeconds(parseInt(property.network.epochAdjustment?.replace('s', '') ?? '0'));
                       }),
                   )
                   .pipe(shareReplay(1));
@@ -145,7 +146,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createTransactionRepository(): TransactionRepository {
-        return new TransactionHttp(this.url, this.epochAdjustment, this.fetchApi);
+        return new TransactionHttp(this.url, this.fetchApi);
     }
 
     createTransactionStatusRepository(): TransactionStatusRepository {
@@ -172,7 +173,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
     }
 
-    getEpochAdjustment(): Observable<number> {
+    getEpochAdjustment(): Observable<Duration> {
         return this.epochAdjustment;
     }
 }

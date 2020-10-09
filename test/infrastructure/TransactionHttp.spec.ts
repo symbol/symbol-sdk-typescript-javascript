@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import {
     BlockDTO,
     BlockInfoDTO,
@@ -58,6 +59,7 @@ describe('TransactionHttp', () => {
     cosignature.signerPublicKey = 'signerPubKey';
     cosignature.signature = 'signature';
     cosignature.version = '0';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         transactionRoutesApi = mock();
@@ -69,14 +71,14 @@ describe('TransactionHttp', () => {
 
     it('should return an error when a non aggregate transaction bonded is announced via announceAggregateBonded method', () => {
         const tx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.MIJIN_TEST,
         );
         const aggTx = AggregateTransaction.createComplete(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -388,7 +390,7 @@ describe('TransactionHttp', () => {
     it('Test announce', async () => {
         const response = { message: 'done' };
         const tx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
@@ -407,7 +409,7 @@ describe('TransactionHttp', () => {
         const response = { message: 'done' };
 
         const tx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
@@ -415,7 +417,7 @@ describe('TransactionHttp', () => {
         );
 
         const aggTx = AggregateTransaction.createBonded(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -495,7 +497,7 @@ describe('TransactionHttp', () => {
 
     it('announce - Error', async () => {
         const tx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
@@ -515,7 +517,7 @@ describe('TransactionHttp', () => {
         const response = { message: 'done' };
 
         const tx = TransferTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
@@ -523,7 +525,7 @@ describe('TransactionHttp', () => {
         );
 
         const aggTx = AggregateTransaction.createBonded(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],

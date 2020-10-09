@@ -46,68 +46,63 @@ import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransac
 /**
  * @internal
  * @param payload - The transaction binary data
- * @param {number} epochAdjustment Nemesis block epoch
  * @param isEmbedded - Is the transaction an embedded inner transaction
  * @returns {Transaction | InnerTransaction}
  * @constructor
  */
-export const CreateTransactionFromPayload = (
-    payload: string,
-    epochAdjustment: number,
-    isEmbedded = false,
-): Transaction | InnerTransaction => {
+export const CreateTransactionFromPayload = (payload: string, isEmbedded = false): Transaction | InnerTransaction => {
     const transactionBuilder = isEmbedded
         ? EmbeddedTransactionBuilder.loadFromBinary(convert.hexToUint8(payload))
         : TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
     const type = transactionBuilder.getType().valueOf();
     switch (type) {
         case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
-            return AccountAddressRestrictionTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
-            return AccountMosaicRestrictionTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_OPERATION_RESTRICTION:
-            return AccountOperationRestrictionTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_KEY_LINK:
-            return AccountKeyLinkTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return AccountKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ADDRESS_ALIAS:
-            return AddressAliasTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return AddressAliasTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ALIAS:
-            return MosaicAliasTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MosaicAliasTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_DEFINITION:
-            return MosaicDefinitionTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MosaicDefinitionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
-            return MosaicSupplyChangeTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MosaicSupplyChangeTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.NAMESPACE_REGISTRATION:
-            return NamespaceRegistrationTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return NamespaceRegistrationTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.TRANSFER:
-            return TransferTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return TransferTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.SECRET_LOCK:
-            return SecretLockTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return SecretLockTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.SECRET_PROOF:
-            return SecretProofTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return SecretProofTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MULTISIG_ACCOUNT_MODIFICATION:
-            return MultisigAccountModificationTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MultisigAccountModificationTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.HASH_LOCK:
-            return LockFundsTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return LockFundsTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-            return MosaicGlobalRestrictionTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MosaicGlobalRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
-            return MosaicAddressRestrictionTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MosaicAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_METADATA:
-            return AccountMetadataTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return AccountMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_METADATA:
-            return MosaicMetadataTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.NAMESPACE_METADATA:
-            return NamespaceMetadataTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.VRF_KEY_LINK:
-            return VrfKeyLinkTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.NODE_KEY_LINK:
-            return NodeKeyLinkTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return NodeKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.VOTING_KEY_LINK:
-            return VotingKeyLinkTransaction.createFromPayload(payload, epochAdjustment, isEmbedded);
+            return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.AGGREGATE_COMPLETE:
         case TransactionType.AGGREGATE_BONDED:
-            return AggregateTransaction.createFromPayload(payload, epochAdjustment);
+            return AggregateTransaction.createFromPayload(payload);
         default:
             throw new Error('Transaction type not implemented yet.');
     }

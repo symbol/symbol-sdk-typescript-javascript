@@ -28,6 +28,7 @@ import { BlockService } from '../../src/service/BlockService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionStatement } from '../../src/model/receipt/TransactionStatement';
+import { Duration } from 'js-joda';
 
 describe('BlockService', () => {
     const helper = new IntegrationTestHelper();
@@ -39,6 +40,7 @@ describe('BlockService', () => {
     let blockService: BlockService;
     let transactionRepository: TransactionRepository;
     let receiptRepository: ReceiptRepository;
+    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -64,7 +66,7 @@ describe('BlockService', () => {
     describe('Create a transfer', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 account2.address,
                 [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),

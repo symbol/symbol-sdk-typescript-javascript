@@ -28,6 +28,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { take, toArray } from 'rxjs/operators';
 import { Order } from '../../src/infrastructure/infrastructure';
+import { Duration } from 'js-joda';
 
 describe('NamespaceHttp', () => {
     let defaultNamespaceId: NamespaceId;
@@ -36,6 +37,8 @@ describe('NamespaceHttp', () => {
     let account: Account;
     let generationHash: string;
     const helper = new IntegrationTestHelper();
+
+    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -54,7 +57,7 @@ describe('NamespaceHttp', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(1000),
                 helper.networkType,
@@ -68,7 +71,7 @@ describe('NamespaceHttp', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 account.address,

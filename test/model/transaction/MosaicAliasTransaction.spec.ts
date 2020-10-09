@@ -29,10 +29,12 @@ import { deepEqual } from 'assert';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { AliasTransaction } from '../../../src/model/transaction/AliasTransaction';
+import { Duration } from 'js-joda';
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
         account = TestingAccount;
     });
@@ -41,7 +43,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -56,7 +58,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -72,7 +74,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -96,7 +98,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = AliasTransaction.createForMosaic(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -121,7 +123,7 @@ describe('MosaicAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
@@ -134,7 +136,7 @@ describe('MosaicAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(1573430400),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
@@ -150,7 +152,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -166,7 +168,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -180,7 +182,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
@@ -200,7 +202,7 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const tx = MosaicAliasTransaction.create(
-            Deadline.create(1573430400),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,

@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Duration } from 'js-joda';
 import { Page } from '../../src/infrastructure/infrastructure';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -24,10 +25,19 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('Page', () => {
+    const epochAdjustment = Duration.ofSeconds(1573430400);
     it('should create Page', () => {
         const account = TestingAccount;
         let page = new Page<Transaction>(
-            [TransferTransaction.create(Deadline.create(1573430400), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            [
+                TransferTransaction.create(
+                    Deadline.create(epochAdjustment),
+                    account.address,
+                    [],
+                    PlainMessage.create(''),
+                    NetworkType.TEST_NET,
+                ),
+            ],
             1,
             1,
         );
@@ -37,7 +47,15 @@ describe('Page', () => {
         expect(page.isLastPage).to.be.false;
 
         page = new Page<Transaction>(
-            [TransferTransaction.create(Deadline.create(1573430400), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            [
+                TransferTransaction.create(
+                    Deadline.create(epochAdjustment),
+                    account.address,
+                    [],
+                    PlainMessage.create(''),
+                    NetworkType.TEST_NET,
+                ),
+            ],
             2,
             2,
         );

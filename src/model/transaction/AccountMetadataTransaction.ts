@@ -129,11 +129,10 @@ export class AccountMetadataTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedAccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AccountMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -143,7 +142,7 @@ export class AccountMetadataTransaction extends Transaction {
         const transaction = AccountMetadataTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+                : Deadline.createFromDTO((builder as AccountMetadataTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             new UInt64(builder.getScopedMetadataKey()),
             builder.getValueSizeDelta(),

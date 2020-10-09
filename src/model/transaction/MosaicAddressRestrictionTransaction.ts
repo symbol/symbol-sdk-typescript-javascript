@@ -145,11 +145,10 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -159,7 +158,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const transaction = MosaicAddressRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+                : Deadline.createFromDTO((builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             new UInt64(builder.getRestrictionKey()),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),

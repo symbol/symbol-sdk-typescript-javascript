@@ -137,11 +137,10 @@ export class MosaicDefinitionTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -151,7 +150,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         const transaction = MosaicDefinitionTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+                : Deadline.createFromDTO((builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
             MosaicNonce.createFromUint8Array(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),
             MosaicFlags.create((builder.getFlags() & 1) === 1, (builder.getFlags() & 2) === 2, (builder.getFlags() & 4) === 4),

@@ -109,11 +109,10 @@ export class AccountAddressRestrictionTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -123,7 +122,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const transaction = AccountAddressRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+                : Deadline.createFromDTO((builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(addition.unresolvedAddress));

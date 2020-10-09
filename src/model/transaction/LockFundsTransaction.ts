@@ -134,11 +134,10 @@ export class LockFundsTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedHashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -146,9 +145,7 @@ export class LockFundsTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = LockFundsTransaction.create(
-            isEmbedded
-                ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as HashLockTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+            isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as HashLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId), new UInt64(builder.getMosaic().amount.amount)),
             new UInt64(builder.getDuration().blockDuration),
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),

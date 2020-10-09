@@ -119,11 +119,10 @@ export class AddressAliasTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -133,7 +132,7 @@ export class AddressAliasTransaction extends Transaction {
         const transaction = AddressAliasTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp, epochAdjustment),
+                : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
             Address.createFromEncoded(Convert.uint8ToHex(builder.getAddress().address)),
