@@ -23,7 +23,6 @@ import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 import { AccountService } from '../../src/service/AccountService';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { Duration } from 'js-joda';
 
 describe('AccountService', () => {
     const helper = new IntegrationTestHelper();
@@ -33,7 +32,6 @@ describe('AccountService', () => {
     let accountService: AccountService;
     let namespaceId: NamespaceId;
     const name = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -56,7 +54,7 @@ describe('AccountService', () => {
     describe('Create a namespace', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 name,
                 UInt64.fromUint(300000),
                 networkType,

@@ -15,7 +15,6 @@
  */
 
 import { assert, expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Convert } from '../../src/core/format/Convert';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
@@ -60,7 +59,6 @@ describe('TransactionService', () => {
     let networkType: NetworkType;
     let transactionService: TransactionService;
     let transactionRepository: TransactionRepository;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -86,7 +84,7 @@ describe('TransactionService', () => {
 
     function buildAggregateTransaction(): AggregateTransaction {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             addressAlias,
             [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
@@ -95,7 +93,7 @@ describe('TransactionService', () => {
         );
         // Unlink MosaicAlias
         const mosaicAliasTransactionUnlink = MosaicAliasTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             AliasAction.Unlink,
             mosaicAlias,
             mosaicId,
@@ -107,7 +105,7 @@ describe('TransactionService', () => {
         const nonce = MosaicNonce.createRandom();
         newMosaicId = MosaicId.createFromNonce(nonce, account.address);
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             nonce,
             newMosaicId,
             MosaicFlags.create(true, true, false),
@@ -118,7 +116,7 @@ describe('TransactionService', () => {
         );
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             newMosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(200000),
@@ -128,7 +126,7 @@ describe('TransactionService', () => {
 
         // Link namespace with new MosaicId
         const mosaicAliasTransactionRelink = MosaicAliasTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             AliasAction.Link,
             mosaicAlias,
             newMosaicId,
@@ -138,7 +136,7 @@ describe('TransactionService', () => {
 
         // Use new mosaicAlias in metadata
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             account.address,
             UInt64.fromUint(5),
             mosaicAlias,
@@ -148,7 +146,7 @@ describe('TransactionService', () => {
             helper.maxFee,
         );
         return AggregateTransaction.createComplete(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             [
                 transferTransaction.toAggregate(account.publicAccount),
                 mosaicAliasTransactionUnlink.toAggregate(account.publicAccount),
@@ -172,7 +170,7 @@ describe('TransactionService', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(20),
                 networkType,
@@ -189,7 +187,7 @@ describe('TransactionService', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(50),
                 networkType,
@@ -205,7 +203,7 @@ describe('TransactionService', () => {
     describe('Setup test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 addressAlias,
                 account.address,
@@ -224,7 +222,7 @@ describe('TransactionService', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, false),
@@ -243,7 +241,7 @@ describe('TransactionService', () => {
     describe('MosaicSupplyChangeTransaction', () => {
         it('standalone', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(200000),
@@ -259,7 +257,7 @@ describe('TransactionService', () => {
     describe('Setup MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 mosaicAlias,
                 mosaicId,
@@ -275,7 +273,7 @@ describe('TransactionService', () => {
     describe('Create Transfer with alias', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 addressAlias,
                 [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, UInt64.fromUint(1))],
                 PlainMessage.create('test-message'),
@@ -313,7 +311,7 @@ describe('TransactionService', () => {
     describe('Transfer mosaic to account 3', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account3.address,
                 [new Mosaic(mosaicAlias, UInt64.fromUint(1))],
                 PlainMessage.create('test-message'),
@@ -331,7 +329,7 @@ describe('TransactionService', () => {
             const transactions: SignedTransaction[] = [];
             // 1. Transfer A -> B
             const transaction1 = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [new Mosaic(mosaicAlias, UInt64.fromUint(1))],
                 PlainMessage.create('test-message'),
@@ -342,7 +340,7 @@ describe('TransactionService', () => {
 
             // 2. Transfer C -> D
             const transaction2 = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 cosignAccount4.address,
                 [new Mosaic(mosaicAlias, UInt64.fromUint(1))],
                 PlainMessage.create('test-message'),

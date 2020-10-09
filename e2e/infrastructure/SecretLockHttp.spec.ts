@@ -28,7 +28,6 @@ import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTra
 import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
 import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
-import { Duration } from 'js-joda';
 
 describe('SecretLockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -38,7 +37,6 @@ describe('SecretLockHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let secret: string;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -64,7 +62,7 @@ describe('SecretLockHttp', () => {
     describe('Create a hash lock', () => {
         it('Announce SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 helper.createNetworkCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
