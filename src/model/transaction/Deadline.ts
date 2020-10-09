@@ -28,10 +28,10 @@ export class Deadline {
     public adjustedValue: number;
 
     /**
-     * Create deadline model
-     * @param epochAdjustment
-     * @param deadline
-     * @param chronoUnit
+     * Create deadline model. Default to 2 chrono hours in advance.
+     * @param {Duration} epochAdjustment the network's epoch adjustment (seconds). Defined in the network/properties. e.g. Duration.ofSeconds(1573430400);
+     * @param {number} deadline the deadline unit value.
+     * @param {ChronoUnit} chronoUnit the crhono unit. e.g ChronoUnit.HOURS
      * @returns {Deadline}
      */
     public static create(epochAdjustment: Duration, deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
