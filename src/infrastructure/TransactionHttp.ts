@@ -59,19 +59,19 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @internal
      * nemesis block creation epoch
      */
-    private readonly nemesisEpochObservable: Observable<number>;
+    private readonly epochAdjustmentObservable: Observable<number>;
 
     /**
      * Constructor
      * @param url Base catapult-rest url
-     * @param nemesisEpoch Nemesis block epoch
+     * @param epochAdjustment Nemesis block epoch
      * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string, nemesisEpoch?: number | Observable<number>, fetchApi?: any) {
+    constructor(url: string, epochAdjustment?: number | Observable<number>, fetchApi?: any) {
         super(url, fetchApi);
         this.transactionRoutesApi = new TransactionRoutesApi(this.config());
         this.blockRoutesApi = new BlockRoutesApi(this.config());
-        this.nemesisEpochObservable = this.createNemesisEpochObservable(nemesisEpoch);
+        this.epochAdjustmentObservable = this.createEpochAdjustmentObservable(epochAdjustment);
     }
 
     /**
@@ -81,10 +81,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<Transaction>
      */
     public getTransaction(transactionId: string, transactionGroup: TransactionGroup): Observable<Transaction> {
-        return this.nemesisEpochObservable.pipe(
-            mergeMap((nemesisEpoch) =>
+        return this.epochAdjustmentObservable.pipe(
+            mergeMap((epochAdjustment) =>
                 this.call(this.getTransactionByGroup(transactionId, transactionGroup), (body) =>
-                    CreateTransactionFromDTO(body, nemesisEpoch),
+                    CreateTransactionFromDTO(body, epochAdjustment),
                 ),
             ),
         );
@@ -103,31 +103,31 @@ export class TransactionHttp extends Http implements TransactionRepository {
 
         switch (transactionGroup) {
             case TransactionGroup.Confirmed:
-                return this.nemesisEpochObservable.pipe(
-                    mergeMap((nemesisEpoch) =>
+                return this.epochAdjustmentObservable.pipe(
+                    mergeMap((epochAdjustment) =>
                         this.call(this.transactionRoutesApi.getConfirmedTransactions(transactionIdsBody), (body) =>
                             body.map((transactionDTO) => {
-                                return CreateTransactionFromDTO(transactionDTO, nemesisEpoch);
+                                return CreateTransactionFromDTO(transactionDTO, epochAdjustment);
                             }),
                         ),
                     ),
                 );
             case TransactionGroup.Unconfirmed:
-                return this.nemesisEpochObservable.pipe(
-                    mergeMap((nemesisEpoch) =>
+                return this.epochAdjustmentObservable.pipe(
+                    mergeMap((epochAdjustment) =>
                         this.call(this.transactionRoutesApi.getUnconfirmedTransactions(transactionIdsBody), (body) =>
                             body.map((transactionDTO) => {
-                                return CreateTransactionFromDTO(transactionDTO, nemesisEpoch);
+                                return CreateTransactionFromDTO(transactionDTO, epochAdjustment);
                             }),
                         ),
                     ),
                 );
             case TransactionGroup.Partial:
-                return this.nemesisEpochObservable.pipe(
-                    mergeMap((nemesisEpoch) =>
+                return this.epochAdjustmentObservable.pipe(
+                    mergeMap((epochAdjustment) =>
                         this.call(this.transactionRoutesApi.getPartialTransactions(transactionIdsBody), (body) =>
                             body.map((transactionDTO) => {
-                                return CreateTransactionFromDTO(transactionDTO, nemesisEpoch);
+                                return CreateTransactionFromDTO(transactionDTO, epochAdjustment);
                             }),
                         ),
                     ),
@@ -191,11 +191,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<number>
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
-        return this.nemesisEpochObservable
+        return this.epochAdjustmentObservable
             .pipe(
-                mergeMap((nemesisEpoch) =>
+                mergeMap((epochAdjustment) =>
                     this.call(this.getTransactionByGroup(transactionId, TransactionGroup.Confirmed), (body) =>
-                        CreateTransactionFromDTO(body, nemesisEpoch),
+                        CreateTransactionFromDTO(body, epochAdjustment),
                     ),
                 ),
             )
@@ -221,10 +221,10 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns {Observable<Page<Transaction>>}
      */
     public search(criteria: TransactionSearchCriteria): Observable<Page<Transaction>> {
-        return this.nemesisEpochObservable.pipe(
-            mergeMap((nemesisEpoch) =>
+        return this.epochAdjustmentObservable.pipe(
+            mergeMap((epochAdjustment) =>
                 this.call(this.searchTransactionByGroup(criteria), (body) =>
-                    super.toPage(body.pagination, body.data, (body) => CreateTransactionFromDTO(body, nemesisEpoch)),
+                    super.toPage(body.pagination, body.data, (body) => CreateTransactionFromDTO(body, epochAdjustment)),
                 ),
             ),
         );

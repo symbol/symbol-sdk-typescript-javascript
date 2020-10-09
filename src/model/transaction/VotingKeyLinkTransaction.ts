@@ -121,11 +121,11 @@ export class VotingKeyLinkTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} nemesisEpoch Nemesis block epoch
+     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedVotingKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : VotingKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -135,7 +135,7 @@ export class VotingKeyLinkTransaction extends Transaction {
         const transaction = VotingKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
+                : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp, epochAdjustment),
             Convert.uint8ToHex(builder.getLinkedPublicKey().votingKey),
             builder.getStartEpoch().finalizationEpoch,
             builder.getEndEpoch().finalizationEpoch,

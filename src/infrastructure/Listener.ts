@@ -90,7 +90,7 @@ export class Listener implements IListener {
         /**
          * Nemesis block creation epoch
          */
-        private nemesisEpoch: number,
+        private epochAdjustment: number,
         /**
          * WebSocket injected when using listeners in client.
          */
@@ -151,7 +151,7 @@ export class Listener implements IListener {
                 this.messageSubject.next({
                     channelName: ListenerChannelName[channelName],
                     channelParam: channelParam,
-                    message: CreateTransactionFromDTO(message.data, this.nemesisEpoch),
+                    message: CreateTransactionFromDTO(message.data, this.epochAdjustment),
                 });
                 break;
             case ListenerChannelName.block:
@@ -169,7 +169,7 @@ export class Listener implements IListener {
                         Address.createFromRawAddress(channelParam),
                         message.data.hash,
                         message.data.code,
-                        Deadline.createFromDTO(message.data.deadline, this.nemesisEpoch),
+                        Deadline.createFromDTO(message.data.deadline, this.epochAdjustment),
                     ),
                 });
                 break;

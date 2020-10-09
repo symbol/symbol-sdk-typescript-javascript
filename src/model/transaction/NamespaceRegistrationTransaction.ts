@@ -174,11 +174,11 @@ export class NamespaceRegistrationTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} nemesisEpoch Nemesis block epoch
+     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -193,7 +193,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                           ? Deadline.createEmtpy()
                           : Deadline.createFromDTO(
                                 (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp,
-                                nemesisEpoch,
+                                epochAdjustment,
                             ),
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new UInt64(builder.getDuration()!.blockDuration),
@@ -207,7 +207,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                           ? Deadline.createEmtpy()
                           : Deadline.createFromDTO(
                                 (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp,
-                                nemesisEpoch,
+                                epochAdjustment,
                             ),
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new NamespaceId(builder.getParentId()!.namespaceId),

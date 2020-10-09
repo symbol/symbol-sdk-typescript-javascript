@@ -64,7 +64,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly websocketUrl: string;
     private readonly websocketInjected?: any;
     private readonly fetchApi?: any;
-    private readonly nemesisEpoch: Observable<number>;
+    private readonly epochAdjustment: Observable<number>;
 
     /**
      * Constructor
@@ -76,8 +76,8 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.url = url;
         this.fetchApi = configs?.fetchApi;
         this.networkType = configs?.networkType ? observableOf(configs.networkType) : networkRepo.getNetworkType().pipe(shareReplay(1));
-        this.nemesisEpoch = configs?.nemesisEpoch
-            ? observableOf(configs.nemesisEpoch)
+        this.epochAdjustment = configs?.epochAdjustment
+            ? observableOf(configs.epochAdjustment)
             : networkRepo
                   .getNetworkProperties()
                   .pipe(
@@ -145,7 +145,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createTransactionRepository(): TransactionRepository {
-        return new TransactionHttp(this.url, this.nemesisEpoch, this.fetchApi);
+        return new TransactionHttp(this.url, this.epochAdjustment, this.fetchApi);
     }
 
     createTransactionStatusRepository(): TransactionStatusRepository {
@@ -172,7 +172,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
     }
 
-    getNemesisEpoch(): Observable<number> {
-        return this.nemesisEpoch;
+    getEpochAdjustment(): Observable<number> {
+        return this.epochAdjustment;
     }
 }

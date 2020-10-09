@@ -140,5 +140,5 @@ export interface RepositoryFactory {
     /**
      * @returns nemesis block epoch
      */
-    getNemesisEpoch(): Observable<number>;
+    getEpochAdjustment(): Observable<number>;
 }

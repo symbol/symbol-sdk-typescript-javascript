@@ -122,7 +122,7 @@ describe('RepositoryFactory', () => {
             }
         })('http://localhost:3000', {
             generationHash: 'testHash',
-            nemesisEpoch: 1573430400,
+            epochAdjustment: 1573430400,
         });
 
         expect(counter).to.be.equals(0);
@@ -137,10 +137,10 @@ describe('RepositoryFactory', () => {
         });
     });
 
-    it('Should get NemesisEpoch from cache', (done) => {
+    it('Should get epochAdjustment from cache', (done) => {
         let counter = 0;
         const repositoryMock: NetworkRepository = mock();
-        const expectedNemesisEpoch = 1573430400;
+        const expectedepochAdjustment = 1573430400;
         const body: NetworkConfigurationDTO = {
             network: {
                 identifier: 'public-test',
@@ -171,12 +171,12 @@ describe('RepositoryFactory', () => {
         });
 
         expect(counter).to.be.equals(0);
-        repositoryFactory.getNemesisEpoch().subscribe((epoch) => {
+        repositoryFactory.getEpochAdjustment().subscribe((epoch) => {
             expect(counter).to.be.equals(1);
-            expect(epoch).to.be.equals(expectedNemesisEpoch);
-            repositoryFactory.getNemesisEpoch().subscribe((network) => {
+            expect(epoch).to.be.equals(expectedepochAdjustment);
+            repositoryFactory.getEpochAdjustment().subscribe((network) => {
                 expect(counter).to.be.equals(1);
-                expect(network).to.be.equals(expectedNemesisEpoch);
+                expect(network).to.be.equals(expectedepochAdjustment);
                 done();
             });
         });
@@ -205,7 +205,7 @@ describe('RepositoryFactory', () => {
         })('http://localhost:3000', {
             networkType: expectedNetworkType,
             generationHash: 'testHash',
-            nemesisEpoch: 1573430400,
+            epochAdjustment: 1573430400,
         });
 
         expect(counter).to.be.equals(0);
@@ -220,11 +220,11 @@ describe('RepositoryFactory', () => {
         });
     });
 
-    it('Should get NemesisEpoch from memory', (done) => {
+    it('Should get epochAdjustment from memory', (done) => {
         let counter = 0;
 
         const repositoryMock: NetworkRepository = mock();
-        const expectedNemesisEpoch = 1573430400;
+        const expectedepochAdjustment = 1573430400;
         const body: NetworkConfigurationDTO = {
             network: {
                 identifier: 'public-test',
@@ -252,16 +252,16 @@ describe('RepositoryFactory', () => {
         })('http://localhost:3000', {
             networkType: 152,
             generationHash: 'testHash',
-            nemesisEpoch: 1573430400,
+            epochAdjustment: 1573430400,
         });
 
         expect(counter).to.be.equals(0);
-        repositoryFactory.getNemesisEpoch().subscribe((networkType) => {
+        repositoryFactory.getEpochAdjustment().subscribe((networkType) => {
             expect(counter).to.be.equals(0);
-            expect(networkType).to.be.equals(expectedNemesisEpoch);
-            repositoryFactory.getNemesisEpoch().subscribe((network) => {
+            expect(networkType).to.be.equals(expectedepochAdjustment);
+            repositoryFactory.getEpochAdjustment().subscribe((network) => {
                 expect(counter).to.be.equals(0);
-                expect(network).to.be.equals(expectedNemesisEpoch);
+                expect(network).to.be.equals(expectedepochAdjustment);
                 done();
             });
         });

@@ -126,14 +126,14 @@ const extractMessage = (message: any): Message => {
 
 /**
  * Extract deadline from json payload.
- * @param nemesisEpoch Nemesis block epoch
+ * @param epochAdjustment Nemesis block epoch
  * @param deadline - deadline dto
  */
-const extractDeadline = (nemesisEpoch: number, deadline?: string): Deadline => {
+const extractDeadline = (epochAdjustment: number, deadline?: string): Deadline => {
     if (!deadline) {
         return Deadline.createEmtpy();
     }
-    return Deadline.createFromDTO(deadline, nemesisEpoch);
+    return Deadline.createFromDTO(deadline, epochAdjustment);
 };
 
 /**
@@ -157,16 +157,16 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
  * @internal
  * @param transactionDTO
  * @param transactionInfo
- * @param nemesisEpoch
+ * @param epochAdjustment
  * @returns {any}
  * @constructor
  */
-const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nemesisEpoch): Transaction => {
+const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, epochAdjustment): Transaction => {
     if (transactionDTO.type === TransactionType.TRANSFER) {
         return new TransferTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             extractRecipient(transactionDTO.recipientAddress),
             extractMosaics(transactionDTO.mosaics),
@@ -181,7 +181,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new NamespaceRegistrationTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.registrationType,
             transactionDTO.name,
@@ -198,7 +198,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MosaicDefinitionTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             MosaicNonce.createFromNumber(transactionDTO.nonce),
             new MosaicId(transactionDTO.id),
@@ -215,7 +215,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MosaicSupplyChangeTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             transactionDTO.action,
@@ -230,7 +230,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MultisigAccountModificationTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
@@ -247,7 +247,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new LockFundsTransaction(
             networkType,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             new Mosaic(new MosaicId(transactionDTO.mosaicId), UInt64.fromNumericString(transactionDTO.amount)),
             UInt64.fromNumericString(transactionDTO.duration),
@@ -262,7 +262,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new SecretLockTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             new Mosaic(mosaicId, UInt64.fromNumericString(transactionDTO.amount)),
             UInt64.fromNumericString(transactionDTO.duration),
@@ -280,7 +280,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new SecretProofTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
@@ -296,7 +296,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MosaicAliasTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.aliasAction,
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
@@ -311,7 +311,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new AddressAliasTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.aliasAction,
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
@@ -326,7 +326,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new AccountAddressRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.restrictionFlags,
             transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) => extractRecipient(addition)) : [],
@@ -341,7 +341,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new AccountOperationRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.restrictionFlags,
             transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions : [],
@@ -356,7 +356,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new AccountMosaicRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.restrictionFlags,
             transactionDTO.restrictionAdditions
@@ -375,7 +375,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new AccountKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.linkedPublicKey,
             transactionDTO.linkAction,
@@ -389,7 +389,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MosaicGlobalRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.referenceMosaicId),
@@ -408,7 +408,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MosaicAddressRestrictionTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             UInt64.fromHex(transactionDTO.restrictionKey),
@@ -425,7 +425,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new AccountMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
@@ -441,7 +441,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new MosaicMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
@@ -458,7 +458,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new NamespaceMetadataTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
@@ -475,7 +475,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new VrfKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.linkedPublicKey,
             transactionDTO.linkAction,
@@ -489,7 +489,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new NodeKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.linkedPublicKey,
             transactionDTO.linkAction,
@@ -503,7 +503,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
         return new VotingKeyLinkTransaction(
             transactionDTO.network,
             transactionDTO.version,
-            extractDeadline(nemesisEpoch, transactionDTO.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.linkedPublicKey,
             transactionDTO.startEpoch,
@@ -522,11 +522,11 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, nem
 /**
  * @internal
  * @param transactionDTO
- * @param nemesisEpoch
+ * @param epochAdjustment
  * @returns {Transaction}
  * @constructor
  */
-export const CreateTransactionFromDTO = (transactionDTO, nemesisEpoch): Transaction => {
+export const CreateTransactionFromDTO = (transactionDTO, epochAdjustment): Transaction => {
     if (
         transactionDTO.transaction.type === TransactionType.AGGREGATE_COMPLETE ||
         transactionDTO.transaction.type === TransactionType.AGGREGATE_BONDED
@@ -537,14 +537,14 @@ export const CreateTransactionFromDTO = (transactionDTO, nemesisEpoch): Transact
                   innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
                   innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
                   innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo, nemesisEpoch);
+                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo, epochAdjustment);
               })
             : [];
         return new AggregateTransaction(
             transactionDTO.transaction.network,
             transactionDTO.transaction.type,
             transactionDTO.transaction.version,
-            extractDeadline(nemesisEpoch, transactionDTO.transaction.deadline),
+            extractDeadline(epochAdjustment, transactionDTO.transaction.deadline),
             UInt64.fromNumericString(transactionDTO.transaction.maxFee || '0'),
             innerTransactions,
             transactionDTO.transaction.cosignatures
@@ -566,7 +566,7 @@ export const CreateTransactionFromDTO = (transactionDTO, nemesisEpoch): Transact
         return CreateStandaloneTransactionFromDTO(
             transactionDTO.transaction,
             extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
-            nemesisEpoch,
+            epochAdjustment,
         );
     }
 };

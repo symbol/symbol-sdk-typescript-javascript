@@ -23,21 +23,21 @@ export class TransactionMapping {
     /**
      * Create transaction class from Json.
      * @param {object} dataJson The transaction json object.
-     * @param {number} nemesisEpoch The nemesis block epoch.
+     * @param {number} epochAdjustment The nemesis block epoch.
      * @returns {module: model/transaction/transaction} The transaction class.
      */
-    public static createFromDTO(dataJson: object, nemesisEpoch: number): Transaction {
-        return CreateTransactionFromDTO(dataJson, nemesisEpoch);
+    public static createFromDTO(dataJson: object, epochAdjustment: number): Transaction {
+        return CreateTransactionFromDTO(dataJson, epochAdjustment);
     }
 
     /**
      * Create transaction class from payload binary.
      * @param {string} payload The transaction binary payload
-     * @param {number} nemesisEpoch Nemesis block epoch
+     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction} The transaction class.
      */
-    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
-        return CreateTransactionFromPayload(payload, nemesisEpoch, isEmbedded);
+    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
+        return CreateTransactionFromPayload(payload, epochAdjustment, isEmbedded);
     }
 }

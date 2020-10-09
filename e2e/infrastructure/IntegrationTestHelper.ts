@@ -52,7 +52,7 @@ export class IntegrationTestHelper {
     public service = new BootstrapService();
     public config: StartParams;
     public startEachTime = true;
-    public nemesisEpoch: number;
+    public epochAdjustment: number;
 
     private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string }> {
         this.config = {
@@ -113,7 +113,7 @@ export class IntegrationTestHelper {
 
         this.networkType = await this.repositoryFactory.getNetworkType().toPromise();
         this.generationHash = await this.repositoryFactory.getGenerationHash().toPromise();
-        this.nemesisEpoch = await this.repositoryFactory.getNemesisEpoch().toPromise();
+        this.epochAdjustment = await this.repositoryFactory.getEpochAdjustment().toPromise();
 
         let index = 0;
         this.account = Account.createFromPrivateKey(accounts[index++], this.networkType);

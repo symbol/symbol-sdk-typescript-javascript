@@ -90,11 +90,11 @@ export abstract class Http {
         }
     }
 
-    createNemesisEpochObservable(nemesisEpoch?: number | Observable<number>): Observable<number> {
-        if (nemesisEpoch && nemesisEpoch instanceof Observable) {
-            return nemesisEpoch as Observable<number>;
-        } else if (nemesisEpoch) {
-            return observableOf(nemesisEpoch);
+    createEpochAdjustmentObservable(epochAdjustment?: number | Observable<number>): Observable<number> {
+        if (epochAdjustment && epochAdjustment instanceof Observable) {
+            return epochAdjustment as Observable<number>;
+        } else if (epochAdjustment) {
+            return observableOf(epochAdjustment);
         } else {
             return this.call(new NetworkRoutesApi(this.config()).getNetworkProperties(), (body) =>
                 parseInt(body.network.epochAdjustment?.replace('s', '') ?? '0'),

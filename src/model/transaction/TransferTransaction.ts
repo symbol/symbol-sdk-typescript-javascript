@@ -134,11 +134,11 @@ export class TransferTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} nemesisEpoch Nemesis block epoch
+     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -148,7 +148,7 @@ export class TransferTransaction extends Transaction {
         const transaction = TransferTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
+                : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp, epochAdjustment),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();

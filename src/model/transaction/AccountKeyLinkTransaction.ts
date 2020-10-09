@@ -107,11 +107,11 @@ export class AccountKeyLinkTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} nemesisEpoch Nemesis block epoch
+     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedAccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -121,7 +121,7 @@ export class AccountKeyLinkTransaction extends Transaction {
         const transaction = AccountKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as AccountKeyLinkTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
+                : Deadline.createFromDTO((builder as AccountKeyLinkTransactionBuilder).getDeadline().timestamp, epochAdjustment),
             Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,

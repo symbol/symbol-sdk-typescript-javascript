@@ -103,11 +103,11 @@ export class VrfKeyLinkTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {number} nemesisEpoch Nemesis block epoch
+     * @param {number} epochAdjustment Nemesis block epoch
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
      * @returns {Transaction | InnerTransaction}
      */
-    public static createFromPayload(payload: string, nemesisEpoch: number, isEmbedded = false): Transaction | InnerTransaction {
+    public static createFromPayload(payload: string, epochAdjustment: number, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
             ? EmbeddedVrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : VrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
@@ -117,7 +117,7 @@ export class VrfKeyLinkTransaction extends Transaction {
         const transaction = VrfKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp, nemesisEpoch),
+                : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp, epochAdjustment),
             Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,

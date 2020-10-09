@@ -44,5 +44,5 @@ export interface RepositoryFactoryConfig {
     /**
      * The nemesis block creation epoch
      */
-    nemesisEpoch?: number;
+    epochAdjustment?: number;
 }
