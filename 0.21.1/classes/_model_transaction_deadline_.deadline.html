@@ -98,13 +98,14 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_transaction_deadline_.deadline.html#value" class="tsd-kind-icon">value</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_model_transaction_deadline_.deadline.html#timestampnemesisblock" class="tsd-kind-icon">timestamp<wbr>Nemesis<wbr>Block</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_transaction_deadline_.deadline.html#adjustedvalue" class="tsd-kind-icon">adjusted<wbr>Value</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_transaction_deadline_.deadline.html#tolocaldatetime" class="tsd-kind-icon">to<wbr>Local<wbr>Date<wbr>Time</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_model_transaction_deadline_.deadline.html#tolocaldatetimegiventimezone" class="tsd-kind-icon">to<wbr>Local<wbr>Date<wbr>Time<wbr>Given<wbr>Time<wbr>Zone</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_model_transaction_deadline_.deadline.html#create" class="tsd-kind-icon">create</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_model_transaction_deadline_.deadline.html#createfromdto" class="tsd-kind-icon">create<wbr>FromDTO</a></li>
 							</ul>
@@ -118,23 +119,27 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Deadline<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocalDateTime</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Deadline<span class="tsd-signature-symbol">(</span>adjustedValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/model/transaction/Deadline.ts#L77">model/transaction/Deadline.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/model/transaction/Deadline.ts#L64">model/transaction/Deadline.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Constructor</p>
+								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>deadline: <span class="tsd-signature-type">LocalDateTime</span></h5>
+									<h5>adjustedValue: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
+											<p>Adjusted value. (Local datetime minus nemesis epoch adjustment)</p>
 										</div>
 									</div>
 								</li>
@@ -147,60 +152,128 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="value" class="tsd-anchor"></a>
-					<h3>value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">LocalDateTime</span></div>
+					<a name="adjustedvalue" class="tsd-anchor"></a>
+					<h3>adjusted<wbr>Value</h3>
+					<div class="tsd-signature tsd-kind-icon">adjusted<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/model/transaction/Deadline.ts#L33">model/transaction/Deadline.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/model/transaction/Deadline.ts#L28">model/transaction/Deadline.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Deadline value</p>
+							<p>Deadline value (without Nemesis epoch adjustment)</p>
 						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
-					<a name="timestampnemesisblock" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> timestamp<wbr>Nemesis<wbr>Block</h3>
-					<div class="tsd-signature tsd-kind-icon">timestamp<wbr>Nemesis<wbr>Block<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1573430400</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/model/transaction/Deadline.ts#L28">model/transaction/Deadline.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="create" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, chronoUnit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ChronoUnit</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tolocaldatetime" class="tsd-anchor"></a>
+					<h3>to<wbr>Local<wbr>Date<wbr>Time</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Local<wbr>Date<wbr>Time<span class="tsd-signature-symbol">(</span>epochAdjustment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocalDateTime</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/model/transaction/Deadline.ts#L41">model/transaction/Deadline.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/model/transaction/Deadline.ts#L93">model/transaction/Deadline.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create deadline model</p>
+									<p>Returns deadline as local date time.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
+									<h5>epochAdjustment: <span class="tsd-signature-type">Duration</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the network&#39;s epoch adjustment. Defined in the network/properties.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">LocalDateTime</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tolocaldatetimegiventimezone" class="tsd-anchor"></a>
+					<h3>to<wbr>Local<wbr>Date<wbr>Time<wbr>Given<wbr>Time<wbr>Zone</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Local<wbr>Date<wbr>Time<wbr>Given<wbr>Time<wbr>Zone<span class="tsd-signature-symbol">(</span>epochAdjustment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Duration</span>, zoneId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ZoneId</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LocalDateTime</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/model/transaction/Deadline.ts#L103">model/transaction/Deadline.ts:103</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns deadline as local date time.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>epochAdjustment: <span class="tsd-signature-type">Duration</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the network&#39;s epoch adjustment. Defined in the network/properties.</p>
+									</div>
+								</li>
+								<li>
+									<h5>zoneId: <span class="tsd-signature-type">ZoneId</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the Zone Id.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">LocalDateTime</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="create" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>epochAdjustment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Duration</span>, deadline<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, chronoUnit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ChronoUnit</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/model/transaction/Deadline.ts#L37">model/transaction/Deadline.ts:37</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create deadline model. Default to 2 chrono hours in advance.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>epochAdjustment: <span class="tsd-signature-type">Duration</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the network&#39;s epoch adjustment (seconds). Defined in the network/properties. e.g. Duration.ofSeconds(1573430400);</p>
+									</div>
+								</li>
+								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> deadline: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 2</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the deadline unit value.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> chronoUnit: <span class="tsd-signature-type">ChronoUnit</span><span class="tsd-signature-symbol"> = ChronoUnit.HOURS</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the crhono unit. e.g ChronoUnit.HOURS</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_model_transaction_deadline_.deadline.html" class="tsd-signature-type">Deadline</a></h4>
@@ -217,7 +290,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/model/transaction/Deadline.ts#L69">model/transaction/Deadline.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/model/transaction/Deadline.ts#L61">model/transaction/Deadline.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -256,10 +329,13 @@
 								<a href="_model_transaction_deadline_.deadline.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_model_transaction_deadline_.deadline.html#value" class="tsd-kind-icon">value</a>
+								<a href="_model_transaction_deadline_.deadline.html#adjustedvalue" class="tsd-kind-icon">adjusted<wbr>Value</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
-								<a href="_model_transaction_deadline_.deadline.html#timestampnemesisblock" class="tsd-kind-icon">timestamp<wbr>Nemesis<wbr>Block</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_transaction_deadline_.deadline.html#tolocaldatetime" class="tsd-kind-icon">to<wbr>Local<wbr>Date<wbr>Time</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_model_transaction_deadline_.deadline.html#tolocaldatetimegiventimezone" class="tsd-kind-icon">to<wbr>Local<wbr>Date<wbr>Time<wbr>Given<wbr>Time<wbr>Zone</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_model_transaction_deadline_.deadline.html#create" class="tsd-kind-icon">create</a>
@@ -290,17 +366,17 @@
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>

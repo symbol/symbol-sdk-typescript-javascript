@@ -137,14 +137,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<wbr>Status<wbr>Http<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fetchApi<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_infrastructure_transactionstatushttp_.transactionstatushttp.html" class="tsd-signature-type">TransactionStatusHttp</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<wbr>Status<wbr>Http<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, epochAdjustment<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span>, fetchApi<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_infrastructure_transactionstatushttp_.transactionstatushttp.html" class="tsd-signature-type">TransactionStatusHttp</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/TransactionStatusHttp.ts#L35">infrastructure/TransactionStatusHttp.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/TransactionStatusHttp.ts#L35">infrastructure/TransactionStatusHttp.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -159,6 +159,14 @@
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 											<p>Base catapult-rest url</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> epochAdjustment: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Nemesis block epoch</p>
 										</div>
 									</div>
 								</li>
@@ -185,7 +193,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#fetchapi">fetchApi</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/Http.ts#L34">infrastructure/Http.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/Http.ts#L34">infrastructure/Http.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -201,7 +209,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#url">url</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/Http.ts#L34">infrastructure/Http.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/Http.ts#L34">infrastructure/Http.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -224,7 +232,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#call">call</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/Http.ts#L103">infrastructure/Http.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/Http.ts#L103">infrastructure/Http.ts:103</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -289,7 +297,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#config">config</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/Http.ts#L93">infrastructure/Http.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/Http.ts#L93">infrastructure/Http.ts:93</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Configuration</span></h4>
@@ -307,7 +315,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#createnetworktypeobservable">createNetworkTypeObservable</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/Http.ts#L83">infrastructure/Http.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/Http.ts#L83">infrastructure/Http.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -331,7 +339,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_infrastructure_transactionstatusrepository_.transactionstatusrepository.html">TransactionStatusRepository</a>.<a href="../interfaces/_infrastructure_transactionstatusrepository_.transactionstatusrepository.html#gettransactionstatus">getTransactionStatus</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/TransactionStatusHttp.ts#L52">infrastructure/TransactionStatusHttp.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/TransactionStatusHttp.ts#L53">infrastructure/TransactionStatusHttp.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -364,7 +372,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_infrastructure_transactionstatusrepository_.transactionstatusrepository.html">TransactionStatusRepository</a>.<a href="../interfaces/_infrastructure_transactionstatusrepository_.transactionstatusrepository.html#gettransactionstatuses">getTransactionStatuses</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/TransactionStatusHttp.ts#L61">infrastructure/TransactionStatusHttp.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/TransactionStatusHttp.ts#L62">infrastructure/TransactionStatusHttp.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -397,7 +405,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_infrastructure_http_.http.html">Http</a>.<a href="_infrastructure_http_.http.html#errorhandling">errorHandling</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/infrastructure/Http.ts#L36">infrastructure/Http.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/infrastructure/Http.ts#L36">infrastructure/Http.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

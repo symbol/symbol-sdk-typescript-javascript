@@ -87,6 +87,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#assign" class="tsd-kind-icon">assign</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#extractaccountrestrictionfromdto" class="tsd-kind-icon">extract<wbr>Account<wbr>Restriction<wbr>From<wbr>Dto</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#mapenum" class="tsd-kind-icon">map<wbr>Enum</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#parseserverduration" class="tsd-kind-icon">parse<wbr>Server<wbr>Duration</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,7 +105,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/core/utils/DtoMapping.ts#L70">core/utils/DtoMapping.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/core/utils/DtoMapping.ts#L71">core/utils/DtoMapping.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -148,7 +149,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/core/utils/DtoMapping.ts#L32">core/utils/DtoMapping.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/core/utils/DtoMapping.ts#L33">core/utils/DtoMapping.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -177,7 +178,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/a0255f0/src/core/utils/DtoMapping.ts#L78">core/utils/DtoMapping.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/core/utils/DtoMapping.ts#L79">core/utils/DtoMapping.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -204,6 +205,42 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">E2</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="parseserverduration" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> parse<wbr>Server<wbr>Duration</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Server<wbr>Duration<span class="tsd-signature-symbol">(</span>serverValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Duration</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/caaede0/src/core/utils/DtoMapping.ts#L92">core/utils/DtoMapping.ts:92</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>It parse a server time/duration configuration like: - 1000ms 1000 milliseconds - 15s 15 seconds</p>
+									<ul>
+										<li>5m 5 minutes - 2h 2 hours - 10d 10 days</li>
+									</ul>
+								</div>
+								<p>into a @{@link Duration} object
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>serverValue: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>time.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Duration</span></h4>
+							<p>an instant from that value.</p>
 						</li>
 					</ul>
 				</section>
@@ -235,6 +272,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
 								<a href="_core_utils_dtomapping_.dtomapping.html#mapenum" class="tsd-kind-icon">map<wbr>Enum</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_core_utils_dtomapping_.dtomapping.html#parseserverduration" class="tsd-kind-icon">parse<wbr>Server<wbr>Duration</a>
 							</li>
 						</ul>
 					</li>
