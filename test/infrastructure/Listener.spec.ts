@@ -38,7 +38,7 @@ import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
         '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
 
     let namespaceRepoMock: NamespaceRepository;
@@ -240,7 +240,7 @@ describe('Listener', () => {
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -284,7 +284,7 @@ describe('Listener', () => {
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -329,7 +329,7 @@ describe('Listener', () => {
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -373,7 +373,7 @@ describe('Listener', () => {
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -419,7 +419,7 @@ describe('Listener', () => {
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                     undefined,
                     undefined,
                     account.publicAccount,

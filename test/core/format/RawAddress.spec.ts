@@ -98,10 +98,10 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE);
 
             // Assert:
-            expect(decoded[0]).to.equal(NetworkType.MIJIN);
+            expect(decoded[0]).to.equal(NetworkType.PRIVATE);
             expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
@@ -112,10 +112,10 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
 
             // Assert:
-            expect(decoded[0]).to.equal(NetworkType.MIJIN_TEST);
+            expect(decoded[0]).to.equal(NetworkType.PRIVATE_TEST);
             expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
@@ -125,8 +125,8 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
-            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
 
             // Assert:
             expect(address.isValidAddress(decoded1)).to.equal(true);
@@ -139,8 +139,8 @@ describe('address', () => {
             const publicKey2 = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.MIJIN_TEST);
-            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.MIJIN_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.PRIVATE_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.PRIVATE_TEST);
 
             // Assert:
             expect(address.isValidAddress(decoded1)).to.equal(true);
@@ -153,7 +153,7 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
@@ -285,7 +285,7 @@ describe('address', () => {
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('Catapult test vector [MIJIN] - PublicKey to Address', () => {
+    describe('Catapult test vector [PRIVATE] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
@@ -313,7 +313,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.PRIVATE));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -325,7 +325,7 @@ describe('address', () => {
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('Catapult test vector [MIJIN_TEST] - PublicKey to Address', () => {
+    describe('Catapult test vector [PRIVATE_TEST] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
@@ -354,7 +354,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST),
+                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.PRIVATE_TEST),
                 );
 
                 // Assert:

@@ -62,7 +62,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -77,7 +77,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -93,7 +93,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
@@ -112,7 +112,7 @@ describe('MosaicMetadataTransaction', () => {
             namespacId,
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
@@ -131,7 +131,7 @@ describe('MosaicMetadataTransaction', () => {
                 new MosaicId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
@@ -145,7 +145,7 @@ describe('MosaicMetadataTransaction', () => {
                 new MosaicId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
@@ -161,7 +161,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(364);
 
@@ -171,7 +171,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicMetadataTransaction = new MosaicMetadataTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -199,7 +199,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(mosaicMetadataTransaction, { signer: account.publicAccount });
@@ -219,7 +219,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
@@ -241,7 +241,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;

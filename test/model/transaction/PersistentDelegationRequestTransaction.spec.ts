@@ -43,7 +43,7 @@ describe('PersistentDelegationRequestTransaction', () => {
             delegatedPrivateKey,
             vrfPrivateKey,
             recipientPublicKey,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(persistentDelegationRequestTransaction.maxFee.higher).to.be.equal(0);
@@ -56,7 +56,7 @@ describe('PersistentDelegationRequestTransaction', () => {
             delegatedPrivateKey,
             vrfPrivateKey,
             recipientPublicKey,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -70,7 +70,7 @@ describe('PersistentDelegationRequestTransaction', () => {
             delegatedPrivateKey,
             vrfPrivateKey,
             recipientPublicKey,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(persistentDelegationRequestTransaction.message.payload.length).to.be.equal(248 + messageMarker.length);
@@ -97,7 +97,7 @@ describe('PersistentDelegationRequestTransaction', () => {
                 'abc',
                 vrfPrivateKey,
                 recipientPublicKey,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 new UInt64([1, 0]),
             );
         }).to.throw();

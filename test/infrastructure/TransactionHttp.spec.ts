@@ -74,12 +74,12 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const aggTx = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
         );
 
@@ -363,7 +363,7 @@ describe('TransactionHttp', () => {
         blockDTO.timestamp = '7';
         blockDTO.beneficiaryAddress = Address.createFromPublicKey(
             '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).encoded();
 
         const blockMetaDTO = {} as BlockMetaDTO;
@@ -393,7 +393,7 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTx = account.sign(tx, generationHash);
@@ -412,13 +412,13 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const aggTx = AggregateTransaction.createBonded(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
         );
 
@@ -500,7 +500,7 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTx = account.sign(tx, generationHash);
@@ -520,13 +520,13 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const aggTx = AggregateTransaction.createBonded(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
         );
         const signedTx = account.sign(aggTx, generationHash);

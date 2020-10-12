@@ -33,7 +33,7 @@ describe('PersistentHarvesting', () => {
 
     const vrfKeyPair = Account.createFromPrivateKey(
         '82798EA9A2D2D202AFCCC82C40A287780BCA3C7F7A2FD5B754832804C6BE1BAA',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
 
     before(() => {
@@ -113,7 +113,7 @@ describe('PersistentHarvesting', () => {
                 remoteAccount.privateKey,
                 vrfKeyPair.privateKey,
                 'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 helper.maxFee,
             );
 

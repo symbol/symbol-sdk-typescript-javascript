@@ -72,7 +72,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(secretLockTransaction.maxFee.higher).to.be.equal(0);
@@ -89,7 +89,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -107,7 +107,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
@@ -127,7 +127,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const signedTx = secretLockTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(256, signedTx.payload.length)).to.be.equal(
@@ -146,7 +146,7 @@ describe('SecretLockTransaction', () => {
                 LockHashAlgorithm.Op_Sha3_256,
                 'non valid hash',
                 recipientAddress,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
@@ -161,7 +161,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Hash_160,
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
@@ -181,7 +181,7 @@ describe('SecretLockTransaction', () => {
                 LockHashAlgorithm.Op_Hash_160,
                 'non valid hash',
                 recipientAddress,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
@@ -195,7 +195,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Hash_256,
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
@@ -215,7 +215,7 @@ describe('SecretLockTransaction', () => {
                 LockHashAlgorithm.Op_Hash_256,
                 'non valid hash',
                 recipientAddress,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
@@ -231,7 +231,7 @@ describe('SecretLockTransaction', () => {
                 LockHashAlgorithm.Op_Hash_256,
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
                 recipientAddress,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(secretLockTransaction.size).to.be.equal(209);
             expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
@@ -247,7 +247,7 @@ describe('SecretLockTransaction', () => {
                 LockHashAlgorithm.Op_Hash_256,
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
                 recipientAddress,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(secretLockTransaction.size).to.be.equal(209);
             expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
@@ -265,7 +265,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
@@ -285,7 +285,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(secretLockTransaction.maxFee.compact()).to.be.equal(418);
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
@@ -295,7 +295,7 @@ describe('SecretLockTransaction', () => {
     it('Test resolveAlias can resolve', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretLockTransaction = new SecretLockTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -327,7 +327,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(recipientAddress, []);
         expect(canNotify).to.be.true;
@@ -349,7 +349,7 @@ describe('SecretLockTransaction', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).shouldNotifyAccount(account.address, [namespaceId]);
         expect(canNotify).to.be.true;
     });

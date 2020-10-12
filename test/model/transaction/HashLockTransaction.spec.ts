@@ -28,14 +28,14 @@ describe('HashLockTransaction', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const epochAdjustment = 1573430400;
     it('creation with an aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = HashLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyLocal.NAMESPACE_ID);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
@@ -44,7 +44,12 @@ describe('HashLockTransaction', () => {
     });
 
     it('should throw exception if it is not a aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(epochAdjustment),
+            [],
+            NetworkType.PRIVATE_TEST,
+            [],
+        );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             HashLockTransaction.create(
@@ -52,20 +57,20 @@ describe('HashLockTransaction', () => {
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
 
     it('Notify Account', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const tx = HashLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

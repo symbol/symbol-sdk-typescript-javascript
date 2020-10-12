@@ -74,7 +74,7 @@ describe('Transaction', () => {
         it('should return true when there is no Transaction Info', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -90,7 +90,7 @@ describe('Transaction', () => {
         it('should return true when height is 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -104,7 +104,7 @@ describe('Transaction', () => {
         it('should return false when height is not 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -120,7 +120,7 @@ describe('Transaction', () => {
         it('should return true when height is not 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -136,7 +136,7 @@ describe('Transaction', () => {
         it('should return false when height is 0 and hash and markehash are different', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -152,7 +152,7 @@ describe('Transaction', () => {
         it('should throw an error if the transaction is announced', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -167,7 +167,7 @@ describe('Transaction', () => {
         it('should return a new transaction', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -181,7 +181,7 @@ describe('Transaction', () => {
         it('should overide deadline properly', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -203,7 +203,7 @@ describe('Transaction', () => {
         it('should throw exception when adding an aggregated transaction as inner transaction', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -214,7 +214,7 @@ describe('Transaction', () => {
             const aggregateTransaction = AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 [],
             );
 
@@ -231,7 +231,7 @@ describe('Transaction', () => {
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [],
                 PlainMessage.create('test-message'),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const serialized = transaction.serialize();
 
@@ -245,7 +245,7 @@ describe('Transaction', () => {
         it('should return version in hex format', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -342,7 +342,7 @@ describe('Transaction', () => {
             expect(hash1).to.equal(hash2);
         });
 
-        it('create correct SHA3 transaction hash given network type MIJIN or MIJIN_TEST', () => {
+        it('create correct SHA3 transaction hash given network type PRIVATE or PRIVATE_TEST', () => {
             const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
             const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
@@ -382,7 +382,7 @@ describe('Transaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ) as Transaction;
 
         expect(tx.isSigned(account.address)).to.be.false;

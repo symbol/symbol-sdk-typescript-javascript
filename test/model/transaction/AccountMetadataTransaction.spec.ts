@@ -43,7 +43,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(accountMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -57,7 +57,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -72,7 +72,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
@@ -90,7 +90,7 @@ describe('AccountMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
 
             expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
@@ -107,7 +107,7 @@ describe('AccountMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
 
             expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
@@ -124,7 +124,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(accountMetadataTransaction, { signer: account.publicAccount });
@@ -143,7 +143,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const resolved = accountMetadataTransaction.resolveAliases();
@@ -159,7 +159,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotify = tx.shouldNotifyAccount(account.address, []);
@@ -181,7 +181,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);

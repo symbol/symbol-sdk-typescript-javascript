@@ -31,7 +31,7 @@
 //     let statementDTO;
 
 //     before(() => {
-//         account = Account.createFromPrivateKey('81C18245507F9C15B61BDEDAFA2C10D9DC2C4E401E573A10935D45AA2A461FD5', NetworkType.MIJIN_TEST);
+//         account = Account.createFromPrivateKey('81C18245507F9C15B61BDEDAFA2C10D9DC2C4E401E573A10935D45AA2A461FD5', NetworkType.PRIVATE_TEST);
 //         transactionStatementsDTO = [
 //             {
 //                 statement: {
