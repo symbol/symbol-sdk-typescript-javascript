@@ -21,7 +21,7 @@ import { HashLockRepository } from '../../../src/infrastructure/HashLockReposito
 import { Address } from '../../../src/model/account/Address';
 
 describe('HashLockPaginationStreamer', () => {
-    const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+    const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
 
     it('basicMultiPageTest', () => {
         const hashLockRepositoryMock: HashLockRepository = mock();

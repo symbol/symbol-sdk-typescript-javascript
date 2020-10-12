@@ -80,7 +80,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -96,7 +96,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
-        expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
@@ -172,7 +172,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
@@ -191,7 +191,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
-        expect(transaction.address.plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        expect(transaction.address.plain()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -340,7 +340,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -355,7 +355,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         expect(transaction.message.payload).to.be.equal('test-message');
         expect(transaction.mosaics.length).to.be.equal(1);
-        expect(transaction.recipientToString()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        expect(transaction.recipientToString()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -369,7 +369,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const recipientAddress = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -474,7 +474,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -620,7 +620,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -1069,7 +1069,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should throw error with invalid type', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,

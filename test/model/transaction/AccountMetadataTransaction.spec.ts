@@ -79,7 +79,7 @@ describe('AccountMetadataTransaction', () => {
         const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '90D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA4E80300000000000001000A0000000000000000000000',
+            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05CE80300000000000001000A0000000000000000000000',
         );
     });
 
@@ -166,7 +166,7 @@ describe('AccountMetadataTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -188,7 +188,7 @@ describe('AccountMetadataTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), [wrongAlias]);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [wrongAlias]);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

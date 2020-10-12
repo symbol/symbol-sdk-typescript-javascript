@@ -42,7 +42,7 @@ describe('CreateTransactionFromDTO', () => {
                     type: 16724,
                     maxFee: '0',
                     deadline: '1000',
-                    recipientAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                    recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                     message: {
                         payload: '746573742D6D657373616765',
                         type: 0,
@@ -81,7 +81,7 @@ describe('CreateTransactionFromDTO', () => {
                     type: 16724,
                     maxFee: '0',
                     deadline: '1000',
-                    recipientAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                    recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                     mosaics: [
                         {
                             id: '85BBEA6CC462B244',
@@ -143,7 +143,7 @@ describe('CreateTransactionFromDTO', () => {
                                         id: '85BBEA6CC462B244',
                                     },
                                 ],
-                                recipientAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                                recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16724,
                                 version: 1,
@@ -178,7 +178,7 @@ describe('CreateTransactionFromDTO', () => {
                     version: 1,
                     network: 144,
                     type: 16724,
-                    recipientAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                    recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                     message: {
                         payload: '746573742D6D657373616765',
                         type: 0,
@@ -593,7 +593,7 @@ describe('CreateTransactionFromDTO', () => {
                     maxFee: '0',
                     minApprovalDelta: 1,
                     minRemovalDelta: 1,
-                    addressAdditions: ['6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144'],
+                    addressAdditions: ['7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5'],
                     addressDeletions: [],
                     signature:
                         '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
@@ -648,7 +648,7 @@ describe('CreateTransactionFromDTO', () => {
                             transaction: {
                                 minApprovalDelta: 1,
                                 minRemovalDelta: 1,
-                                addressAdditions: ['6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144'],
+                                addressAdditions: ['7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5'],
                                 addressDeletions: [],
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16725,

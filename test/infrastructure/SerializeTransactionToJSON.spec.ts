@@ -78,7 +78,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -130,7 +130,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
@@ -217,7 +217,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -231,7 +231,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const recipientAddress = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -287,7 +287,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -309,7 +309,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,

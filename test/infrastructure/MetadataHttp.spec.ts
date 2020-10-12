@@ -44,7 +44,7 @@ import { MetadataTransactionService } from '../../src/service/MetadataTransactio
 
 describe('MetadataHttp', () => {
     const epochAdjustment = Duration.ofSeconds(1573430400);
-    const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+    const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');
 

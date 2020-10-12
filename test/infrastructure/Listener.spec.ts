@@ -66,7 +66,7 @@ describe('Listener', () => {
 
     describe('Invalid Channel', () => {
         it('should throw error if channel is not supported', () => {
-            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -105,7 +105,7 @@ describe('Listener', () => {
 
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -149,7 +149,7 @@ describe('Listener', () => {
 
     describe('onConfirmed', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -570,7 +570,7 @@ describe('Listener', () => {
                             '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
                             'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
                         signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                        beneficiaryAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                        beneficiaryAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                         timestamp: '0',
                         type: 32768,
                         version: 1,

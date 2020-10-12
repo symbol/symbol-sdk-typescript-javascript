@@ -32,7 +32,7 @@ describe('AccountRestrictions', () => {
                     values: [
                         {
                             modificationAction: AccountRestrictionModificationAction.Add,
-                            value: 'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ',
+                            value: 'QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ',
                         },
                     ],
                 },

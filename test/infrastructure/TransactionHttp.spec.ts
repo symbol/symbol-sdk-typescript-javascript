@@ -72,7 +72,7 @@ describe('TransactionHttp', () => {
     it('should return an error when a non aggregate transaction bonded is announced via announceAggregateBonded method', () => {
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -109,7 +109,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+        transactionDto.recipientAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -176,7 +176,7 @@ describe('TransactionHttp', () => {
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
@@ -189,7 +189,7 @@ describe('TransactionHttp', () => {
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
@@ -202,7 +202,7 @@ describe('TransactionHttp', () => {
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
@@ -224,7 +224,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+        transactionDto.recipientAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -241,7 +241,7 @@ describe('TransactionHttp', () => {
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
@@ -250,7 +250,7 @@ describe('TransactionHttp', () => {
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
@@ -259,7 +259,7 @@ describe('TransactionHttp', () => {
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
@@ -278,7 +278,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+        transactionDto.recipientAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -309,7 +309,7 @@ describe('TransactionHttp', () => {
         expect(transactionConfirmed.length).to.be.equal(1);
         expect(transactionConfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactionConfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transactionConfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionConfirmed[0].transactionInfo?.hash).to.be.equal('hash');
@@ -317,7 +317,7 @@ describe('TransactionHttp', () => {
         expect(transactionUnconfirmed.length).to.be.equal(1);
         expect(transactionUnconfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactionUnconfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transactionUnconfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionUnconfirmed[0].transactionInfo?.hash).to.be.equal('hash');
@@ -325,7 +325,7 @@ describe('TransactionHttp', () => {
         expect(transactionPartial.length).to.be.equal(1);
         expect(transactionPartial[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactionPartial[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144').plain(),
+            Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain(),
         );
         expect(transactionPartial[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionPartial[0].transactionInfo?.hash).to.be.equal('hash');
@@ -344,7 +344,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+        transactionDto.recipientAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -391,7 +391,7 @@ describe('TransactionHttp', () => {
         const response = { message: 'done' };
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -410,7 +410,7 @@ describe('TransactionHttp', () => {
 
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -498,7 +498,7 @@ describe('TransactionHttp', () => {
     it('announce - Error', async () => {
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -518,7 +518,7 @@ describe('TransactionHttp', () => {
 
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,

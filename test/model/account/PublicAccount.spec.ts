@@ -25,7 +25,7 @@ describe('PublicAccount', () => {
     it('should createComplete a public account from public key', () => {
         const publicAccount = PublicAccount.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
         expect(publicAccount.publicKey).to.be.equal(publicKey);
-        expect(publicAccount.address.plain()).to.be.equal('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZQ');
+        expect(publicAccount.address.plain()).to.be.equal('QARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJGY6QEI');
     });
 });
 
