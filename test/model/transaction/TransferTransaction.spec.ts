@@ -79,7 +79,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.maxFee.higher).to.be.equal(0);
@@ -92,7 +92,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -106,7 +106,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -127,7 +127,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
             EmptyMessage,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('');
@@ -148,7 +148,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -171,7 +171,7 @@ describe('TransferTransaction', () => {
             addressAlias,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -194,7 +194,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         // test recipientToString with Address recipient
@@ -211,7 +211,7 @@ describe('TransferTransaction', () => {
             new NamespaceId('nem.owner'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         // test recipientToString with NamespaceId recipient
@@ -229,7 +229,7 @@ describe('TransferTransaction', () => {
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
@@ -241,7 +241,7 @@ describe('TransferTransaction', () => {
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
@@ -255,7 +255,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -276,8 +276,8 @@ describe('TransferTransaction', () => {
             Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
-            PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
-            NetworkType.MIJIN_TEST,
+            PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.PRIVATE_TEST),
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.message.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
@@ -288,8 +288,8 @@ describe('TransferTransaction', () => {
             Deadline.create(epochAdjustment),
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [],
-            PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
-            NetworkType.MIJIN_TEST,
+            PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.PRIVATE_TEST),
+            NetworkType.PRIVATE_TEST,
         );
         expect(transferTransaction.message.payload.length).to.be.equal(248 + messageMarker.length);
         expect(transferTransaction.message.payload.includes(messageMarker)).to.be.true;
@@ -313,9 +313,9 @@ describe('TransferTransaction', () => {
                     delegatedPrivateKey,
                     vrfPrivateKey,
                     recipientPublicKey,
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 ),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error, 'PersistentDelegationRequestTransaction should be created without Mosaic');
     });
@@ -326,8 +326,8 @@ describe('TransferTransaction', () => {
                 Deadline.create(epochAdjustment),
                 Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
                 [NetworkCurrencyLocal.createRelative(100)],
-                PersistentHarvestingDelegationMessage.create('abc', vrfPrivateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
-                NetworkType.MIJIN_TEST,
+                PersistentHarvestingDelegationMessage.create('abc', vrfPrivateKey, recipientPublicKey, NetworkType.PRIVATE_TEST),
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw();
     });
@@ -342,9 +342,9 @@ describe('TransferTransaction', () => {
                     delegatedPrivateKey,
                     vrfPrivateKey,
                     recipientPublicKey,
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 ),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw();
     });
@@ -360,7 +360,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             mosaics,
             PlainMessage.create('NEM'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.mosaics[0].id.id.compact()).to.be.equal(200);
@@ -389,7 +389,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             mosaics,
             PlainMessage.create('NEM'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(transferTransaction.mosaics[0].id.toHex()).to.be.equal('D525AD41D95FCF29');
@@ -410,7 +410,7 @@ describe('TransferTransaction', () => {
             namespaceId,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const payload = transferTransaction.serialize();
         const newTransaction = CreateTransactionFromPayload(payload) as TransferTransaction;
@@ -425,7 +425,7 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(transferTransaction.maxFee.compact()).to.be.equal(378);
 
@@ -439,14 +439,14 @@ describe('TransferTransaction', () => {
             Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(() => {
             AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [transferTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 [],
             ).setMaxFee(2);
         }).to.throw();
@@ -454,7 +454,7 @@ describe('TransferTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const transferTransaction = new TransferTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -481,7 +481,7 @@ describe('TransferTransaction', () => {
             address,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(address, []);
         expect(canNotify).to.be.true;
@@ -501,7 +501,7 @@ describe('TransferTransaction', () => {
             namespaceId,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).shouldNotifyAccount(address, [namespaceId]);
         expect(canNotify).to.be.true;
     });

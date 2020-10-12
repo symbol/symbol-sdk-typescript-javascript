@@ -43,7 +43,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicDefinitionTransaction.maxFee.higher).to.be.equal(0);
@@ -58,7 +58,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -74,7 +74,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicDefinitionTransaction.duration!.lower).to.be.equal(1000);
@@ -99,7 +99,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicDefinitionTransaction.duration!.lower).to.be.equal(1000);
@@ -125,7 +125,7 @@ describe('MosaicDefinitionTransaction', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicDefinitionTransaction.size).to.be.equal(150);
             expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
@@ -138,7 +138,7 @@ describe('MosaicDefinitionTransaction', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicDefinitionTransaction.size).to.be.equal(150);
             expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
@@ -154,7 +154,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicDefinitionTransaction.divisibility).to.be.equal(3);
@@ -177,7 +177,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(mosaicDefinitionTransaction.maxFee.compact()).to.be.equal(300);
 
@@ -193,7 +193,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

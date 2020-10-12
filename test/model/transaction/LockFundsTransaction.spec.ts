@@ -56,14 +56,14 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
@@ -72,14 +72,14 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -88,14 +88,14 @@ describe('LockFundsTransaction', () => {
     });
 
     it('creation with an aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
@@ -103,7 +103,12 @@ describe('LockFundsTransaction', () => {
     });
 
     it('should throw exception if it is not a aggregate bonded tx', () => {
-        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(epochAdjustment),
+            [],
+            NetworkType.PRIVATE_TEST,
+            [],
+        );
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             LockFundsTransaction.create(
@@ -111,20 +116,20 @@ describe('LockFundsTransaction', () => {
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
 
     it('should create and sign LockFundsTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const signedTx = lockFundsTransaction.signWith(account, generationHash);
 
@@ -138,7 +143,7 @@ describe('LockFundsTransaction', () => {
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(epochAdjustment),
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 [],
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
@@ -147,7 +152,7 @@ describe('LockFundsTransaction', () => {
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(lockFundsTransaction.size).to.be.equal(184);
         });
@@ -156,7 +161,7 @@ describe('LockFundsTransaction', () => {
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(epochAdjustment),
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 [],
             );
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
@@ -165,7 +170,7 @@ describe('LockFundsTransaction', () => {
                 NetworkCurrencyLocal.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(lockFundsTransaction.size).to.be.equal(184);
             expect(lockFundsTransaction.setPayloadSize(10).size).to.be.equal(10);
@@ -173,14 +178,14 @@ describe('LockFundsTransaction', () => {
     });
 
     it('Test set maxFee using multiplier', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(lockFundsTransaction.maxFee.compact()).to.be.equal(368);
 
@@ -189,10 +194,10 @@ describe('LockFundsTransaction', () => {
     });
 
     it('Test resolveAlias can resolve', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = new LockFundsTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -211,14 +216,14 @@ describe('LockFundsTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const tx = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

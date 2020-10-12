@@ -45,7 +45,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(namespaceMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -60,7 +60,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -76,7 +76,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
@@ -95,7 +95,7 @@ describe('NamespaceMetadataTransaction', () => {
                 new NamespaceId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
@@ -109,7 +109,7 @@ describe('NamespaceMetadataTransaction', () => {
                 new NamespaceId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
@@ -125,7 +125,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(364);
 
@@ -141,7 +141,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(namespaceMetadataTransaction, { signer: account.publicAccount });
@@ -161,7 +161,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const resolved = namespaceMetadataTransaction.resolveAliases();
 
@@ -177,7 +177,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
@@ -199,7 +199,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;

@@ -114,7 +114,7 @@ describe('MetadataTransactionService', () => {
         metadataTransactionService
             .createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 key,
                 value + deltaValue,
@@ -137,7 +137,7 @@ describe('MetadataTransactionService', () => {
         metadataTransactionService
             .createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 new MosaicId(targetIdHex),
                 key,
@@ -162,7 +162,7 @@ describe('MetadataTransactionService', () => {
         metadataTransactionService
             .createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 NamespaceId.createFromEncoded(targetIdHex),
                 key,
@@ -197,7 +197,7 @@ describe('MetadataTransactionService', () => {
         expect(() => {
             metadataTransactionService.createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 key,
                 value + deltaValue,
@@ -221,7 +221,7 @@ describe('MetadataTransactionService', () => {
         expect(() => {
             metadataTransactionService.createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 new MosaicId(targetIdHex),
                 key,
@@ -246,7 +246,7 @@ describe('MetadataTransactionService', () => {
         expect(() => {
             metadataTransactionService.createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 NamespaceId.createFromEncoded(targetIdHex),
                 key,

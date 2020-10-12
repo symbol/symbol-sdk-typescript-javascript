@@ -458,7 +458,7 @@ Client Library | v0.7.20-alpha.6  | [nem2-sdk-openapi-typescript-node-client](ht
 - Fixed http repository `error handling` issues.
 - Fixed bugs in `Alias` interface.
 - Fixed `MosaicId significant byte` not detected properly in TransactionPayload.
-- Fixed only `MIJIN_TEST` network type allowed in NetworkTypeHttp.
+- Fixed only `PRIVATE_TEST` network type allowed in NetworkTypeHttp.
 - Applied latest OpenAPI doc (`v0.7.19`).
 - Changed `SignedTransaction` class constructor to public.
 - Changed `MosaicRestrictionKey` format to be Hexadecimal.

@@ -43,27 +43,27 @@ import { TransactionService } from '../../src/service/TransactionService';
  */
 describe('TransactionService', () => {
     const generationHash = '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950';
-    const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
+    const account = Account.generateNewAccount(NetworkType.PRIVATE_TEST);
     const epochAdjustment = Duration.ofSeconds(1573430400);
     const transferTransaction = TransferTransaction.create(
         Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
         Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
         [],
         PlainMessage.create('test-message'),
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
 
     const aggregateCompleteTransaction = AggregateTransaction.createComplete(
         Deadline.create(epochAdjustment),
         [transferTransaction.toAggregate(account.publicAccount)],
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
         [],
     );
 
     const aggregateBondedTransaction = AggregateTransaction.createBonded(
         Deadline.create(epochAdjustment),
         [transferTransaction.toAggregate(account.publicAccount)],
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
         [],
     );
 
@@ -72,7 +72,7 @@ describe('TransactionService', () => {
         new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
         UInt64.fromUint(10000),
         account.sign(aggregateBondedTransaction, generationHash),
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
 
     let transactionRepositoryMock: TransactionRepository;

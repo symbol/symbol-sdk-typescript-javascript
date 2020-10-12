@@ -60,7 +60,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);
@@ -74,7 +74,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -89,7 +89,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicSupplyChangeTransaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
@@ -113,7 +113,7 @@ describe('MosaicSupplyChangeTransaction', () => {
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
@@ -125,7 +125,7 @@ describe('MosaicSupplyChangeTransaction', () => {
                 mosaicId,
                 MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicSupplyChangeTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
@@ -140,7 +140,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(mosaicSupplyChangeTransaction.maxFee.compact()).to.be.equal(290);
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
@@ -149,7 +149,7 @@ describe('MosaicSupplyChangeTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicSupplyChangeTransaction = new MosaicSupplyChangeTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -173,7 +173,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

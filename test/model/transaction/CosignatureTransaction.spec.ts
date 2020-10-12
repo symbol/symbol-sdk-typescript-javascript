@@ -112,7 +112,7 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).serialize();
 
         const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
@@ -128,13 +128,13 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const aggregate = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
         );
         const txHash = '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6';
@@ -155,13 +155,13 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const aggregate = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
         );
         const cosignTx = new CosignatureTransaction(aggregate);

@@ -46,7 +46,7 @@ import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client'
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
         const repositoryFactory = new RepositoryFactoryHttp('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
         });
 
@@ -83,7 +83,7 @@ describe('RepositoryFactory', () => {
                 return instance(repositoryMock);
             }
         })('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
         });
 
         expect(counter).to.be.equals(0);
@@ -105,7 +105,7 @@ describe('RepositoryFactory', () => {
     it('Should get NetworkType from cache', (done) => {
         let counter = 0;
         const repositoryMock: NetworkRepository = mock();
-        const expectedNetworkType = NetworkType.MIJIN_TEST;
+        const expectedNetworkType = NetworkType.PRIVATE_TEST;
         const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(
             map((v) => {
                 counter++;
@@ -187,7 +187,7 @@ describe('RepositoryFactory', () => {
 
         const repositoryMock: NetworkRepository = mock();
 
-        const expectedNetworkType = NetworkType.MIJIN_TEST;
+        const expectedNetworkType = NetworkType.PRIVATE_TEST;
         const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(
             map((v) => {
                 counter++;
@@ -282,7 +282,7 @@ describe('RepositoryFactory', () => {
                 return instance(namespaceRepository);
             }
         })('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
             websocketInjected: WebSocketMock,
         });
@@ -295,7 +295,7 @@ describe('RepositoryFactory', () => {
                 return instance(namespaceRepository);
             }
         })('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
             websocketUrl: 'ws://localhost:3000/ws',
             websocketInjected: WebSocketMock,
@@ -307,7 +307,7 @@ describe('RepositoryFactory', () => {
 
     it('Should create listener object using injected ws', () => {
         const factory = new RepositoryFactoryHttp('url', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
         });
 

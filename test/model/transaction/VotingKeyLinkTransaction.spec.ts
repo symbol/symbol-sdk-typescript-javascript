@@ -45,7 +45,7 @@ describe('VotingKeyLinkTransaction', () => {
             startEpoch,
             endEpoch,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -61,7 +61,7 @@ describe('VotingKeyLinkTransaction', () => {
             startEpoch,
             endEpoch,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -78,7 +78,7 @@ describe('VotingKeyLinkTransaction', () => {
             startEpoch,
             endEpoch,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -100,7 +100,7 @@ describe('VotingKeyLinkTransaction', () => {
             startEpoch,
             endEpoch,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -123,7 +123,7 @@ describe('VotingKeyLinkTransaction', () => {
                 startEpoch,
                 endEpoch,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(votingKeyLinkTransaction.serialize()).length).to.be.equal(votingKeyLinkTransaction.size);
             expect(votingKeyLinkTransaction.size).to.be.equal(185);
@@ -137,7 +137,7 @@ describe('VotingKeyLinkTransaction', () => {
             startEpoch,
             endEpoch,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(votingKeyLinkTransaction.maxFee.compact()).to.be.equal(370);
 
@@ -152,7 +152,7 @@ describe('VotingKeyLinkTransaction', () => {
             startEpoch,
             endEpoch,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;

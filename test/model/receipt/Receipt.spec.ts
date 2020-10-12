@@ -49,7 +49,10 @@ describe('Receipt', () => {
     let statementDTO;
 
     before(() => {
-        account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
+        account = Account.createFromPrivateKey(
+            'D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D',
+            NetworkType.PRIVATE_TEST,
+        );
         transactionStatementsDTO = [
             {
                 statement: {

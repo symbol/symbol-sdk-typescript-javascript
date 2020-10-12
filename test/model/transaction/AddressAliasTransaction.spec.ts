@@ -44,7 +44,7 @@ describe('AddressAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(addressAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -59,7 +59,7 @@ describe('AddressAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -75,7 +75,7 @@ describe('AddressAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -98,7 +98,7 @@ describe('AddressAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ) as AddressAliasTransaction;
 
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -122,7 +122,7 @@ describe('AddressAliasTransaction', () => {
                 AliasAction.Link,
                 namespaceId,
                 address,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
             expect(addressAliasTransaction.size).to.be.equal(161);
@@ -136,7 +136,7 @@ describe('AddressAliasTransaction', () => {
                 AliasAction.Link,
                 namespaceId,
                 address,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
             expect(addressAliasTransaction.size).to.be.equal(161);
@@ -152,7 +152,7 @@ describe('AddressAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(addressAliasTransaction.maxFee.compact()).to.be.equal(322);
     });
@@ -165,7 +165,7 @@ describe('AddressAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotify = tx.shouldNotifyAccount(address);

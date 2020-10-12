@@ -71,7 +71,7 @@ describe('NamespaceInfo', () => {
                 level0: new NamespaceId([929036875, 2226345261]),
                 ownerAddress: Address.createFromPublicKey(
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 ).encoded(),
                 parentId: new NamespaceId([0, 0]),
                 startHeight: new UInt64([1, 0]),
@@ -93,7 +93,7 @@ describe('NamespaceInfo', () => {
                 parentId: new NamespaceId([3316183705, 3829351378]),
                 ownerAddress: Address.createFromPublicKey(
                     '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 ).encoded(),
                 startHeight: [795, 0],
                 endHeight: [50795, 0],

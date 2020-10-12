@@ -31,11 +31,11 @@ describe('MultisigAccountModificationTransaction', () => {
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const address1 = Address.createFromPublicKey(
         'B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
     const address2 = Address.createFromPublicKey(
         'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
     const epochAdjustment = Duration.ofSeconds(1573430400);
     before(() => {
@@ -49,7 +49,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [address1, address2],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);
@@ -63,7 +63,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [address1, address2],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -78,7 +78,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [address1, address2],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(modifyMultisigAccountTransaction.minApprovalDelta).to.be.equal(2);
@@ -103,7 +103,7 @@ describe('MultisigAccountModificationTransaction', () => {
                 1,
                 [address1],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(modifyMultisigAccountTransaction.size).to.be.equal(160);
             expect(Convert.hexToUint8(modifyMultisigAccountTransaction.serialize()).length).to.be.equal(
@@ -117,7 +117,7 @@ describe('MultisigAccountModificationTransaction', () => {
                 1,
                 [address1],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(modifyMultisigAccountTransaction.size).to.be.equal(160);
             expect(Convert.hexToUint8(modifyMultisigAccountTransaction.serialize()).length).to.be.equal(
@@ -134,7 +134,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [address1],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(modifyMultisigAccountTransaction.maxFee.compact()).to.be.equal(320);
 
@@ -149,7 +149,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [address1],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotify = txAddition.shouldNotifyAccount(address1, []);
@@ -167,7 +167,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [],
             [address1],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, []);
@@ -189,7 +189,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [alias],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotify = txAddition.shouldNotifyAccount(address1, [alias]);
@@ -210,7 +210,7 @@ describe('MultisigAccountModificationTransaction', () => {
             1,
             [],
             [alias],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, [alias]);

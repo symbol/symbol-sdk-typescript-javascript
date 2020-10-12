@@ -364,7 +364,7 @@ describe('MetadataHttp', () => {
         metadataTransactionService
             .createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
@@ -397,7 +397,7 @@ describe('MetadataHttp', () => {
         metadataTransactionService
             .createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 address,
                 mosaicId,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -431,7 +431,7 @@ describe('MetadataHttp', () => {
         metadataTransactionService
             .createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 address,
                 namespaceId,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -464,7 +464,7 @@ describe('MetadataHttp', () => {
         await metadataTransactionService
             .createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
@@ -493,7 +493,7 @@ describe('MetadataHttp', () => {
         await metadataTransactionService
             .createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 address,
                 mosaicId,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -523,7 +523,7 @@ describe('MetadataHttp', () => {
         await metadataTransactionService
             .createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 address,
                 namespaceId,
                 UInt64.fromHex('85BBEA6CC462B244'),

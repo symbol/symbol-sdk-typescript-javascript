@@ -36,7 +36,7 @@ describe('Account', () => {
 
     const epochAdjustment = Duration.ofSeconds(1573430400);
     it('should be created via private key', () => {
-        const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.MIJIN_TEST);
+        const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.PRIVATE_TEST);
         expect(account.publicKey).to.be.equal(accountInformation.publicKey);
         expect(account.privateKey).to.be.equal(accountInformation.privateKey);
         expect(account.address.plain()).to.be.equal(accountInformation.address);
@@ -44,12 +44,12 @@ describe('Account', () => {
 
     it('should throw exception when the private key is not valid', () => {
         expect(() => {
-            Account.createFromPrivateKey('', NetworkType.MIJIN_TEST);
+            Account.createFromPrivateKey('', NetworkType.PRIVATE_TEST);
         }).to.throw();
     });
 
     it('should generate a new account', () => {
-        const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
+        const account = Account.generateNewAccount(NetworkType.PRIVATE_TEST);
         expect(account.publicKey).to.not.be.equal(undefined);
         expect(account.privateKey).to.not.be.equal(undefined);
         expect(account.address).to.not.be.equal(undefined);
@@ -117,7 +117,7 @@ describe('Account', () => {
         it('utf-8', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
@@ -127,7 +127,7 @@ describe('Account', () => {
         it('hexa', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
@@ -157,7 +157,7 @@ describe('Account', () => {
         it('hexa without 0x previx', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4');
@@ -167,7 +167,7 @@ describe('Account', () => {
         it('hexa without 0x previx should be the same as with 0x', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('AA');
@@ -179,7 +179,7 @@ describe('Account', () => {
         it('hexa without 0x previx should be the same as with 0x', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
@@ -198,7 +198,7 @@ describe('Account', () => {
         it('sign empty', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('');

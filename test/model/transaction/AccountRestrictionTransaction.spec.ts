@@ -73,7 +73,7 @@ describe('AccountRestrictionTransaction', () => {
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [address],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
 
             expect(Convert.hexToUint8(addressRestrictionTransaction.serialize()).length).to.be.equal(addressRestrictionTransaction.size);
@@ -87,7 +87,7 @@ describe('AccountRestrictionTransaction', () => {
                 MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicRestrictionTransaction.size).to.be.equal(144);
         });
@@ -98,7 +98,7 @@ describe('AccountRestrictionTransaction', () => {
                 MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicRestrictionTransaction.setPayloadSize(10).size).to.be.equal(10);
         });
@@ -111,7 +111,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(operationRestrictionTransaction.size).to.be.equal(138);
     });
@@ -123,7 +123,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(addressRestrictionTransaction.maxFee.higher).to.be.equal(0);
@@ -137,7 +137,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -152,7 +152,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
@@ -169,7 +169,7 @@ describe('AccountRestrictionTransaction', () => {
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
@@ -184,7 +184,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -199,7 +199,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
@@ -213,7 +213,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.BlockOutgoingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
@@ -230,7 +230,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -242,7 +242,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.BlockOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -257,7 +257,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(address, []);
         expect(canNotify).to.be.true;
@@ -273,7 +273,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [address],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address, []);
         expect(canNotifyDeletion).to.be.true;
@@ -293,7 +293,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [alias],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;
@@ -309,7 +309,7 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [alias],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(account.address, [alias]);
         expect(canNotifyDeletion).to.be.true;

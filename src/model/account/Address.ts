@@ -45,9 +45,9 @@ export class Address {
             throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 39 characters long');
         }
         if (addressTrimAndUpperCase.charAt(0) === 'S') {
-            networkType = NetworkType.MIJIN_TEST;
+            networkType = NetworkType.PRIVATE_TEST;
         } else if (addressTrimAndUpperCase.charAt(0) === 'M') {
-            networkType = NetworkType.MIJIN;
+            networkType = NetworkType.PRIVATE;
         } else if (addressTrimAndUpperCase.charAt(0) === 'T') {
             networkType = NetworkType.TEST_NET;
         } else if (addressTrimAndUpperCase.charAt(0) === 'N') {

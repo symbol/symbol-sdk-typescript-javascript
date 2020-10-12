@@ -28,7 +28,7 @@ import { DtoMapping } from '../../../src/core/utils/DtoMapping';
 describe('DtoMapping', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
         '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
     const address = publicAccount.address;
     const mosaicId = new MosaicId('11F4B1B3AC033DB5');

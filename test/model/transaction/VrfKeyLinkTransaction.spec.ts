@@ -39,7 +39,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(vrfKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -51,7 +51,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -64,7 +64,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -82,7 +82,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -101,7 +101,7 @@ describe('VrfKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(vrfKeyLinkTransaction.serialize()).length).to.be.equal(vrfKeyLinkTransaction.size);
             expect(vrfKeyLinkTransaction.size).to.be.equal(161);
@@ -113,7 +113,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(vrfKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -126,7 +126,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
