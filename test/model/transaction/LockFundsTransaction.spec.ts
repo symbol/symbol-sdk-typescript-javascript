@@ -133,7 +133,7 @@ describe('LockFundsTransaction', () => {
         const signedTx = lockFundsTransaction.signWith(account, generationHash);
 
         expect(signedTx.payload.substring(144, signedTransaction.payload.length - 104)).to.be.equal(
-            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6000000000190484100000000',
+            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6000000000180484100000000',
         );
     });
 

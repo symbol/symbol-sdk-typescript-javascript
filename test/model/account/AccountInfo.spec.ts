@@ -32,7 +32,7 @@ describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {
         const accountInfoDTO = {
             account: {
-                address: Address.createFromEncoded('6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144'),
+                address: Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5'),
                 addressHeight: new UInt64([1, 0]),
                 importance: new UInt64([405653170, 0]),
                 importanceHeight: new UInt64([6462, 0]),

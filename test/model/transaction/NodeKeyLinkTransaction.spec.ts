@@ -141,7 +141,7 @@ describe('NodeKeyLinkTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

@@ -58,7 +58,7 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.signerPublicKey).to.be.equal(account.publicKey);
         deepEqual(criteria.type, [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
 
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         criteria = {
             order: Order.Desc,
             pageNumber: 2,

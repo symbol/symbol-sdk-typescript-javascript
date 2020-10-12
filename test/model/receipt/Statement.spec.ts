@@ -44,7 +44,7 @@
 //                         {
 //                             version: 1,
 //                             type: 8515,
-//                             targetAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+//                             targetAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
 //                             mosaicId: '504677C3281108DB',
 //                             amount: '0',
 //                         },
