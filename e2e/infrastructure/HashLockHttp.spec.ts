@@ -30,11 +30,10 @@ import { deepEqual } from 'assert';
 import { Order, HashLockPaginationStreamer } from '../../src/infrastructure/infrastructure';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { ChronoUnit } from 'js-joda';
+import { ChronoUnit } from '@js-joda/core';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
 import { HashLockRepository } from '../../src/infrastructure/HashLockRepository';
-import { Duration } from 'js-joda';
 
 describe('HashLockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -49,7 +48,7 @@ describe('HashLockHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

@@ -35,7 +35,6 @@ import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
 import { Page } from '../../src/infrastructure/Page';
-import { Duration } from 'js-joda';
 
 describe('MetadataTransactionService', () => {
     let account: Account;
@@ -44,7 +43,7 @@ describe('MetadataTransactionService', () => {
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     function mockMetadata(type: MetadataType): Metadata {
         let targetId;
 

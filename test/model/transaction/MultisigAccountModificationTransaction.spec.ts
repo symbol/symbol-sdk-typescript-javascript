@@ -24,7 +24,6 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { Address } from '../../../src/model/account/Address';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { Duration } from 'js-joda';
 
 describe('MultisigAccountModificationTransaction', () => {
     let account: Account;
@@ -37,7 +36,7 @@ describe('MultisigAccountModificationTransaction', () => {
         'B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
         NetworkType.MIJIN_TEST,
     );
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Convert } from '../../src/core/format';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
 import { Account } from '../../src/model/account/Account';
@@ -20,7 +19,7 @@ import { MetadataTransactionService } from '../../src/service/MetadataTransactio
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MetadataTransactionService', () => {
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     const deadline = Deadline.create(epochAdjustment);
     const key = UInt64.fromUint(Math.round(Math.random() * 10));
     const newValue = 'new test value';

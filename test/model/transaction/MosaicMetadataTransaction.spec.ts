@@ -33,7 +33,6 @@ import { TestingAccount } from '../../conf/conf.spec';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { Address } from '../../../src/model/account/Address';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { Duration } from 'js-joda';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;
@@ -41,7 +40,7 @@ describe('MosaicMetadataTransaction', () => {
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
         statement = new Statement(

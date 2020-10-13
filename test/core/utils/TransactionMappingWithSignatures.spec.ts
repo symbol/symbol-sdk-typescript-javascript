@@ -66,7 +66,6 @@ import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLi
 import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
-import { Duration } from 'js-joda';
 
 describe('TransactionMapping - createFromPayload with optional sigature and signer', () => {
     let account: Account;
@@ -74,7 +73,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     const testSignature =
         '4CBA582B4C898FD6D218499251FE8EE1214D3715545023123F70D25389D577A96E74C1FCD07FF8F0D678A4DA5CAD8CCB173DDD9F7975A6985ADCD7AD625B170F';
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

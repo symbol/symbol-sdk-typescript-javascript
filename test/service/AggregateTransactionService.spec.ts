@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { ChronoUnit, Duration } from 'js-joda';
+import { ChronoUnit } from '@js-joda/core';
 import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
@@ -91,7 +91,7 @@ describe('AggregateTransactionService', () => {
         NetworkType.MIJIN_TEST,
     );
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     function givenMultisig2AccountInfo(): MultisigAccountInfo {
         return new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], []);

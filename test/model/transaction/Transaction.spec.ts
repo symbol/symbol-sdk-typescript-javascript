@@ -32,11 +32,10 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import { Duration } from 'js-joda';
 
 describe('Transaction', () => {
     let account: Account;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

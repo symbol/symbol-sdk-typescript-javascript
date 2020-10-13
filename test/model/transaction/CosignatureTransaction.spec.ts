@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
@@ -29,7 +28,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 describe('CosignatureTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

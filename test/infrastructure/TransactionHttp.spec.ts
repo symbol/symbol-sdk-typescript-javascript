@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import {
     BlockDTO,
     BlockInfoDTO,
@@ -59,7 +58,7 @@ describe('TransactionHttp', () => {
     cosignature.signerPublicKey = 'signerPubKey';
     cosignature.signature = 'signature';
     cosignature.version = '0';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         transactionRoutesApi = mock();

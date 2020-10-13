@@ -39,7 +39,6 @@ import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import { Duration } from 'js-joda';
 
 describe('TransferTransaction', () => {
     let account: Account;
@@ -52,7 +51,7 @@ describe('TransferTransaction', () => {
     const unresolvedAddress = new NamespaceId('address');
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

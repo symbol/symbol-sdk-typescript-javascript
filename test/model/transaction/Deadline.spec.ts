@@ -15,12 +15,11 @@
  */
 
 import { expect } from 'chai';
-import { ChronoUnit, Instant, LocalDateTime, ZoneId } from 'js-joda';
+import { ChronoUnit, Instant, LocalDateTime, ZoneId } from '@js-joda/core';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { Duration } from 'js-joda';
 
 describe('Deadline', () => {
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     it('should createComplete timestamp today', () => {
         const deadline = Deadline.create(epochAdjustment);

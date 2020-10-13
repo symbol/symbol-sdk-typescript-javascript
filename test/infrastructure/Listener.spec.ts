@@ -34,7 +34,6 @@ import { TransactionStatusError } from '../../src/model/transaction/TransactionS
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
-import { Duration } from 'js-joda';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
@@ -44,7 +43,7 @@ describe('Listener', () => {
 
     let namespaceRepoMock: NamespaceRepository;
     let namespaceRepo: NamespaceRepository;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     beforeEach(() => {
         namespaceRepoMock = mock();
         namespaceRepo = instance(namespaceRepoMock);

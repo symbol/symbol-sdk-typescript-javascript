@@ -173,10 +173,10 @@ describe('RepositoryFactory', () => {
         expect(counter).to.be.equals(0);
         repositoryFactory.getEpochAdjustment().subscribe((epoch) => {
             expect(counter).to.be.equals(1);
-            expect(epoch.seconds()).to.be.equals(expectedepochAdjustment);
+            expect(epoch).to.be.equals(expectedepochAdjustment);
             repositoryFactory.getEpochAdjustment().subscribe((network) => {
                 expect(counter).to.be.equals(1);
-                expect(network.seconds()).to.be.equals(expectedepochAdjustment);
+                expect(network).to.be.equals(expectedepochAdjustment);
                 done();
             });
         });
@@ -258,10 +258,10 @@ describe('RepositoryFactory', () => {
         expect(counter).to.be.equals(0);
         repositoryFactory.getEpochAdjustment().subscribe((networkType) => {
             expect(counter).to.be.equals(0);
-            expect(networkType.seconds()).to.be.equals(expectedepochAdjustment);
+            expect(networkType).to.be.equals(expectedepochAdjustment);
             repositoryFactory.getEpochAdjustment().subscribe((network) => {
                 expect(counter).to.be.equals(0);
-                expect(network.seconds()).to.be.equals(expectedepochAdjustment);
+                expect(network).to.be.equals(expectedepochAdjustment);
                 done();
             });
         });

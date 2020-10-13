@@ -29,7 +29,6 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { Duration } from 'js-joda';
 
 export class IntegrationTestHelper {
     public apiUrl: string;
@@ -53,7 +52,7 @@ export class IntegrationTestHelper {
     public service = new BootstrapService();
     public config: StartParams;
     public startEachTime = true;
-    public epochAdjustment: Duration;
+    public epochAdjustment: number;
 
     private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string }> {
         this.config = {

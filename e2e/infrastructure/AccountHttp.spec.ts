@@ -38,7 +38,6 @@ import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
 import { Order } from '../../src/infrastructure/infrastructure';
 import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
-import { Duration } from 'js-joda';
 
 describe('AccountHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -57,7 +56,7 @@ describe('AccountHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
