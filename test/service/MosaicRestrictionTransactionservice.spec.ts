@@ -37,7 +37,6 @@ import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
 import { Page } from '../../src/infrastructure/Page';
-import { Duration } from 'js-joda';
 
 describe('MosaicRestrictionTransactionService', () => {
     let account: Account;
@@ -52,7 +51,7 @@ describe('MosaicRestrictionTransactionService', () => {
     const globalRestrictionValue = '1000';
     const globalRestrictionType = MosaicRestrictionType.LE;
     const addressRestrictionValue = '10';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     function mockGlobalRestriction(): Page<MosaicGlobalRestriction> {
         const restriction = new MosaicGlobalRestriction(

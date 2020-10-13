@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import {
     MetadataEntryDTO,
     MetadataRoutesApi,
@@ -43,7 +42,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 
 describe('MetadataHttp', () => {
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');

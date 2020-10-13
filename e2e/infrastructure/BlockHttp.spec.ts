@@ -31,7 +31,6 @@ import { take } from 'rxjs/operators';
 import { TransactionStatement } from '../../src/model/model';
 import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { Order } from '../../src/infrastructure/infrastructure';
-import { Duration } from 'js-joda';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -44,7 +43,7 @@ describe('BlockHttp', () => {
     let networkType: NetworkType;
     let transactionHash;
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

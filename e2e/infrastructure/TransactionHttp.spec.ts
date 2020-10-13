@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { ChronoUnit } from 'js-joda';
+import { ChronoUnit } from '@js-joda/core';
 import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';

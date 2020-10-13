@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MessageMarker } from '../../../src/model/message/MessageMarker';
@@ -32,7 +31,7 @@ describe('PersistentDelegationRequestTransaction', () => {
     const recipientPublicKey = '9DBF67474D6E1F8B131B4EB1F5BA0595AFFAE1123607BC1048F342193D7E669F';
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const messageMarker = MessageMarker.PersistentDelegationUnlock;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         account = TestingAccount;

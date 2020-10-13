@@ -33,7 +33,6 @@ import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStr
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { Duration } from 'js-joda';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
@@ -45,7 +44,7 @@ describe('MosaicHttp', () => {
     const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

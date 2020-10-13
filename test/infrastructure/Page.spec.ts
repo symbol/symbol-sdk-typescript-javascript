@@ -15,7 +15,6 @@
  */
 
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Page } from '../../src/infrastructure/infrastructure';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -25,7 +24,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('Page', () => {
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     it('should create Page', () => {
         const account = TestingAccount;
         let page = new Page<Transaction>(

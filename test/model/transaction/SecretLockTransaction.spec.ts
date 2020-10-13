@@ -36,7 +36,6 @@ import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo'
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import * as CryptoJS from 'crypto-js';
-import { Duration } from 'js-joda';
 
 describe('SecretLockTransaction', () => {
     let account: Account;
@@ -45,7 +44,7 @@ describe('SecretLockTransaction', () => {
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
         statement = new Statement(

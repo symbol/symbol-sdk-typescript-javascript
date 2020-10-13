@@ -25,7 +25,6 @@ import { AggregateTransaction } from '../../../src/model/transaction/AggregateTr
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import { Duration } from 'js-joda';
 
 describe('Account', () => {
     const accountInformation = {
@@ -34,7 +33,7 @@ describe('Account', () => {
         publicKey: '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6'.toUpperCase(),
     };
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     it('should be created via private key', () => {
         const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.MIJIN_TEST);
         expect(account.publicKey).to.be.equal(accountInformation.publicKey);

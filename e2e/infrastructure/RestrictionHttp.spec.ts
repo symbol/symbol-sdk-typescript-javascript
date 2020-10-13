@@ -36,7 +36,6 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
 import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
-import { Duration } from 'js-joda';
 
 describe('RestrictionHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -49,7 +48,7 @@ describe('RestrictionHttp', () => {
     let mosaicId: MosaicId;
     let referenceMosaicId: MosaicId;
     let restrictionAccountRepository: RestrictionAccountRepository;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Convert } from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -49,7 +48,7 @@ describe('Unresolved Mapping', () => {
     let mosaicId: MosaicId;
     let namespaceIdAddress: NamespaceId;
     let namespaceIdMosaic: NamespaceId;
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

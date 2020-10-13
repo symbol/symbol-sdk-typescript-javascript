@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Duration } from 'js-joda';
+import { Duration } from '@js-joda/core';
 import { Address } from '../../model/account/Address';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';

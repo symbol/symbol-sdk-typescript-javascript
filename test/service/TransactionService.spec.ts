@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { ChronoUnit, Duration } from 'js-joda';
+import { ChronoUnit } from '@js-joda/core';
 import { EMPTY, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { IListener } from '../../src/infrastructure/IListener';
@@ -44,7 +44,7 @@ import { TransactionService } from '../../src/service/TransactionService';
 describe('TransactionService', () => {
     const generationHash = '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950';
     const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     const transferTransaction = TransferTransaction.create(
         Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
         Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),

@@ -69,12 +69,11 @@ import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLi
 import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
 import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
-import { Duration } from 'js-joda';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });
@@ -825,7 +824,7 @@ describe('TransactionMapping - createFromPayload', () => {
 describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

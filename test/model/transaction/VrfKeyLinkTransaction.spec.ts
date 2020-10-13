@@ -24,7 +24,6 @@ import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { Address } from '../../../src/model/account/Address';
-import { Duration } from 'js-joda';
 
 describe('VrfKeyLinkTransaction', () => {
     let account: Account;
@@ -32,7 +31,7 @@ describe('VrfKeyLinkTransaction', () => {
     before(() => {
         account = TestingAccount;
     });
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     it('should default maxFee field be set to 0', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(

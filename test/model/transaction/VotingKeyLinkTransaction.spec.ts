@@ -24,7 +24,6 @@ import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import { Address } from '../../../src/model/account/Address';
-import { Duration } from 'js-joda';
 
 describe('VotingKeyLinkTransaction', () => {
     let account: Account;
@@ -32,7 +31,7 @@ describe('VotingKeyLinkTransaction', () => {
     const startEpoch = 1;
     const endEpoch = 10;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
         votingKey = '344B9146A1F8DBBD8AFC830A2AAB7A83692E73AD775159B811355B1D2C0C27120243B10A16D4B5001B2AF0ED456C82D0';

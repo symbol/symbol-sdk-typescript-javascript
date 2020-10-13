@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { ChronoUnit } from 'js-joda';
+import { ChronoUnit } from '@js-joda/core';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';

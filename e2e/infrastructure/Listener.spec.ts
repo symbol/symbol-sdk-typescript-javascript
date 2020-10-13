@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { assert, expect } from 'chai';
-import { ChronoUnit, Duration } from 'js-joda';
+import { ChronoUnit } from '@js-joda/core';
 import { filter, mergeMap } from 'rxjs/operators';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
@@ -47,7 +47,7 @@ describe('Listener', () => {
     let networkType: NetworkType;
     let transactionRepository: TransactionRepository;
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

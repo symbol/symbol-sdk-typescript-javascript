@@ -28,7 +28,6 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { take, toArray } from 'rxjs/operators';
 import { Order } from '../../src/infrastructure/infrastructure';
-import { Duration } from 'js-joda';
 
 describe('NamespaceHttp', () => {
     let defaultNamespaceId: NamespaceId;
@@ -38,7 +37,7 @@ describe('NamespaceHttp', () => {
     let generationHash: string;
     const helper = new IntegrationTestHelper();
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

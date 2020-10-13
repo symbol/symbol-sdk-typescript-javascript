@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -27,7 +26,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 describe('HashLockTransaction', () => {
     const account = TestingAccount;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     it('creation with an aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);

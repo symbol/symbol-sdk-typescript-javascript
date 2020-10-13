@@ -53,7 +53,6 @@ import { HashLockRepository } from './HashLockRepository';
 import { SecretLockRepository } from './SecretLockRepository';
 import { SecretLockHttp } from './SecretLockHttp';
 import { HashLockHttp } from './HashLockHttp';
-import { Duration } from 'js-joda';
 import { DtoMapping } from '../core/utils/DtoMapping';
 /**
  * Receipt http repository.
@@ -66,7 +65,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly websocketUrl: string;
     private readonly websocketInjected?: any;
     private readonly fetchApi?: any;
-    private readonly epochAdjustment: Observable<Duration>;
+    private readonly epochAdjustment: Observable<number>;
 
     /**
      * Constructor
@@ -79,12 +78,12 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.fetchApi = configs?.fetchApi;
         this.networkType = configs?.networkType ? observableOf(configs.networkType) : networkRepo.getNetworkType().pipe(shareReplay(1));
         this.epochAdjustment = configs?.epochAdjustment
-            ? observableOf(Duration.ofSeconds(configs.epochAdjustment))
+            ? observableOf(configs.epochAdjustment)
             : networkRepo
                   .getNetworkProperties()
                   .pipe(
                       map((property) => {
-                          return DtoMapping.parseServerDuration(property.network.epochAdjustment ?? '-');
+                          return DtoMapping.parseServerDuration(property.network.epochAdjustment ?? '-').seconds();
                       }),
                   )
                   .pipe(shareReplay(1));
@@ -174,7 +173,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
     }
 
-    getEpochAdjustment(): Observable<Duration> {
+    getEpochAdjustment(): Observable<number> {
         return this.epochAdjustment;
     }
 }

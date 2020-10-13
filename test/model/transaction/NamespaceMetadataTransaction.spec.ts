@@ -27,12 +27,11 @@ import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTr
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { deepEqual } from 'assert';
 import { Address } from '../../../src/model/account/Address';
-import { Duration } from 'js-joda';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });

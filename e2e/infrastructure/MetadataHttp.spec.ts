@@ -36,7 +36,6 @@ import { MetadataType } from '../../src/model/model';
 import { Order, MetadataPaginationStreamer } from '../../src/infrastructure/infrastructure';
 import { deepEqual } from 'assert';
 import { take, toArray } from 'rxjs/operators';
-import { Duration } from 'js-joda';
 
 describe('MetadataHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -48,7 +47,7 @@ describe('MetadataHttp', () => {
     let networkType: NetworkType;
     let metadataRepository: MetadataRepository;
 
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {

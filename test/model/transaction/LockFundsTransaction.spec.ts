@@ -15,7 +15,6 @@
  */
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
@@ -41,7 +40,7 @@ describe('LockFundsTransaction', () => {
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
         statement = new Statement(

@@ -19,7 +19,7 @@ import { CreateTransactionFromDTO } from '../../../src/infrastructure/transactio
 import { Address } from '../../../src/model/account/Address';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import ValidateTransaction from './ValidateTransaction';
-import { LocalDateTime } from 'js-joda';
+import { LocalDateTime } from '@js-joda/core';
 
 describe('CreateTransactionFromDTO', () => {
     describe('TransferTransaction', () => {

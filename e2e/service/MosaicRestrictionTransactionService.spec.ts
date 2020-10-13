@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { Duration } from 'js-joda';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
@@ -25,7 +24,7 @@ import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRes
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MosaicRestrictionTransactionService', () => {
-    const epochAdjustment = Duration.ofSeconds(1573430400);
+    const epochAdjustment = 1573430400;
     const deadline = Deadline.create(epochAdjustment);
     const key = KeyGenerator.generateUInt64Key('TestKey');
     let account: Account;
