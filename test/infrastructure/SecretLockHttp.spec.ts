@@ -31,7 +31,7 @@ import { Address } from '../../src/model/account/Address';
 import { SecretLockInfo } from '../../src/model/lock/SecretLockInfo';
 
 describe('SecretLockHttp', () => {
-    const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+    const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
 
     const dto = {} as SecretLockInfoDTO;
     dto.id = '1';

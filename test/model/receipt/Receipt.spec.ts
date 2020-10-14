@@ -49,7 +49,10 @@ describe('Receipt', () => {
     let statementDTO;
 
     before(() => {
-        account = Account.createFromPrivateKey('D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D', NetworkType.MIJIN_TEST);
+        account = Account.createFromPrivateKey(
+            'D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D',
+            NetworkType.PRIVATE_TEST,
+        );
         transactionStatementsDTO = [
             {
                 statement: {
@@ -358,7 +361,7 @@ describe('Receipt', () => {
     it('should generate hash for TransactionStatement', () => {
         const receipt = createTransactionStatement(statementDTO.transactionStatements[0]);
         const hash = receipt.generateHash();
-        expect(hash).to.be.equal('E73E67382162C38AED77D5D5D67F96AA590DC12FF13AE263AA50932896AC4801');
+        expect(hash).to.be.equal('872A93FFA08A23EA36F429B6AA5B98AA237F2CBF5FDC975ABA732313D493B74F');
     });
 
     it('artifactExpiryReceipt - serialize', () => {

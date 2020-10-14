@@ -51,7 +51,7 @@ describe('BlockHttp', () => {
     blockDTO.timestamp = '7';
     blockDTO.beneficiaryAddress = Address.createFromPublicKey(
         '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     ).encoded();
 
     const blockMetaDTO = {} as BlockMetaDTO;

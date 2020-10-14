@@ -32,7 +32,7 @@ describe('MosaicAmountView', () => {
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply
             new UInt64([1, 0]), // height
-            Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+            Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.PRIVATE_TEST),
             1, // revision
             MosaicFlags.create(true, true, true),
             3,
@@ -64,7 +64,7 @@ describe('MosaicAmountView', () => {
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply
             new UInt64([1, 0]), // height
-            Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
+            Address.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.PRIVATE_TEST),
             1, // revision
             MosaicFlags.create(true, true, true),
             0,
