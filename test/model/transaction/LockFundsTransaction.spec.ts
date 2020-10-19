@@ -32,7 +32,7 @@ import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTr
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('LockFundsTransaction', () => {
     let account: Account;

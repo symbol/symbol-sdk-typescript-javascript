@@ -40,7 +40,7 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { NetworkCurrencyLocal } from '../../test/model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService', () => {

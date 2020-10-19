@@ -24,7 +24,7 @@ import { AggregateTransaction } from '../../../src/model/transaction/AggregateTr
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('Account', () => {
     const accountInformation = {

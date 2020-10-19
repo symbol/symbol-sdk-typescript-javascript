@@ -19,7 +19,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { NetworkCurrencies } from '../model/mosaic';
 import { NetworkConfiguration } from '../model/network/NetworkConfiguration';
 import { NetworkType } from '../model/network/NetworkType';
-import { NetworkCurrencyService } from '../service/NetworkCurrencyService';
+import { CurrencyService } from '../service/CurrencyService';
 import { AccountHttp } from './AccountHttp';
 import { AccountRepository } from './AccountRepository';
 import { BlockHttp } from './BlockHttp';
@@ -102,7 +102,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.websocketInjected = configs?.websocketInjected;
         this.networkCurrencies = configs?.networkCurrencies
             ? observableOf(configs.networkCurrencies)
-            : this.cache(new NetworkCurrencyService(this).getMainNetworkCurrencies());
+            : this.cache(new CurrencyService(this).getNetworkCurrencies());
     }
 
     cache<T>(delegate: Observable<T>): Observable<T> {

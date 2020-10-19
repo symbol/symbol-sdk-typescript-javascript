@@ -35,7 +35,7 @@ import { NamespaceName } from '../../src/model/namespace/NamespaceName';
 import { Mosaic } from '../../src/model/mosaic';
 import { SupplementalPublicKeys } from '../../src/model/account';
 import { Page } from '../../src/infrastructure/Page';
-import { NetworkCurrencyLocal, NetworkCurrencyPublic, NetworkHarvestLocal } from '../model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal, NetworkCurrencyPublic, NetworkHarvestLocal } from '../model/mosaic/Currency.spec';
 
 describe('AccountService', () => {
     let accountService: AccountService;

@@ -53,7 +53,7 @@ import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyL
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
-import { NetworkCurrencyLocal } from '../model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../model/mosaic/Currency.spec';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;

@@ -33,7 +33,7 @@ import { TransactionStatusError } from '../../src/model/transaction/TransactionS
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { NetworkCurrencyLocal } from '../model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../model/mosaic/Currency.spec';
 
 /**
  * Unit test of TransactionService

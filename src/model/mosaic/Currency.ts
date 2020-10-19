@@ -23,24 +23,25 @@ import { UnresolvedMosaicId } from './UnresolvedMosaicId';
 /**
  * An object that knows how to create Mosaics based on the Mosaic Info and Namespace configuration.
  */
-export class NetworkCurrency {
+export class Currency {
     /**
-     * NetworkCurrency for public / Public_test network.
+     * Currency for public / Public_test network.
      *
      * This represents the per-network currency mosaic. This mosaicId is aliased with namespace name `symbol.xym`.
      *
      * This simplifies offline operations but general applications should load the currency from the repository factory and network currency service.
      *
-     * If you are creating a private network and you need offline access, you can create a NetworkCurrency in memory.
+     * If you are creating a private network and you need offline access, you can create a Currency in memory.
      *
      */
-    public static readonly PUBLIC = new NetworkCurrency({
+    public static readonly PUBLIC = new Currency({
         unresolvedMosaicId: new NamespaceId('symbol.xym'),
         namespaceId: new NamespaceId('symbol.xym'),
         mosaicId: new MosaicId('5B66E76BECAD0860'),
         divisibility: 6,
         transferable: true,
         supplyMutable: false,
+        restrictable: false,
     });
 
     /**
@@ -68,6 +69,9 @@ export class NetworkCurrency {
     /** Is this currency supply mutable. */
     public readonly supplyMutable: boolean;
 
+    /** Is this currency restrictable. */
+    public readonly restrictable: boolean;
+
     constructor({
         unresolvedMosaicId,
         mosaicId,
@@ -75,6 +79,7 @@ export class NetworkCurrency {
         divisibility,
         transferable,
         supplyMutable,
+        restrictable,
     }: {
         unresolvedMosaicId?: UnresolvedMosaicId;
         mosaicId?: MosaicId;
@@ -82,6 +87,7 @@ export class NetworkCurrency {
         divisibility: number;
         transferable: boolean;
         supplyMutable: boolean;
+        restrictable: boolean;
     }) {
         const finalMosaicId = unresolvedMosaicId || namespaceId || mosaicId;
         if (!finalMosaicId) {
@@ -93,6 +99,7 @@ export class NetworkCurrency {
         this.divisibility = divisibility;
         this.transferable = transferable;
         this.supplyMutable = supplyMutable;
+        this.restrictable = restrictable;
     }
 
     /**

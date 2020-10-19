@@ -16,5 +16,5 @@
 
 export * from './IAccountService';
 export * from './IBlockService';
-export * from './INetworkCurrencyService';
+export * from './ICurrencyService';
 export * from './ITransactionService';

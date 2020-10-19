@@ -16,12 +16,9 @@
 
 import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account';
 import { Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic';
-import { MosaicId } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -32,7 +29,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
-import { NetworkCurrencyLocal } from '../../test/model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService - AggregateBonded', () => {
@@ -43,7 +40,6 @@ describe('TransactionService - AggregateBonded', () => {
     let cosignAccount1: Account;
     let cosignAccount2: Account;
     let cosignAccount3: Account;
-    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
     let transactionService: TransactionService;
@@ -58,7 +54,6 @@ describe('TransactionService - AggregateBonded', () => {
             cosignAccount3 = helper.cosignAccount3;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionService = new TransactionService(
                 helper.repositoryFactory.createTransactionRepository(),
                 helper.repositoryFactory.createReceiptRepository(),

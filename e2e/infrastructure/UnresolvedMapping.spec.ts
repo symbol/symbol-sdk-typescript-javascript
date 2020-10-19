@@ -36,7 +36,7 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { NetworkCurrencyLocal } from '../../test/model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('Unresolved Mapping', () => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NetworkCurrency } from './NetworkCurrency';
+import { Currency } from './Currency';
 
 /**
  * Object holding the symbol network currencies, main and harvest.
@@ -23,7 +23,13 @@ export class NetworkCurrencies {
     /**
      * The pre-configured public currencies for easier offline access.
      */
-    public static readonly PUBLIC = new NetworkCurrencies(NetworkCurrency.PUBLIC, NetworkCurrency.PUBLIC);
+    public static readonly PUBLIC = new NetworkCurrencies(Currency.PUBLIC, Currency.PUBLIC);
 
-    constructor(public readonly currency: NetworkCurrency, public readonly harvest: NetworkCurrency) {}
+    /**
+     * Constructor
+     *
+     * @param currency the network main currency.
+     * @param harvest the network harvest currency.
+     */
+    constructor(public readonly currency: Currency, public readonly harvest: Currency) {}
 }

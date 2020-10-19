@@ -22,29 +22,32 @@ import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { MosaicId } from '../model/mosaic';
 import { MosaicInfo } from '../model/mosaic';
 import { MosaicNames } from '../model/mosaic';
-import { NetworkCurrency } from '../model/mosaic';
-import { NetworkCurrencies } from '../model/mosaic/NetworkCurrencies';
+import { Currency } from '../model/mosaic';
+import { NetworkCurrencies } from '../model/mosaic';
 import { NamespaceId } from '../model/namespace';
-import { INetworkCurrencyService } from './interfaces';
+import { ICurrencyService } from './interfaces';
 
 /**
- * A service used to load network currencies.
+ * A service used to load Currencies objects.
  */
-export class NetworkCurrencyService implements INetworkCurrencyService {
+export class CurrencyService implements ICurrencyService {
     /**
      * Local cache for symbol network currencies.
      */
     private readonly networkCurrenciesObservable: Observable<NetworkCurrencies>;
 
     constructor(private readonly repositoryFactory: RepositoryFactory) {
-        this.networkCurrenciesObservable = defer(() => this.loadMainNetworkCurrencies()).pipe(shareReplay(1));
+        this.networkCurrenciesObservable = defer(() => this.loadNetworkCurrencies()).pipe(shareReplay(1));
     }
 
-    public getMainNetworkCurrencies(): Observable<NetworkCurrencies> {
+    /**
+     * This method loads and caches the network currencies.
+     */
+    public getNetworkCurrencies(): Observable<NetworkCurrencies> {
         return this.networkCurrenciesObservable;
     }
 
-    public loadMainNetworkCurrencies(): Observable<NetworkCurrencies> {
+    private loadNetworkCurrencies(): Observable<NetworkCurrencies> {
         return this.repositoryFactory
             .createNetworkRepository()
             .getNetworkProperties()
@@ -59,7 +62,7 @@ export class NetworkCurrencyService implements INetworkCurrencyService {
                     const currencyMosaic = new MosaicId(DtoMapping.toSimpleHex(properties.chain.currencyMosaicId));
                     const harvestingMosaic = new MosaicId(DtoMapping.toSimpleHex(properties.chain.harvestingMosaicId));
                     const mosaicIds = currencyMosaic.equals(harvestingMosaic) ? [currencyMosaic] : [currencyMosaic, harvestingMosaic];
-                    return this.loadCurrencies(mosaicIds).pipe(
+                    return this.getCurrencies(mosaicIds).pipe(
                         map((networkCurrencies) => {
                             const currency = networkCurrencies.filter((c) => currencyMosaic.equals(c.mosaicId))[0];
                             const harvest = networkCurrencies.filter((c) => harvestingMosaic.equals(c.mosaicId))[0];
@@ -70,7 +73,7 @@ export class NetworkCurrencyService implements INetworkCurrencyService {
             );
     }
 
-    public loadCurrencies(mosaicIds: MosaicId[]): Observable<NetworkCurrency[]> {
+    public getCurrencies(mosaicIds: MosaicId[]): Observable<Currency[]> {
         const mosaicHttp = this.repositoryFactory.createMosaicRepository();
         const namespaceHttp = this.repositoryFactory.createNamespaceRepository();
 
@@ -84,7 +87,7 @@ export class NetworkCurrencyService implements INetworkCurrencyService {
                 mosaicsInfo.map((mosaicInfo) => {
                     const thisMosaicNames =
                         mosaicNames.find((mn) => mn.mosaicId.equals(mosaicInfo.id)) || new MosaicNames(mosaicInfo.id, []);
-                    return this.getNetworkCurrency(mosaicInfo, thisMosaicNames);
+                    return this.getCurrency(mosaicInfo, thisMosaicNames);
                 }),
             ),
         );
@@ -94,19 +97,20 @@ export class NetworkCurrencyService implements INetworkCurrencyService {
      * Creates a network currency model given mosaic info and mosaic names
      * @param {MosaicInfo} mosaicInfo
      * @param {MosaicNames} mosaicName
-     * @returns {(NetworkCurrency | undefined)}
+     * @returns {(Currency | undefined)}
      */
-    private getNetworkCurrency(mosaicInfo: MosaicInfo, mosaicName: MosaicNames): NetworkCurrency {
+    private getCurrency(mosaicInfo: MosaicInfo, mosaicName: MosaicNames): Currency {
         const mosaicId = mosaicInfo.id;
         const namespaceName = this.getName([mosaicName], mosaicId);
         const namespaceId = namespaceName ? new NamespaceId(namespaceName) : undefined;
-        return new NetworkCurrency({
+        return new Currency({
             unresolvedMosaicId: namespaceId,
             mosaicId: mosaicId,
             namespaceId: namespaceId,
             divisibility: mosaicInfo.divisibility,
             transferable: mosaicInfo.flags.transferable,
             supplyMutable: mosaicInfo.flags.supplyMutable,
+            restrictable: mosaicInfo.flags.restrictable,
         });
     }
 

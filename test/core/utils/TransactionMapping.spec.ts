@@ -68,7 +68,7 @@ import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLi
 import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
 import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
-import { NetworkCurrencyLocal } from '../../model/mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../../model/mosaic/Currency.spec';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;

@@ -35,7 +35,7 @@ import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo'
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 import * as CryptoJS from 'crypto-js';
-import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('SecretLockTransaction', () => {
     let account: Account;

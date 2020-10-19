@@ -21,7 +21,7 @@ export * from './MosaicInfo';
 export * from './MosaicNames';
 export * from './MosaicNonce';
 export * from './MosaicSupplyChangeAction';
-export * from './NetworkCurrency';
+export * from './Currency';
 export * from './NetworkCurrencies';
 export * from './ResolvedMosaic';
 export * from './UnresolvedMosaicId';

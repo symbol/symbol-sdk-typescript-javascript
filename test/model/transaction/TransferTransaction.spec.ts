@@ -38,7 +38,7 @@ import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
-import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('TransferTransaction', () => {
     let account: Account;

@@ -16,24 +16,26 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { NetworkCurrency } from '../../../src/model/mosaic';
+import { Currency } from '../../../src/model/mosaic';
 import { NamespaceId } from '../../../src/model/namespace';
 import { UInt64 } from '../../../src/model/UInt64';
 
-export const NetworkCurrencyPublic = NetworkCurrency.PUBLIC;
+export const NetworkCurrencyPublic = Currency.PUBLIC;
 
-export const NetworkCurrencyLocal = new NetworkCurrency({
+export const NetworkCurrencyLocal = new Currency({
     namespaceId: new NamespaceId('cat.currency'),
     divisibility: 6,
     transferable: true,
     supplyMutable: false,
+    restrictable: false,
 });
 
-export const NetworkHarvestLocal = new NetworkCurrency({
+export const NetworkHarvestLocal = new Currency({
     namespaceId: new NamespaceId('cat.harvest'),
     divisibility: 3,
     transferable: true,
     supplyMutable: true,
+    restrictable: false,
 });
 
 describe('NetworkCurrencyLocal', () => {

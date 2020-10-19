@@ -21,7 +21,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../../src/model/transaction/HashLockTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('HashLockTransaction', () => {
     const account = TestingAccount;

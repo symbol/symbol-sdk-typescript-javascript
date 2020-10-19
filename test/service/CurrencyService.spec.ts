@@ -23,14 +23,14 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { Account } from '../../src/model/account';
-import { MosaicFlags, MosaicId, MosaicInfo, MosaicNames, NetworkCurrency } from '../../src/model/mosaic';
+import { MosaicFlags, MosaicId, MosaicInfo, MosaicNames, Currency } from '../../src/model/mosaic';
 import { NamespaceId, NamespaceName } from '../../src/model/namespace';
 import { NetworkConfiguration } from '../../src/model/network/NetworkConfiguration';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { UInt64 } from '../../src/model/UInt64';
-import { NetworkCurrencyService } from '../../src/service/NetworkCurrencyService';
+import { CurrencyService } from '../../src/service/CurrencyService';
 
-describe('NetworkCurrencyService', () => {
+describe('CurrencyService', () => {
     it('getNetworkProperties', async () => {
         const networkType = NetworkType.MIJIN_TEST;
         const currencyServerHex = "0x017D'1694'0477'B3F5";
@@ -100,27 +100,29 @@ describe('NetworkCurrencyService', () => {
         when(mockRepoFactory.createNamespaceRepository()).thenReturn(namespaceRepository);
         const repositoryFactory = instance(mockRepoFactory);
 
-        const service = new NetworkCurrencyService(repositoryFactory);
-        const currencies = await service.getMainNetworkCurrencies().toPromise();
+        const service = new CurrencyService(repositoryFactory);
+        const currencies = await service.getNetworkCurrencies().toPromise();
 
         const currencyNamespaceId = currencyMosaicNames.names[0].namespaceId;
         expect(currencies.currency).to.be.deep.equal(
-            new NetworkCurrency({
+            new Currency({
                 unresolvedMosaicId: currencyNamespaceId,
                 namespaceId: currencyNamespaceId,
                 mosaicId: currencyMosaicInfo.id,
                 divisibility: currencyMosaicInfo.divisibility,
                 supplyMutable: currencyMosaicInfo.isSupplyMutable(),
                 transferable: currencyMosaicInfo.isTransferable(),
+                restrictable: currencyMosaicInfo.isRestrictable(),
             }),
         );
         expect(currencies.harvest).to.be.deep.equal(
-            new NetworkCurrency({
+            new Currency({
                 unresolvedMosaicId: harvestMosaicInfo.id,
                 mosaicId: harvestMosaicInfo.id,
                 divisibility: harvestMosaicInfo.divisibility,
                 supplyMutable: harvestMosaicInfo.isSupplyMutable(),
                 transferable: harvestMosaicInfo.isTransferable(),
+                restrictable: harvestMosaicInfo.isRestrictable(),
             }),
         );
     });
@@ -181,27 +183,29 @@ describe('NetworkCurrencyService', () => {
         when(mockRepoFactory.createNamespaceRepository()).thenReturn(namespaceRepository);
         const repositoryFactory = instance(mockRepoFactory);
 
-        const service = new NetworkCurrencyService(repositoryFactory);
-        const [currency, harvest] = await service.loadCurrencies([currencyMosaicId, harvestingMosaicId]).toPromise();
+        const service = new CurrencyService(repositoryFactory);
+        const [currency, harvest] = await service.getCurrencies([currencyMosaicId, harvestingMosaicId]).toPromise();
 
         expect(currency).to.be.deep.equal(
-            new NetworkCurrency({
+            new Currency({
                 unresolvedMosaicId: currencyMosaicInfo.id,
                 mosaicId: currencyMosaicInfo.id,
                 divisibility: currencyMosaicInfo.divisibility,
                 supplyMutable: currencyMosaicInfo.isSupplyMutable(),
                 transferable: currencyMosaicInfo.isTransferable(),
+                restrictable: currencyMosaicInfo.isRestrictable(),
             }),
         );
         const harvestNamespaceI = harvestMosaicNames.names[0].namespaceId;
         expect(harvest).to.be.deep.equal(
-            new NetworkCurrency({
+            new Currency({
                 namespaceId: harvestNamespaceI,
                 unresolvedMosaicId: harvestNamespaceI,
                 mosaicId: harvestMosaicInfo.id,
                 divisibility: harvestMosaicInfo.divisibility,
                 supplyMutable: harvestMosaicInfo.isSupplyMutable(),
                 transferable: harvestMosaicInfo.isTransferable(),
+                restrictable: harvestMosaicInfo.isRestrictable(),
             }),
         );
     });

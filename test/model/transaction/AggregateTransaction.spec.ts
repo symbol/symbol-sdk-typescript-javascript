@@ -49,7 +49,7 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount } from '../../conf/conf.spec';
-import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('AggregateTransaction', () => {
     let account: Account;

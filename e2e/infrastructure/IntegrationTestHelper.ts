@@ -20,7 +20,7 @@ import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { Account } from '../../src/model/account';
 import { Mosaic } from '../../src/model/mosaic';
-import { NetworkCurrency } from '../../src/model/mosaic';
+import { Currency } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
@@ -44,7 +44,7 @@ export class IntegrationTestHelper {
     public maxFee: UInt64;
     public harvestingAccount: Account;
     public transactionService: TransactionService;
-    public networkCurrency: NetworkCurrency;
+    public networkCurrency: Currency;
     public service = new BootstrapService();
     public config: StartParams;
     public startEachTime = true;
@@ -128,7 +128,7 @@ export class IntegrationTestHelper {
         return this;
     }
 
-    createNetworkCurrency(amount: number, isRelative = true): Mosaic {
+    createCurrency(amount: number, isRelative = true): Mosaic {
         return isRelative ? this.networkCurrency.createRelative(amount) : this.networkCurrency.createAbsolute(amount);
     }
 

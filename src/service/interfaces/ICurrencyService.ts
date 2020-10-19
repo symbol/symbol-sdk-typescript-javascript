@@ -15,14 +15,22 @@
  */
 import { Observable } from 'rxjs';
 import { MosaicId } from '../../model/mosaic';
-import { NetworkCurrency } from '../../model/mosaic';
-import { NetworkCurrencies } from '../../model/mosaic/NetworkCurrencies';
+import { Currency } from '../../model/mosaic';
+import { NetworkCurrencies } from '../../model/mosaic';
 
-export interface INetworkCurrencyService {
+/**
+ * A service that allows you loading Network currencies for mosaic creation.
+ */
+export interface ICurrencyService {
     /**
-     *
+     * This method loads and caches the network currencies (main currency and harvest).
      */
-    getMainNetworkCurrencies(): Observable<NetworkCurrencies>;
+    getNetworkCurrencies(): Observable<NetworkCurrencies>;
 
-    loadCurrencies(mosaicIds: MosaicId[]): Observable<NetworkCurrency[]>;
+    /**
+     * It creates the Currency objects from the mosaic ids by loading the mosaic infos and namespace aliases.
+     *
+     * @param mosaicIds the mosaic ids.
+     */
+    getCurrencies(mosaicIds: MosaicId[]): Observable<Currency[]>;
 }
