@@ -19,17 +19,16 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import { Account } from '../../../src/model/account/Account';
-import { Address } from '../../../src/model/account/Address';
+import { Account } from '../../../src/model/account';
+import { Address } from '../../../src/model/account';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
-import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
-import { MosaicSupplyChangeAction } from '../../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
-import { AliasAction } from '../../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NamespaceRegistrationType } from '../../../src/model/namespace/NamespaceRegistrationType';
+import { MosaicFlags } from '../../../src/model/mosaic';
+import { MosaicId } from '../../../src/model/mosaic';
+import { MosaicNonce } from '../../../src/model/mosaic';
+import { MosaicSupplyChangeAction } from '../../../src/model/mosaic';
+import { AliasAction } from '../../../src/model/namespace';
+import { NamespaceId } from '../../../src/model/namespace';
+import { NamespaceRegistrationType } from '../../../src/model/namespace';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
@@ -66,6 +65,7 @@ import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLi
 import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
+import { NetworkCurrencyLocal } from '../../model/mosaic/NetworkCurrency.spec';
 
 describe('TransactionMapping - createFromPayload with optional sigature and signer', () => {
     let account: Account;
@@ -670,7 +670,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         let transaction = TransactionMapping.createFromPayload(signedLockFundTransaction) as LockFundsTransaction;
 
-        deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.namespaceId!.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
         expect(transaction.signature).to.be.equal(testSignature);

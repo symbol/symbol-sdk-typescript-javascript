@@ -17,13 +17,11 @@
 import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
+import { Account } from '../../src/model/account';
+import { Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { Mosaic } from '../../src/model/mosaic';
+import { MosaicId } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -34,6 +32,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/NetworkCurrency.spec';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService - AggregateBonded', () => {
@@ -48,7 +47,7 @@ describe('TransactionService - AggregateBonded', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionService: TransactionService;
-    let NetworkCurrencyLocalId: MosaicId;
+    let networkCurrencyLocalId: MosaicId;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -100,10 +99,10 @@ describe('TransactionService - AggregateBonded', () => {
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', () => {
             return namespaceRepository
-                .getLinkedMosaicId(new NamespaceId('cat.currency'))
+                .getLinkedMosaicId(helper.networkCurrency.namespaceId!)
                 .toPromise()
                 .then((networkMosaicId: MosaicId) => {
-                    NetworkCurrencyLocalId = networkMosaicId;
+                    networkCurrencyLocalId = networkMosaicId;
                 });
         });
     });
@@ -170,7 +169,7 @@ describe('TransactionService - AggregateBonded', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+                new Mosaic(networkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.divisibility))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType,
@@ -190,7 +189,7 @@ describe('TransactionService - AggregateBonded', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+                new Mosaic(networkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.divisibility))),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType,

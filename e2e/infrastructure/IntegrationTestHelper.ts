@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as fs from 'fs';
-import * as path from 'path';
 import { map } from 'rxjs/operators';
 import { BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
 import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { Account } from '../../src/model/account/Account';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { Account } from '../../src/model/account';
+import { Mosaic } from '../../src/model/mosaic';
+import { NetworkCurrency } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
@@ -47,8 +44,7 @@ export class IntegrationTestHelper {
     public maxFee: UInt64;
     public harvestingAccount: Account;
     public transactionService: TransactionService;
-    public networkCurrencyNamespaceId: NamespaceId;
-    public networkCurrencyDivisibility: number;
+    public networkCurrency: NetworkCurrency;
     public service = new BootstrapService();
     public config: StartParams;
     public startEachTime = true;
@@ -74,6 +70,16 @@ export class IntegrationTestHelper {
         }
         return { accounts, apiUrl: 'http://localhost:3000' };
     }
+    private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string }> {
+        const target = 'target/bootstrap-test';
+        console.log('Loading bootstrap server');
+        const addresses = BootstrapUtils.loadExistingAddresses(target);
+        const accounts = addresses?.mosaics?.['currency'].map((n) => n.privateKey);
+        if (!accounts) {
+            throw new Error('Nemesis accounts could not be loaded!');
+        }
+        return { accounts, apiUrl: 'http://localhost:3000' };
+    }
 
     async close(): Promise<void> {
         if (this.listener && this.listener.isOpen()) await this.listener.close();
@@ -84,25 +90,9 @@ export class IntegrationTestHelper {
         }
     }
 
-    private async connectToExternalServer(): Promise<{ accounts: string[]; apiUrl: string }> {
-        const json = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../conf/network.conf'), 'utf8'));
-        const accounts = [
-            json.testAccount.privateKey,
-            json.testAccount2.privateKey,
-            json.testAccount3.privateKey,
-            json.multisigAccount.privateKey,
-            json.cosignatoryAccount.privateKey,
-            json.cosignatory2Account.privateKey,
-            json.cosignatory3Account.privateKey,
-            json.cosignatory4Account.privateKey,
-            json.harvestingAccount.privateKey,
-        ];
-        return { accounts, apiUrl: json.apiUrl };
-    }
-
     async start({ openListener }: { openListener: boolean }): Promise<IntegrationTestHelper> {
         // await this.service.stop(this.config);
-        const config = await this.startBootstrapServer();
+        const config = await this.loadBootstrap();
         const accounts = config.accounts;
         this.apiUrl = config.apiUrl;
         this.repositoryFactory = new RepositoryFactoryHttp(this.apiUrl);
@@ -130,12 +120,7 @@ export class IntegrationTestHelper {
 
         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
         this.maxFee = UInt64.fromUint(1000000);
-        this.networkCurrencyNamespaceId = this.apiUrl.toLowerCase().includes('localhost')
-            ? NetworkCurrencyLocal.NAMESPACE_ID
-            : NetworkCurrencyPublic.NAMESPACE_ID;
-        this.networkCurrencyDivisibility = this.apiUrl.toLowerCase().includes('localhost')
-            ? NetworkCurrencyLocal.DIVISIBILITY
-            : NetworkCurrencyPublic.DIVISIBILITY;
+        this.networkCurrency = (await this.repositoryFactory.getCurrencies().toPromise()).currency;
 
         if (openListener) {
             await this.listener.open();
@@ -143,11 +128,8 @@ export class IntegrationTestHelper {
         return this;
     }
 
-    createNetworkCurrency(amount: number, isRelative = true): NetworkCurrencyPublic | NetworkCurrencyLocal {
-        if (this.apiUrl.toLowerCase().includes('localhost')) {
-            return isRelative ? NetworkCurrencyLocal.createRelative(amount) : NetworkCurrencyLocal.createAbsolute(amount);
-        }
-        return isRelative ? NetworkCurrencyPublic.createRelative(amount) : NetworkCurrencyPublic.createAbsolute(amount);
+    createNetworkCurrency(amount: number, isRelative = true): Mosaic {
+        return isRelative ? this.networkCurrency.createRelative(amount) : this.networkCurrency.createAbsolute(amount);
     }
 
     announce(signedTransaction: SignedTransaction): Promise<Transaction> {
@@ -161,5 +143,14 @@ export class IntegrationTestHelper {
                 }),
             )
             .toPromise();
+    }
+
+    public static sleep(ms: number): Promise<any> {
+        // Create a promise that rejects in <ms> milliseconds
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, ms);
+        });
     }
 }

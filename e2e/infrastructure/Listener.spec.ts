@@ -98,7 +98,7 @@ describe('Listener', () => {
     ): void => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
-            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
             networkType,
@@ -227,7 +227,7 @@ describe('Listener', () => {
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrencyNamespaceId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrency.namespaceId!);
             helper.listener.aggregateBondedAdded(account.address).subscribe(() => {
                 done();
             });
@@ -245,7 +245,7 @@ describe('Listener', () => {
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsRemoved', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrency.namespaceId!);
             helper.listener.aggregateBondedRemoved(cosignAccount1.address, signedAggregatedTx.hash).subscribe(() => {
                 done();
             });
@@ -289,7 +289,7 @@ describe('Listener', () => {
         it('cosignatureAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
 
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrency.namespaceId!);
             helper.listener.cosignatureAdded(cosignAccount1.address).subscribe(() => {
                 done();
             });

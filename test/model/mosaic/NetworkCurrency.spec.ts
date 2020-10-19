@@ -16,10 +16,25 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
-import { NetworkCurrencyPublic } from '../../../src/model/mosaic/NetworkCurrencyPublic';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkCurrency } from '../../../src/model/mosaic';
+import { NamespaceId } from '../../../src/model/namespace';
 import { UInt64 } from '../../../src/model/UInt64';
+
+export const NetworkCurrencyPublic = NetworkCurrency.PUBLIC;
+
+export const NetworkCurrencyLocal = new NetworkCurrency({
+    namespaceId: new NamespaceId('cat.currency'),
+    divisibility: 6,
+    transferable: true,
+    supplyMutable: false,
+});
+
+export const NetworkHarvestLocal = new NetworkCurrency({
+    namespaceId: new NamespaceId('cat.harvest'),
+    divisibility: 3,
+    transferable: true,
+    supplyMutable: true,
+});
 
 describe('NetworkCurrencyLocal', () => {
     it('should createComplete an NetworkCurrencyLocal object', () => {
@@ -42,10 +57,10 @@ describe('NetworkCurrencyLocal', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkCurrencyLocal.NAMESPACE_ID.id, new NamespaceId([3294802500, 2243684972]).id);
-        expect(NetworkCurrencyLocal.DIVISIBILITY).to.be.equal(6);
-        expect(NetworkCurrencyLocal.TRANSFERABLE).to.be.equal(true);
-        expect(NetworkCurrencyLocal.SUPPLY_MUTABLE).to.be.equal(false);
+        deepEqual(NetworkCurrencyLocal.namespaceId!.id, new NamespaceId([3294802500, 2243684972]).id);
+        expect(NetworkCurrencyLocal.divisibility).to.be.equal(6);
+        expect(NetworkCurrencyLocal.transferable).to.be.equal(true);
+        expect(NetworkCurrencyLocal.supplyMutable).to.be.equal(false);
     });
 
     it('should create network currency with absolute amount', () => {
@@ -78,10 +93,10 @@ describe('NetworkCurrencyPublic', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(NetworkCurrencyPublic.NAMESPACE_ID.id, new NamespaceId([1106554862, 3880491450]).id);
-        expect(NetworkCurrencyPublic.DIVISIBILITY).to.be.equal(6);
-        expect(NetworkCurrencyPublic.TRANSFERABLE).to.be.equal(true);
-        expect(NetworkCurrencyPublic.SUPPLY_MUTABLE).to.be.equal(false);
+        deepEqual(NetworkCurrencyPublic.namespaceId!.id, new NamespaceId([1106554862, 3880491450]).id);
+        expect(NetworkCurrencyPublic.divisibility).to.be.equal(6);
+        expect(NetworkCurrencyPublic.transferable).to.be.equal(true);
+        expect(NetworkCurrencyPublic.supplyMutable).to.be.equal(false);
     });
 
     it('should create network currency with absolute amount', () => {

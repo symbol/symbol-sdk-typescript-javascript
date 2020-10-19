@@ -15,14 +15,13 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
-import { Account } from '../../src/model/account/Account';
+import { Account } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { MosaicFlags } from '../../src/model/mosaic';
+import { MosaicId } from '../../src/model/mosaic';
+import { MosaicNonce } from '../../src/model/mosaic';
+import { AliasAction } from '../../src/model/namespace';
+import { NamespaceId } from '../../src/model/namespace';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -37,6 +36,7 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/NetworkCurrency.spec';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('Unresolved Mapping', () => {

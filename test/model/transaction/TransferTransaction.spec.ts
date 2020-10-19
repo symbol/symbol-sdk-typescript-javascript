@@ -25,7 +25,6 @@ import { PersistentHarvestingDelegationMessage } from '../../../src/model/messag
 import { EmptyMessage, PlainMessage } from '../../../src/model/message/PlainMessage';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
@@ -39,6 +38,7 @@ import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
+import { NetworkCurrencyLocal } from '../mosaic/NetworkCurrency.spec';
 
 describe('TransferTransaction', () => {
     let account: Account;

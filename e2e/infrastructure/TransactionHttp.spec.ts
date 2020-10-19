@@ -95,7 +95,7 @@ describe('TransactionHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let mosaicId: MosaicId;
-    let NetworkCurrencyLocalId: MosaicId;
+    let networkCurrencyLocalId: MosaicId;
     let addressAlias: NamespaceId;
     let mosaicAlias: NamespaceId;
     let harvestingAccount: Account;
@@ -128,7 +128,9 @@ describe('TransactionHttp', () => {
 
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', async () => {
-            NetworkCurrencyLocalId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
+            networkCurrencyLocalId = (await namespaceRepository
+                .getLinkedMosaicId(helper.networkCurrency!.namespaceId!)
+                .toPromise()) as MosaicId;
         });
     });
 
@@ -899,7 +901,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+                helper.networkCurrency.createRelative(10),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 networkType,
@@ -944,7 +946,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+                new Mosaic(networkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 networkType,
@@ -966,7 +968,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+                new Mosaic(networkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
                 UInt64.fromUint(10),
                 signedTransaction,
                 networkType,

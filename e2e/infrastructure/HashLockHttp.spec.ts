@@ -95,7 +95,7 @@ describe('HashLockHttp', () => {
     ): any => {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
-            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
             networkType,
@@ -143,7 +143,7 @@ describe('HashLockHttp', () => {
     describe('Create a hash lock', () => {
         it('Announce HashLockTransaction', () => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
-            return createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrencyNamespaceId);
+            return createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrency.namespaceId!);
         });
     });
 
