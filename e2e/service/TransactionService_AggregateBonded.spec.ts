@@ -47,7 +47,6 @@ describe('TransactionService - AggregateBonded', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionService: TransactionService;
-    let networkCurrencyLocalId: MosaicId;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -90,22 +89,6 @@ describe('TransactionService - AggregateBonded', () => {
         );
         return signer.sign(aggregateTransaction, generationHash);
     };
-
-    /**
-     * =========================
-     * Setup test data
-     * =========================
-     */
-    describe('Get network currency mosaic id', () => {
-        it('get mosaicId', () => {
-            return namespaceRepository
-                .getLinkedMosaicId(helper.networkCurrency.namespaceId!)
-                .toPromise()
-                .then((networkMosaicId: MosaicId) => {
-                    networkCurrencyLocalId = networkMosaicId;
-                });
-        });
-    });
 
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
@@ -169,7 +152,7 @@ describe('TransactionService - AggregateBonded', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(networkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.divisibility))),
+                helper.networkCurrency.createRelative(10),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType,
@@ -189,7 +172,7 @@ describe('TransactionService - AggregateBonded', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(networkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.divisibility))),
+                helper.networkCurrency.createRelative(10),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType,
