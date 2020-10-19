@@ -626,7 +626,9 @@ describe('AggregateTransaction', () => {
             NetworkType.PRIVATE_TEST,
             [],
         ).setMaxFeeForAggregate(2, 10);
-        expect(aggregateTransaction.maxFee.compact()).to.be.equal(560 + 960 * 2);
+        const size = aggregateTransaction.size;
+        expect(size).to.be.equal(280);
+        expect(aggregateTransaction.maxFee.compact()).to.be.equal((size + 104 * 10) * 2);
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
