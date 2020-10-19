@@ -409,8 +409,10 @@ export class AggregateTransaction extends Transaction {
         }
         // Check if current cosignature count is greater than requiredCosignatures.
         const calculatedCosignatures = requiredCosignatures > this.cosignatures.length ? requiredCosignatures : this.cosignatures.length;
+        // version + public key + signature
+        const sizePerCosignature = 8 + 32 + 64;
         // Remove current cosignature length and use the calculated one.
-        const calculatedSize = this.size - this.cosignatures.length * 96 + calculatedCosignatures * 96;
+        const calculatedSize = this.size - this.cosignatures.length * sizePerCosignature + calculatedCosignatures * sizePerCosignature;
         return DtoMapping.assign(this, {
             maxFee: UInt64.fromUint(calculatedSize * feeMultiplier),
         });
