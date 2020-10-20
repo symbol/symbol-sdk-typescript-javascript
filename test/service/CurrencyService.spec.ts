@@ -106,7 +106,7 @@ describe('CurrencyService', () => {
         const currencyNamespaceId = currencyMosaicNames.names[0].namespaceId;
         expect(currencies.currency).to.be.deep.equal(
             new Currency({
-                unresolvedMosaicId: currencyNamespaceId,
+                unresolvedMosaicId: currencyMosaicInfo.id,
                 namespaceId: currencyNamespaceId,
                 mosaicId: currencyMosaicInfo.id,
                 divisibility: currencyMosaicInfo.divisibility,
@@ -196,11 +196,11 @@ describe('CurrencyService', () => {
                 restrictable: currencyMosaicInfo.isRestrictable(),
             }),
         );
-        const harvestNamespaceI = harvestMosaicNames.names[0].namespaceId;
+        const harvestNamespaceId = harvestMosaicNames.names[0].namespaceId;
         expect(harvest).to.be.deep.equal(
             new Currency({
-                namespaceId: harvestNamespaceI,
-                unresolvedMosaicId: harvestNamespaceI,
+                unresolvedMosaicId: harvestMosaicInfo.id,
+                namespaceId: harvestNamespaceId,
                 mosaicId: harvestMosaicInfo.id,
                 divisibility: harvestMosaicInfo.divisibility,
                 supplyMutable: harvestMosaicInfo.isSupplyMutable(),

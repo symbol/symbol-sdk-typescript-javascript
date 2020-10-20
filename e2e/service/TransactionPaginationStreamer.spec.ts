@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-import { concatMap, map, mergeMap, toArray } from 'rxjs/operators';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account, Address } from '../../src/model/account';
+import { Address } from '../../src/model/account';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
-import { MosaicId } from '../../src/model/mosaic';
-import { NamespaceId } from '../../src/model/namespace';
-import { NetworkType } from '../../src/model/network/NetworkType';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { TransactionService } from '../../src/service/TransactionService';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 interface TransactionWithBlock {
@@ -37,37 +32,9 @@ interface TransactionWithBlock {
 
 describe('TransactionPaginationStreamer', () => {
     const helper = new IntegrationTestHelper();
-    let generationHash: string;
-    let addressAlias: NamespaceId;
-    let mosaicAlias: NamespaceId;
-    let mosaicId: MosaicId;
-    let newMosaicId: MosaicId;
-    let transactionHashes: string[];
-    let transactionHashesMultiple: string[];
-    let account: Account;
-    let account2: Account;
-    let account3: Account;
-    let cosignAccount4: Account;
-    let networkType: NetworkType;
-    let transactionService: TransactionService;
-    let transactionRepository: TransactionRepository;
 
     before(() => {
-        return helper.start({ openListener: true }).then(() => {
-            account = helper.account;
-            account2 = helper.account2;
-            account3 = helper.account3;
-            cosignAccount4 = helper.cosignAccount4;
-            generationHash = helper.generationHash;
-            networkType = helper.networkType;
-            transactionHashes = [];
-            transactionHashesMultiple = [];
-            transactionRepository = helper.repositoryFactory.createTransactionRepository();
-            transactionService = new TransactionService(
-                helper.repositoryFactory.createTransactionRepository(),
-                helper.repositoryFactory.createReceiptRepository(),
-            );
-        });
+        return helper.start({ openListener: true }).then(() => {});
     });
 
     after(() => {

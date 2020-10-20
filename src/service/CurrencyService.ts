@@ -90,7 +90,6 @@ export class CurrencyService implements ICurrencyService {
         const namespaceName = this.getName([mosaicName], mosaicId);
         const namespaceId = namespaceName ? new NamespaceId(namespaceName) : undefined;
         return new Currency({
-            unresolvedMosaicId: namespaceId,
             mosaicId: mosaicId,
             namespaceId: namespaceId,
             divisibility: mosaicInfo.divisibility,

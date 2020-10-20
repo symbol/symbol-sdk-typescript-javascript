@@ -79,13 +79,13 @@ describe('NetworkCurrencyLocal', () => {
 describe('NetworkCurrencyPublic', () => {
     it('should createComplete an NetworkCurrencyPublic object', () => {
         const currency = NetworkCurrencyPublic.createRelative(1000);
-        deepEqual(currency.id.id.toHex(), 'E74B99BA41F4AFEE'); // holds NAMESPACE_ID
+        expect(currency.id.id.toHex()).to.be.equal(NetworkCurrencyPublic.namespaceId?.id.toHex()); // Holds Namespace ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should createComplete an NetworkCurrencyPublic object', () => {
         const currency = NetworkCurrencyPublic.createRelative(UInt64.fromUint(1000));
-        deepEqual(currency.id.id.toHex(), 'E74B99BA41F4AFEE'); // holds NAMESPACE_ID
+        expect(currency.id.id.toHex()).to.be.equal(NetworkCurrencyPublic.namespaceId?.id.toHex()); // Holds Namespace ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 

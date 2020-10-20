@@ -35,9 +35,7 @@ export class Currency {
      *
      */
     public static readonly PUBLIC = new Currency({
-        unresolvedMosaicId: new NamespaceId('symbol.xym'),
         namespaceId: new NamespaceId('symbol.xym'),
-        mosaicId: new MosaicId('5B66E76BECAD0860'),
         divisibility: 6,
         transferable: true,
         supplyMutable: false,
@@ -89,9 +87,10 @@ export class Currency {
         supplyMutable: boolean;
         restrictable: boolean;
     }) {
-        const finalMosaicId = unresolvedMosaicId || namespaceId || mosaicId;
+        // If unresolvedMosaicId is not provided explicitly, mosaic id wins over namespace id for performace reasons.
+        const finalMosaicId = unresolvedMosaicId || mosaicId || namespaceId;
         if (!finalMosaicId) {
-            throw new Error('At least one mosaic Id or Namespace id must be provided');
+            throw new Error('At least one Mosaic Id or Namespace Id must be provided');
         }
         this.unresolvedMosaicId = finalMosaicId;
         this.mosaicId = mosaicId;

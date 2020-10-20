@@ -38,8 +38,11 @@ describe('CurrencyService', () => {
         it('Load symbol network currencies', async () => {
             const networkCurrencyService = new CurrencyService(helper.repositoryFactory);
             const currencies = await networkCurrencyService.getNetworkCurrencies().toPromise();
+            expect(currencies.currency.unresolvedMosaicId).to.be.deep.eq(currencies.currency.mosaicId);
             expect(currencies.currency.namespaceId).to.be.deep.eq(NetworkCurrencyLocal.namespaceId);
             expect(currencies.currency.unresolvedMosaicId).to.be.deep.eq(NetworkCurrencyLocal.unresolvedMosaicId);
+
+            expect(currencies.harvest.unresolvedMosaicId).to.be.deep.eq(currencies.harvest.mosaicId);
             expect(currencies.harvest.namespaceId).to.be.deep.eq(NetworkHarvestLocal.namespaceId);
             expect(currencies.harvest.unresolvedMosaicId).to.be.deep.eq(NetworkHarvestLocal.unresolvedMosaicId);
         });
