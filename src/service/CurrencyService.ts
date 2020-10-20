@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-import { defer, forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { flatMap, map } from 'rxjs/internal/operators';
-import { shareReplay } from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
-import { MosaicId } from '../model/mosaic';
-import { MosaicInfo } from '../model/mosaic';
-import { MosaicNames } from '../model/mosaic';
-import { Currency } from '../model/mosaic';
-import { NetworkCurrencies } from '../model/mosaic';
+import { Currency, MosaicId, MosaicInfo, MosaicNames, NetworkCurrencies } from '../model/mosaic';
 import { NamespaceId } from '../model/namespace';
 import { ICurrencyService } from './interfaces';
 
@@ -31,23 +26,14 @@ import { ICurrencyService } from './interfaces';
  * A service used to load Currencies objects.
  */
 export class CurrencyService implements ICurrencyService {
-    /**
-     * Local cache for symbol network currencies.
-     */
-    private readonly networkCurrenciesObservable: Observable<NetworkCurrencies>;
+    x;
 
-    constructor(private readonly repositoryFactory: RepositoryFactory) {
-        this.networkCurrenciesObservable = defer(() => this.loadNetworkCurrencies()).pipe(shareReplay(1));
-    }
+    constructor(private readonly repositoryFactory: RepositoryFactory) {}
 
     /**
-     * This method loads and caches the network currencies.
+     * This method loads the network currencies.
      */
     public getNetworkCurrencies(): Observable<NetworkCurrencies> {
-        return this.networkCurrenciesObservable;
-    }
-
-    private loadNetworkCurrencies(): Observable<NetworkCurrencies> {
         return this.repositoryFactory
             .createNetworkRepository()
             .getNetworkProperties()

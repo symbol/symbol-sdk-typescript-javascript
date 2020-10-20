@@ -23,7 +23,7 @@ import { NetworkCurrencies } from '../../model/mosaic';
  */
 export interface ICurrencyService {
     /**
-     * This method loads and caches the network currencies (main currency and harvest).
+     * This method loads the network currencies (main currency and harvest).
      */
     getNetworkCurrencies(): Observable<NetworkCurrencies>;
 
