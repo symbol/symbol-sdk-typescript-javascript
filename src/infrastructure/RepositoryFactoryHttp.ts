@@ -80,11 +80,11 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         const networkRepo = this.createNetworkRepository();
         this.url = url;
         this.fetchApi = configs?.fetchApi;
-        this.networkType = configs?.networkType ? observableOf(configs.networkType) : this.cache(networkRepo.getNetworkType());
-        this.networkProperties = this.cache(this.createNetworkRepository().getNetworkProperties());
+        this.networkType = configs?.networkType ? observableOf(configs.networkType) : this.cache(() => networkRepo.getNetworkType());
+        this.networkProperties = this.cache(() => this.createNetworkRepository().getNetworkProperties());
         this.epochAdjustment = configs?.epochAdjustment
             ? observableOf(configs.epochAdjustment)
-            : this.cache(
+            : this.cache(() =>
                   this.networkProperties.pipe(
                       map((property) => {
                           return DtoMapping.parseServerDuration(property.network.epochAdjustment ?? '-').seconds();
@@ -93,7 +93,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
               );
         this.generationHash = configs?.generationHash
             ? observableOf(configs.generationHash)
-            : this.cache(
+            : this.cache(() =>
                   this.createNodeRepository()
                       .getNodeInfo()
                       .pipe(map((b) => b.networkGenerationHashSeed)),
@@ -102,11 +102,11 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
         this.websocketInjected = configs?.websocketInjected;
         this.networkCurrencies = configs?.networkCurrencies
             ? observableOf(configs.networkCurrencies)
-            : this.cache(new CurrencyService(this).getNetworkCurrencies());
+            : this.cache(() => new CurrencyService(this).getNetworkCurrencies());
     }
 
-    cache<T>(delegate: Observable<T>): Observable<T> {
-        return defer(() => delegate).pipe(shareReplay(1));
+    cache<T>(delegate: () => Observable<T>): Observable<T> {
+        return defer(delegate).pipe(shareReplay(1));
     }
 
     createAccountRepository(): AccountRepository {
