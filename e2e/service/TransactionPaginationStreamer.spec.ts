@@ -34,7 +34,7 @@ describe('TransactionPaginationStreamer', () => {
     const helper = new IntegrationTestHelper();
 
     before(() => {
-        return helper.start({ openListener: true }).then(() => {});
+        return helper.start({ openListener: true });
     });
 
     after(() => {
