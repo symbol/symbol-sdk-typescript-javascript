@@ -35,7 +35,7 @@ import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 
 describe('Transaction', () => {
     let account: Account;
-
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });
@@ -74,9 +74,9 @@ describe('Transaction', () => {
         it('should return true when there is no Transaction Info', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -90,9 +90,9 @@ describe('Transaction', () => {
         it('should return true when height is 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -104,9 +104,9 @@ describe('Transaction', () => {
         it('should return false when height is not 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -120,9 +120,9 @@ describe('Transaction', () => {
         it('should return true when height is not 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -136,9 +136,9 @@ describe('Transaction', () => {
         it('should return false when height is 0 and hash and markehash are different', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
@@ -152,47 +152,47 @@ describe('Transaction', () => {
         it('should throw an error if the transaction is announced', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(() => {
-                transaction.reapplyGiven(Deadline.create());
+                transaction.reapplyGiven(Deadline.create(epochAdjustment));
             }).to.throws("an Announced transaction can't be modified");
         });
         it('should return a new transaction', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
-            const newTransaction = transaction.reapplyGiven(Deadline.create());
+            const newTransaction = transaction.reapplyGiven(Deadline.create(epochAdjustment));
             expect(newTransaction).to.not.equal(transaction);
         });
         it('should overide deadline properly', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
-            const newDeadline = Deadline.create(3);
+            const newDeadline = Deadline.create(epochAdjustment, 3);
             const newTransaction = transaction.reapplyGiven(newDeadline);
-            const equal = newTransaction.deadline.value.equals(transaction.deadline.value);
-            const after = newTransaction.deadline.value.isAfter(transaction.deadline.value);
+            const equal = newTransaction.deadline.adjustedValue === transaction.deadline.adjustedValue;
+            const after = newTransaction.deadline.adjustedValue > transaction.deadline.adjustedValue;
             expect(newTransaction.deadline).to.be.equal(newDeadline);
             expect(equal).to.be.equal(false);
             expect(after).to.be.equal(true);
@@ -203,18 +203,18 @@ describe('Transaction', () => {
         it('should throw exception when adding an aggregated transaction as inner transaction', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 [],
             );
 
@@ -227,16 +227,16 @@ describe('Transaction', () => {
     describe('Transaction serialize', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
-                Deadline.create(),
-                Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+                Deadline.create(epochAdjustment),
+                Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
                 [],
                 PlainMessage.create('test-message'),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             const serialized = transaction.serialize();
 
             expect(serialized.substring(256, serialized.length)).to.be.equal(
-                '9026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B20D0000000000000000746573742D6D657373616765',
+                '8026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A0D0000000000000000746573742D6D657373616765',
             );
         });
     });
@@ -245,15 +245,15 @@ describe('Transaction', () => {
         it('should return version in hex format', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 1,
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
-            expect(transaction.versionToHex()).to.be.equal('0x9001');
+            expect(transaction.versionToHex()).to.be.equal('0x8001');
         });
     });
 
@@ -270,10 +270,10 @@ describe('Transaction', () => {
             '0801000000000000AC1F3E0EE2C16F465CDC2E091DC44D6EB55F7FE3988A5F21' +
             '309DF479BE6D3F0033E155695FB1133EA0EA64A67C1EDC2B430CFAF9722AF36B' +
             'AE84DBDB1C8F1509C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357AC' +
-            'B041E2F9AB402EFE000000000190414200000000000000006BA50FB91A000000' +
+            'B041E2F9AB402EFE000000000180414200000000000000006BA50FB91A000000' +
             'EA8F8301E7EDFD701F62E1DC1601ABDE22E5FCD11C9C7E7A01B87F8DFB6B62B0' +
             '60000000000000005D00000000000000C2F93346E27CE6AD1A9F8F5E3066F832' +
-            '6593A406BDF357ACB041E2F9AB402EFE00000000019054419050B9837EFAB4BB' +
+            '6593A406BDF357ACB041E2F9AB402EFE00000000018054419050B9837EFAB4BB' +
             'E8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D65' +
             '7373616765000000';
 
@@ -342,7 +342,7 @@ describe('Transaction', () => {
             expect(hash1).to.equal(hash2);
         });
 
-        it('create correct SHA3 transaction hash given network type MIJIN or MIJIN_TEST', () => {
+        it('create correct SHA3 transaction hash given network type PRIVATE or PRIVATE_TEST', () => {
             const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
             const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
 
@@ -378,17 +378,17 @@ describe('Transaction', () => {
 
     it('is signed', () => {
         let tx = TransferTransaction.create(
-            Deadline.create(),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Deadline.create(epochAdjustment),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ) as Transaction;
 
         expect(tx.isSigned(account.address)).to.be.false;
         const signed = tx.signWith(account, '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6');
         tx = TransactionMapping.createFromPayload(signed.payload) as Transaction;
         expect((tx as Transaction).isSigned(account.address)).to.be.true;
-        expect((tx as Transaction).isSigned(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'))).to.be.false;
+        expect((tx as Transaction).isSigned(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'))).to.be.false;
     });
 });

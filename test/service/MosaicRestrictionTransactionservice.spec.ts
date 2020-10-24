@@ -51,6 +51,7 @@ describe('MosaicRestrictionTransactionService', () => {
     const globalRestrictionValue = '1000';
     const globalRestrictionType = MosaicRestrictionType.LE;
     const addressRestrictionValue = '10';
+    const epochAdjustment = 1573430400;
 
     function mockGlobalRestriction(): Page<MosaicGlobalRestriction> {
         const restriction = new MosaicGlobalRestriction(
@@ -103,8 +104,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should create MosaicGlobalRestriction Transaction', (done) => {
         mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 mosaicId,
                 key,
                 '2000',
@@ -123,8 +124,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should create MosaicGlobalRestriction Transaction - with referenceMosaicId', (done) => {
         mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 mosaicId,
                 key,
                 '2000',
@@ -143,7 +144,14 @@ describe('MosaicRestrictionTransactionService', () => {
 
     it('should create MosaicAddressRestriction Transaction', (done) => {
         mosaicRestrictionTransactionService
-            .createMosaicAddressRestrictionTransaction(Deadline.create(), NetworkType.MIJIN_TEST, mosaicId, key, account.address, '2000')
+            .createMosaicAddressRestrictionTransaction(
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
+                mosaicId,
+                key,
+                account.address,
+                '2000',
+            )
             .subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
@@ -156,8 +164,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should create MosaicGlobalRestriction Transaction with unresolvedMosaicId', (done) => {
         mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 unresolvedMosaicId,
                 key,
                 '2000',
@@ -176,8 +184,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should create MosaicAddressRestriction Transaction with unresolvedAddress', (done) => {
         mosaicRestrictionTransactionService
             .createMosaicAddressRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 unresolvedMosaicId,
                 key,
                 unresolvedAddress,
@@ -195,8 +203,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should throw error with invalid unresolvedMosaicId', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 unresolvedAddress,
                 key,
                 '2000',
@@ -208,8 +216,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should throw error with invalid unresolvedAddress', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 mosaicId,
                 key,
                 unresolvedMosaicId,
@@ -221,8 +229,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should throw error with invalid value / key', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 mosaicId,
                 key,
                 'wrong value',
@@ -232,8 +240,8 @@ describe('MosaicRestrictionTransactionService', () => {
 
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 mosaicId,
                 key,
                 account.address,
@@ -245,8 +253,8 @@ describe('MosaicRestrictionTransactionService', () => {
     it('should throw error with invalid address restriction key - MosaicAddressRestriction', () => {
         mosaicRestrictionTransactionService
             .createMosaicAddressRestrictionTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 mosaicIdWrongKey,
                 invalidKey,
                 account.address,

@@ -24,10 +24,19 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('Page', () => {
+    const epochAdjustment = 1573430400;
     it('should create Page', () => {
         const account = TestingAccount;
         let page = new Page<Transaction>(
-            [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            [
+                TransferTransaction.create(
+                    Deadline.create(epochAdjustment),
+                    account.address,
+                    [],
+                    PlainMessage.create(''),
+                    NetworkType.TEST_NET,
+                ),
+            ],
             1,
             1,
         );
@@ -37,7 +46,15 @@ describe('Page', () => {
         expect(page.isLastPage).to.be.false;
 
         page = new Page<Transaction>(
-            [TransferTransaction.create(Deadline.create(), account.address, [], PlainMessage.create(''), NetworkType.TEST_NET)],
+            [
+                TransferTransaction.create(
+                    Deadline.create(epochAdjustment),
+                    account.address,
+                    [],
+                    PlainMessage.create(''),
+                    NetworkType.TEST_NET,
+                ),
+            ],
             2,
             2,
         );

@@ -55,6 +55,7 @@ import { SecretLockHttp } from './SecretLockHttp';
 import { HashLockHttp } from './HashLockHttp';
 import { FinalizationHttp } from './FinalizationHttp';
 import { FinalizationRepository } from './FinalizationRepository';
+import { DtoMapping } from '../core/utils/DtoMapping';
 /**
  * Receipt http repository.
  *
@@ -66,6 +67,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly websocketUrl: string;
     private readonly websocketInjected?: any;
     private readonly fetchApi?: any;
+    private readonly epochAdjustment: Observable<number>;
 
     /**
      * Constructor
@@ -73,11 +75,20 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      * @param configs optional repository factory configs
      */
     constructor(url: string, configs?: RepositoryFactoryConfig) {
+        const networkRepo = this.createNetworkRepository();
         this.url = url;
         this.fetchApi = configs?.fetchApi;
-        this.networkType = configs?.networkType
-            ? observableOf(configs.networkType)
-            : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
+        this.networkType = configs?.networkType ? observableOf(configs.networkType) : networkRepo.getNetworkType().pipe(shareReplay(1));
+        this.epochAdjustment = configs?.epochAdjustment
+            ? observableOf(configs.epochAdjustment)
+            : networkRepo
+                  .getNetworkProperties()
+                  .pipe(
+                      map((property) => {
+                          return DtoMapping.parseServerDuration(property.network.epochAdjustment ?? '-').seconds();
+                      }),
+                  )
+                  .pipe(shareReplay(1));
         this.generationHash = configs?.generationHash
             ? observableOf(configs?.generationHash)
             : this.createNodeRepository()
@@ -166,5 +177,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     createListener(): IListener {
         return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
+    }
+
+    getEpochAdjustment(): Observable<number> {
+        return this.epochAdjustment;
     }
 }

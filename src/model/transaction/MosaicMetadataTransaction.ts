@@ -152,7 +152,9 @@ export class MosaicMetadataTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = MosaicMetadataTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as MosaicMetadataTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
             new UInt64(builder.getScopedMetadataKey()),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getTargetMosaicId().unresolvedMosaicId).toHex()),

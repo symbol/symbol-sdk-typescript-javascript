@@ -31,7 +31,7 @@
 //     let statementDTO;
 
 //     before(() => {
-//         account = Account.createFromPrivateKey('81C18245507F9C15B61BDEDAFA2C10D9DC2C4E401E573A10935D45AA2A461FD5', NetworkType.MIJIN_TEST);
+//         account = Account.createFromPrivateKey('81C18245507F9C15B61BDEDAFA2C10D9DC2C4E401E573A10935D45AA2A461FD5', NetworkType.PRIVATE_TEST);
 //         transactionStatementsDTO = [
 //             {
 //                 statement: {
@@ -44,7 +44,7 @@
 //                         {
 //                             version: 1,
 //                             type: 8515,
-//                             targetAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+//                             targetAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
 //                             mosaicId: '504677C3281108DB',
 //                             amount: '0',
 //                         },

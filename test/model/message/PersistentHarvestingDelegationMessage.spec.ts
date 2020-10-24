@@ -28,11 +28,12 @@ describe('PersistentHarvestingDelegationMessage', () => {
     let recipient_nis: Account;
     const signingPrivateKey = 'F0AB1010EFEE19EE5373719881DF5123C13E643C519655F7E97347BFF77175BF';
     const vrfPrivateKey = '800F35F1CC66C2B62CE9DD9F31003B9B3E5C7A2F381FB8952A294277A1015D83';
+    const epochAdjustment = 1573430400;
     before(() => {
-        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.MIJIN_TEST);
+        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.PRIVATE_TEST);
         recipient = Account.createFromPrivateKey(
             'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         recipient_nis = Account.createFromPrivateKey(
             'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
@@ -45,7 +46,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             signingPrivateKey,
             vrfPrivateKey,
             recipient.publicKey,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(encryptedMessage.payload.length).to.be.equal(264);
         expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
@@ -73,7 +74,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             signingPrivateKey,
             vrfPrivateKey,
             recipient.publicKey,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey);
         expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
@@ -82,11 +83,11 @@ describe('PersistentHarvestingDelegationMessage', () => {
     it('return decrepted message reading from message payload', () => {
         const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const tx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             signingPrivateKey,
             vrfPrivateKey,
             recipient.publicKey,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const signedTransaction = tx.signWith(sender, generationHash);
         const encryptMessage = PersistentHarvestingDelegationMessage.createFromPayload(

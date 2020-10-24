@@ -153,7 +153,7 @@ export class SecretLockTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = SecretLockTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as SecretLockTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
                 UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaic().mosaicId.unresolvedMosaicId).toHex()),
                 new UInt64(builder.getMosaic().amount.amount),

@@ -34,10 +34,8 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
-import { EncryptedMessage } from '../message/EncryptedMessage';
 import { Message } from '../message/Message';
 import { MessageType } from '../message/MessageType';
-import { PlainMessage } from '../message/PlainMessage';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
@@ -50,6 +48,9 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { EmptyMessage, PlainMessage } from '../message/PlainMessage';
+import { EncryptedMessage } from '../message/EncryptedMessage';
+import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -121,7 +122,7 @@ export class TransferTransaction extends Transaction {
         /**
          * The transaction message of 2048 characters.
          */
-        public readonly message: Message,
+        public readonly message: Message = EmptyMessage,
         signature?: string,
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,
@@ -140,21 +141,17 @@ export class TransferTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const messageType = builder.getMessage()[0];
-        const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = TransferTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp),
+            isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as TransferTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
                 return new Mosaic(UnresolvedMapping.toUnresolvedMosaic(id), new UInt64(mosaic.amount.amount));
             }),
-            messageType === MessageType.PlainMessage
-                ? PlainMessage.createFromPayload(messageHex)
-                : EncryptedMessage.createFromPayload(messageHex),
+            TransferTransaction.createMessageFromBuffer(builder.getMessage()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
             isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
@@ -168,7 +165,7 @@ export class TransferTransaction extends Transaction {
      * @internal
      */
     protected validate(): void {
-        if (this.message.type === MessageType.PersistentHarvestingDelegationMessage) {
+        if (this.message?.type === MessageType.PersistentHarvestingDelegationMessage) {
             if (this.mosaics.length > 0) {
                 throw new Error('PersistentDelegationRequestTransaction should be created without Mosaic');
             } else if (!/^[0-9a-fA-F]{264}$/.test(this.message.payload)) {
@@ -211,13 +208,16 @@ export class TransferTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     public getMessageBuffer(): Uint8Array {
+        if (!this.message || !this.message.payload) {
+            return Uint8Array.of();
+        }
         const messgeHex =
             this.message.type === MessageType.PersistentHarvestingDelegationMessage
                 ? this.message.payload
                 : Convert.utf8ToHex(this.message.payload);
         const payloadBuffer = Convert.hexToUint8(messgeHex);
         const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
-        return this.message.type === MessageType.PersistentHarvestingDelegationMessage
+        return this.message.type === MessageType.PersistentHarvestingDelegationMessage || !this.message.payload
             ? payloadBuffer
             : GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
     }
@@ -297,5 +297,26 @@ export class TransferTransaction extends Transaction {
             this.recipientAddress.equals(address) ||
             alias.find((name) => this.recipientAddress.equals(name)) !== undefined
         );
+    }
+
+    /**
+     * @internal
+     */
+    private static createMessageFromBuffer(messageBuffer: Uint8Array): Message {
+        if (!messageBuffer.length) {
+            return EmptyMessage;
+        }
+        const messageType = messageBuffer[0];
+        const messageHex = Convert.uint8ToHex(messageBuffer).substring(2);
+        switch (messageType) {
+            case MessageType.PlainMessage:
+                return PlainMessage.createFromPayload(messageHex);
+            case MessageType.EncryptedMessage:
+                return EncryptedMessage.createFromPayload(messageHex);
+            case MessageType.PersistentHarvestingDelegationMessage:
+                return PersistentHarvestingDelegationMessage.createFromPayload(messageHex);
+            default:
+                throw new Error('Message Type is not valid');
+        }
     }
 }

@@ -130,7 +130,9 @@ export class AddressAliasTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = AddressAliasTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
             Address.createFromEncoded(Convert.uint8ToHex(builder.getAddress().address)),

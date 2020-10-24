@@ -37,6 +37,8 @@ describe('NamespaceHttp', () => {
     let generationHash: string;
     const helper = new IntegrationTestHelper();
 
+    const epochAdjustment = 1573430400;
+
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -54,7 +56,7 @@ describe('NamespaceHttp', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(1000),
                 helper.networkType,
@@ -68,7 +70,7 @@ describe('NamespaceHttp', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 account.address,

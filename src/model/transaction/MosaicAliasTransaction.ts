@@ -127,7 +127,9 @@ export class MosaicAliasTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = MosaicAliasTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
             new MosaicId(builder.getMosaicId().mosaicId),

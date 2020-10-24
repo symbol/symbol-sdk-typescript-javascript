@@ -121,7 +121,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = AccountAddressRestrictionTransaction.create(
             isEmbedded
-                ? Deadline.create()
+                ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {

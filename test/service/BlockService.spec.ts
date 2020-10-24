@@ -29,6 +29,13 @@ import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';
 import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
+import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
+import { Page } from '../../src/infrastructure/Page';
+import { Transaction } from '../../src/model/transaction/Transaction';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { Deadline, TransactionInfo } from '../../src/model/model';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('BlockService', () => {
     const mockBlockHash = 'D4EC16FCFE696EFDBF1820F68245C88135ACF4C6F888599C8E18BC09B9F08C7B';
@@ -48,7 +55,7 @@ describe('BlockService', () => {
                 1,
                 'signature',
                 account.publicAccount,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 0,
                 0,
                 UInt64.fromUint(1),
@@ -62,7 +69,9 @@ describe('BlockService', () => {
                 'fakeHash',
                 'fakeHash',
                 'stateHash',
-                undefined,
+                account.address,
+                0,
+                0,
             );
         }
         return new BlockInfo(
@@ -75,7 +84,7 @@ describe('BlockService', () => {
             1,
             'signature',
             account.publicAccount,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             0,
             0,
             UInt64.fromUint(1),
@@ -89,7 +98,9 @@ describe('BlockService', () => {
             'fakeHash',
             'fakeHash',
             'stateHash',
-            undefined,
+            account.address,
+            0,
+            0,
         );
     }
 
@@ -107,10 +118,27 @@ describe('BlockService', () => {
         );
     }
 
+    function mockTransactions(): Page<Transaction> {
+        const tx = new TransferTransaction(
+            NetworkType.TEST_NET,
+            1,
+            Deadline.createEmtpy(),
+            UInt64.fromUint(0),
+            TestingAccount.address,
+            [],
+            PlainMessage.create(''),
+            undefined,
+            undefined,
+            new TransactionInfo(UInt64.fromUint(1), 0, 'id', 'DCD14A040BC5096348FC55CACBD0D459DD6F81779C7E7C526EA52309BD6595F7'),
+        );
+        return new Page<Transaction>([tx], 1, 20);
+    }
+
     before(() => {
         account = TestingAccount;
         const mockBlockRepository = mock<BlockRepository>();
         const mockReceiptRepository = mock<ReceiptRepository>();
+        const mockTransactionReposity = mock<TransactionRepository>();
         const mockRepoFactory = mock<RepositoryFactory>();
 
         when(mockBlockRepository.getBlockByHeight(deepEqual(UInt64.fromUint(1)))).thenReturn(observableOf(mockBlockInfo()));
@@ -124,11 +152,22 @@ describe('BlockService', () => {
         when(mockBlockRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(1)), leaf)).thenReturn(observableOf(mockMerklePath()));
         when(mockBlockRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(2)), leaf)).thenReturn(observableOf(mockMerklePath()));
         when(mockBlockRepository.getMerkleReceipts(deepEqual(UInt64.fromUint(3)), leaf)).thenReject(new Error());
+        when(
+            mockTransactionReposity.search(
+                deepEqual({
+                    group: TransactionGroup.Confirmed,
+                    height: UInt64.fromUint(1),
+                    pageNumber: 1,
+                }),
+            ),
+        ).thenReturn(observableOf(mockTransactions()));
         const blockRepository = instance(mockBlockRepository);
         const receiptRepository = instance(mockReceiptRepository);
+        const transactionRepository = instance(mockTransactionReposity);
 
         when(mockRepoFactory.createBlockRepository()).thenReturn(blockRepository);
         when(mockRepoFactory.createReceiptRepository()).thenReturn(receiptRepository);
+        when(mockRepoFactory.createTransactionRepository()).thenReturn(transactionRepository);
         const repoFactory = instance(mockRepoFactory);
         blockService = new BlockService(repoFactory);
     });
@@ -166,5 +205,10 @@ describe('BlockService', () => {
     it('should validate statement - error', async () => {
         const result = await blockService.validateStatementInBlock(leaf, UInt64.fromUint(3)).toPromise();
         expect(result).to.be.false;
+    });
+
+    it('should calculate root transaction merkle hash', async () => {
+        const result = await blockService.calculateTransactionsMerkleRootHash(UInt64.fromUint(1)).toPromise();
+        expect(result).to.be.equal('DCD14A040BC5096348FC55CACBD0D459DD6F81779C7E7C526EA52309BD6595F7');
     });
 });

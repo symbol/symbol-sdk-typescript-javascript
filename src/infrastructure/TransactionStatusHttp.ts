@@ -37,9 +37,10 @@ export class TransactionStatusHttp extends Http implements TransactionStatusRepo
     /**
      * Constructor
      * @param url Base catapult-rest url
+     * @param epochAdjustment Nemesis block epoch
      * @param fetchApi fetch function to be used when performing rest requests.
      */
-    constructor(url: string, fetchApi?: any) {
+    constructor(url: string, epochAdjustment?: number | Observable<number>, fetchApi?: any) {
         super(url, fetchApi);
         this.transactionStatusRoutesApi = new TransactionStatusRoutesApi(this.config());
     }

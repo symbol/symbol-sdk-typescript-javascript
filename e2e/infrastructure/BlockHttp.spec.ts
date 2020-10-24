@@ -43,6 +43,8 @@ describe('BlockHttp', () => {
     let networkType: NetworkType;
     let transactionHash;
 
+    const epochAdjustment = 1573430400;
+
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -67,7 +69,7 @@ describe('BlockHttp', () => {
     describe('Setup Test Data', () => {
         it('Announce TransferTransaction FER', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account2.address,
                 [helper.createNetworkCurrency(1, false)],
                 PlainMessage.create('test-message'),
@@ -91,7 +93,7 @@ describe('BlockHttp', () => {
             expect(blockInfo.timestamp.lower).to.be.equal(0);
             expect(blockInfo.timestamp.higher).to.be.equal(0);
             expect(blockInfo.beneficiaryAddress).not.to.be.undefined;
-            expect(blockInfo.numStatements).not.to.be.undefined;
+            expect(blockInfo.statementsCount).not.to.be.undefined;
         });
     });
 

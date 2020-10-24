@@ -51,14 +51,15 @@ describe('BlockHttp', () => {
     blockDTO.timestamp = '7';
     blockDTO.beneficiaryAddress = Address.createFromPublicKey(
         '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     ).encoded();
 
     const blockMetaDTO = {} as BlockMetaDTO;
     blockMetaDTO.generationHash = 'abc';
     blockMetaDTO.hash = 'aHash';
-    blockMetaDTO.numStatements = 10;
-    blockMetaDTO.numTransactions = 20;
+    blockMetaDTO.statementsCount = 10;
+    blockMetaDTO.transactionsCount = 20;
+    blockMetaDTO.totalTransactionsCount = 30;
     blockMetaDTO.totalFee = '30';
     blockMetaDTO.stateHashSubCacheMerkleRoots = ['a', 'b', 'c'];
 
@@ -94,8 +95,9 @@ describe('BlockHttp', () => {
 
         expect(blockInfo.generationHash).to.be.equals(blockInfoDto.meta.generationHash);
         expect(blockInfo.hash).to.be.equals(blockInfoDto.meta.hash);
-        expect(blockInfo.numStatements).to.be.equals(blockInfoDto.meta.numStatements);
-        expect(blockInfo.numTransactions).to.be.equals(blockInfoDto.meta.numTransactions);
+        expect(blockInfo.statementsCount).to.be.equals(blockInfoDto.meta.statementsCount);
+        expect(blockInfo.transactionsCount).to.be.equals(blockInfoDto.meta.transactionsCount);
+        expect(blockInfo.totalTransactionsCount).to.be.equals(blockInfoDto.meta.totalTransactionsCount);
         expect(blockInfo.totalFee.toString()).to.be.equals(blockInfoDto.meta.totalFee);
     }
 

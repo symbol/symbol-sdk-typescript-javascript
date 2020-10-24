@@ -43,6 +43,7 @@ describe('MetadataTransactionService', () => {
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
+    const epochAdjustment = 1573430400;
     function mockMetadata(type: MetadataType): Metadata {
         let targetId;
 
@@ -111,8 +112,8 @@ describe('MetadataTransactionService', () => {
     it('should create AccountMetadataTransaction', (done) => {
         metadataTransactionService
             .createAccountMetadataTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 key,
                 value + deltaValue,
@@ -134,8 +135,8 @@ describe('MetadataTransactionService', () => {
     it('should create MosaicMetadataTransaction', (done) => {
         metadataTransactionService
             .createMosaicMetadataTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 new MosaicId(targetIdHex),
                 key,
@@ -159,8 +160,8 @@ describe('MetadataTransactionService', () => {
     it('should create NamespaceMetadataTransaction', (done) => {
         metadataTransactionService
             .createNamespaceMetadataTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 NamespaceId.createFromEncoded(targetIdHex),
                 key,
@@ -194,8 +195,8 @@ describe('MetadataTransactionService', () => {
         ).thenReject();
         expect(() => {
             metadataTransactionService.createAccountMetadataTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 key,
                 value + deltaValue,
@@ -218,8 +219,8 @@ describe('MetadataTransactionService', () => {
         ).thenReject();
         expect(() => {
             metadataTransactionService.createMosaicMetadataTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 new MosaicId(targetIdHex),
                 key,
@@ -243,8 +244,8 @@ describe('MetadataTransactionService', () => {
         ).thenReject();
         expect(() => {
             metadataTransactionService.createNamespaceMetadataTransaction(
-                Deadline.create(),
-                NetworkType.MIJIN_TEST,
+                Deadline.create(epochAdjustment),
+                NetworkType.PRIVATE_TEST,
                 account.address,
                 NamespaceId.createFromEncoded(targetIdHex),
                 key,

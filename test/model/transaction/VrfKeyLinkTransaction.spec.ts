@@ -31,13 +31,14 @@ describe('VrfKeyLinkTransaction', () => {
     before(() => {
         account = TestingAccount;
     });
+    const epochAdjustment = 1573430400;
 
     it('should default maxFee field be set to 0', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(vrfKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -46,10 +47,10 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -59,10 +60,10 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should create an VrfKeyLinkTransaction object with link action', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -77,10 +78,10 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('should create an VrfKeyLinkTransaction object with unlink action', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -96,10 +97,10 @@ describe('VrfKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 161 for VrfKeyLinkTransaction byte size', () => {
             const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(vrfKeyLinkTransaction.serialize()).length).to.be.equal(vrfKeyLinkTransaction.size);
             expect(vrfKeyLinkTransaction.size).to.be.equal(161);
@@ -108,10 +109,10 @@ describe('VrfKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(vrfKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -120,11 +121,16 @@ describe('VrfKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = VrfKeyLinkTransaction.create(Deadline.create(), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
+        const tx = VrfKeyLinkTransaction.create(
+            Deadline.create(epochAdjustment),
+            account.publicKey,
+            LinkAction.Unlink,
+            NetworkType.PRIVATE_TEST,
+        );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

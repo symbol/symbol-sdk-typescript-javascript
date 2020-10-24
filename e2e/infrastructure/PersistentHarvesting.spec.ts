@@ -30,9 +30,10 @@ describe('PersistentHarvesting', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let remoteAccount: Account;
+
     const vrfKeyPair = Account.createFromPrivateKey(
         '82798EA9A2D2D202AFCCC82C40A287780BCA3C7F7A2FD5B754832804C6BE1BAA',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
 
     before(() => {
@@ -58,7 +59,7 @@ describe('PersistentHarvesting', () => {
     describe('AccountKeyLinkTransaction', () => {
         it('standalone', () => {
             const accountLinkTransaction = AccountKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(helper.epochAdjustment),
                 remoteAccount.publicKey,
                 LinkAction.Link,
                 networkType,
@@ -73,7 +74,7 @@ describe('PersistentHarvesting', () => {
     describe('VrfKeyLinkTransaction', () => {
         it('standalone', () => {
             const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(helper.epochAdjustment),
                 vrfKeyPair.publicKey,
                 LinkAction.Link,
                 networkType,
@@ -88,7 +89,7 @@ describe('PersistentHarvesting', () => {
     describe('NodeKeyLinkTransaction', () => {
         it('standalone', () => {
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(helper.epochAdjustment),
                 'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',
                 LinkAction.Link,
                 networkType,
@@ -108,11 +109,11 @@ describe('PersistentHarvesting', () => {
     describe('transactions', () => {
         it('should create delegated harvesting transaction', () => {
             const tx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
-                Deadline.create(),
+                Deadline.create(helper.epochAdjustment),
                 remoteAccount.privateKey,
                 vrfKeyPair.privateKey,
                 'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
                 helper.maxFee,
             );
 

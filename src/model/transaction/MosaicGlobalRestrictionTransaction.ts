@@ -173,7 +173,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = MosaicGlobalRestrictionTransaction.create(
             isEmbedded
-                ? Deadline.create()
+                ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
             UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             new UInt64(builder.getRestrictionKey()),

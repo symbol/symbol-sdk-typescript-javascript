@@ -38,25 +38,26 @@ import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(
         '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
 
     let namespaceRepoMock: NamespaceRepository;
     let namespaceRepo: NamespaceRepository;
+    const epochAdjustment = 1573430400;
     beforeEach(() => {
         namespaceRepoMock = mock();
         namespaceRepo = instance(namespaceRepoMock);
     });
 
     it('should createComplete a WebSocket instance given url parameter', () => {
-        const listener = new Listener('http://localhost:3000/ws', namespaceRepo);
+        const listener = new Listener('http://localhost:3000/ws', namespaceRepo, epochAdjustment);
         expect('http://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
 
     describe('isOpen', () => {
         it('should return false when listener is created and not opened', () => {
-            const listener = new Listener('http://localhost:3000', namespaceRepo);
+            const listener = new Listener('http://localhost:3000', namespaceRepo, epochAdjustment);
             expect(listener.isOpen()).to.be.false;
             listener.close();
         });
@@ -64,7 +65,7 @@ describe('Listener', () => {
 
     describe('Invalid Channel', () => {
         it('should throw error if channel is not supported', () => {
-            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -103,7 +104,7 @@ describe('Listener', () => {
 
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -147,7 +148,7 @@ describe('Listener', () => {
 
     describe('onConfirmed', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -192,7 +193,7 @@ describe('Listener', () => {
 
     describe('onerror', () => {
         it('should reject because of wrong server url', async () => {
-            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo);
+            const listener = new Listener('https://notcorrecturl:0000', namespaceRepo, epochAdjustment);
             await listener
                 .open()
                 .then(() => {
@@ -235,11 +236,11 @@ describe('Listener', () => {
                 );
 
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -279,11 +280,11 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -324,11 +325,11 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -368,11 +369,11 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -414,11 +415,11 @@ describe('Listener', () => {
                     observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
                 );
                 const transferTransaction = TransferTransaction.create(
-                    Deadline.create(),
+                    Deadline.create(epochAdjustment),
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.MIJIN_TEST,
+                    NetworkType.PRIVATE_TEST,
                     undefined,
                     undefined,
                     account.publicAccount,
@@ -568,7 +569,7 @@ describe('Listener', () => {
                             '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
                             'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
                         signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                        beneficiaryAddress: '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144',
+                        beneficiaryAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                         timestamp: '0',
                         type: 32768,
                         version: 1,

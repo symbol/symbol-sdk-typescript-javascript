@@ -31,19 +31,20 @@ import { Address } from '../../../src/model/account/Address';
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });
 
     it('should default maxFee field be set to 0', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(namespaceMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -52,13 +53,13 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -68,32 +69,32 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should create and sign an NamespaceMetadataTransaction object', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '90D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA4E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
+            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05CE8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
         );
     });
 
     describe('size', () => {
         it('should return 182 for NamespaceMetadataTransaction byte size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
@@ -101,13 +102,13 @@ describe('NamespaceMetadataTransaction', () => {
 
         it('should set payload size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
@@ -117,13 +118,13 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(364);
 
@@ -133,13 +134,13 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should create EmbeddedTransactionBuilder', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(namespaceMetadataTransaction, { signer: account.publicAccount });
@@ -153,13 +154,13 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('should resolve alias', () => {
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const resolved = namespaceMetadataTransaction.resolveAliases();
 
@@ -169,18 +170,18 @@ describe('NamespaceMetadataTransaction', () => {
 
     it('Notify Account', () => {
         const tx = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.address,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -191,18 +192,18 @@ describe('NamespaceMetadataTransaction', () => {
         const alias = new NamespaceId('test');
         const wrongAlias = new NamespaceId('wrong');
         const tx = NamespaceMetadataTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             alias,
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), [wrongAlias]);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [wrongAlias]);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

@@ -52,20 +52,22 @@ export class IntegrationTestHelper {
     public service = new BootstrapService();
     public config: StartParams;
     public startEachTime = true;
+    public epochAdjustment: number;
 
     private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string }> {
         this.config = {
+            report: false,
             preset: Preset.bootstrap,
             reset: this.startEachTime,
             customPreset: './e2e/e2e-preset.yml',
             timeout: 60000 * 3,
             target: 'target/bootstrap-test',
-            daemon: false,
+            detached: false,
             user: 'current',
         };
 
         console.log('Starting bootstrap server');
-        const configResult = await this.service.start({ ...this.config, daemon: true });
+        const configResult = await this.service.start({ ...this.config, detached: true });
         const accounts = configResult.addresses?.mosaics?.['currency'].map((n) => n.privateKey);
         if (!accounts) {
             throw new Error('Nemesis accounts could not be loaded!');
@@ -111,6 +113,7 @@ export class IntegrationTestHelper {
 
         this.networkType = await this.repositoryFactory.getNetworkType().toPromise();
         this.generationHash = await this.repositoryFactory.getGenerationHash().toPromise();
+        this.epochAdjustment = await this.repositoryFactory.getEpochAdjustment().toPromise();
 
         let index = 0;
         this.account = Account.createFromPrivateKey(accounts[index++], this.networkType);

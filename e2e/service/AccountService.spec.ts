@@ -54,7 +54,7 @@ describe('AccountService', () => {
     describe('Create a namespace', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(helper.epochAdjustment),
                 name,
                 UInt64.fromUint(300000),
                 networkType,

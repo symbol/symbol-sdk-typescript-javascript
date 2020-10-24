@@ -1,4 +1,5 @@
 /*
+import { Convert } from '../../core/format/Convert';
  * Copyright 2018 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { MessageType } from './MessageType';
+import { Convert } from '../../core/format/Convert';
 
 /**
  * An abstract message class that serves as the base class of all message types.
@@ -46,10 +50,12 @@ export abstract class Message {
     /**
      * Create DTO object
      */
-    toDTO(): any {
-        return {
-            type: this.type,
-            payload: this.payload,
-        };
+    toDTO(): string {
+        if (!this.payload) {
+            return '';
+        }
+        return this.type === MessageType.PersistentHarvestingDelegationMessage
+            ? this.payload
+            : this.type.toString(16).padStart(2, '0').toUpperCase() + Convert.utf8ToHex(this.payload);
     }
 }

@@ -40,4 +40,9 @@ export interface RepositoryFactoryConfig {
      *  2) or node-fetch if running on server (window.fetch not found)
      */
     fetchApi?: any;
+
+    /**
+     * The nemesis block creation epoch
+     */
+    epochAdjustment?: number;
 }

@@ -47,6 +47,8 @@ describe('MetadataHttp', () => {
     let networkType: NetworkType;
     let metadataRepository: MetadataRepository;
 
+    const epochAdjustment = 1573430400;
+
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -72,7 +74,7 @@ describe('MetadataHttp', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -90,7 +92,7 @@ describe('MetadataHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
@@ -105,7 +107,7 @@ describe('MetadataHttp', () => {
     describe('AccountMetadataTransaction', () => {
         it('aggregate', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(6),
                 23,
@@ -115,7 +117,7 @@ describe('MetadataHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 [accountMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -129,7 +131,7 @@ describe('MetadataHttp', () => {
     describe('MosaicMetadataTransaction', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(6),
                 mosaicId,
@@ -140,7 +142,7 @@ describe('MetadataHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -154,7 +156,7 @@ describe('MetadataHttp', () => {
     describe('NamespaceMetadataTransaction', () => {
         it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.address,
                 UInt64.fromUint(6),
                 namespaceId,
@@ -165,7 +167,7 @@ describe('MetadataHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 [namespaceMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],

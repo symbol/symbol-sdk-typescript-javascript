@@ -21,7 +21,7 @@ import { SecretLockRepository } from '../../../src/infrastructure/SecretLockRepo
 import { Address } from '../../../src/model/account/Address';
 
 describe('SecretLockPaginationStreamer', () => {
-    const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+    const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
 
     it('basicMultiPageTest', () => {
         const SecretLockRepositoryMock: SecretLockRepository = mock();

@@ -38,6 +38,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
         statement = new Statement(
@@ -55,14 +56,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         );
 
@@ -85,14 +86,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             namespacId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         );
 
@@ -119,14 +120,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             namespacId,
         );
 
@@ -149,14 +150,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         ).setMaxFee(2);
         expect(mosaicGlobalRestrictionTransaction.maxFee.compact()).to.be.equal(340);
@@ -167,7 +168,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicGlobalRestrictionTransaction = new MosaicGlobalRestrictionTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -195,14 +196,14 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
         const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
         const tx = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             mosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         );
 

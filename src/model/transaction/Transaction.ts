@@ -358,7 +358,7 @@ export abstract class Transaction {
      * @returns {Transaction}
      * @memberof Transaction
      */
-    public reapplyGiven(deadline: Deadline = Deadline.create()): Transaction {
+    public reapplyGiven(deadline: Deadline): Transaction {
         if (this.isUnannounced()) {
             return DtoMapping.assign(this, { deadline });
         }

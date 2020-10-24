@@ -48,8 +48,8 @@ export interface RepositoryFactory {
     getNetworkType(): Observable<NetworkType>;
 
     /**
-     * @returns the generation hash used to sign transactions. Value retrieved from the block/1
-     * endEpoch. This method is cached, the server is only called the first time.
+     * @returns the generation hash used to sign transactions. Value retrieved from the blocks/1
+     * endpoint. This method is cached, the server is only called the first time.
      */
     getGenerationHash(): Observable<string>;
 
@@ -142,4 +142,9 @@ export interface RepositoryFactory {
      * @returns a newly created {@link IListener}
      */
     createListener(): IListener;
+
+    /**
+     * @returns nemesis block epoch adjustment in seconds
+     */
+    getEpochAdjustment(): Observable<number>;
 }

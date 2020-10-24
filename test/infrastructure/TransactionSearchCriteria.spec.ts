@@ -36,6 +36,8 @@ describe('TransactionSearchCriteria', () => {
             embedded: true,
             group: TransactionGroup.Confirmed,
             height: UInt64.fromUint(1),
+            fromHeight: UInt64.fromUint(1),
+            toHeight: UInt64.fromUint(1),
             offset: '6789',
             recipientAddress: account.address,
             signerPublicKey: account.publicKey,
@@ -49,12 +51,14 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.embedded).to.be.equal(true);
         expect(criteria.group.toString()).to.be.equal(TransactionGroup.Confirmed.toString());
         expect(criteria.height?.toString()).to.be.equal('1');
+        expect(criteria.fromHeight?.toString()).to.be.equal('1');
+        expect(criteria.toHeight?.toString()).to.be.equal('1');
         expect(criteria.offset).to.be.equal('6789');
         expect(criteria.recipientAddress?.plain()).to.be.equal(account.address.plain());
         expect(criteria.signerPublicKey).to.be.equal(account.publicKey);
         deepEqual(criteria.type, [TransactionType.ACCOUNT_ADDRESS_RESTRICTION]);
 
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         criteria = {
             order: Order.Desc,
             pageNumber: 2,
@@ -63,6 +67,8 @@ describe('TransactionSearchCriteria', () => {
             embedded: false,
             group: TransactionGroup.Unconfirmed,
             height: UInt64.fromUint(2),
+            fromHeight: UInt64.fromUint(1),
+            toHeight: UInt64.fromUint(1),
             offset: 'bbb',
             recipientAddress: address,
             signerPublicKey: 'publicKey',
@@ -80,6 +86,8 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.recipientAddress?.plain()).to.be.equal(address.plain());
         expect(criteria.signerPublicKey).to.be.equal('publicKey');
         deepEqual(criteria.type, [TransactionType.TRANSFER]);
+        expect(criteria.fromHeight?.toString()).to.be.equal('1');
+        expect(criteria.toHeight?.toString()).to.be.equal('1');
     });
 
     it('should create TransactionSearchCriteria - default', () => {
@@ -90,6 +98,8 @@ describe('TransactionSearchCriteria', () => {
         expect(criteria.embedded).to.be.undefined;
         expect(criteria.group).to.be.equal(TransactionGroup.Confirmed);
         expect(criteria.height).to.be.undefined;
+        expect(criteria.fromHeight).to.be.undefined;
+        expect(criteria.toHeight).to.be.undefined;
         expect(criteria.offset).to.be.undefined;
         expect(criteria.pageNumber).to.be.undefined;
         expect(criteria.pageSize).to.be.undefined;

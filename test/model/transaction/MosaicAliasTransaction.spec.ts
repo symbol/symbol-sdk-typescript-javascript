@@ -33,6 +33,7 @@ import { AliasTransaction } from '../../../src/model/transaction/AliasTransactio
 describe('MosaicAliasTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });
@@ -41,11 +42,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -56,11 +57,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -72,11 +73,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -96,11 +97,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = AliasTransaction.createForMosaic(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ) as MosaicAliasTransaction;
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -121,11 +122,11 @@ describe('MosaicAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicAliasTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
@@ -134,11 +135,11 @@ describe('MosaicAliasTransaction', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicAliasTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
@@ -150,11 +151,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(mosaicAliasTransaction.maxFee.compact()).to.be.equal(290);
 
@@ -166,11 +167,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const resolved = mosaicAliasTransaction.resolveAliases();
         deepEqual(mosaicAliasTransaction, resolved);
@@ -180,11 +181,11 @@ describe('MosaicAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         Object.assign(mosaicAliasTransaction, { signer: account.publicAccount });
@@ -199,7 +200,13 @@ describe('MosaicAliasTransaction', () => {
     it('Notify Account', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const tx = MosaicAliasTransaction.create(Deadline.create(), AliasAction.Link, namespaceId, mosaicId, NetworkType.MIJIN_TEST);
+        const tx = MosaicAliasTransaction.create(
+            Deadline.create(epochAdjustment),
+            AliasAction.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.PRIVATE_TEST,
+        );
 
         Object.assign(tx, { signer: account.publicAccount });
         expect(tx.shouldNotifyAccount(account.address)).to.be.true;

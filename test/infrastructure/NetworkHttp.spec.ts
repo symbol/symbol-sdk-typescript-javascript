@@ -87,7 +87,7 @@ describe('NetworkHttp', () => {
 
     it('getNetworkType', async () => {
         const body: NodeInfoDTO = {
-            networkIdentifier: NetworkType.MIJIN_TEST,
+            networkIdentifier: NetworkType.PRIVATE_TEST,
             friendlyName: '',
             host: '',
             networkGenerationHashSeed: '',
@@ -100,7 +100,7 @@ describe('NetworkHttp', () => {
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
 
         const networkType = await networkRepository.getNetworkType().toPromise();
-        expect(networkType).to.be.equals(NetworkType.MIJIN_TEST);
+        expect(networkType).to.be.equals(NetworkType.PRIVATE_TEST);
     });
 
     it('getNetworkName', async () => {

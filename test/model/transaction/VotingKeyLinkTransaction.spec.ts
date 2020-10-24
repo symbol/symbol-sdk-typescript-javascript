@@ -31,6 +31,7 @@ describe('VotingKeyLinkTransaction', () => {
     const startEpoch = 1;
     const endEpoch = 10;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
         votingKey = '344B9146A1F8DBBD8AFC830A2AAB7A83692E73AD775159B811355B1D2C0C27120243B10A16D4B5001B2AF0ED456C82D0';
@@ -38,12 +39,12 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -54,12 +55,12 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -71,12 +72,12 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should create an votingKeyLinkTransaction object with link action', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -93,12 +94,12 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('should create an VotingKeyLinkTransaction object with unlink action', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -116,12 +117,12 @@ describe('VotingKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 185 for VotingKeyLinkTransaction byte size', () => {
             const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 votingKey,
                 startEpoch,
                 endEpoch,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(votingKeyLinkTransaction.serialize()).length).to.be.equal(votingKeyLinkTransaction.size);
             expect(votingKeyLinkTransaction.size).to.be.equal(185);
@@ -130,12 +131,12 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             votingKey,
             startEpoch,
             endEpoch,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(votingKeyLinkTransaction.maxFee.compact()).to.be.equal(370);
 
@@ -145,17 +146,17 @@ describe('VotingKeyLinkTransaction', () => {
 
     it('Notify Account', () => {
         const tx = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             startEpoch,
             endEpoch,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

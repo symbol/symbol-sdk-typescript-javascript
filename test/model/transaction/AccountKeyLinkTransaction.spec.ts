@@ -28,16 +28,17 @@ import { Address } from '../../../src/model/account/Address';
 describe('AccountKeyLinkTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
     });
 
     it('should default maxFee field be set to 0', () => {
         const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(accountKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -46,10 +47,10 @@ describe('AccountKeyLinkTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -59,10 +60,10 @@ describe('AccountKeyLinkTransaction', () => {
 
     it('should create an AccountKeyLinkTransaction object with link action', () => {
         const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(accountKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -77,10 +78,10 @@ describe('AccountKeyLinkTransaction', () => {
 
     it('should create an AccountKeyLinkTransaction object with unlink action', () => {
         const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(accountKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -96,10 +97,10 @@ describe('AccountKeyLinkTransaction', () => {
     describe('size', () => {
         it('should return 161 for AccountKeyLinkTransaction byte size', () => {
             const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(accountKeyLinkTransaction.serialize()).length).to.be.equal(accountKeyLinkTransaction.size);
             expect(accountKeyLinkTransaction.size).to.be.equal(161);
@@ -107,10 +108,10 @@ describe('AccountKeyLinkTransaction', () => {
 
         it('should create payload size', () => {
             const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(Convert.hexToUint8(accountKeyLinkTransaction.serialize()).length).to.be.equal(accountKeyLinkTransaction.size);
             expect(accountKeyLinkTransaction.size).to.be.equal(161);
@@ -120,10 +121,10 @@ describe('AccountKeyLinkTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const accountKeyLinkTransaction = AccountKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(accountKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -132,11 +133,16 @@ describe('AccountKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = AccountKeyLinkTransaction.create(Deadline.create(), account.publicKey, LinkAction.Unlink, NetworkType.MIJIN_TEST);
+        const tx = AccountKeyLinkTransaction.create(
+            Deadline.create(epochAdjustment),
+            account.publicKey,
+            LinkAction.Unlink,
+            NetworkType.PRIVATE_TEST,
+        );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

@@ -42,11 +42,12 @@ import { NodeInfo } from '../../src/model/node/NodeInfo';
 import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
 import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
 import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
+import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
         const repositoryFactory = new RepositoryFactoryHttp('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
         });
 
@@ -84,7 +85,7 @@ describe('RepositoryFactory', () => {
                 return instance(repositoryMock);
             }
         })('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
         });
 
         expect(counter).to.be.equals(0);
@@ -106,7 +107,7 @@ describe('RepositoryFactory', () => {
     it('Should get NetworkType from cache', (done) => {
         let counter = 0;
         const repositoryMock: NetworkRepository = mock();
-        const expectedNetworkType = NetworkType.MIJIN_TEST;
+        const expectedNetworkType = NetworkType.PRIVATE_TEST;
         const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(
             map((v) => {
                 counter++;
@@ -123,6 +124,7 @@ describe('RepositoryFactory', () => {
             }
         })('http://localhost:3000', {
             generationHash: 'testHash',
+            epochAdjustment: 1573430400,
         });
 
         expect(counter).to.be.equals(0);
@@ -137,12 +139,57 @@ describe('RepositoryFactory', () => {
         });
     });
 
+    it('Should get epochAdjustment from cache', (done) => {
+        let counter = 0;
+        const repositoryMock: NetworkRepository = mock();
+        const expectedepochAdjustment = 1573430400;
+        const body: NetworkConfigurationDTO = {
+            network: {
+                identifier: 'public-test',
+                nemesisSignerPublicKey: 'E3F04CA92250B49679EBEF98FAC87C1CECAC7E7491ECBB2307DF1AD65BED57FD',
+                generationHashSeed: 'AE6488282F9C09457F017BE5EE26387B21EB15CF32D6DA1E9846C25E00828329',
+                epochAdjustment: '1573430400s',
+            },
+            chain: {},
+            plugins: {},
+        };
+        const observableOfNetworkProperties = observableOf(body).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
+        when(repositoryMock.getNetworkProperties()).thenReturn(observableOfNetworkProperties);
+
+        expect(observableOfNetworkProperties).to.be.equals(observableOfNetworkProperties);
+
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNetworkRepository(): NetworkRepository {
+                return instance(repositoryMock);
+            }
+        })('http://localhost:3000', {
+            generationHash: 'testHash',
+            networkType: 152,
+        });
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getEpochAdjustment().subscribe((epoch) => {
+            expect(counter).to.be.equals(1);
+            expect(epoch).to.be.equals(expectedepochAdjustment);
+            repositoryFactory.getEpochAdjustment().subscribe((network) => {
+                expect(counter).to.be.equals(1);
+                expect(network).to.be.equals(expectedepochAdjustment);
+                done();
+            });
+        });
+    });
+
     it('Should get NetworkType from memory', (done) => {
         let counter = 0;
 
         const repositoryMock: NetworkRepository = mock();
 
-        const expectedNetworkType = NetworkType.MIJIN_TEST;
+        const expectedNetworkType = NetworkType.PRIVATE_TEST;
         const observableOfBlockInfo = observableOf(expectedNetworkType).pipe(
             map((v) => {
                 counter++;
@@ -160,6 +207,7 @@ describe('RepositoryFactory', () => {
         })('http://localhost:3000', {
             networkType: expectedNetworkType,
             generationHash: 'testHash',
+            epochAdjustment: 1573430400,
         });
 
         expect(counter).to.be.equals(0);
@@ -169,6 +217,53 @@ describe('RepositoryFactory', () => {
             repositoryFactory.getNetworkType().subscribe((network) => {
                 expect(counter).to.be.equals(0);
                 expect(network).to.be.equals(expectedNetworkType);
+                done();
+            });
+        });
+    });
+
+    it('Should get epochAdjustment from memory', (done) => {
+        let counter = 0;
+
+        const repositoryMock: NetworkRepository = mock();
+        const expectedepochAdjustment = 1573430400;
+        const body: NetworkConfigurationDTO = {
+            network: {
+                identifier: 'public-test',
+                nemesisSignerPublicKey: 'E3F04CA92250B49679EBEF98FAC87C1CECAC7E7491ECBB2307DF1AD65BED57FD',
+                generationHashSeed: 'AE6488282F9C09457F017BE5EE26387B21EB15CF32D6DA1E9846C25E00828329',
+                epochAdjustment: '1573430400s',
+            },
+            chain: {},
+            plugins: {},
+        };
+        const observableOfNetworkProperties = observableOf(body).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
+        when(repositoryMock.getNetworkProperties()).thenReturn(observableOfNetworkProperties);
+
+        expect(observableOfNetworkProperties).to.be.equals(observableOfNetworkProperties);
+
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNetworkRepository(): NetworkRepository {
+                return instance(repositoryMock);
+            }
+        })('http://localhost:3000', {
+            networkType: 152,
+            generationHash: 'testHash',
+            epochAdjustment: 1573430400,
+        });
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getEpochAdjustment().subscribe((networkType) => {
+            expect(counter).to.be.equals(0);
+            expect(networkType).to.be.equals(expectedepochAdjustment);
+            repositoryFactory.getEpochAdjustment().subscribe((network) => {
+                expect(counter).to.be.equals(0);
+                expect(network).to.be.equals(expectedepochAdjustment);
                 done();
             });
         });
@@ -189,7 +284,7 @@ describe('RepositoryFactory', () => {
                 return instance(namespaceRepository);
             }
         })('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
             websocketInjected: WebSocketMock,
         });
@@ -202,7 +297,7 @@ describe('RepositoryFactory', () => {
                 return instance(namespaceRepository);
             }
         })('http://localhost:3000', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
             websocketUrl: 'ws://localhost:3000/ws',
             websocketInjected: WebSocketMock,
@@ -214,7 +309,7 @@ describe('RepositoryFactory', () => {
 
     it('Should create listener object using injected ws', () => {
         const factory = new RepositoryFactoryHttp('url', {
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.PRIVATE_TEST,
             generationHash: 'testHash',
         });
 

@@ -149,7 +149,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = MosaicDefinitionTransaction.create(
             isEmbedded
-                ? Deadline.create()
+                ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
             MosaicNonce.createFromUint8Array(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),

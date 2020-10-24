@@ -44,6 +44,8 @@ describe('MosaicHttp', () => {
     const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
 
+    const epochAdjustment = 1573430400;
+
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -70,7 +72,7 @@ describe('MosaicHttp', () => {
             expect(nonce.toHex()).to.be.equals('22EA84A6');
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, false),
@@ -100,7 +102,7 @@ describe('MosaicHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(1000),
                 networkType,
@@ -115,7 +117,7 @@ describe('MosaicHttp', () => {
     describe('Setup test MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
@@ -189,7 +191,7 @@ describe('MosaicHttp', () => {
     describe('Remove test MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
+                Deadline.create(epochAdjustment),
                 AliasAction.Unlink,
                 namespaceId,
                 mosaicId,

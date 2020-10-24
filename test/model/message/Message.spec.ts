@@ -15,29 +15,26 @@
  */
 
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { Message } from '../../../src/model/message/Message';
-import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
 
 describe('Message', () => {
     it('should create an plain message dto object', () => {
         const message = new PlainMessage('test');
-        expect(message.toDTO().type).to.be.equal(MessageType.PlainMessage);
-        expect(message.toDTO().payload).to.be.equal('test');
+        expect(message.toDTO()).to.be.equal('00' + Convert.utf8ToHex('test'));
     });
 
     it('should create an encrypted message dto object', () => {
         const message = new EncryptedMessage('test');
-        expect(message.toDTO().type).to.be.equal(MessageType.EncryptedMessage);
-        expect(message.toDTO().payload).to.be.equal('test');
+        expect(message.toDTO()).to.be.equal('01' + Convert.utf8ToHex('test'));
     });
 
     it('should create an PersistentHarvestingDelegationMessage message dto object', () => {
         const message = new PersistentHarvestingDelegationMessage('746573742D6D657373616765');
-        expect(message.toDTO().type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
-        expect(message.toDTO().payload).to.be.equal('746573742D6D657373616765');
+        expect(message.toDTO()).to.be.equal('746573742D6D657373616765');
     });
 
     it('should throw exception on creating PersistentHarvestingDelegationMessage', () => {

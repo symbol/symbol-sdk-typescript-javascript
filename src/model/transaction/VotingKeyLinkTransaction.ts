@@ -132,7 +132,9 @@ export class VotingKeyLinkTransaction extends Transaction {
         const networkType = builder.getNetwork().valueOf();
         const signature = payload.substring(16, 144);
         const transaction = VotingKeyLinkTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp),
+            isEmbedded
+                ? Deadline.createEmtpy()
+                : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getLinkedPublicKey().votingKey),
             builder.getStartEpoch().finalizationEpoch,
             builder.getEndEpoch().finalizationEpoch,

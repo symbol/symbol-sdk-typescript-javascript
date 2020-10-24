@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Duration } from '@js-joda/core';
 import { Address } from '../../model/account/Address';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';
@@ -77,5 +78,46 @@ export class DtoMapping {
      */
     public static mapEnum<E1, E2>(value: E1 | undefined): E2 {
         return (value as unknown) as E2;
+    }
+
+    /**
+     * It parse a server time/duration configuration like: - 1000ms 1000 milliseconds - 15s 15 seconds
+     * - 5m 5 minutes - 2h 2 hours - 10d 10 days
+     *
+     * <p>into a @{@link Duration} object
+     *
+     * @param serverValue time.
+     * @return {Duration} an instant from that value.
+     */
+    public static parseServerDuration(serverValue: string): Duration {
+        const preprocessedValue = serverValue.replace(`'`, '').trim();
+        const regex = `([0-9]+)([hdms]+)[:\\s]?$`;
+        let duration = Duration.ofSeconds(0);
+        const matcher = preprocessedValue.match(regex);
+        if (matcher && matcher.length === 3) {
+            const num = parseInt(matcher[1]);
+            const type = matcher[2];
+            switch (type) {
+                case 'ms':
+                    duration = duration.plusMillis(num);
+                    break;
+                case 's':
+                    duration = duration.plusSeconds(num);
+                    break;
+                case 'm':
+                    duration = duration.plusMinutes(num);
+                    break;
+                case 'h':
+                    duration = duration.plusHours(num);
+                    break;
+                case 'd':
+                    duration = duration.plusDays(num);
+                    break;
+                default:
+                    throw new Error('Duration value format is not recognized.');
+            }
+            return duration;
+        }
+        throw new Error(`Duration value format is not recognized.`);
     }
 }

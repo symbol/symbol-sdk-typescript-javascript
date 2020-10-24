@@ -120,7 +120,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const signature = payload.substring(16, 144);
         const transaction = AccountMosaicRestrictionTransaction.create(
             isEmbedded
-                ? Deadline.create()
+                ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountMosaicRestrictionTransactionBuilder).getDeadline().timestamp),
             builder.getRestrictionFlags().valueOf(),
             builder.getRestrictionAdditions().map((addition) => {
