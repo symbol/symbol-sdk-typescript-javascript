@@ -73,13 +73,14 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
      * @param configs optional repository factory configs
      */
     constructor(url: string, configs?: RepositoryFactoryConfig) {
-        const networkRepo = this.createNetworkRepository();
         this.url = url;
         this.fetchApi = configs?.fetchApi;
-        this.networkType = configs?.networkType ? observableOf(configs.networkType) : networkRepo.getNetworkType().pipe(shareReplay(1));
+        this.networkType = configs?.networkType
+            ? observableOf(configs.networkType)
+            : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
         this.epochAdjustment = configs?.epochAdjustment
             ? observableOf(configs.epochAdjustment)
-            : networkRepo
+            : this.createNetworkRepository()
                   .getNetworkProperties()
                   .pipe(
                       map((property) => {
