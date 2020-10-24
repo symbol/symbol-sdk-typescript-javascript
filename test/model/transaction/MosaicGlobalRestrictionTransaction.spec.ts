@@ -63,7 +63,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         );
 
@@ -93,7 +93,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         );
 
@@ -127,7 +127,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             namespacId,
         );
 
@@ -157,7 +157,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         ).setMaxFee(2);
         expect(mosaicGlobalRestrictionTransaction.maxFee.compact()).to.be.equal(340);
@@ -168,7 +168,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicGlobalRestrictionTransaction = new MosaicGlobalRestrictionTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -203,7 +203,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             referenceMosaicId,
         );
 

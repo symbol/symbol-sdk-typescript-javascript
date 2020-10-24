@@ -29,8 +29,8 @@ describe('Alias', () => {
     let address2;
 
     before(() => {
-        address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
-        address2 = Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY');
+        address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        address2 = Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY');
         mosaicAliasDTO = {
             type: AliasType.Mosaic,
             mosaicId: new MosaicId([481110499, 231112638]),

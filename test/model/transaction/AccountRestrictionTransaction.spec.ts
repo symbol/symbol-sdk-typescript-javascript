@@ -40,7 +40,7 @@ describe('AccountRestrictionTransaction', () => {
         account = TestingAccount;
     });
     it('should create address restriction filter', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(AccountRestrictionModificationAction.Add, address);
         expect(addressRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(addressRestrictionFilter.value).to.be.equal(address.plain());
@@ -66,13 +66,13 @@ describe('AccountRestrictionTransaction', () => {
 
     describe('size', () => {
         it('should return 160 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
-            const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+            const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [address],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
 
             expect(Convert.hexToUint8(addressRestrictionTransaction.serialize()).length).to.be.equal(addressRestrictionTransaction.size);
@@ -86,7 +86,7 @@ describe('AccountRestrictionTransaction', () => {
                 MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicRestrictionTransaction.size).to.be.equal(144);
         });
@@ -97,7 +97,7 @@ describe('AccountRestrictionTransaction', () => {
                 MosaicRestrictionFlag.AllowMosaic,
                 [mosaicId],
                 [],
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(mosaicRestrictionTransaction.setPayloadSize(10).size).to.be.equal(10);
         });
@@ -110,19 +110,19 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(operationRestrictionTransaction.size).to.be.equal(138);
     });
 
     it('should default maxFee field be set to 0', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(addressRestrictionTransaction.maxFee.higher).to.be.equal(0);
@@ -130,13 +130,13 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -145,19 +145,19 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should create allow incmoing address restriction transaction', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01000100000000009026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B2',
+            '01000100000000008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A',
         );
     });
 
@@ -168,7 +168,7 @@ describe('AccountRestrictionTransaction', () => {
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
@@ -183,7 +183,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -192,19 +192,19 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should create outgoing address restriction transaction', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         let addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01400100000000009026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B2',
+            '01400100000000008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A',
         );
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -212,13 +212,13 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.BlockOutgoingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01C00100000000009026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B2',
+            '01C00100000000008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A',
         );
     });
 
@@ -229,7 +229,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         let signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -241,7 +241,7 @@ describe('AccountRestrictionTransaction', () => {
             OperationRestrictionFlag.BlockOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -250,18 +250,18 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -272,12 +272,12 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [address],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address, []);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'), []);
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
@@ -292,12 +292,12 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [alias],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), [wrongAlias]);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [wrongAlias]);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -308,12 +308,12 @@ describe('AccountRestrictionTransaction', () => {
             AddressRestrictionFlag.AllowOutgoingAddress,
             [],
             [alias],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(account.address, [alias]);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY'), [
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'), [
             wrongAlias,
         ]);
         expect(canNotifyDeletion).to.be.false;

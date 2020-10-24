@@ -36,7 +36,7 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 describe('MosaicHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
         '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
-        NetworkType.MIJIN_TEST,
+        NetworkType.PRIVATE_TEST,
     );
     const address = publicAccount.address;
     const mosaicId = new MosaicId('941299B2B7E1291C');
@@ -60,7 +60,7 @@ describe('MosaicHttp', () => {
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const mosaicRoutesApi: MosaicRoutesApi = mock();
-    const mosaicRepository: MosaicRepository = DtoMapping.assign(new MosaicHttp(url, NetworkType.MIJIN_TEST), {
+    const mosaicRepository: MosaicRepository = DtoMapping.assign(new MosaicHttp(url, NetworkType.PRIVATE_TEST), {
         mosaicRoutesApi: instance(mosaicRoutesApi),
     });
 

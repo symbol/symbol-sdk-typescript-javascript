@@ -79,13 +79,13 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -95,7 +95,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         let transaction = TransactionMapping.createFromPayload(signedTransaction) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
-        expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        expect((transaction.restrictionAdditions[0] as Address).plain()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         expect(transaction.restrictionDeletions.length).to.be.equal(0);
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
@@ -115,7 +115,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -145,7 +145,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -171,13 +171,13 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -190,7 +190,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
-        expect(transaction.address.plain()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        expect(transaction.address.plain()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -210,7 +210,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -243,7 +243,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -278,7 +278,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -310,7 +310,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -339,10 +339,10 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -354,7 +354,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
         expect(transaction.message.payload).to.be.equal('test-message');
         expect(transaction.mosaics.length).to.be.equal(1);
-        expect(transaction.recipientToString()).to.be.equal('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        expect(transaction.recipientToString()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         expect(transaction.signature).to.be.equal(testSignature);
         expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
 
@@ -368,7 +368,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        const recipientAddress = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -376,7 +376,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -410,7 +410,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -439,9 +439,9 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(epochAdjustment),
             2,
             1,
-            [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST)],
+            [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.PRIVATE_TEST)],
             [],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -455,7 +455,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         expect(transaction.minRemovalDelta).to.be.equal(1);
         expect(
             transaction.addressAdditions[0].equals(
-                Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.MIJIN_TEST),
+                Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.PRIVATE_TEST),
             ),
         ).to.be.true;
         expect(transaction.addressDeletions.length).to.be.equal(0);
@@ -473,29 +473,29 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
@@ -503,13 +503,13 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             1,
             3,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(epochAdjustment),
@@ -519,7 +519,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             MosaicRestrictionType.NONE,
             UInt64.fromUint(0),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(epochAdjustment),
@@ -527,7 +527,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             UInt64.fromUint(0),
         );
         const accountMetadataTransaction = AccountMetadataTransaction.create(
@@ -536,7 +536,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(epochAdjustment),
@@ -545,7 +545,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.create(epochAdjustment),
@@ -554,7 +554,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
@@ -562,7 +562,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             AliasAction.Link,
             new NamespaceId([2262289484, 3405110546]),
             new MosaicId([2262289484, 3405110546]),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const secretProofTransaction = SecretProofTransaction.create(
@@ -571,7 +571,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             sha3_256.create().update(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7')).hex(),
             account.address,
             'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
@@ -591,7 +591,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
                 mosaicAliasTransaction.toAggregate(account.publicAccount),
                 secretProofTransaction.toAggregate(account.publicAccount),
             ],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
             undefined,
             testSignature,
@@ -619,16 +619,16 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             [],
             undefined,
             testSignature,
@@ -653,14 +653,14 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     });
 
     it('should create LockFundTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.MIJIN_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -689,7 +689,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -716,7 +716,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -743,7 +743,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -773,7 +773,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             1,
             3,
             LinkAction.Link,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -802,7 +802,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -830,7 +830,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             'parent-test-namespace',
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -862,7 +862,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             MosaicRestrictionType.NONE,
             UInt64.fromUint(0),
             MosaicRestrictionType.GE,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             undefined,
             testSignature,
@@ -899,7 +899,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             UInt64.fromUint(0),
             undefined,
             testSignature,
@@ -934,7 +934,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             UInt64.fromUint(0),
             undefined,
             testSignature,
@@ -970,7 +970,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -1003,7 +1003,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -1038,7 +1038,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,
@@ -1068,10 +1068,10 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
     it('should throw error with invalid type', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'),
+            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             undefined,
             testSignature,
             account.publicAccount,

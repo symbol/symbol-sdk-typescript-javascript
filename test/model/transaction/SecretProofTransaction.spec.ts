@@ -62,7 +62,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
@@ -77,7 +77,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             new UInt64([1, 0]),
         );
 
@@ -93,7 +93,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(secretProofTransaction.hashAlgorithm).to.be.equal(0);
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
@@ -109,7 +109,7 @@ describe('SecretProofTransaction', () => {
                 'non valid hash',
                 account.address,
                 proof,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
@@ -122,7 +122,7 @@ describe('SecretProofTransaction', () => {
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(secretProofTransaction.hashAlgorithm).to.be.equal(1);
         expect(secretProofTransaction.secret).to.be.equal('3fc43d717d824302e3821de8129ea2f7786912e5');
@@ -138,7 +138,7 @@ describe('SecretProofTransaction', () => {
                 'non valid hash',
                 account.address,
                 proof,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
@@ -151,7 +151,7 @@ describe('SecretProofTransaction', () => {
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(secretProofTransaction.hashAlgorithm).to.be.equal(2);
         expect(secretProofTransaction.secret).to.be.equal('c346f5ecf5bcfa54ab14fad815c8239bdeb051df8835d212dba2af59f688a00e');
@@ -167,7 +167,7 @@ describe('SecretProofTransaction', () => {
                 'non valid hash',
                 account.address,
                 proof,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
         }).to.throw(Error);
     });
@@ -181,7 +181,7 @@ describe('SecretProofTransaction', () => {
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
                 account.address,
                 proof,
-                NetworkType.MIJIN_TEST,
+                NetworkType.PRIVATE_TEST,
             );
             expect(secretProofTransaction.size).to.be.equal(219);
             expect(Convert.hexToUint8(secretProofTransaction.serialize()).length).to.be.equal(secretProofTransaction.size);
@@ -196,13 +196,13 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
 
         const signedTx = secretProofTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(256, signedTx.payload.length)).to.be.equal(
-            '90D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1204EA49B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC7667' +
-                '5D79B4A5E200000B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
+            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C9B3155B37159DA50AA52D5967C509B410F5A' +
+                '36A3B1E31ECB5AC76675D79B4A5E200000B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
         );
     });
 
@@ -215,7 +215,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         expect(secretProofTransaction.hashAlgorithm).to.be.equal(0);
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
@@ -231,7 +231,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).setMaxFee(2);
         expect(secretProofTransaction.maxFee.compact()).to.be.equal(438);
         const signedTransaction = secretProofTransaction.signWith(account, generationHash);
@@ -241,7 +241,7 @@ describe('SecretProofTransaction', () => {
     it('Test resolveAlias can resolve', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const transferTransaction = new SecretProofTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.create(epochAdjustment),
             UInt64.fromUint(0),
@@ -263,7 +263,7 @@ describe('SecretProofTransaction', () => {
     it('should create EmbeddedTransactionBuilder', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = new SecretProofTransaction(
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
             1,
             Deadline.create(epochAdjustment),
             UInt64.fromUint(0),
@@ -292,7 +292,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         const secretBytes = secretProofTransaction.getSecretByte();
         expect(secretBytes).not.to.be.undefined;
@@ -307,12 +307,12 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         );
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -328,7 +328,7 @@ describe('SecretProofTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.MIJIN_TEST,
+            NetworkType.PRIVATE_TEST,
         ).shouldNotifyAccount(account.address, [namespaceId]);
         expect(canNotify).to.be.true;
     });

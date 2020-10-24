@@ -24,7 +24,7 @@ import { Address } from '../../src/model/account/Address';
 import { HashLockInfo } from '../../src/model/lock/HashLockInfo';
 
 describe('HashLockHttp', () => {
-    const address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+    const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
 
     const dto = {} as HashLockInfoDTO;
     dto.id = '1';

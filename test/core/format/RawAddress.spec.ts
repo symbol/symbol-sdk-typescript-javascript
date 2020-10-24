@@ -94,28 +94,28 @@ describe('address', () => {
     describe('publicKeyToAddress', () => {
         it('can create address from public key for well known network', () => {
             // Arrange:
-            const expectedHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const expectedHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE);
 
             // Assert:
-            expect(decoded[0]).to.equal(NetworkType.MIJIN);
+            expect(decoded[0]).to.equal(NetworkType.PRIVATE);
             expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
         it('can create address from public key for custom network', () => {
             // Arrange:
-            const expectedHex = '9026D27E1D0A26CA4E316F901E23E55C8711DB20DF11A7B2';
+            const expectedHex = '8026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A';
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
 
             // Assert:
-            expect(decoded[0]).to.equal(NetworkType.MIJIN_TEST);
+            expect(decoded[0]).to.equal(NetworkType.PRIVATE_TEST);
             expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
@@ -125,8 +125,8 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
-            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
 
             // Assert:
             expect(address.isValidAddress(decoded1)).to.equal(true);
@@ -139,8 +139,8 @@ describe('address', () => {
             const publicKey2 = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.MIJIN_TEST);
-            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.MIJIN_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.PRIVATE_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.PRIVATE_TEST);
 
             // Assert:
             expect(address.isValidAddress(decoded1)).to.equal(true);
@@ -153,7 +153,7 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
@@ -166,7 +166,7 @@ describe('address', () => {
     describe('isValidAddress', () => {
         it('returns true for valid address', () => {
             // Arrange:
-            const validHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const validHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
@@ -175,7 +175,7 @@ describe('address', () => {
 
         it('returns false for address with invalid checksum', () => {
             // Arrange:
-            const validHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const validHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const decoded = convert.hexToUint8(validHex);
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
@@ -185,7 +185,7 @@ describe('address', () => {
 
         it('returns false for address with invalid hash', () => {
             // Arrange:
-            const validHex = '6026D27E1D0A26CA4E316F901E23E55C8711DB20DF300144';
+            const validHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const decoded = convert.hexToUint8(validHex);
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
@@ -285,7 +285,7 @@ describe('address', () => {
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('Catapult test vector [MIJIN] - PublicKey to Address', () => {
+    describe('Catapult test vector [PRIVATE] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
@@ -297,11 +297,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'MATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34YACRA',
-                'MDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22B27FI',
-                'MCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFDHL7I',
-                'MDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWFN3NKY',
-                'MDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QCLCVEA',
+                'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
+                'PDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2ZMEBFQ',
+                'PCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTREWK33Q',
+                'PDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWELJG3Y',
+                'PDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QAAJTUI',
             ];
 
             // Sanity:
@@ -313,7 +313,7 @@ describe('address', () => {
                 const expectedAddress = Addresses[i];
 
                 // Act:
-                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
+                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.PRIVATE));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -325,7 +325,7 @@ describe('address', () => {
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('Catapult test vector [MIJIN_TEST] - PublicKey to Address', () => {
+    describe('Catapult test vector [PRIVATE_TEST] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
@@ -337,11 +337,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ',
-                'SDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2Z5UYYY',
-                'SCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTRFENHXQ',
-                'SDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWH6N46A',
-                'SDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDVZG2I',
+                'QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ',
+                'QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY',
+                'QCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTREIM2RQ',
+                'QDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWESE7PY',
+                'QDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDQKH7Y',
             ];
 
             // Sanity:
@@ -354,7 +354,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST),
+                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.PRIVATE_TEST),
                 );
 
                 // Assert:

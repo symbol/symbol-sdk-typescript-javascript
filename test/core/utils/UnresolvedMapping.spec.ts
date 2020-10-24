@@ -29,7 +29,7 @@ describe('UnresolvedMapping', () => {
     before(() => {
         mosaicId = new MosaicId('11F4B1B3AC033DB5');
         namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
-        address = Address.createFromRawAddress('SATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34I2PMQ');
+        address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
     });
 
     describe('toUnresolvedMosaic', () => {
@@ -74,16 +74,16 @@ describe('UnresolvedMapping', () => {
 
     describe('toUnresolvedAddressBytes', () => {
         it('can map Address to buffer', () => {
-            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(address, NetworkType.MIJIN_TEST);
+            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(address, NetworkType.PRIVATE_TEST);
             expect(buffer instanceof Uint8Array).to.be.true;
             expect(Convert.uint8ToHex(buffer)).to.be.equal(Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())));
         });
 
-        it('can map hex string to NamespaceId using MIJIN_TEST', () => {
-            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId, NetworkType.MIJIN_TEST);
+        it('can map hex string to NamespaceId using PRIVATE_TEST', () => {
+            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId, NetworkType.PRIVATE_TEST);
             expect(buffer instanceof Uint8Array).to.be.true;
-            expect(buffer[0]).to.be.equal(NetworkType.MIJIN_TEST | 1);
-            expect(Convert.uint8ToHex(buffer)).to.be.equal('91C51FB4C93FCA5095000000000000000000000000000000');
+            expect(buffer[0]).to.be.equal(NetworkType.PRIVATE_TEST | 1);
+            expect(Convert.uint8ToHex(buffer)).to.be.equal('81C51FB4C93FCA5095000000000000000000000000000000');
         });
 
         it('can map hex string to NamespaceId using MAIN_NET', () => {

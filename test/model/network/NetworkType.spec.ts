@@ -28,6 +28,16 @@ describe('NetworkType', () => {
         expect(NetworkType.TEST_NET).to.be.equal(152);
     });
 
+    it('PRIVATE_TEST is 0x80', () => {
+        expect(NetworkType.PRIVATE_TEST).to.be.equal(0x80);
+        expect(NetworkType.PRIVATE_TEST).to.be.equal(128);
+    });
+
+    it('PRIVATE is 0x78', () => {
+        expect(NetworkType.PRIVATE).to.be.equal(0x78);
+        expect(NetworkType.PRIVATE).to.be.equal(120);
+    });
+
     it('MIJIN is 0x60', () => {
         expect(NetworkType.MIJIN).to.be.equal(0x60);
         expect(NetworkType.MIJIN).to.be.equal(96);
