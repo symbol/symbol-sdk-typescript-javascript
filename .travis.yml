@@ -1,40 +1,54 @@
+dist: bionic
 language: node_js
 node_js:
-  - "10"
-  - "12"
+  - 10
+  - 12
+services:
+  - docker
+env:
+  global:
+    - DEV_BRANCH=dev
+    - RELEASE_BRANCH=main
+    - POST_RELEASE_BRANCH=main
+    - RELEASE_MESSAGE=release
 cache:
   directories:
     - "node_modules"
     - .eslintcache
-jobs:
-  include:
-    - stage: e2e
-      script: npm run e2e
-      if: branch = main and type = cron
 before_script:
-  - npm run build
-  - if [ "$TRAVIS_NODE_VERSION" = "10" ] || [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi
+  - . ./travis/node-functions.sh
+  - VERSION="$(node_load_version)"
+  - log_env_variables
 script:
   - npm run test:cov
-  - npm run doc
-  - touch ./ts-docs/.nojekyll
   - if [ "$TRAVIS_NODE_VERSION" = "10" ]; then npm run coveralls-report; fi
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/github-pages.sh
-    on:
-      branch: main
-      node_js: "12"
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/uploadArchives.sh
-    on:
-      branch: main
-      node_js: "10"
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/release.sh
-    on:
-      branch: $RELEASE_BRANCH
-      node_js: "10"
+jobs:
+  include:
+    - stage: test
+      name: docs
+      script: npm run doc
+    - stage: test
+      name: lint
+      script: npm run lint
+    - name: e2e
+      script: npm run e2e
+      if: (branch = env(DEV_BRANCH) AND type = cron) OR (commit_message = e2e)
+    - stage: publish
+      name: github alpha pages
+      script: /bin/bash travis/node-functions.sh node_push_github_pages
+      if: branch = env(DEV_BRANCH) AND type = push
+    - name: alpha npm
+      script: npm pack && /bin/bash travis/node-functions.sh node_publish_alpha
+      if: branch = env(DEV_BRANCH) AND type = push
+    - stage: release
+      name: release npm
+      script: npm pack && /bin/bash travis/node-functions.sh node_publish_release
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+    - stage: release
+      name: github release pages
+      script: /bin/bash travis/node-functions.sh node_push_github_pages
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+    - stage: post release
+      name: tag and version upgrade
+      script: npm pack && /bin/bash travis/node-functions.sh node_post_release
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
