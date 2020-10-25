@@ -31,7 +31,7 @@ jobs:
       name: lint
       script: npm run lint
     - name: e2e
-      script: npm run test:e2e
+      script: npm run e2e
       if: (branch = env(DEV_BRANCH) AND type = cron) OR (commit_message = e2e)
     - stage: publish
       name: github alpha pages

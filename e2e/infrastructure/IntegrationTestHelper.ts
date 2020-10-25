@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as fs from 'fs';
-import * as path from 'path';
 import { map } from 'rxjs/operators';
-import { BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
+import { Addresses, BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
 import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
@@ -68,7 +66,17 @@ export class IntegrationTestHelper {
 
         console.log('Starting bootstrap server');
         const configResult = await this.service.start({ ...this.config, detached: true });
-        const accounts = configResult.addresses?.mosaics?.[0].accounts.map((n) => n.privateKey);
+        return this.toAccounts(configResult.addresses);
+    }
+    private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string }> {
+        const target = 'target/bootstrap-test';
+        console.log('Loading bootstrap server');
+        const addresses = BootstrapUtils.loadExistingAddresses(target);
+        return this.toAccounts(addresses);
+    }
+
+    private toAccounts(addresses: Addresses): { accounts: string[]; apiUrl: string } {
+        const accounts = addresses?.mosaics?.[0].accounts.map((n) => n.privateKey);
         if (!accounts) {
             throw new Error('Nemesis accounts could not be loaded!');
         }
@@ -84,25 +92,9 @@ export class IntegrationTestHelper {
         }
     }
 
-    private async connectToExternalServer(): Promise<{ accounts: string[]; apiUrl: string }> {
-        const json = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../conf/network.conf'), 'utf8'));
-        const accounts = [
-            json.testAccount.privateKey,
-            json.testAccount2.privateKey,
-            json.testAccount3.privateKey,
-            json.multisigAccount.privateKey,
-            json.cosignatoryAccount.privateKey,
-            json.cosignatory2Account.privateKey,
-            json.cosignatory3Account.privateKey,
-            json.cosignatory4Account.privateKey,
-            json.harvestingAccount.privateKey,
-        ];
-        return { accounts, apiUrl: json.apiUrl };
-    }
-
     async start({ openListener }: { openListener: boolean }): Promise<IntegrationTestHelper> {
         // await this.service.stop(this.config);
-        const config = await this.startBootstrapServer();
+        const config = await this.loadBootstrap();
         const accounts = config.accounts;
         this.apiUrl = config.apiUrl;
         this.repositoryFactory = new RepositoryFactoryHttp(this.apiUrl);
@@ -161,5 +153,14 @@ export class IntegrationTestHelper {
                 }),
             )
             .toPromise();
+    }
+
+    public static sleep(ms: number): Promise<any> {
+        // Create a promise that rejects in <ms> milliseconds
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, ms);
+        });
     }
 }

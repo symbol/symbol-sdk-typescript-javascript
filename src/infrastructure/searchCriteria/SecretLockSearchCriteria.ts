@@ -25,4 +25,9 @@ export interface SecretLockSearchCriteria extends SearchCriteria {
      * The owner address. (required)
      */
     address: Address;
+
+    /**
+     * Optional to search by secret.
+     */
+    secret?: string;
 }

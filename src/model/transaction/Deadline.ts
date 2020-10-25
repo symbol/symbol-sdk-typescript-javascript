@@ -91,10 +91,7 @@ export class Deadline {
      * @returns {LocalDateTime}
      */
     public toLocalDateTime(epochAdjustment: number): LocalDateTime {
-        return LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(this.adjustedValue).plusMillis(Duration.ofSeconds(epochAdjustment).toMillis()),
-            ZoneId.SYSTEM,
-        );
+        return this.toLocalDateTimeGivenTimeZone(epochAdjustment, ZoneId.SYSTEM);
     }
 
     /**
