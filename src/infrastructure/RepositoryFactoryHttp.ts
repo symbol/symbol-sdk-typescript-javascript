@@ -79,8 +79,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     constructor(url: string, configs?: RepositoryFactoryConfig) {
         this.url = url;
         this.fetchApi = configs?.fetchApi;
-        this.networkType = configs?.networkType ? observableOf(configs.networkType) : this.cache(() => networkRepo.getNetworkType());
-        this.networkProperties = this.cache(() => this.createNetworkRepository().getNetworkProperties());
+        const networkRepository = this.createNetworkRepository();
+        this.networkType = configs?.networkType ? observableOf(configs.networkType) : this.cache(() => networkRepository.getNetworkType());
+        this.networkProperties = this.cache(() => networkRepository.getNetworkProperties());
         this.epochAdjustment = configs?.epochAdjustment
             ? observableOf(configs.epochAdjustment)
             : this.cache(() =>
