@@ -68,7 +68,7 @@ export class IntegrationTestHelper {
 
         console.log('Starting bootstrap server');
         const configResult = await this.service.start({ ...this.config, detached: true });
-        const accounts = configResult.addresses?.mosaics?.['currency'].map((n) => n.privateKey);
+        const accounts = configResult.addresses?.mosaics?.[0].accounts.map((n) => n.privateKey);
         if (!accounts) {
             throw new Error('Nemesis accounts could not be loaded!');
         }

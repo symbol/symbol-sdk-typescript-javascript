@@ -81,7 +81,7 @@
         "prettier": "^2.1.2",
         "secure-random": "^1.1.2",
         "shx": "^0.3.2",
-        "symbol-bootstrap": "^0.1.1",
+        "symbol-bootstrap": "^0.2.0",
         "ts-mockito": "^2.6.1",
         "ts-node": "^8.10.2",
         "typedoc": "^0.18.0",
@@ -106,7 +106,7 @@
         "ripemd160": "^2.0.2",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.3",
-        "symbol-openapi-typescript-fetch-client": "0.9.7-SNAPSHOT.202009161826",
+        "symbol-openapi-typescript-fetch-client": "0.10.0-3",
         "tweetnacl": "^1.0.3",
         "ws": "^7.3.1"
     },
