@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { map } from 'rxjs/operators';
-import { BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
+import { Addresses, BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
 import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { Account } from '../../src/model/account';
+import { Account } from '../../src/model/account/Account';
 import { Mosaic } from '../../src/model/mosaic';
 import { Currency } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -64,17 +64,17 @@ export class IntegrationTestHelper {
 
         console.log('Starting bootstrap server');
         const configResult = await this.service.start({ ...this.config, detached: true });
-        const accounts = configResult.addresses?.mosaics?.['currency'].map((n) => n.privateKey);
-        if (!accounts) {
-            throw new Error('Nemesis accounts could not be loaded!');
-        }
-        return { accounts, apiUrl: 'http://localhost:3000' };
+        return this.toAccounts(configResult.addresses);
     }
     private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string }> {
         const target = 'target/bootstrap-test';
         console.log('Loading bootstrap server');
         const addresses = BootstrapUtils.loadExistingAddresses(target);
-        const accounts = addresses?.mosaics?.['currency'].map((n) => n.privateKey);
+        return this.toAccounts(addresses);
+    }
+
+    private toAccounts(addresses: Addresses): { accounts: string[]; apiUrl: string } {
+        const accounts = addresses?.mosaics?.[0].accounts.map((n) => n.privateKey);
         if (!accounts) {
             throw new Error('Nemesis accounts could not be loaded!');
         }
