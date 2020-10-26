@@ -15,6 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
+import { NetworkCurrencies } from '../model/mosaic/NetworkCurrencies';
 import { NetworkType } from '../model/network/NetworkType';
 import { AccountRepository } from './AccountRepository';
 import { BlockRepository } from './BlockRepository';
@@ -147,4 +148,9 @@ export interface RepositoryFactory {
      * @returns nemesis block epoch adjustment in seconds
      */
     getEpochAdjustment(): Observable<number>;
+
+    /**
+     * @returns the network currencies.
+     */
+    getCurrencies(): Observable<NetworkCurrencies>;
 }

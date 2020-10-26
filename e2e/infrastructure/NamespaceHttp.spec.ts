@@ -44,7 +44,7 @@ describe('NamespaceHttp', () => {
             account = helper.account;
             generationHash = helper.generationHash;
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
-            defaultNamespaceId = helper.networkCurrencyNamespaceId;
+            defaultNamespaceId = helper.networkCurrency.namespaceId!;
         });
     });
 

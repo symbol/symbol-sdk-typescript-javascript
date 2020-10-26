@@ -18,21 +18,7 @@ export * from './UInt64';
 export * from './Id';
 
 // Account
-export * from './account/Account';
-export * from './account/AccountType';
-export * from './account/ActivityBucket';
-export * from './account/AccountInfo';
-export * from './account/Address';
-export * from './account/MultisigAccountGraphInfo';
-export * from './account/MultisigAccountInfo';
-export * from './account/PublicAccount';
-export * from './account/AccountNames';
-export * from './account/AccountInfoResolvedMosaic';
-export * from './account/AccountKeyTypeFlags';
-export * from './account/AccountLinkPublicKey';
-export * from './account/AccountLinkVotingKey';
-export * from './account/SupplementalPublicKeys';
-export * from './account/UnresolvedAddress';
+export * from './account';
 
 // Blockchain
 export * from './blockchain/ChainInfo';
@@ -55,20 +41,9 @@ export * from './finalization/ParentPublicKeySignaturePair';
 export * from './finalization/Stage';
 
 // Mosaic
-export * from './mosaic/Mosaic';
-export * from './mosaic/MosaicInfo';
-export * from './mosaic/MosaicId';
-export * from './mosaic/MosaicNonce';
-export * from './mosaic/MosaicSupplyChangeAction';
-export * from './mosaic/MosaicFlags';
+export * from './mosaic';
 export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
-export * from './mosaic/NetworkCurrencyLocal';
-export * from './mosaic/NetworkCurrencyPublic';
-export * from './mosaic/NetworkHarvestLocal';
-export * from './mosaic/MosaicNames';
-export * from './mosaic/ResolvedMosaic';
-export * from './mosaic/UnresolvedMosaicId';
 
 //lock
 export * from './lock/HashLockInfo';
@@ -81,17 +56,7 @@ export * from './metadata/MetadataType';
 
 // Namespace
 export * from '../service/Namespace';
-export * from './namespace/AliasType';
-export * from './namespace/Alias';
-export * from './namespace/AddressAlias';
-export * from './namespace/MosaicAlias';
-export * from './namespace/NamespaceId';
-export * from './namespace/NamespaceInfo';
-export * from './namespace/NamespaceName';
-export * from './namespace/NamespaceRegistrationType';
-export * from './namespace/AliasAction';
-export * from './namespace/EmptyAlias';
-export * from './namespace/NamespaceInfoWithName';
+export * from './namespace';
 
 // Network
 

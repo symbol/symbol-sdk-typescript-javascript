@@ -37,6 +37,7 @@ import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosai
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
+import { NetworkCurrencies } from '../../src/model/mosaic/NetworkCurrencies';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
 import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
@@ -361,4 +362,28 @@ describe('RepositoryFactory', () => {
             }
         }
     });
+
+    it('Fail remote getCurrencies ', async () => {
+        const factory = new RepositoryFactoryHttp('http://localhost:2000');
+        try {
+            await factory.getCurrencies().toPromise();
+            expect(true).eq(false);
+        } catch (e) {
+            expect(e.message).contains('request to http://localhost:2000');
+        }
+    });
+
+    it('getCurrencies', async () => {
+        const factory = new RepositoryFactoryHttp('http://localhost:2000', { networkCurrencies: NetworkCurrencies.PUBLIC });
+        const networkCurrencies = await factory.getCurrencies().toPromise();
+        expect(networkCurrencies).eq(NetworkCurrencies.PUBLIC);
+    });
+
+    // it('howToUse', async () => {
+    //     const factory = new RepositoryFactoryHttp('http://localhost:3000');
+    //     const networkCurrencies = await factory.getCurrencies().toPromise();
+    //     const namespaceName: string = networkCurrencies.currency!.namespaceId!.fullName!;
+    //     const mosaic: Mosaic = networkCurrencies.currency.createRelative(1000);
+    //     // a mosaic ready to use for transactions
+    // });
 });

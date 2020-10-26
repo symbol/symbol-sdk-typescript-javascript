@@ -19,9 +19,8 @@ import { IListener } from '../../src/infrastructure/IListener';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { Account } from '../../src/model/account/Account';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { Mosaic } from '../../src/model/mosaic';
+import { Currency } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../src/model/transaction/Transaction';
@@ -45,8 +44,7 @@ export class IntegrationTestHelper {
     public maxFee: UInt64;
     public harvestingAccount: Account;
     public transactionService: TransactionService;
-    public networkCurrencyNamespaceId: NamespaceId;
-    public networkCurrencyDivisibility: number;
+    public networkCurrency: Currency;
     public service = new BootstrapService();
     public config: StartParams;
     public startEachTime = true;
@@ -122,12 +120,7 @@ export class IntegrationTestHelper {
 
         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
         this.maxFee = UInt64.fromUint(1000000);
-        this.networkCurrencyNamespaceId = this.apiUrl.toLowerCase().includes('localhost')
-            ? NetworkCurrencyLocal.NAMESPACE_ID
-            : NetworkCurrencyPublic.NAMESPACE_ID;
-        this.networkCurrencyDivisibility = this.apiUrl.toLowerCase().includes('localhost')
-            ? NetworkCurrencyLocal.DIVISIBILITY
-            : NetworkCurrencyPublic.DIVISIBILITY;
+        this.networkCurrency = (await this.repositoryFactory.getCurrencies().toPromise()).currency;
 
         if (openListener) {
             await this.listener.open();
@@ -135,11 +128,8 @@ export class IntegrationTestHelper {
         return this;
     }
 
-    createNetworkCurrency(amount: number, isRelative = true): NetworkCurrencyPublic | NetworkCurrencyLocal {
-        if (this.apiUrl.toLowerCase().includes('localhost')) {
-            return isRelative ? NetworkCurrencyLocal.createRelative(amount) : NetworkCurrencyLocal.createAbsolute(amount);
-        }
-        return isRelative ? NetworkCurrencyPublic.createRelative(amount) : NetworkCurrencyPublic.createAbsolute(amount);
+    createCurrency(amount: number, isRelative = true): Mosaic {
+        return isRelative ? this.networkCurrency.createRelative(amount) : this.networkCurrency.createAbsolute(amount);
     }
 
     announce(signedTransaction: SignedTransaction): Promise<Transaction> {

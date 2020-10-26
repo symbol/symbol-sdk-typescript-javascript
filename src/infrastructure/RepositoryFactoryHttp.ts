@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { Observable, of as observableOf } from 'rxjs';
+import { defer, Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { NetworkCurrencies } from '../model/mosaic';
+import { NetworkConfiguration } from '../model/network/NetworkConfiguration';
 import { NetworkType } from '../model/network/NetworkType';
+import { CurrencyService } from '../service/CurrencyService';
 import { AccountHttp } from './AccountHttp';
 import { AccountRepository } from './AccountRepository';
 import { BlockHttp } from './BlockHttp';
@@ -68,7 +71,8 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly websocketInjected?: any;
     private readonly fetchApi?: any;
     private readonly epochAdjustment: Observable<number>;
-
+    private readonly networkProperties: Observable<NetworkConfiguration>;
+    private readonly networkCurrencies: Observable<NetworkCurrencies>;
     /**
      * Constructor
      * @param url the server url.
@@ -77,27 +81,34 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     constructor(url: string, configs?: RepositoryFactoryConfig) {
         this.url = url;
         this.fetchApi = configs?.fetchApi;
-        this.networkType = configs?.networkType
-            ? observableOf(configs.networkType)
-            : this.createNetworkRepository().getNetworkType().pipe(shareReplay(1));
+        const networkRepository = this.createNetworkRepository();
+        this.networkType = configs?.networkType ? observableOf(configs.networkType) : this.cache(() => networkRepository.getNetworkType());
+        this.networkProperties = this.cache(() => networkRepository.getNetworkProperties());
         this.epochAdjustment = configs?.epochAdjustment
             ? observableOf(configs.epochAdjustment)
-            : this.createNetworkRepository()
-                  .getNetworkProperties()
-                  .pipe(
+            : this.cache(() =>
+                  this.networkProperties.pipe(
                       map((property) => {
                           return DtoMapping.parseServerDuration(property.network.epochAdjustment ?? '-').seconds();
                       }),
-                  )
-                  .pipe(shareReplay(1));
+                  ),
+              );
         this.generationHash = configs?.generationHash
-            ? observableOf(configs?.generationHash)
-            : this.createNodeRepository()
-                  .getNodeInfo()
-                  .pipe(map((b) => b.networkGenerationHashSeed))
-                  .pipe(shareReplay(1));
+            ? observableOf(configs.generationHash)
+            : this.cache(() =>
+                  this.createNodeRepository()
+                      .getNodeInfo()
+                      .pipe(map((b) => b.networkGenerationHashSeed)),
+              );
         this.websocketUrl = configs?.websocketUrl ? configs?.websocketUrl : `${url.replace(/\/$/, '')}/ws`;
         this.websocketInjected = configs?.websocketInjected;
+        this.networkCurrencies = configs?.networkCurrencies
+            ? observableOf(configs.networkCurrencies)
+            : this.cache(() => new CurrencyService(this).getNetworkCurrencies());
+    }
+
+    cache<T>(delegate: () => Observable<T>): Observable<T> {
+        return defer(delegate).pipe(shareReplay(1));
     }
 
     createAccountRepository(): AccountRepository {
@@ -182,5 +193,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     getEpochAdjustment(): Observable<number> {
         return this.epochAdjustment;
+    }
+
+    getCurrencies(): Observable<NetworkCurrencies> {
+        return this.networkCurrencies;
     }
 }
