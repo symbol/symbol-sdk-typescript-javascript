@@ -88,6 +88,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#extractaccountrestrictionfromdto" class="tsd-kind-icon">extract<wbr>Account<wbr>Restriction<wbr>From<wbr>Dto</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#mapenum" class="tsd-kind-icon">map<wbr>Enum</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#parseserverduration" class="tsd-kind-icon">parse<wbr>Server<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_core_utils_dtomapping_.dtomapping.html#tosimplehex" class="tsd-kind-icon">to<wbr>Simple<wbr>Hex</a></li>
 							</ul>
 						</section>
 					</div>
@@ -105,7 +106,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6ff7df2/src/core/utils/DtoMapping.ts#L71">core/utils/DtoMapping.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/791bc93/src/core/utils/DtoMapping.ts#L71">core/utils/DtoMapping.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -149,7 +150,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6ff7df2/src/core/utils/DtoMapping.ts#L33">core/utils/DtoMapping.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/791bc93/src/core/utils/DtoMapping.ts#L33">core/utils/DtoMapping.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -178,7 +179,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6ff7df2/src/core/utils/DtoMapping.ts#L79">core/utils/DtoMapping.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/791bc93/src/core/utils/DtoMapping.ts#L79">core/utils/DtoMapping.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -218,7 +219,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6ff7df2/src/core/utils/DtoMapping.ts#L92">core/utils/DtoMapping.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/791bc93/src/core/utils/DtoMapping.ts#L92">core/utils/DtoMapping.ts:92</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -241,6 +242,36 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Duration</span></h4>
 							<p>an instant from that value.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="tosimplehex" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>Simple<wbr>Hex</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Simple<wbr>Hex<span class="tsd-signature-symbol">(</span>serverHex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/791bc93/src/core/utils/DtoMapping.ts#L130">core/utils/DtoMapping.ts:130</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>It converts a server Hex like 0x017D&#39;1694&#39;0477&#39;B3F5 to 017D16940477B3F5</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>serverHex: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -275,6 +306,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_core_utils_dtomapping_.dtomapping.html#parseserverduration" class="tsd-kind-icon">parse<wbr>Server<wbr>Duration</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_core_utils_dtomapping_.dtomapping.html#tosimplehex" class="tsd-kind-icon">to<wbr>Simple<wbr>Hex</a>
 							</li>
 						</ul>
 					</li>
