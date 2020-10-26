@@ -36,6 +36,11 @@ describe('FinalizationHttp', () => {
         it('should return finalization proof at epoch', async () => {
             const dto = await finalizationRepository.getFinalizationProofAtEpoch(1).toPromise();
             expect(dto).not.to.be.null;
+            expect(dto.height).to.deep.eq(UInt64.fromUint(1));
+            expect(dto.version).to.eq(1);
+            expect(dto.finalizationEpoch).to.eq(1);
+            expect(dto.finalizationPoint).to.eq(1);
+            expect(dto.hash).not.to.be.null;
         });
     });
 
@@ -43,6 +48,11 @@ describe('FinalizationHttp', () => {
         it('should return finalization proof at height', async () => {
             const dto = await finalizationRepository.getFinalizationProofAtHeight(UInt64.fromUint(1)).toPromise();
             expect(dto).not.to.be.null;
+            expect(dto.height).to.deep.eq(UInt64.fromUint(1));
+            expect(dto.version).to.eq(1);
+            expect(dto.finalizationEpoch).to.eq(1);
+            expect(dto.finalizationPoint).to.eq(1);
+            expect(dto.hash).not.to.be.null;
         });
     });
 });
