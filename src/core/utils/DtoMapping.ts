@@ -120,4 +120,14 @@ export class DtoMapping {
         }
         throw new Error(`Duration value format is not recognized.`);
     }
+
+    /**
+     *
+     * It converts a server Hex like 0x017D'1694'0477'B3F5 to 017D16940477B3F5
+     *
+     * @param serverHex
+     */
+    public static toSimpleHex(serverHex: string): string {
+        return serverHex.split("'").join('').replace(/^(0x)/, '');
+    }
 }

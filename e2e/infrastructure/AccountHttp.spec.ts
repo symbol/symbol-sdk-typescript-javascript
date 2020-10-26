@@ -91,7 +91,7 @@ describe('AccountHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(epochAdjustment),
                 account2.address,
-                [helper.createNetworkCurrency(1, false)],
+                [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,

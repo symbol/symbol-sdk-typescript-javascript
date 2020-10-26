@@ -15,13 +15,13 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../../src/model/transaction/HashLockTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('HashLockTransaction', () => {
     const account = TestingAccount;
@@ -37,7 +37,7 @@ describe('HashLockTransaction', () => {
             signedTransaction,
             NetworkType.PRIVATE_TEST,
         );
-        expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyLocal.NAMESPACE_ID);
+        expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyLocal.namespaceId!);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
         expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);

@@ -63,7 +63,7 @@ describe('SecretLockHttp', () => {
         it('Announce SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 secret,

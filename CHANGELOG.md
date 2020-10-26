@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.21.1] - NEXT
+
+**Milestone**: Catapult-server finality(0.10.0.3)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.21.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.22 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.10.0-3  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- **[BREAKING CHANGE]** `Deadline.create` requires the configurable `epochAdjustment` from the network properties.
+- **[BREAKING CHANGE]** `NetworkCurrency` subclasses replaced with `Currency` objects.
+- Added `CurrencyService` to allow loading Network and custom `Currency` objects from the rest service.
+
 ## [0.21.0] - 25-Sep-2020
 
 **Milestone**: Catapult-server finality(0.10.0.3)

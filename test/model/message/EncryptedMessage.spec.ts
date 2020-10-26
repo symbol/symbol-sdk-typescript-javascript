@@ -20,7 +20,7 @@ import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('EncryptedMessage', () => {
     let sender: Account;

@@ -91,4 +91,10 @@ describe('DtoMapping', () => {
             DtoMapping.parseServerDuration(epochS).seconds();
         }).to.throw();
     });
+
+    it('toSimpleHex', () => {
+        expect(DtoMapping.toSimpleHex("0x017D'1694'0477'B3F5")).to.be.equal('017D16940477B3F5');
+        expect(DtoMapping.toSimpleHex('017D16940477B3F5')).to.be.equal('017D16940477B3F5');
+        expect(DtoMapping.toSimpleHex("0x29C6'42F2'F432'8612")).to.be.equal('29C642F2F4328612');
+    });
 });
