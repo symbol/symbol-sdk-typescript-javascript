@@ -64,14 +64,14 @@ export interface NamespaceRepository extends Searcher<NamespaceInfo, NamespaceSe
     /**
      * Gets the MosaicId from a MosaicAlias
      * @param namespaceId - the namespaceId of the namespace
-     * @returns Observable<MosaicId | null>
+     * @returns Observable<MosaicId>
      */
-    getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null>;
+    getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId>;
 
     /**
      * Gets the Address from a AddressAlias
      * @param namespaceId - the namespaceId of the namespace
-     * @returnsObservable<Address | null>
+     * @returnsObservable<Address>
      */
-    getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null>;
+    getLinkedAddress(namespaceId: NamespaceId): Observable<Address>;
 }

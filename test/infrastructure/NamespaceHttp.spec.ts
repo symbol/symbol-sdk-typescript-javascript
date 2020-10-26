@@ -18,17 +18,15 @@ import * as http from 'http';
 import {
     AccountNamesDTO,
     AccountsNamesDTO,
-    AliasDTO,
     AliasTypeEnum,
     MosaicNamesDTO,
     MosaicsNamesDTO,
     NamespaceDTO,
     NamespaceInfoDTO,
-    NamespaceMetaDTO,
     NamespaceNameDTO,
+    NamespacePage,
     NamespaceRoutesApi,
     Pagination,
-    NamespacePage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -48,45 +46,47 @@ describe('NamespaceHttp', () => {
     const address = publicAccount.address;
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('testnamespace');
-    const namespaceMetaDto = {} as NamespaceMetaDTO;
-    namespaceMetaDto.active = true;
-    namespaceMetaDto.id = '1';
-    namespaceMetaDto.index = 0;
+    const namespaceIdAlias = new NamespaceId('aliasofalias');
 
-    const namespaceDto = {} as NamespaceDTO;
-    const aliasDtoAddress = {} as AliasDTO;
-    aliasDtoAddress.address = address.encoded();
-    aliasDtoAddress.type = AliasTypeEnum.NUMBER_2;
+    const namespaceDtoAddress: NamespaceDTO = {
+        alias: { address: address.encoded(), type: AliasTypeEnum.NUMBER_2 },
+        depth: 1,
+        endHeight: '12',
+        level0: namespaceId.toHex(),
+        ownerAddress: address.encoded(),
+        parentId: namespaceId.toHex(),
+        registrationType: 0,
+        startHeight: '10',
+    };
 
-    namespaceDto.alias = aliasDtoAddress;
-    namespaceDto.depth = 1;
-    namespaceDto.endHeight = '12';
-    namespaceDto.level0 = namespaceId.toHex();
-    namespaceDto.ownerAddress = address.encoded();
-    namespaceDto.parentId = namespaceId.toHex();
-    namespaceDto.registrationType = 0;
-    namespaceDto.startHeight = '10';
+    const namespaceInfoDtoAddress: NamespaceInfoDTO = { id: '', meta: { active: true, id: '1', index: 0 }, namespace: namespaceDtoAddress };
 
-    const namespaceInfoDto = {} as NamespaceInfoDTO;
-    namespaceInfoDto.meta = namespaceMetaDto;
-    namespaceInfoDto.namespace = namespaceDto;
+    const namespaceDtoMosaic: NamespaceDTO = {
+        alias: { mosaicId: mosaicId.toHex(), type: AliasTypeEnum.NUMBER_1 },
+        depth: 1,
+        endHeight: '12',
+        level0: namespaceId.toHex(),
+        ownerAddress: address.encoded(),
+        parentId: namespaceId.toHex(),
+        registrationType: 0,
+        startHeight: '10',
+    };
 
-    const aliasDtoMosaic = {} as AliasDTO;
-    aliasDtoMosaic.mosaicId = mosaicId.toHex();
-    aliasDtoMosaic.type = AliasTypeEnum.NUMBER_1;
-    const namespaceDtoMosaic = {} as NamespaceDTO;
-    namespaceDtoMosaic.alias = aliasDtoMosaic;
-    namespaceDtoMosaic.depth = 1;
-    namespaceDtoMosaic.endHeight = '12';
-    namespaceDtoMosaic.level0 = namespaceId.toHex();
-    namespaceDtoMosaic.ownerAddress = address.encoded();
-    namespaceDtoMosaic.parentId = namespaceId.toHex();
-    namespaceDtoMosaic.registrationType = 0;
-    namespaceDtoMosaic.startHeight = '10';
+    const namespaceInfoDtoMosaic = { id: '', meta: { active: true, id: '1', index: 0 }, namespace: namespaceDtoMosaic };
 
-    const namespaceInfoDtoMosaic = {} as NamespaceInfoDTO;
-    namespaceInfoDtoMosaic.meta = namespaceMetaDto;
-    namespaceInfoDtoMosaic.namespace = namespaceDtoMosaic;
+    const namespaceDtoAlias: NamespaceDTO = {
+        alias: { type: AliasTypeEnum.NUMBER_0 },
+        depth: 2,
+        endHeight: '12',
+        level0: namespaceId.toHex(),
+        level1: namespaceIdAlias.toHex(),
+        ownerAddress: address.encoded(),
+        parentId: namespaceId.toHex(),
+        registrationType: 0,
+        startHeight: '10',
+    };
+
+    const namespaceInfoDtoAlias = { id: '', meta: { active: true, id: '1', index: 0 }, namespace: namespaceDtoAlias };
 
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
@@ -146,7 +146,7 @@ describe('NamespaceHttp', () => {
     });
 
     it('getNamespace', async () => {
-        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoAddress));
         const namespace = await namespaceRepository.getNamespace(namespaceId).toPromise();
         assertNamespaceInfo(namespace);
     });
@@ -175,10 +175,16 @@ describe('NamespaceHttp', () => {
     });
 
     it('getLinkedAddress', async () => {
-        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
-        const namespaces = await namespaceRepository.getLinkedAddress(namespaceId).toPromise();
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoAddress));
+        const resolvedAddress = await namespaceRepository.getLinkedAddress(namespaceId).toPromise();
+        expect(resolvedAddress?.plain()).to.be.equal(address.plain());
+    });
 
-        expect(namespaces?.plain()).to.be.equal(address.plain());
+    it('getLinkedAddress multilevel', async () => {
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoAddress));
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceIdAlias.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoAlias));
+        const resolvedAddress = await namespaceRepository.getLinkedAddress(namespaceIdAlias).toPromise();
+        expect(resolvedAddress?.plain()).to.be.equal(address.plain());
     });
 
     it('getLinkedMosaicId', async () => {
@@ -188,8 +194,15 @@ describe('NamespaceHttp', () => {
         expect(namespaces?.toHex()).to.be.equal(mosaicId.toHex());
     });
 
+    it('getLinkedMosaicId multilevel', async () => {
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoMosaic));
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceIdAlias.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoAlias));
+        const resolvedMosaicId = await namespaceRepository.getLinkedMosaicId(namespaceIdAlias).toPromise();
+        expect(resolvedMosaicId?.toHex()).to.be.equal(mosaicId.toHex());
+    });
+
     it('getLinkedMosaicId - Error', async () => {
-        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
+        when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoAddress));
         await namespaceRepository
             .getLinkedMosaicId(namespaceId)
             .toPromise()
@@ -210,7 +223,7 @@ describe('NamespaceHttp', () => {
         pagination.pageSize = 1;
 
         const body = {} as NamespacePage;
-        body.data = [namespaceInfoDto];
+        body.data = [namespaceInfoDtoAddress];
         body.pagination = pagination;
         when(
             namespaceRoutesApi.searchNamespaces(

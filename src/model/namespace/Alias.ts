@@ -15,6 +15,7 @@
  */
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
+import { AliasType } from './AliasType';
 
 /**
  * Abtract class for Aliases
@@ -36,7 +37,7 @@ export abstract class Alias {
          * - 1 : Mosaic id alias
          * - 2 : Address alias
          */
-        public readonly type: number,
+        public readonly type: AliasType,
 
         /**
          * The alias address

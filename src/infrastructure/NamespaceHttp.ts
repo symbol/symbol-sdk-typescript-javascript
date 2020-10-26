@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { NamespaceDTO, NamespaceInfoDTO, NamespaceRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -168,24 +167,18 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<MosaicId | null>
      */
     public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId> {
-        return this.networkTypeObservable.pipe(
-            mergeMap(() =>
-                this.call(this.namespaceRoutesApi.getNamespace(namespaceId.toHex()), (body) => {
-                    const namespaceInfoDTO = body;
-                    if (namespaceInfoDTO.namespace === undefined) {
-                        // forward catapult-rest error
-                        throw namespaceInfoDTO;
+        return this.getNamespace(namespaceId).pipe(
+            mergeMap((info) => {
+                if (info.depth === 1) {
+                    if (info.alias.type === AliasType.Mosaic && info.alias.mosaicId) {
+                        return of(info.alias.mosaicId);
                     }
-                    if (
-                        namespaceInfoDTO.namespace.alias.type.valueOf() === AliasType.None ||
-                        namespaceInfoDTO.namespace.alias.type.valueOf() !== AliasType.Mosaic ||
-                        !namespaceInfoDTO.namespace.alias.mosaicId
-                    ) {
-                        throw new Error(`No mosaicId is linked to namespace '${namespaceInfoDTO.namespace.level0}'`);
-                    }
-                    return new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId);
-                }),
-            ),
+                    return throwError(
+                        new Error(`Invalid alias type ${info.alias.type} when resolving mosaic alias for namespace ` + namespaceId.toHex()),
+                    );
+                }
+                return this.getLinkedMosaicId(info.levels[0]);
+            }),
         );
     }
 
@@ -195,27 +188,20 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<Address>
      */
     public getLinkedAddress(namespaceId: NamespaceId): Observable<Address> {
-        return this.networkTypeObservable.pipe(
-            mergeMap(() =>
-                this.call(this.namespaceRoutesApi.getNamespace(namespaceId.toHex()), (body) => {
-                    const namespaceInfoDTO = body;
-                    if (namespaceInfoDTO.namespace === undefined) {
-                        // forward catapult-rest error
-                        throw namespaceInfoDTO;
+        return this.getNamespace(namespaceId).pipe(
+            mergeMap((info) => {
+                if (info.depth === 1) {
+                    if (info.alias.type === AliasType.Address && info.alias.address) {
+                        return of(info.alias.address);
                     }
-                    if (
-                        namespaceInfoDTO.namespace.alias.type.valueOf() === AliasType.None ||
-                        namespaceInfoDTO.namespace.alias.type.valueOf() !== AliasType.Address ||
-                        !namespaceInfoDTO.namespace.alias.address
-                    ) {
-                        throw new Error(`No address is linked to namespace '${namespaceInfoDTO.namespace.level0}'`);
-                    }
-
-                    const addressDecoded = namespaceInfoDTO.namespace.alias.address;
-                    const address = AddressLibrary.addressToString(convert.hexToUint8(addressDecoded));
-                    return Address.createFromRawAddress(address);
-                }),
-            ),
+                    return throwError(
+                        new Error(
+                            `Invalid alias type ${info.alias.type} when resolving address alias for namespace ` + namespaceId.toHex(),
+                        ),
+                    );
+                }
+                return this.getLinkedAddress(info.levels[0]);
+            }),
         );
     }
 
