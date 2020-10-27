@@ -25,7 +25,7 @@ import { AddressAliasTransaction } from '../../../src/model/transaction/AddressA
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { AliasTransaction } from '../../../src/model/model';
+import { AliasTransaction } from '../../../src/model';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;

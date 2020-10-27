@@ -32,8 +32,8 @@ import { NamespaceMetadataTransaction } from '../../src/model/transaction/Namesp
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { MetadataType } from '../../src/model/model';
-import { Order, MetadataPaginationStreamer } from '../../src/infrastructure/infrastructure';
+import { MetadataType } from '../../src/model';
+import { Order, MetadataPaginationStreamer } from '../../src/infrastructure';
 import { deepEqual } from 'assert';
 import { take, toArray } from 'rxjs/operators';
 

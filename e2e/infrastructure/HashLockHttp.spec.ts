@@ -27,7 +27,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
-import { Order, HashLockPaginationStreamer } from '../../src/infrastructure/infrastructure';
+import { Order, HashLockPaginationStreamer } from '../../src/infrastructure';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { ChronoUnit } from '@js-joda/core';

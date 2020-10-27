@@ -36,7 +36,7 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
-import { Order } from '../../src/infrastructure/infrastructure';
+import { Order } from '../../src/infrastructure';
 import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
 
 describe('AccountHttp', () => {
