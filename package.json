@@ -4,6 +4,7 @@
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
+        "prepack": "npm run build",
         "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
         "e2econfigcopy": "gulp",
         "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
