@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AccountRestrictionsBuilder } from 'catbuffer-typescript';
+import { AccountRestrictionsBuilder, GeneratorUtils } from 'catbuffer-typescript';
 import { AccountRestrictionAddressValueBuilder } from 'catbuffer-typescript';
 import { AccountRestrictionMosaicValueBuilder } from 'catbuffer-typescript';
 import { AccountRestrictionsInfoBuilder } from 'catbuffer-typescript';
 import { AccountRestrictionTransactionTypeValueBuilder } from 'catbuffer-typescript';
+import { AccountRestrictionFlagsDto } from 'catbuffer-typescript';
 import { isNumeric } from 'rxjs/internal-compatibility';
 import { Address } from '../account';
 import { MosaicId } from '../mosaic';
@@ -29,23 +30,11 @@ import { AccountRestriction } from './AccountRestriction';
 export class AccountRestrictions {
     /**
      * Constructor
-     * @param address
-     * @param restrictions
+     * @param recordId the data base id.
+     * @param address the target address
+     * @param restrictions the restrictions
      */
-    constructor(
-        /**
-         * The stored database id.
-         */
-        public readonly recordId: string,
-        /**
-         * Account Address
-         */
-        public readonly address: Address,
-        /**
-         * Restrictions.
-         */
-        public readonly restrictions: AccountRestriction[],
-    ) {}
+    constructor(public readonly recordId: string, public readonly address: Address, public readonly restrictions: AccountRestriction[]) {}
 
     /**
      * Generate buffer
@@ -64,7 +53,7 @@ export class AccountRestrictions {
                 r.values.filter((v) => isNumeric(v)).map((a) => a as number),
             );
             return new AccountRestrictionsInfoBuilder(
-                r.restrictionFlags as number,
+                GeneratorUtils.toFlags(AccountRestrictionFlagsDto, r.restrictionFlags),
                 addressRestrictions,
                 mosaicIdRestrictions,
                 transactionTypeRestrictions,

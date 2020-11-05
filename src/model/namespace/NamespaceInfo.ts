@@ -153,6 +153,7 @@ export class NamespaceInfo {
     private toNamespaceAliasTypeDto(namespaceInfo: NamespaceInfo): NamespacePathBuilder {
         const path: NamespaceIdDto[] = namespaceInfo.levels.map((id) => id.toBuilder());
         const alias: NamespaceAliasBuilder = new NamespaceAliasBuilder(
+            namespaceInfo.alias.type.valueOf(),
             namespaceInfo.alias.mosaicId?.toBuilder(),
             namespaceInfo.alias.address?.toBuilder(),
         );

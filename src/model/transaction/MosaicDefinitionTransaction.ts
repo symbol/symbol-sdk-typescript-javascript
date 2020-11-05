@@ -19,11 +19,13 @@ import {
     BlockDurationDto,
     EmbeddedMosaicDefinitionTransactionBuilder,
     EmbeddedTransactionBuilder,
+    GeneratorUtils,
     MosaicDefinitionTransactionBuilder,
     MosaicNonceDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
+import { MosaicFlagsDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
@@ -150,7 +152,11 @@ export class MosaicDefinitionTransaction extends Transaction {
                 : Deadline.createFromDTO((builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
             MosaicNonce.createFromUint8Array(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),
-            MosaicFlags.create((builder.getFlags() & 1) === 1, (builder.getFlags() & 2) === 2, (builder.getFlags() & 4) === 4),
+            MosaicFlags.create(
+                builder.getFlags().indexOf(MosaicFlagsDto.SUPPLY_MUTABLE) > -1,
+                builder.getFlags().indexOf(MosaicFlagsDto.TRANSFERABLE) > -1,
+                builder.getFlags().indexOf(MosaicFlagsDto.RESTRICTABLE) > -1,
+            ),
             builder.getDivisibility(),
             new UInt64(builder.getDuration().blockDuration),
             networkType,
@@ -186,7 +192,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.mosaicId.toBuilder(),
             new BlockDurationDto(this.duration.toDTO()),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
-            this.flags.getValue(),
+            GeneratorUtils.toFlags(MosaicFlagsDto, this.flags.getValue()),
             this.divisibility,
         );
     }
@@ -204,7 +210,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.mosaicId.toBuilder(),
             new BlockDurationDto(this.duration.toDTO()),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
-            this.flags.getValue(),
+            GeneratorUtils.toFlags(MosaicFlagsDto, this.flags.getValue()),
             this.divisibility,
         );
     }

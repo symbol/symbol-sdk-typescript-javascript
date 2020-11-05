@@ -23,8 +23,9 @@ import {
     SignatureDto,
     TimestampDto,
     UnresolvedMosaicIdDto,
-    TransactionBuilder,
+    TransactionBuilder, GeneratorUtils,
 } from 'catbuffer-typescript';
+import { AccountRestrictionFlagsDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
@@ -122,7 +123,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountMosaicRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionFlags().valueOf(),
+            GeneratorUtils.fromFlags(AccountRestrictionFlagsDto, builder.getRestrictionFlags()),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedMosaic(new UInt64(addition.unresolvedMosaicId).toHex());
             }),
@@ -150,7 +151,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedMosaicIdDto(addition.id.toDTO());
             }),
@@ -171,7 +172,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedMosaicIdDto(addition.id.toDTO());
             }),

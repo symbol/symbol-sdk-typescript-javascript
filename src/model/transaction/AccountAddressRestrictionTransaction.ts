@@ -16,23 +16,22 @@
 
 import {
     AccountAddressRestrictionTransactionBuilder,
+    AccountRestrictionFlagsDto,
     AmountDto,
     EmbeddedAccountAddressRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    SignatureDto,
+    GeneratorUtils,
     TimestampDto,
-    UnresolvedAddressDto,
     TransactionBuilder,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { DtoMapping } from '../../core/utils/DtoMapping';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NetworkType } from '../network/NetworkType';
-import { Statement } from '../receipt/Statement';
+import { DtoMapping, UnresolvedMapping } from '../../core/utils';
+import { Address, PublicAccount, UnresolvedAddress } from '../account';
+import { NamespaceId } from '../namespace';
+import { NetworkType } from '../network';
+import { Statement } from '../receipt';
+import { AddressRestrictionFlag } from '../restriction';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -40,8 +39,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 export class AccountAddressRestrictionTransaction extends Transaction {
     /**
@@ -123,7 +120,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionFlags().valueOf(),
+            GeneratorUtils.fromFlags(AccountRestrictionFlagsDto, builder.getRestrictionFlags()),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(addition.unresolvedAddress));
             }),
@@ -151,7 +148,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),
@@ -172,7 +169,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),

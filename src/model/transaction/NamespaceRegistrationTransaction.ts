@@ -219,7 +219,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
     protected createBuilder(): TransactionBuilder {
         let transactionBuilder: NamespaceRegistrationTransactionBuilder;
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
+            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderRoot(
                 this.getSignatureAsBuilder(),
                 this.getSignerAsBuilder(),
                 this.versionToDTO(),
@@ -227,13 +227,12 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
+                new BlockDurationDto(this.duration!.toDTO()),
                 this.namespaceId.toBuilder(),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                new BlockDurationDto(this.duration!.toDTO()),
-                undefined,
             );
         } else {
-            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
+            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderChild(
                 this.getSignatureAsBuilder(),
                 this.getSignerAsBuilder(),
                 this.versionToDTO(),
@@ -241,10 +240,9 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
+                this.parentId!.toBuilder(),
                 this.namespaceId.toBuilder(),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                undefined,
-                this.parentId!.toBuilder(),
             );
         }
         return transactionBuilder;
@@ -256,26 +254,24 @@ export class NamespaceRegistrationTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            return new EmbeddedNamespaceRegistrationTransactionBuilder(
+            return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderRoot(
                 this.getSignerAsBuilder(),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
+                new BlockDurationDto(this.duration!.toDTO()),
                 this.namespaceId.toBuilder(),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                new BlockDurationDto(this.duration!.toDTO()),
-                undefined,
             );
         }
-        return new EmbeddedNamespaceRegistrationTransactionBuilder(
+        return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderChild(
             this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_REGISTRATION.valueOf(),
+            this.parentId!.toBuilder(),
             this.namespaceId.toBuilder(),
             Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-            undefined,
-            this.parentId!.toBuilder(),
         );
     }
 

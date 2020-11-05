@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { MosaicEntryBuilder } from 'catbuffer-typescript';
+import { GeneratorUtils, MosaicEntryBuilder } from 'catbuffer-typescript';
 import { AmountDto } from 'catbuffer-typescript';
 import { BlockDurationDto } from 'catbuffer-typescript';
 import { HeightDto } from 'catbuffer-typescript';
 import { MosaicDefinitionBuilder } from 'catbuffer-typescript';
 import { MosaicIdDto } from 'catbuffer-typescript';
 import { MosaicPropertiesBuilder } from 'catbuffer-typescript';
+import { MosaicFlagsDto } from 'catbuffer-typescript';
 import { UInt64 } from '../UInt64';
 import { MosaicFlags } from './MosaicFlags';
 import { MosaicId } from './MosaicId';
@@ -115,7 +116,8 @@ export class MosaicInfo {
         const ownerAddress = this.ownerAddress.toBuilder();
         const revision = this.revision;
         const duration = new BlockDurationDto(this.duration.toDTO());
-        const properties = new MosaicPropertiesBuilder(this.flags.getValue(), this.divisibility, duration);
+        const flags = GeneratorUtils.toFlags(MosaicFlagsDto, this.flags.getValue());
+        const properties = new MosaicPropertiesBuilder(flags, this.divisibility, duration);
         const definition = new MosaicDefinitionBuilder(startHeight, ownerAddress, revision, properties);
         return new MosaicEntryBuilder(mosaicId, supply, definition).serialize();
     }

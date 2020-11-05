@@ -17,57 +17,52 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { Convert } from '../../../src/core/format';
-import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
-import { Account } from '../../../src/model/account';
-import { Address } from '../../../src/model/account';
-import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
-import { MessageType } from '../../../src/model/message/MessageType';
-import { PlainMessage } from '../../../src/model/message/PlainMessage';
-import { Mosaic } from '../../../src/model/mosaic';
-import { MosaicFlags } from '../../../src/model/mosaic';
-import { MosaicId } from '../../../src/model/mosaic';
-import { MosaicNonce } from '../../../src/model/mosaic';
-import { MosaicSupplyChangeAction } from '../../../src/model/mosaic';
-import { AliasAction } from '../../../src/model/namespace';
-import { NamespaceId } from '../../../src/model/namespace';
-import { NamespaceRegistrationType } from '../../../src/model/namespace';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
-import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountKeyLinkTransaction } from '../../../src/model/transaction/AccountKeyLinkTransaction';
-import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../../src/model/transaction/AccountOperationRestrictionTransaction';
-import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
-import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
-import { LinkAction } from '../../../src/model/transaction/LinkAction';
-import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
-import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../../src/model/transaction/NamespaceRegistrationTransaction';
-import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../../src/model/transaction/SecretProofTransaction';
-import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
-import { VrfKeyLinkTransaction } from '../../../src/model/transaction/VrfKeyLinkTransaction';
-import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
 import { Crypto } from '../../../src/core/crypto';
-import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLinkTransaction';
-import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
-import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
+import { Convert } from '../../../src/core/format';
+import { TransactionMapping } from '../../../src/core/utils';
+import { UInt64 } from '../../../src/model';
+import { Account, Address } from '../../../src/model/account';
+import { LockHashAlgorithm } from '../../../src/model/lock';
+import { EncryptedMessage, MessageType, PlainMessage } from '../../../src/model/message';
+import { Mosaic, MosaicFlags, MosaicId, MosaicNonce, MosaicSupplyChangeAction } from '../../../src/model/mosaic';
+import { AliasAction, NamespaceId, NamespaceRegistrationType } from '../../../src/model/namespace';
+import { NetworkType } from '../../../src/model/network';
+import {
+    AddressRestrictionFlag,
+    MosaicRestrictionFlag,
+    MosaicRestrictionType,
+    OperationRestrictionFlag,
+} from '../../../src/model/restriction';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountKeyLinkTransaction,
+    AccountMetadataTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AccountRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    Deadline,
+    LinkAction,
+    LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    MosaicMetadataTransaction,
+    MosaicSupplyChangeTransaction,
+    MultisigAccountModificationTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    TransactionType,
+    TransferTransaction,
+    VotingKeyLinkTransaction,
+    VrfKeyLinkTransaction,
+} from '../../../src/model/transaction';
+import { TestingAccount } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../../model/mosaic/Currency.spec';
 
 describe('TransactionMapping - createFromPayload', () => {

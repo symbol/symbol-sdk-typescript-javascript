@@ -15,12 +15,11 @@
  */
 
 import {
-    AggregateBondedTransactionBuilder,
-    AggregateCompleteTransactionBuilder,
+    AggregateTransactionBuilder,
     AmountDto,
     CosignatureBuilder,
     EmbeddedTransactionBuilder,
-    EmbeddedTransactionHelper,
+    GeneratorUtils,
     Hash256Dto,
     KeyDto,
     SignatureDto,
@@ -29,12 +28,12 @@ import {
 } from 'catbuffer-typescript';
 import { KeyPair, MerkleHashBuilder, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
-import { DtoMapping } from '../../core/utils/DtoMapping';
-import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
-import { Account } from '../account/Account';
-import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
-import { Statement } from '../receipt/Statement';
+import { DtoMapping } from '../../core/utils';
+import { CreateTransactionFromPayload } from '../../infrastructure/transaction';
+import { Account, Address, PublicAccount } from '../account';
+import { NamespaceId } from '../namespace';
+import { NetworkType } from '../network';
+import { Statement } from '../receipt';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
@@ -45,8 +44,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -161,12 +158,10 @@ export class AggregateTransaction extends Transaction {
          * Get transaction type from the payload hex
          * As buffer uses separate builder class for Complete and bonded
          */
-        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(payload.substring(220, 224)).reverse()), 16);
-        const builder =
-            type === TransactionType.AGGREGATE_COMPLETE
-                ? AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
-                : AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const innerTransactions = builder.getTransactions().map((t) => Convert.uint8ToHex(EmbeddedTransactionHelper.serialize(t)));
+
+        const builder = AggregateTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const type = (builder.type as number) as TransactionType;
+        const innerTransactions = builder.getTransactions();
         const networkType = builder.getNetwork().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const signature = payload.substring(16, 144);
@@ -182,7 +177,7 @@ export class AggregateTransaction extends Transaction {
             ? AggregateTransaction.createComplete(
                   Deadline.createFromDTO(builder.deadline.timestamp),
                   innerTransactions.map((transactionRaw) => {
-                      return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
+                      return CreateTransactionFromPayload(Convert.uint8ToHex(transactionRaw.serialize()), true) as InnerTransaction;
                   }),
                   networkType,
                   consignatures,
@@ -193,7 +188,7 @@ export class AggregateTransaction extends Transaction {
             : AggregateTransaction.createBonded(
                   Deadline.createFromDTO(builder.deadline.timestamp),
                   innerTransactions.map((transactionRaw) => {
-                      return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
+                      return CreateTransactionFromPayload(Convert.uint8ToHex(transactionRaw.serialize()), true) as InnerTransaction;
                   }),
                   networkType,
                   consignatures,
@@ -311,33 +306,18 @@ export class AggregateTransaction extends Transaction {
             return new CosignatureBuilder(cosignature.version.toDTO(), new KeyDto(signerBytes), new SignatureDto(signatureBytes));
         });
 
-        const transactionBuilder =
-            this.type === TransactionType.AGGREGATE_COMPLETE
-                ? new AggregateCompleteTransactionBuilder(
-                      this.getSignatureAsBuilder(),
-                      this.getSignerAsBuilder(),
-                      this.versionToDTO(),
-                      this.networkType.valueOf(),
-                      this.type.valueOf(),
-                      new AmountDto(this.maxFee.toDTO()),
-                      new TimestampDto(this.deadline.toDTO()),
-                      new Hash256Dto(this.calculateInnerTransactionHash()),
-                      transactions,
-                      cosignatures,
-                  )
-                : new AggregateBondedTransactionBuilder(
-                      this.getSignatureAsBuilder(),
-                      this.getSignerAsBuilder(),
-                      this.versionToDTO(),
-                      this.networkType.valueOf(),
-                      this.type.valueOf(),
-                      new AmountDto(this.maxFee.toDTO()),
-                      new TimestampDto(this.deadline.toDTO()),
-                      new Hash256Dto(this.calculateInnerTransactionHash()),
-                      transactions,
-                      cosignatures,
-                  );
-        return transactionBuilder;
+        return new AggregateTransactionBuilder(
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
+            this.versionToDTO(),
+            this.networkType.valueOf(),
+            this.type.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new Hash256Dto(this.calculateInnerTransactionHash()),
+            transactions,
+            cosignatures,
+        );
     }
 
     /**
@@ -362,7 +342,10 @@ export class AggregateTransaction extends Transaction {
 
             // for each embedded transaction hash their body
             hasher.reset();
-            hasher.update(transaction.toAggregateTransactionBytes());
+
+            const byte = transaction.toEmbeddedTransaction().serialize();
+            const padding = new Uint8Array(GeneratorUtils.getPaddingSize(byte.length, 8));
+            hasher.update(GeneratorUtils.concatTypedArrays(byte, padding));
             hasher.finalize(entityHash);
 
             // update merkle tree (add transaction hash)
@@ -371,15 +354,6 @@ export class AggregateTransaction extends Transaction {
 
         // calculate root hash with all transactions
         return builder.getRootHash();
-    }
-
-    /**
-     * Gets the padding size that rounds up \a size to the next multiple of \a alignment.
-     * @param size Inner transaction size
-     * @param alignment Next multiple alignment
-     */
-    private getInnerTransactionPaddingSize(size: number, alignment: number): number {
-        return 0 === size % alignment ? 0 : alignment - (size % alignment);
     }
 
     /**

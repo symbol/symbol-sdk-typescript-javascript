@@ -15,7 +15,9 @@
  */
 
 import {
+    AccountKeyTypeFlagsDto,
     AccountStateBuilder,
+    AccountStateFormatDto,
     AddressDto,
     AmountDto,
     FinalizationEpochDto,
@@ -28,12 +30,10 @@ import {
     KeyDto,
     MosaicBuilder,
     PinnedVotingKeyBuilder,
-    AccountKeyTypeFlagsDto,
     VotingKeyDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { MosaicId } from '../mosaic';
-import { Mosaic } from '../mosaic';
+import { Mosaic, MosaicId } from '../mosaic';
 import { UInt64 } from '../UInt64';
 import { AccountLinkVotingKey } from './AccountLinkVotingKey';
 import { AccountType } from './AccountType';
@@ -128,21 +128,22 @@ export class AccountInfo {
         const activityBuckets: HeightActivityBucketsBuilder = new HeightActivityBucketsBuilder(
             this.activityBucket.map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
         );
-
+        const format = this.importance.compare(UInt64.fromUint(0)) > -1 ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
         return new AccountStateBuilder(
             address,
             addressHeight,
             publicKey,
             publicKeyHeight,
             accountType,
+            format,
             supplementalPublicKeysMask,
-            votingPublicKeys,
-            balances,
             linkedPublicKey,
             nodePublicKey,
             vrfPublicKey,
+            votingPublicKeys,
             importanceSnapshots,
             activityBuckets,
+            balances,
         ).serialize();
     }
 
@@ -151,16 +152,16 @@ export class AccountInfo {
      *
      * @return Mosaic flags
      */
-    private getAccountKeyTypeFlags(): number {
-        let flags: number = AccountKeyTypeFlagsDto.UNSET;
+    private getAccountKeyTypeFlags(): AccountKeyTypeFlagsDto[] {
+        const flags: AccountKeyTypeFlagsDto[] = [];
         if (this.supplementalPublicKeys.vrf) {
-            flags &= AccountKeyTypeFlagsDto.VRF;
+            flags.push(AccountKeyTypeFlagsDto.VRF);
         }
         if (this.supplementalPublicKeys.node) {
-            flags &= AccountKeyTypeFlagsDto.NODE;
+            flags.push(AccountKeyTypeFlagsDto.NODE);
         }
         if (this.supplementalPublicKeys.linked) {
-            flags &= AccountKeyTypeFlagsDto.LINKED;
+            flags.push(AccountKeyTypeFlagsDto.LINKED);
         }
         return flags;
     }
