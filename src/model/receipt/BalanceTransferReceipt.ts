@@ -70,9 +70,9 @@ export class BalanceTransferReceipt extends Receipt {
         return new BalanceTransferReceiptBuilder(
             ReceiptVersion.BALANCE_TRANSFER,
             this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
-            new AddressDto(Convert.hexToUint8(this.senderAddress.encoded())),
-            new AddressDto(Convert.hexToUint8(this.recipientAddress.encoded())),
+            new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO())),
+            this.senderAddress.toBuilder(),
+            this.recipientAddress.toBuilder(),
         ).serialize();
     }
 }

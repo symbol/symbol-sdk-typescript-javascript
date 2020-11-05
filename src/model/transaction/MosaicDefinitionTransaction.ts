@@ -19,15 +19,13 @@ import {
     BlockDurationDto,
     EmbeddedMosaicDefinitionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     MosaicDefinitionTransactionBuilder,
-    MosaicIdDto,
     MosaicNonceDto,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicFlags } from '../mosaic/MosaicFlags';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -40,7 +38,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
@@ -178,24 +175,20 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
-        const transactionBuilder = new MosaicDefinitionTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+        return new MosaicDefinitionTransactionBuilder(
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.mosaicId.toBuilder(),
             new BlockDurationDto(this.duration.toDTO()),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
             this.flags.getValue(),
             this.divisibility,
         );
-        return transactionBuilder;
     }
 
     /**
@@ -204,11 +197,11 @@ export class MosaicDefinitionTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedMosaicDefinitionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.mosaicId.toBuilder(),
             new BlockDurationDto(this.duration.toDTO()),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
             this.flags.getValue(),

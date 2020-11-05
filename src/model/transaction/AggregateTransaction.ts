@@ -304,8 +304,6 @@ export class AggregateTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
         const transactions = this.innerTransactions.map((transaction) => (transaction as Transaction).toEmbeddedTransaction());
         const cosignatures = this.cosignatures.map((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
@@ -316,8 +314,8 @@ export class AggregateTransaction extends Transaction {
         const transactionBuilder =
             this.type === TransactionType.AGGREGATE_COMPLETE
                 ? new AggregateCompleteTransactionBuilder(
-                      new SignatureDto(signatureBuffer),
-                      new KeyDto(signerBuffer),
+                      this.getSignatureAsBuilder(),
+                      this.getSignerAsBuilder(),
                       this.versionToDTO(),
                       this.networkType.valueOf(),
                       this.type.valueOf(),
@@ -328,8 +326,8 @@ export class AggregateTransaction extends Transaction {
                       cosignatures,
                   )
                 : new AggregateBondedTransactionBuilder(
-                      new SignatureDto(signatureBuffer),
-                      new KeyDto(signerBuffer),
+                      this.getSignatureAsBuilder(),
+                      this.getSignerAsBuilder(),
                       this.versionToDTO(),
                       this.networkType.valueOf(),
                       this.type.valueOf(),

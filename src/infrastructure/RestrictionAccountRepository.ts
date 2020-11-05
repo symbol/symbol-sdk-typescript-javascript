@@ -16,6 +16,7 @@
 
 import { Observable } from 'rxjs/internal/Observable';
 import { Address } from '../model/account/Address';
+import { AccountRestrictions } from '../model/restriction';
 import { AccountRestriction } from '../model/restriction/AccountRestriction';
 
 export interface RestrictionAccountRepository {
@@ -24,5 +25,5 @@ export interface RestrictionAccountRepository {
      * @param address list of addresses
      * @returns Observable<AccountRestrictionsInfo>
      */
-    getAccountRestrictions(address: Address): Observable<AccountRestriction[]>;
+    getAccountRestrictions(address: Address): Observable<AccountRestrictions>;
 }

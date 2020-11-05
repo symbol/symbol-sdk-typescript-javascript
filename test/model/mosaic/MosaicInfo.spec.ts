@@ -15,7 +15,9 @@
  */
 
 import { deepEqual } from 'assert';
+import { MetadataEntryBuilder, MosaicEntryBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';
@@ -63,6 +65,12 @@ describe('MosaicInfo', () => {
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
         deepEqual(mosaicInfo.duration.toString(), mosaicInfoDTO.mosaic.duration);
+
+        const serialized = mosaicInfo.serialize();
+        expect(Convert.uint8ToHex(serialized)).eq(
+            '29CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E811010000000703E803000000000000',
+        );
+        deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
 
     it('should createComplete an MosaicInfo object without duration', () => {
@@ -88,6 +96,12 @@ describe('MosaicInfo', () => {
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
         deepEqual(mosaicInfo.duration.toDTO(), [0, 0]);
+
+        const serialized = mosaicInfo.serialize();
+        expect(Convert.uint8ToHex(serialized)).eq(
+            '29CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E8110100000007030000000000000000',
+        );
+        deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
 
     describe('isSupplyMutable', () => {

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Address } from '../account';
+import { MosaicId } from '../mosaic';
+import { TransactionType } from '../transaction';
 import { OperationRestrictionFlag } from './OperationRestrictionFlag';
 import { AddressRestrictionFlag } from './AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from './MosaicRestrictionFlag';
@@ -35,6 +38,6 @@ export class AccountRestriction {
         /**
          * Restriction values.
          */
-        public readonly values: object[],
+        public readonly values: (Address | MosaicId | TransactionType)[],
     ) {}
 }

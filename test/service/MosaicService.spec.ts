@@ -53,6 +53,7 @@ describe('MosaicService', () => {
 
     function buildAccountInfo(mosaicId: MosaicId, isEmptyMosaic = false): AccountInfo {
         return new AccountInfo(
+            'someId',
             TestingAccount.address,
             UInt64.fromUint(1),
             TestingAccount.publicKey,

@@ -198,7 +198,7 @@ describe('RestrictionHttp', () => {
     describe('getAccountRestrictions', () => {
         it('should call getAccountRestrictions successfully', async () => {
             const accountRestrictions = await restrictionAccountRepository.getAccountRestrictions(accountAddress).toPromise();
-            expect(accountRestrictions.length).to.be.greaterThan(0);
+            expect(accountRestrictions.restrictions.length).to.be.greaterThan(0);
         });
     });
 
@@ -209,8 +209,9 @@ describe('RestrictionHttp', () => {
                 .toPromise();
             deepEqual(mosaicRestrictionPage.data[0].mosaicId.toHex(), mosaicId.toHex());
             deepEqual(mosaicRestrictionPage.data[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-            deepEqual((mosaicRestrictionPage.data[0] as MosaicAddressRestriction).targetAddress.plain(), account3.address.plain());
-            deepEqual(mosaicRestrictionPage.data[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
+            const addressRestriction = mosaicRestrictionPage.data[0] as MosaicAddressRestriction;
+            deepEqual(addressRestriction.targetAddress.plain(), account3.address.plain());
+            deepEqual(addressRestriction.getRestriction(UInt64.fromUint(60641))!.restrictionValue, UInt64.fromUint(2));
         });
     });
 

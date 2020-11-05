@@ -16,19 +16,19 @@
 
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
-import { Account } from '../../../src/model/account/Account';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { AliasAction } from '../../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
+import { Account } from '../../../src/model/account';
+import { MosaicId } from '../../../src/model/mosaic';
+import { AliasAction } from '../../../src/model/namespace';
+import { NamespaceId } from '../../../src/model/namespace';
+import { NetworkType } from '../../../src/model/network';
+import { Deadline } from '../../../src/model/transaction';
+import { MosaicAliasTransaction } from '../../../src/model/transaction';
+import { UInt64 } from '../../../src/model';
 import { TestingAccount } from '../../conf/conf.spec';
 import { deepEqual } from 'assert';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
-import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { AliasTransaction } from '../../../src/model/transaction/AliasTransaction';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
+import { TransactionType } from '../../../src/model/transaction';
+import { AliasTransaction } from '../../../src/model/transaction';
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;

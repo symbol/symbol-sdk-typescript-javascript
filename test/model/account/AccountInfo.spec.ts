@@ -15,27 +15,32 @@
  */
 
 import { deepEqual } from 'assert';
+import { AccountStateBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
-import { AccountInfo } from '../../../src/model/account/AccountInfo';
-import { ActivityBucket } from '../../../src/model/account/ActivityBucket';
-import { Address } from '../../../src/model/account/Address';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { Mosaic } from '../../../src/model/mosaic/Mosaic';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { UInt64 } from '../../../src/model/UInt64';
-import { SupplementalPublicKeys } from '../../../src/model/account/SupplementalPublicKeys';
-import { AccountLinkPublicKey } from '../../../src/model/account/AccountLinkPublicKey';
-import { AccountLinkVotingKey } from '../../../src/model/account/AccountLinkVotingKey';
+import { AccountInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { Convert } from '../../../src/core/format';
+import { AccountHttp } from '../../../src/infrastructure';
+import { UInt64 } from '../../../src/model';
+import { AccountInfo, Address, PublicAccount } from '../../../src/model/account';
+import { MosaicId } from '../../../src/model/mosaic';
+import { NetworkType } from '../../../src/model/network';
 
 describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {
-        const accountInfoDTO = {
+        const mosaicId = new MosaicId([3646934825, 3576016193]);
+        const mosaicAmount = new UInt64([1830592442, 94387]);
+        const addressHeight = new UInt64([1, 0]);
+        const importance = new UInt64([405653170, 0]);
+        const importanceHeight = new UInt64([6462, 0]);
+        const address = Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5');
+        const publicKeyHeight = new UInt64([13, 0]);
+        const accountInfoDTO: AccountInfoDTO = {
+            id: 'someId',
             account: {
-                address: Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5'),
-                addressHeight: new UInt64([1, 0]),
-                importance: new UInt64([405653170, 0]),
-                importanceHeight: new UInt64([6462, 0]),
+                address: address.encoded(),
+                addressHeight: addressHeight.toString(),
+                importance: importance.toString(),
+                importanceHeight: importanceHeight.toString(),
                 accountType: 0,
                 supplementalPublicKeys: {
                     linked: { publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F' },
@@ -51,66 +56,66 @@ describe('AccountInfo', () => {
                         ],
                     },
                 },
-                activityBucket: [
+                activityBuckets: [
                     {
                         startHeight: '1000',
                         totalFeesPaid: '100',
                         beneficiaryCount: 1,
+                        rawScore: '10',
+                    },
+
+                    {
+                        startHeight: '2000',
+                        totalFeesPaid: '200',
+                        beneficiaryCount: 2,
                         rawScore: '20',
+                    },
+
+                    {
+                        startHeight: '3000',
+                        totalFeesPaid: '300',
+                        beneficiaryCount: 3,
+                        rawScore: '30',
+                    },
+
+                    {
+                        startHeight: '4000',
+                        totalFeesPaid: '400',
+                        beneficiaryCount: 4,
+                        rawScore: '40',
+                    },
+
+                    {
+                        startHeight: '5000',
+                        totalFeesPaid: '500',
+                        beneficiaryCount: 5,
+                        rawScore: '50',
                     },
                 ],
                 mosaics: [
                     {
-                        amount: new UInt64([1830592442, 94387]),
-                        id: new MosaicId([3646934825, 3576016193]),
+                        amount: mosaicAmount.toString(),
+                        id: mosaicId.toHex(),
                     },
                 ],
                 publicKey: '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
-                publicKeyHeight: new UInt64([13, 0]),
+                publicKeyHeight: publicKeyHeight.toString(),
             },
         };
 
-        const accountInfo = new AccountInfo(
-            accountInfoDTO.account.address,
-            accountInfoDTO.account.addressHeight,
-            accountInfoDTO.account.publicKey,
-            accountInfoDTO.account.publicKeyHeight,
-            accountInfoDTO.account.accountType,
-            new SupplementalPublicKeys(
-                accountInfoDTO.account.supplementalPublicKeys.linked
-                    ? new AccountLinkPublicKey(accountInfoDTO.account.supplementalPublicKeys.linked?.publicKey)
-                    : undefined,
-                accountInfoDTO.account.supplementalPublicKeys.node
-                    ? new AccountLinkPublicKey(accountInfoDTO.account.supplementalPublicKeys.node?.publicKey)
-                    : undefined,
-                accountInfoDTO.account.supplementalPublicKeys.vrf
-                    ? new AccountLinkPublicKey(accountInfoDTO.account.supplementalPublicKeys.vrf?.publicKey)
-                    : undefined,
-                accountInfoDTO.account.supplementalPublicKeys.voting
-                    ? accountInfoDTO.account.supplementalPublicKeys.voting?.publicKeys.map(
-                          (v) => new AccountLinkVotingKey(v.publicKey, v.startEpoch, v.endEpoch),
-                      )
-                    : undefined,
-            ),
-            accountInfoDTO.account.activityBucket.map(
-                (bucket) =>
-                    new ActivityBucket(
-                        UInt64.fromNumericString(bucket.startHeight),
-                        UInt64.fromNumericString(bucket.totalFeesPaid),
-                        bucket.beneficiaryCount,
-                        UInt64.fromNumericString(bucket.rawScore),
-                    ),
-            ),
-            accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(mosaicDTO.id, mosaicDTO.amount)),
-            accountInfoDTO.account.importance,
-            accountInfoDTO.account.importanceHeight,
-        );
-        deepEqual(accountInfo.address, accountInfoDTO.account.address);
-        deepEqual(accountInfo.addressHeight, accountInfoDTO.account.addressHeight);
+        const accountInfo = AccountHttp.toAccountInfo(accountInfoDTO);
+        deepEqual(accountInfo.address, address);
+        deepEqual(accountInfo.addressHeight, addressHeight);
         expect(accountInfo.publicKey).to.be.equal(accountInfoDTO.account.publicKey);
-        deepEqual(accountInfo.publicKeyHeight, accountInfoDTO.account.publicKeyHeight);
-        deepEqual(accountInfo.importance, accountInfoDTO.account.importance);
-        deepEqual(accountInfo.importanceHeight, accountInfoDTO.account.importanceHeight);
+        deepEqual(accountInfo.publicKeyHeight, publicKeyHeight);
+        deepEqual(accountInfo.importance, importance);
+        deepEqual(accountInfo.importanceHeight, importanceHeight);
         deepEqual(accountInfo.publicAccount, PublicAccount.createFromPublicKey(accountInfoDTO.account.publicKey, NetworkType.PRIVATE));
+
+        const serialized = accountInfo.serialize();
+        expect(Convert.uint8ToHex(serialized)).eq(
+            '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B501000000000000002E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F0D00000000000000000100012E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F0100000003000000B2C62D18000000003E19000000000000E8030000000000006400000000000000010000000A00000000000000D007000000000000C800000000000000020000001400000000000000B80B0000000000002C01000000000000030000001E00000000000000A00F00000000000090010000000000000400000028000000000000008813000000000000F401000000000000050000003200000000000000010029CF5FD941AD25D5BA9F1C6DB3700100',
+        );
+        deepEqual(AccountStateBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
 });

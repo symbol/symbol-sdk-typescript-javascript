@@ -18,15 +18,12 @@ import {
     AmountDto,
     EmbeddedMosaicAliasTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     MosaicAliasTransactionBuilder,
-    MosaicIdDto,
-    NamespaceIdDto,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { AliasAction } from '../namespace/AliasAction';
@@ -39,7 +36,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 export class MosaicAliasTransaction extends Transaction {
     /**
@@ -146,22 +142,18 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
-        const transactionBuilder = new MosaicAliasTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+        return new MosaicAliasTransactionBuilder(
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.namespaceId.toBuilder(),
+            this.mosaicId.toBuilder(),
             this.aliasAction.valueOf(),
         );
-        return transactionBuilder;
     }
 
     /**
@@ -170,12 +162,12 @@ export class MosaicAliasTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedMosaicAliasTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.namespaceId.toBuilder(),
+            this.mosaicId.toBuilder(),
             this.aliasAction.valueOf(),
         );
     }

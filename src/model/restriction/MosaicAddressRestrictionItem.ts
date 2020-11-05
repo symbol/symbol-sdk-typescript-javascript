@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AccountRestrictions } from './AccountRestrictions';
+
+import { UInt64 } from '../UInt64';
+
 /**
- * Account restrictions structure describes restriction information for an account.
+ * Mosaic address restriction structure describes restriction information for an mosaic.
  */
-export class AccountRestrictionsInfo {
-    /**
-     * Constructor
-     * @param meta
-     * @param accountRestrictions
-     */
-    constructor(
-        /**
-         * meta
-         */
-        public readonly meta: any,
-        /**
-         * Restrictions.
-         */
-        public readonly accountRestrictions: AccountRestrictions,
-    ) {}
 
-
-
+export class MosaicAddressRestrictionItem {
+    constructor(public readonly key: UInt64, public readonly restrictionValue: UInt64) {}
 }

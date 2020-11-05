@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { MosaicIdDto } from 'catbuffer-typescript';
 import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { Id } from '../Id';
@@ -85,9 +86,9 @@ export class MosaicId {
     }
 
     /**
-     * Create DTO object.
+     * Create Builder object.
      */
-    toDTO(): any {
-        return this.id.toDTO();
+    toBuilder(): MosaicIdDto {
+        return new MosaicIdDto(this.id.toDTO());
     }
 }

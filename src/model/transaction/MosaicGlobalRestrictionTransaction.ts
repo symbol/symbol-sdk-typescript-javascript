@@ -18,17 +18,17 @@ import {
     AmountDto,
     EmbeddedMosaicGlobalRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     MosaicGlobalRestrictionTransactionBuilder,
-    SignatureDto,
     TimestampDto,
-    UnresolvedMosaicIdDto,
     TransactionBuilder,
+    UnresolvedMosaicIdDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { MosaicRestrictionType } from '../restriction/MosaicRestrictionType';
@@ -39,8 +39,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class MosaicGlobalRestrictionTransaction extends Transaction {
     /**
@@ -195,12 +193,9 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
-        const transactionBuilder = new MosaicGlobalRestrictionTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+        return new MosaicGlobalRestrictionTransactionBuilder(
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_GLOBAL_RESTRICTION.valueOf(),
@@ -214,7 +209,6 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
             this.previousRestrictionType.valueOf(),
             this.newRestrictionType.valueOf(),
         );
-        return transactionBuilder;
     }
 
     /**
@@ -223,7 +217,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedMosaicGlobalRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_GLOBAL_RESTRICTION.valueOf(),

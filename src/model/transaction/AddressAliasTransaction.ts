@@ -149,19 +149,16 @@ export class AddressAliasTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new AddressAliasTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+            this.namespaceId.toBuilder(),
+            this.address.toBuilder(),
             this.aliasAction.valueOf(),
         );
         return transactionBuilder;
@@ -173,12 +170,12 @@ export class AddressAliasTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedAddressAliasTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+            this.namespaceId.toBuilder(),
+            this.address.toBuilder(),
             this.aliasAction.valueOf(),
         );
     }

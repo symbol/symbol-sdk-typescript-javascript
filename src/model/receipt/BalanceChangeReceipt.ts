@@ -66,8 +66,8 @@ export class BalanceChangeReceipt extends Receipt {
         return new BalanceChangeReceiptBuilder(
             ReceiptVersion.BALANCE_CHANGE,
             this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
-            new AddressDto(Convert.hexToUint8(this.targetAddress.encoded())),
+            new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO())),
+            this.targetAddress.toBuilder(),
         ).serialize();
     }
 }

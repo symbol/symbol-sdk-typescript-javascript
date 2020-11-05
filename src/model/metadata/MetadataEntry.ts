@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { UInt64 } from '../UInt64';
-import { MetadataType } from './MetadataType';
+import { MetadataEntryBuilder, MetadataValueBuilder, ScopedMetadataKeyDto } from 'catbuffer-typescript';
+import { Convert } from '../../core/format';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { UInt64 } from '../UInt64';
+import { MetadataType } from './MetadataType';
 
 /**
  * A mosaic describes an instance of a mosaic definition.
@@ -64,5 +66,26 @@ export class MetadataEntry {
          * The target mosaic or namespace identifier
          */
         public readonly targetId?: MosaicId | NamespaceId,
-    ) {}
+    ) {
+    }
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const sourceAddress = this.sourceAddress.toBuilder();
+        const targetAddress = this.targetAddress.toBuilder();
+
+        /** Metadata key scoped to source, target and type. */
+        const scopedMetadataKey = new ScopedMetadataKeyDto(this.scopedMetadataKey.toDTO());
+        /** Target id. */
+        const targetId: number[] = this.targetId?.id.toDTO() || [0, 0];
+        /** Metadata type. */
+        const metadataType = this.metadataType.valueOf();
+        /** Value. */
+        const value = new MetadataValueBuilder(Convert.utf8ToUint8(this.value));
+
+        return new MetadataEntryBuilder(sourceAddress, targetAddress, scopedMetadataKey, targetId, metadataType, value).serialize();
+    }
 }

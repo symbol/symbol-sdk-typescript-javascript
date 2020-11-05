@@ -15,6 +15,8 @@
  */
 
 import { deepEqual } from 'assert';
+import { MetadataEntryBuilder } from 'catbuffer-typescript';
+import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
@@ -57,6 +59,14 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.targetId, undefined);
         deepEqual(metadata.metadataType, MetadataType.Account);
         deepEqual(metadata.value, '12345');
+
+        const serialized = metadata.serialize();
+        deepEqual(
+            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8500000000000000000005003132333435',
+            Convert.uint8ToHex(serialized),
+        );
+
+        deepEqual(serialized, MetadataEntryBuilder.loadFromBinary(serialized).serialize());
     });
 
     it('should createComplete an Mosaic Metadata object', () => {
@@ -88,6 +98,13 @@ describe('MetadataEntry', () => {
         deepEqual((metadata.targetId as MosaicId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Mosaic);
         deepEqual(metadata.value, '12345');
+
+        const serialized = metadata.serialize();
+        deepEqual(
+            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8544B262C46CEABB850105003132333435',
+            Convert.uint8ToHex(serialized),
+        );
+        deepEqual(serialized, MetadataEntryBuilder.loadFromBinary(serialized).serialize());
     });
 
     it('should createComplete an Namespace Metadata object', () => {

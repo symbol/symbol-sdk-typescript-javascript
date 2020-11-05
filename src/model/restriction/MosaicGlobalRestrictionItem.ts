@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
+import {
+    AddressDto,
+    AddressKeyValueBuilder,
+    AddressKeyValueSetBuilder,
+    MosaicAddressRestrictionEntryBuilder, MosaicGlobalRestrictionEntryBuilder,
+    MosaicIdDto, MosaicResolutionEntryBuilder,
+    MosaicRestrictionKeyDto
+} from 'catbuffer-typescript';
+import { GlobalKeyValueSetBuilder } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
+import { UInt64 } from '../UInt64';
 import { MosaicRestrictionType } from './MosaicRestrictionType';
 /**
  * Mosaic global restriction item structure .
@@ -22,11 +32,13 @@ import { MosaicRestrictionType } from './MosaicRestrictionType';
 export class MosaicGlobalRestrictionItem {
     /**
      * Constructor
+     * @param key string,
      * @param referenceMosaicId
      * @param restrictionValue
      * @param restrictionType
      */
     constructor(
+        public readonly key: UInt64,
         /**
          * Reference mosaic identifier
          */
@@ -34,10 +46,12 @@ export class MosaicGlobalRestrictionItem {
         /**
          * Mosaic restriction value.
          */
-        public readonly restrictionValue: string,
+        public readonly restrictionValue: UInt64,
         /**
          * Mosaic restriction type.
          */
         public readonly restrictionType: MosaicRestrictionType,
     ) {}
+
+
 }

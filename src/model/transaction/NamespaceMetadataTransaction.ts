@@ -170,12 +170,9 @@ export class NamespaceMetadataTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new NamespaceMetadataTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_METADATA.valueOf(),
@@ -183,7 +180,7 @@ export class NamespaceMetadataTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
             this.scopedMetadataKey.toDTO(),
-            new NamespaceIdDto(this.targetNamespaceId.id.toDTO()),
+            this.targetNamespaceId.toBuilder(),
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );
@@ -196,13 +193,13 @@ export class NamespaceMetadataTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedNamespaceMetadataTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_METADATA.valueOf(),
             new UnresolvedAddressDto(this.targetAddress.encodeUnresolvedAddress(this.networkType)),
             this.scopedMetadataKey.toDTO(),
-            new NamespaceIdDto(this.targetNamespaceId.id.toDTO()),
+            this.targetNamespaceId.toBuilder(),
             this.valueSizeDelta,
             Convert.utf8ToUint8(this.value),
         );

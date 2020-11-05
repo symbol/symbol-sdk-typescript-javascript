@@ -43,16 +43,12 @@ export class ArtifactExpiryReceipt extends Receipt {
      */
     public serialize(): Uint8Array {
         if (this.artifactId instanceof MosaicId) {
-            return new MosaicExpiryReceiptBuilder(
-                ReceiptVersion.ARTIFACT_EXPIRY,
-                this.type.valueOf(),
-                new MosaicIdDto(this.artifactId.toDTO()),
-            ).serialize();
+            return new MosaicExpiryReceiptBuilder(ReceiptVersion.ARTIFACT_EXPIRY, this.type.valueOf(), this.artifactId.toBuilder()).serialize();
         }
         return new NamespaceExpiryReceiptBuilder(
             ReceiptVersion.ARTIFACT_EXPIRY,
             this.type.valueOf(),
-            new NamespaceIdDto(this.artifactId.id.toDTO()),
+            this.artifactId.toBuilder(),
         ).serialize();
     }
 }

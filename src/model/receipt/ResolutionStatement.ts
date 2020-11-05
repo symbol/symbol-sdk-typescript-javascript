@@ -101,7 +101,7 @@ export class ResolutionStatement<U extends UnresolvedAddress | UnresolvedMosaicI
                           (entry) =>
                               new AddressResolutionEntryBuilder(
                                   new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                                  new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
+                                  (entry.resolved as Address).toBuilder(),
                               ),
                       ),
                   )
@@ -113,7 +113,7 @@ export class ResolutionStatement<U extends UnresolvedAddress | UnresolvedMosaicI
                           (entry) =>
                               new MosaicResolutionEntryBuilder(
                                   new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                                  new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
+                                  (entry.resolved as MosaicId).toBuilder(),
                               ),
                       ),
                   );

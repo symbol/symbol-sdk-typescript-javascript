@@ -13,3 +13,4 @@ export * from './MosaicRestrictionFlag';
 export * from './MosaicRestrictionType';
 export * from './OperationRestrictionFlag';
 export * from './RestrictionFlag';
+export { MosaicAddressRestrictionItem } from './MosaicAddressRestrictionItem';

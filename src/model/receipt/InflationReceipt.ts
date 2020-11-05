@@ -58,7 +58,7 @@ export class InflationReceipt extends Receipt {
         return new InflationReceiptBuilder(
             ReceiptVersion.INFLATION_RECEIPT,
             this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO())),
         ).serialize();
     }
 }

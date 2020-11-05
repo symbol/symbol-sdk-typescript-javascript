@@ -45,7 +45,7 @@ describe('DtoMapping', () => {
         restrictionInfo.accountRestrictions = restrictionsDto;
         const result = DtoMapping.extractAccountRestrictionFromDto(restrictionInfo);
         expect(result).not.to.be.undefined;
-        expect(result.accountRestrictions.restrictions[0].values[0]).to.be.equal(16724);
+        expect(result.restrictions[0].values[0]).to.be.equal(16724);
     });
 
     it('extractRestrictionInfo - Mosaic', () => {
@@ -61,7 +61,7 @@ describe('DtoMapping', () => {
         restrictionInfo.accountRestrictions = restrictionsDto;
         const result = DtoMapping.extractAccountRestrictionFromDto(restrictionInfo);
         expect(result).not.to.be.undefined;
-        expect((result.accountRestrictions.restrictions[0].values[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+        expect((result.restrictions[0].values[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
     });
 
     it('parseServerDuration', () => {
