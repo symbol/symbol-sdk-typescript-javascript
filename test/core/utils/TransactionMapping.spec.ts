@@ -317,7 +317,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.serialize()).eq(
+        assertSerialization(
+            mosaicDefinitionTransaction,
             '96000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001804D4100000000000000002B0200000000000001000000000000000000000000000000E6DE84B80003',
         );
 
@@ -656,7 +657,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(accountLinkTransaction.serialize()).eq(
+        assertSerialization(
+            accountLinkTransaction,
             'A1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001804C4100000000000000002B020000000000009801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601',
         );
 
@@ -675,7 +677,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(vrfKeyLinkTransaction.serialize()).eq(
+        assertSerialization(
+            vrfKeyLinkTransaction,
             'A100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180434200000000000000002B020000000000009801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601',
         );
 
@@ -694,7 +697,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(nodeKeyLinkTransaction.serialize()).eq(
+        assertSerialization(
+            nodeKeyLinkTransaction,
             'A1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001804C4200000000000000002B020000000000009801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601',
         );
 
@@ -738,7 +742,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(registerNamespaceTransaction.serialize()).eq(
+        assertSerialization(
+            registerNamespaceTransaction,
             'A5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001804E4100000000000000002B02000000000000E803000000000000CFCBE72D994BE69B0013726F6F742D746573742D6E616D657370616365',
         );
 
@@ -756,10 +761,6 @@ describe('TransactionMapping - createFromPayload', () => {
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.PRIVATE_TEST,
-        );
-
-        expect(registerNamespaceTransaction.serialize()).eq(
-            'A5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001804E4100000000000000002B020000000000004DF55E7F6D8FB7FF924207DF2CA1BBF30113726F6F742D746573742D6E616D657370616365',
         );
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -782,7 +783,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(mosaicGlobalRestrictionTransaction.serialize()).eq(
+        assertSerialization(
+            mosaicGlobalRestrictionTransaction,
             'AA00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180514100000000000000002B02000000000000010000000000000000000000000000005C11000000000000000000000000000000000000000000000006',
         );
 
@@ -811,7 +813,8 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(0),
         );
 
-        expect(mosaicAddressRestrictionTransaction.serialize()).eq(
+        assertSerialization(
+            mosaicAddressRestrictionTransaction,
             'B800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180514200000000000000002B0200000000000001000000000000005C110000000000000000000000000000000000000000000080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C',
         );
 
@@ -838,7 +841,8 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(0),
         );
 
-        expect(mosaicAddressRestrictionTransaction.serialize()).eq(
+        assertSerialization(
+            mosaicAddressRestrictionTransaction,
             'B800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180514200000000000000002B020000000000006EC265194C0501D45C110000000000000000000000000000000000000000000080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C',
         );
 
@@ -865,7 +869,8 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        expect(accountMetadataTransaction.serialize()).eq(
+        assertSerialization(
+            accountMetadataTransaction,
             'AE00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180444100000000000000002B0200000000000080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05CE80300000000000001000A0000000000000000000000',
         );
 
@@ -894,7 +899,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const expectedHex =
             'B600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180444200000000000000002B0200000000000080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05CE8030000000000004CCCD78612DDF5CA01000A0000000000000000000000';
 
-        expect(mosaicMetadataTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicMetadataTransaction, expectedHex);
 
         const signedTx = mosaicMetadataTransaction.signWith(account, generationHash);
 
@@ -922,7 +927,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const expectedHex =
             'B600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180444300000000000000002B0200000000000080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05CE8030000000000004CCCD78612DDF5CA01000A0000000000000000000000';
 
-        expect(namespaceMetadataTransaction.serialize()).eq(expectedHex);
+        assertSerialization(namespaceMetadataTransaction, expectedHex);
 
         const signedTx = namespaceMetadataTransaction.signWith(account, generationHash);
 
@@ -973,7 +978,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(transferTransaction.serialize()).eq(expectedHex);
+        assertSerialization(transferTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
 
@@ -993,7 +998,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(transferTransaction.serialize()).eq(expectedHex);
+        assertSerialization(transferTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
         expect((transaction.recipientAddress as NamespaceId).id.toHex().toUpperCase()).to.be.equal(
@@ -1014,7 +1019,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(transferTransaction.serialize()).eq(expectedHex);
+        assertSerialization(transferTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
 
@@ -1047,7 +1052,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(vrfKeyLinkTransaction.serialize()).eq(expectedHex);
+        assertSerialization(vrfKeyLinkTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(vrfKeyLinkTransaction.toJSON()) as VrfKeyLinkTransaction;
 
@@ -1066,7 +1071,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(nodeKeyLinkTransaction.serialize()).eq(expectedHex);
+        assertSerialization(nodeKeyLinkTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(nodeKeyLinkTransaction.toJSON()) as NodeKeyLinkTransaction;
 
@@ -1110,7 +1115,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(addressRestrictionTransaction.serialize()).eq(expectedHex);
+        assertSerialization(addressRestrictionTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(
             addressRestrictionTransaction.toJSON(),
@@ -1134,7 +1139,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
 
-        expect(mosaicRestrictionTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicRestrictionTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
 
@@ -1155,7 +1160,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(operationRestrictionTransaction.serialize()).eq(expectedHex);
+        assertSerialization(operationRestrictionTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(
             operationRestrictionTransaction.toJSON(),
@@ -1179,7 +1184,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(addressAliasTransaction.serialize()).eq(expectedHex);
+        assertSerialization(addressAliasTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(addressAliasTransaction.toJSON()) as AddressAliasTransaction;
 
@@ -1200,7 +1205,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(mosaicAliasTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicAliasTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(mosaicAliasTransaction.toJSON()) as MosaicAliasTransaction;
 
@@ -1221,7 +1226,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(mosaicDefinitionTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicDefinitionTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(mosaicDefinitionTransaction.toJSON()) as MosaicDefinitionTransaction;
 
@@ -1244,7 +1249,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(mosaicSupplyChangeTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicSupplyChangeTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(mosaicSupplyChangeTransaction.toJSON()) as MosaicSupplyChangeTransaction;
 
@@ -1267,7 +1272,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(secretLockTransaction.serialize()).eq(expectedHex);
+        assertSerialization(secretLockTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
 
@@ -1290,7 +1295,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(secretLockTransaction.serialize()).eq(expectedHex);
+        assertSerialization(secretLockTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
 
@@ -1314,7 +1319,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(secretLockTransaction.serialize()).eq(expectedHex);
+        assertSerialization(secretLockTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
 
@@ -1336,7 +1341,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(secretProofTransaction.serialize()).eq(expectedHex);
+        assertSerialization(secretProofTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
 
@@ -1361,7 +1366,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(secretProofTransaction.serialize()).eq(expectedHex);
+        assertSerialization(secretProofTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
 
@@ -1384,7 +1389,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(modifyMultisigAccountTransaction.serialize()).eq(expectedHex);
+        assertSerialization(modifyMultisigAccountTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(
             modifyMultisigAccountTransaction.toJSON(),
@@ -1413,7 +1418,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(aggregateTransaction.serialize()).eq(expectedHex);
+        assertSerialization(aggregateTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(aggregateTransaction.toJSON()) as AggregateTransaction;
 
@@ -1439,7 +1444,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(aggregateTransaction.serialize()).eq(expectedHex);
+        assertSerialization(aggregateTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(aggregateTransaction.toJSON()) as AggregateTransaction;
 
@@ -1460,7 +1465,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(lockTransaction.serialize()).eq(expectedHex);
+        assertSerialization(lockTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(lockTransaction.toJSON()) as LockFundsTransaction;
 
@@ -1478,7 +1483,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(registerNamespaceTransaction.serialize()).eq(expectedHex);
+        assertSerialization(registerNamespaceTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
 
@@ -1495,7 +1500,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(registerNamespaceTransaction.serialize()).eq(expectedHex);
+        assertSerialization(registerNamespaceTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
 
@@ -1516,7 +1521,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(mosaicGlobalRestrictionTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicGlobalRestrictionTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(
             mosaicGlobalRestrictionTransaction.toJSON(),
@@ -1545,7 +1550,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(mosaicAddressRestrictionTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicAddressRestrictionTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(
             mosaicAddressRestrictionTransaction.toJSON(),
@@ -1571,7 +1576,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(accountMetadataTransaction.serialize()).eq(expectedHex);
+        assertSerialization(accountMetadataTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(accountMetadataTransaction.toJSON()) as AccountMetadataTransaction;
 
@@ -1595,7 +1600,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(mosaicMetadataTransaction.serialize()).eq(expectedHex);
+        assertSerialization(mosaicMetadataTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(mosaicMetadataTransaction.toJSON()) as MosaicMetadataTransaction;
 
@@ -1620,7 +1625,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         const expectedHex =
             '8A00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180504300000000000000002B0200000000000004400100000000004E42';
-        expect(namespaceMetadataTransaction.serialize()).eq(expectedHex);
+        assertSerialization(namespaceMetadataTransaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(namespaceMetadataTransaction.toJSON()) as NamespaceMetadataTransaction;
 

@@ -107,6 +107,10 @@ export class NamespaceRegistrationTransaction extends Transaction {
         } else {
             parentId = parentNamespace;
         }
+        const namespaceId =
+            typeof parentNamespace === 'string'
+                ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
+                : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName));
         return new NamespaceRegistrationTransaction(
             networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
@@ -114,9 +118,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             maxFee,
             NamespaceRegistrationType.SubNamespace,
             namespaceName,
-            typeof parentNamespace === 'string'
-                ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
-                : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
+            namespaceId,
             undefined,
             parentId,
             signature,
