@@ -90,4 +90,12 @@ describe('NodeHttp', () => {
             expect(health.db).not.to.be.null;
         });
     });
+
+    describe('getUnlockedAccount', () => {
+        it('should return unlocked account', async () => {
+            const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
+            expect(unlockedAccount).not.to.be.null;
+            expect(unlockedAccount.length).greaterThan(0);
+        });
+    });
 });

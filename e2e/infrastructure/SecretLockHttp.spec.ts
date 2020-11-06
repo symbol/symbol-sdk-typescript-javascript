@@ -111,7 +111,12 @@ describe('SecretLockHttp', () => {
                 .search({ address: account.address, pageSize: 20, order: Order.Asc })
                 .pipe(take(20), toArray())
                 .toPromise();
-            const info = await SecretLockRepo.search({ address: account.address, pageSize: 20, order: Order.Asc }).toPromise();
+            const info = await SecretLockRepo.search({
+                address: account.address,
+                secret: undefined,
+                pageSize: 20,
+                order: Order.Asc,
+            }).toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });
