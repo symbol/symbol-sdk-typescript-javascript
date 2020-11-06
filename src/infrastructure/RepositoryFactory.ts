@@ -34,6 +34,7 @@ import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
 import { HashLockRepository } from './HashLockRepository';
 import { SecretLockRepository } from './SecretLockRepository';
+import { FinalizationRepository } from './FinalizationRepository';
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing
@@ -132,6 +133,11 @@ export interface RepositoryFactory {
      * @returns a newly created {@link SecretLockRepository}
      */
     createSecretLockRepository(): SecretLockRepository;
+
+    /**
+     * @returns a newly created {@link FinalizationRepository}
+     */
+    createFinalizationRepository(): FinalizationRepository;
 
     /**
      * @returns a newly created {@link IListener}

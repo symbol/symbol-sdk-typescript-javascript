@@ -57,6 +57,8 @@ import { SecretLockRepository } from './SecretLockRepository';
 import { SecretLockHttp } from './SecretLockHttp';
 import { HashLockHttp } from './HashLockHttp';
 import { DtoMapping } from '../core/utils/DtoMapping';
+import { FinalizationHttp } from './FinalizationHttp';
+import { FinalizationRepository } from './FinalizationRepository';
 /**
  * Receipt http repository.
  *
@@ -171,6 +173,10 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     createSecretLockRepository(): SecretLockRepository {
         return new SecretLockHttp(this.url, this.fetchApi);
+    }
+
+    createFinalizationRepository(): FinalizationRepository {
+        return new FinalizationHttp(this.url, this.fetchApi);
     }
 
     getGenerationHash(): Observable<string> {

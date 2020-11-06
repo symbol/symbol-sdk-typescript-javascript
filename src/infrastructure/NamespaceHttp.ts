@@ -227,7 +227,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         return new NamespaceInfo(
             dto.meta.active,
             dto.meta.index,
-            dto.meta.id,
+            dto.id,
             dto.namespace.registrationType as number,
             dto.namespace.depth,
             NamespaceHttp.extractLevels(dto.namespace),

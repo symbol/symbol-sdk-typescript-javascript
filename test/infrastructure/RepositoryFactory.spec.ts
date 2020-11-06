@@ -42,6 +42,7 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
 import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
 import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
+import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
 import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
 
 describe('RepositoryFactory', () => {
@@ -66,6 +67,7 @@ describe('RepositoryFactory', () => {
         expect(repositoryFactory.createTransactionRepository()).to.be.not.null;
         expect(repositoryFactory.createHashLockRepository()).to.be.not.null;
         expect(repositoryFactory.createSecretLockRepository()).to.be.not.null;
+        expect(repositoryFactory.createFinalizationRepository()).to.be.not.null;
     });
 
     it('Should get GenerationHash from cache', (done) => {
@@ -329,6 +331,7 @@ describe('RepositoryFactory', () => {
         expect(factory.createTransactionStatusRepository() instanceof TransactionStatusHttp).to.be.true;
         expect(factory.createHashLockRepository() instanceof HashLockHttp).to.be.true;
         expect(factory.createSecretLockRepository() instanceof SecretLockHttp).to.be.true;
+        expect(factory.createFinalizationRepository() instanceof FinalizationHttp).to.be.true;
     });
 
     it('Fail remote call ', async () => {

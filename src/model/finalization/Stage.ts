@@ -1,7 +1,7 @@
 /*
  * Copyright 2020 NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"),
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
-import { Address } from '../../model/account/Address';
-
 /**
- * Defines the params used to search secret lock. With this criteria, you can sort and filter
+ * Message group stage enum
  */
-export interface SecretLockSearchCriteria extends SearchCriteria {
-    /**
-     * The owner address. (required)
-     */
-    address: Address;
 
-    /**
-     * Optional to search by secret.
-     */
-    secret?: string;
+export enum Stage {
+    Prevote = 0,
+    Precommit = 1,
+    Count = 2,
 }
