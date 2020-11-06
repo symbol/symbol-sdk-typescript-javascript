@@ -15,6 +15,7 @@
  */
 
 import { Address } from '../../model/account/Address';
+import { MosaicId } from '../../model/mosaic/MosaicId';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { UInt64 } from '../../model/UInt64';
 import { TransactionGroup } from '../TransactionGroup';
@@ -77,4 +78,19 @@ export interface TransactionSearchCriteria extends SearchCriteria {
      * Only blocks with height smaller or equal than this one are returned.
      */
     toHeight?: UInt64;
+
+    /*
+     * Only transfer transactions with a transfer amount of the provided mosaic id, greater or equal than this amount are returned.
+     */
+    fromTransferAmount?: UInt64;
+
+    /*
+     * Only transfer transactions with a transfer amount of the provided mosaic id, lesser or equal than this amount are returned.
+     */
+    toTransferAmount?: UInt64;
+
+    /**
+     * Only transfer transactions with a transfer amount of the provided mosaic id, lesser or equal than this amount are returned.
+     */
+    transferMosaicId?: MosaicId;
 }

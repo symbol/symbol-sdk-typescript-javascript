@@ -112,6 +112,14 @@ export class NodeHttp extends Http implements NodeRepository {
     }
 
     /**
+     * Return unlocked harvesting account from node.
+     * @returns Observable<string[]>
+     */
+    getUnlockedAccount(): Observable<string[]> {
+        return this.call(this.nodeRoutesApi.getUnlockedAccount(), (body) => body);
+    }
+
+    /**
      * It maps NodeInfoDTO to NodeInfo
      *
      * @param nodeInfo the dto object.

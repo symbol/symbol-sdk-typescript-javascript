@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs';
 import { Searcher } from './paginationStreamer/Searcher';
 import { SecretLockInfo } from '../model/lock/SecretLockInfo';
 import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCriteria';
@@ -22,11 +21,4 @@ import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCrite
 /**
  * Secretlock interface repository.
  */
-export interface SecretLockRepository extends Searcher<SecretLockInfo, SecretLockSearchCriteria> {
-    /**
-     * Get Secret lock info for an account.
-     * @param secret Secretlock Secret
-     * @returns Observable<SecretLockInfo>
-     */
-    getSecretLock(secret: string): Observable<SecretLockInfo>;
-}
+export type SecretLockRepository = Searcher<SecretLockInfo, SecretLockSearchCriteria>;

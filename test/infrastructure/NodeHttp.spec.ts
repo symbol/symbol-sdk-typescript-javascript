@@ -200,6 +200,17 @@ describe('NodeHttp', () => {
         }
     });
 
+    it('getUnlockedAccount', async () => {
+        const body = ['key1', 'key2'];
+
+        when(nodeRoutesApi.getUnlockedAccount()).thenReturn(Promise.resolve(body));
+
+        const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
+        expect(unlockedAccount).to.be.not.null;
+        expect(unlockedAccount[0]).to.be.equal('key1');
+        expect(unlockedAccount[1]).to.be.equal('key2');
+    });
+
     it('getStorageInfo', async () => {
         const body = {} as StorageInfoDTO;
         body.numAccounts = 1;

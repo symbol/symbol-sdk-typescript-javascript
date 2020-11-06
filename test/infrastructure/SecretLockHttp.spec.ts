@@ -73,12 +73,6 @@ describe('SecretLockHttp', () => {
         expect(info.status).to.be.equal(lockDto.status);
     }
 
-    it('getSecretLockInfo', async () => {
-        when(secretLockRoutesApi.getSecretLock(lockDto.secret)).thenReturn(Promise.resolve(dto));
-        const hashInfo = await secretLockRepository.getSecretLock(lockDto.secret).toPromise();
-        assertHashInfo(hashInfo);
-    });
-
     it('search', async () => {
         const pagination = {} as Pagination;
         pagination.pageNumber = 1;
@@ -87,18 +81,10 @@ describe('SecretLockHttp', () => {
         const body = {} as SecretLockPage;
         body.data = [dto];
         body.pagination = pagination;
-        when(secretLockRoutesApi.searchSecretLock(address.plain(), undefined, undefined, undefined, undefined)).thenReturn(
+        when(secretLockRoutesApi.searchSecretLock(address.plain(), undefined, undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve(body),
         );
         const infos = await secretLockRepository.search({ address }).toPromise();
         assertHashInfo(infos.data[0]);
-    });
-
-    it('getSecretLockInfo - Error', async () => {
-        when(secretLockRoutesApi.getSecretLock(lockDto.secret)).thenReject(new Error('Mocked Error'));
-        await secretLockRepository
-            .getSecretLock(lockDto.secret)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
     });
 });

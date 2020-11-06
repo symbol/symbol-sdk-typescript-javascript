@@ -49,15 +49,6 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
     }
 
     /**
-     * Get secret lock info for an account.
-     * @param secret SecretLock secret
-     * @returns Observable<SecretLockInfo>
-     */
-    public getSecretLock(secret: string): Observable<SecretLockInfo> {
-        return this.call(this.secretLockRoutesApi.getSecretLock(secret), (body) => this.toSecretLockInfo(body));
-    }
-
-    /**
      * Gets an array of SecretLockInfo.
      * @param criteria - SecretLock search criteria
      * @returns Observable<Page<SecretLockInfo>>
@@ -66,6 +57,7 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
         return this.call(
             this.secretLockRoutesApi.searchSecretLock(
                 criteria.address.plain(),
+                criteria.secret,
                 criteria.pageSize,
                 criteria.pageNumber,
                 criteria.offset,

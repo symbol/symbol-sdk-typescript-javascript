@@ -50,7 +50,6 @@ describe('NamespaceHttp', () => {
     const namespaceId = new NamespaceId('testnamespace');
     const namespaceMetaDto = {} as NamespaceMetaDTO;
     namespaceMetaDto.active = true;
-    namespaceMetaDto.id = '1';
     namespaceMetaDto.index = 0;
 
     const namespaceDto = {} as NamespaceDTO;
@@ -70,6 +69,7 @@ describe('NamespaceHttp', () => {
     const namespaceInfoDto = {} as NamespaceInfoDTO;
     namespaceInfoDto.meta = namespaceMetaDto;
     namespaceInfoDto.namespace = namespaceDto;
+    namespaceInfoDto.id = '1';
 
     const aliasDtoMosaic = {} as AliasDTO;
     aliasDtoMosaic.mosaicId = mosaicId.toHex();
