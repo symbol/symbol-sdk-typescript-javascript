@@ -22,7 +22,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
-import { Order, SecretLockPaginationStreamer } from '../../src/infrastructure/infrastructure';
+import { Order, SecretLockPaginationStreamer } from '../../src/infrastructure';
 import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';

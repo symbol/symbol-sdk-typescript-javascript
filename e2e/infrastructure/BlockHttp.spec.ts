@@ -28,9 +28,9 @@ import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
 import { deepEqual } from 'assert';
 import { take } from 'rxjs/operators';
-import { TransactionStatement } from '../../src/model/model';
+import { TransactionStatement } from '../../src/model';
 import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
-import { Order } from '../../src/infrastructure/infrastructure';
+import { Order } from '../../src/infrastructure';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();

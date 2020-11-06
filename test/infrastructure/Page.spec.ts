@@ -15,12 +15,12 @@
  */
 
 import { expect } from 'chai';
-import { Page } from '../../src/infrastructure/infrastructure';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { Transaction } from '../../src/model/transaction/Transaction';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { Page } from '../../src/infrastructure';
+import { PlainMessage } from '../../src/model/message';
+import { NetworkType } from '../../src/model/network';
+import { Deadline } from '../../src/model/transaction';
+import { Transaction } from '../../src/model/transaction';
+import { TransferTransaction } from '../../src/model/transaction';
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('Page', () => {

@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { toArray } from 'rxjs/operators';
 import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
-import { ReceiptType, UInt64 } from '../../src/model/model';
+import { ReceiptType, UInt64 } from '../../src/model';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('ReceiptHttp', () => {

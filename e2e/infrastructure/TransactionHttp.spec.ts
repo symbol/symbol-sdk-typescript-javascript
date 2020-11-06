@@ -64,7 +64,7 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
-import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
+import { TransactionSearchCriteria } from '../../src/infrastructure';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
 import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';

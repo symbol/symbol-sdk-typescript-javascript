@@ -30,7 +30,7 @@ import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { UInt64, NamespaceId, MosaicId, ResolutionType } from '../../src/model/model';
+import { UInt64, NamespaceId, MosaicId, ResolutionType } from '../../src/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { ResolutionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Pagination } from 'symbol-openapi-typescript-fetch-client';

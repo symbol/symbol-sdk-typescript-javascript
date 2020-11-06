@@ -27,7 +27,7 @@ import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { take, toArray } from 'rxjs/operators';
-import { Order } from '../../src/infrastructure/infrastructure';
+import { Order } from '../../src/infrastructure';
 
 describe('NamespaceHttp', () => {
     let defaultNamespaceId: NamespaceId;

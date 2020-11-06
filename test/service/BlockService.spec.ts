@@ -33,7 +33,7 @@ import { TransactionRepository } from '../../src/infrastructure/TransactionRepos
 import { Page } from '../../src/infrastructure/Page';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { Deadline, TransactionInfo } from '../../src/model/model';
+import { Deadline, TransactionInfo } from '../../src/model';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 

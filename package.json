@@ -4,6 +4,7 @@
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
+        "prepack": "npm run build",
         "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
         "e2econfigcopy": "gulp",
         "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
@@ -18,6 +19,7 @@
         "lint": "eslint --cache src/ test/ e2e/ --ext .ts",
         "lint:fix": "eslint src/ test/ e2e/ --ext .ts --fix",
         "style:fix": "npm run prettier && npm run lint:fix",
+        "create-index-files": "cti create ./src -b -n",
         "doc": "typedoc --out \"ts-docs/$(npm run version --silent)\" src",
         "bootstrap-clean": "symbol-bootstrap clean -t target/bootstrap-test",
         "bootstrap-start-detached": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml -t target/bootstrap-test --timeout 120000 -d --healthCheck",
@@ -70,6 +72,7 @@
         "assert": "^1.5.0",
         "chai": "^4.2.0",
         "coveralls": "^3.1.0",
+        "create-ts-index": "^1.13.6",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.12.0",
         "eslint-plugin-prettier": "^3.1.4",

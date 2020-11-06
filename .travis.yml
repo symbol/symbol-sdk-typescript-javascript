@@ -38,11 +38,11 @@ jobs:
       script: /bin/bash travis/node-functions.sh node_push_github_pages
       if: branch = env(DEV_BRANCH) AND type = push
     - name: alpha npm
-      script: npm pack && /bin/bash travis/node-functions.sh node_publish_alpha
+      script: npm run build && /bin/bash travis/node-functions.sh node_publish_alpha
       if: branch = env(DEV_BRANCH) AND type = push
     - stage: release
       name: release npm
-      script: npm pack && /bin/bash travis/node-functions.sh node_publish_release
+      script: npm run build && /bin/bash travis/node-functions.sh node_publish_release
       if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
     - stage: release
       name: github release pages
@@ -50,5 +50,5 @@ jobs:
       if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
     - stage: post release
       name: tag and version upgrade
-      script: npm pack && /bin/bash travis/node-functions.sh node_post_release
+      script: /bin/bash travis/node-functions.sh node_post_release
       if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
