@@ -19,6 +19,7 @@ Client Library | v0.10.1  | [symbol-openapi-typescript-fetch-client](https://www
 - Added `FinalizationRepository`.
 - Added `transferMosaicId`, `fromTransferAmount`, `toTransferAmount` to transaction searches.
 - Added `CurrencyService` to allow loading Network and custom `Currency` objects from the rest service.
+- Added `UnlockedAccount` endpoint in `NodeRepository` for checking delegated harvesting status.
 
 ## [0.21.0] - 25-Sep-2020
 
