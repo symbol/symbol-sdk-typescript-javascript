@@ -16,8 +16,8 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { first, take, toArray } from 'rxjs/operators';
-import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
+import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';

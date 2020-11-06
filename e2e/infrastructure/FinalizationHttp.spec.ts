@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import { FinalizationRepository } from '../../src/infrastructure/FinalizationRepository';
-import { UInt64 } from '../../src/model/model';
+import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('FinalizationHttp', () => {
