@@ -100,6 +100,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#address" class="tsd-kind-icon">address</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#embedded" class="tsd-kind-icon">embedded</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#fromheight" class="tsd-kind-icon">from<wbr>Height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#fromtransferamount" class="tsd-kind-icon">from<wbr>Transfer<wbr>Amount</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#group" class="tsd-kind-icon">group</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#height" class="tsd-kind-icon">height</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#offset" class="tsd-kind-icon">offset</a></li>
@@ -109,6 +110,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#recipientaddress" class="tsd-kind-icon">recipient<wbr>Address</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#signerpublickey" class="tsd-kind-icon">signer<wbr>Public<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#toheight" class="tsd-kind-icon">to<wbr>Height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#totransferamount" class="tsd-kind-icon">to<wbr>Transfer<wbr>Amount</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#transfermosaicid" class="tsd-kind-icon">transfer<wbr>Mosaic<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
@@ -123,7 +126,7 @@
 					<div class="tsd-signature tsd-kind-icon">address<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L41">infrastructure/searchCriteria/TransactionSearchCriteria.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L42">infrastructure/searchCriteria/TransactionSearchCriteria.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -142,7 +145,7 @@
 					<div class="tsd-signature tsd-kind-icon">embedded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L69">infrastructure/searchCriteria/TransactionSearchCriteria.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L70">infrastructure/searchCriteria/TransactionSearchCriteria.ts:70</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -159,9 +162,30 @@
 					<div class="tsd-signature tsd-kind-icon">from<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L74">infrastructure/searchCriteria/TransactionSearchCriteria.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L75">infrastructure/searchCriteria/TransactionSearchCriteria.ts:75</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Only blocks with height greater or equal than this one are returned.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="fromtransferamount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> from<wbr>Transfer<wbr>Amount</h3>
+					<div class="tsd-signature tsd-kind-icon">from<wbr>Transfer<wbr>Amount<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L91">infrastructure/searchCriteria/TransactionSearchCriteria.ts:91</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Requires providing the <code>transferMosaicId</code> filter.
+							Only transfer transactions with a transfer amount of the provided mosaic id, greater or equal than this amount are returned.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="group" class="tsd-anchor"></a>
@@ -169,7 +193,7 @@
 					<div class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">:</span> <a href="../enums/_infrastructure_transactiongroup_.transactiongroup.html" class="tsd-signature-type">TransactionGroup</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L31">infrastructure/searchCriteria/TransactionSearchCriteria.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L32">infrastructure/searchCriteria/TransactionSearchCriteria.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -184,7 +208,7 @@
 					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L56">infrastructure/searchCriteria/TransactionSearchCriteria.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L57">infrastructure/searchCriteria/TransactionSearchCriteria.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -200,7 +224,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html">SearchCriteria</a>.<a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html#offset">offset</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/SearchCriteria.ts#L42">infrastructure/searchCriteria/SearchCriteria.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/SearchCriteria.ts#L42">infrastructure/searchCriteria/SearchCriteria.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -218,7 +242,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html">SearchCriteria</a>.<a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html#order">order</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/SearchCriteria.ts#L25">infrastructure/searchCriteria/SearchCriteria.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/SearchCriteria.ts#L25">infrastructure/searchCriteria/SearchCriteria.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -236,7 +260,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html">SearchCriteria</a>.<a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html#pagenumber">pageNumber</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/SearchCriteria.ts#L35">infrastructure/searchCriteria/SearchCriteria.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/SearchCriteria.ts#L35">infrastructure/searchCriteria/SearchCriteria.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -252,7 +276,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html">SearchCriteria</a>.<a href="_infrastructure_searchcriteria_searchcriteria_.searchcriteria.html#pagesize">pageSize</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/SearchCriteria.ts#L30">infrastructure/searchCriteria/SearchCriteria.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/SearchCriteria.ts#L30">infrastructure/searchCriteria/SearchCriteria.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -267,7 +291,7 @@
 					<div class="tsd-signature tsd-kind-icon">recipient<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L46">infrastructure/searchCriteria/TransactionSearchCriteria.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L47">infrastructure/searchCriteria/TransactionSearchCriteria.ts:47</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -282,7 +306,7 @@
 					<div class="tsd-signature tsd-kind-icon">signer<wbr>Public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L51">infrastructure/searchCriteria/TransactionSearchCriteria.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L52">infrastructure/searchCriteria/TransactionSearchCriteria.ts:52</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -297,9 +321,44 @@
 					<div class="tsd-signature tsd-kind-icon">to<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L79">infrastructure/searchCriteria/TransactionSearchCriteria.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L80">infrastructure/searchCriteria/TransactionSearchCriteria.ts:80</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Only blocks with height smaller or equal than this one are returned.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="totransferamount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> to<wbr>Transfer<wbr>Amount</h3>
+					<div class="tsd-signature tsd-kind-icon">to<wbr>Transfer<wbr>Amount<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L96">infrastructure/searchCriteria/TransactionSearchCriteria.ts:96</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Requires providing the <code>transferMosaicId</code> filter. Only transfer transactions with a transfer amount of the provided mosaic id, lesser or equal than this amount are returned.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="transfermosaicid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> transfer<wbr>Mosaic<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">transfer<wbr>Mosaic<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../classes/_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L85">infrastructure/searchCriteria/TransactionSearchCriteria.ts:85</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Filters transactions involving a specific <code>mosaicId</code> hex.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="type" class="tsd-anchor"></a>
@@ -307,7 +366,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_transaction_transactiontype_.transactiontype.html" class="tsd-signature-type">TransactionType</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/80f5e49/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L62">infrastructure/searchCriteria/TransactionSearchCriteria.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/2da80cc/src/infrastructure/searchCriteria/TransactionSearchCriteria.ts#L63">infrastructure/searchCriteria/TransactionSearchCriteria.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -347,6 +406,9 @@
 								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#fromheight" class="tsd-kind-icon">from<wbr>Height</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#fromtransferamount" class="tsd-kind-icon">from<wbr>Transfer<wbr>Amount</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#group" class="tsd-kind-icon">group</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -372,6 +434,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#toheight" class="tsd-kind-icon">to<wbr>Height</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#totransferamount" class="tsd-kind-icon">to<wbr>Transfer<wbr>Amount</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#transfermosaicid" class="tsd-kind-icon">transfer<wbr>Mosaic<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_infrastructure_searchcriteria_transactionsearchcriteria_.transactionsearchcriteria.html#type" class="tsd-kind-icon">type</a>
