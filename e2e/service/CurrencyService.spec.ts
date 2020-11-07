@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { MosaicFlags, MosaicId, MosaicNonce, Currency } from '../../src/model/mosaic';
+import { Currency, MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { UInt64 } from '../../src/model/UInt64';

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
-import { NamespaceRegistrationType } from '../../model/namespace/NamespaceRegistrationType';
-import { AliasType } from '../../model/namespace/AliasType';
 import { Address } from '../../model/account/Address';
+import { AliasType } from '../../model/namespace/AliasType';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { NamespaceRegistrationType } from '../../model/namespace/NamespaceRegistrationType';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search blocks. With this criteria, you can sort and filter

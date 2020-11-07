@@ -15,8 +15,9 @@
  */
 
 import { Observable } from 'rxjs';
-import { MetadataRoutesApi, MetadataInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { MetadataInfoDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../core/format/Convert';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataEntry } from '../model/metadata/MetadataEntry';
@@ -25,10 +26,9 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
-import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
-import { Page } from './Page';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { MetadataRepository } from './MetadataRepository';
+import { Page } from './Page';
+import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
 
 /**
  * Metadata http repository.

@@ -1,15 +1,13 @@
 // created from 'create-ts-index'
 
-export * from './paginationStreamer';
-export * from './receipt';
-export * from './searchCriteria';
-export * from './transaction';
 export * from './AccountHttp';
 export * from './AccountRepository';
 export * from './BlockHttp';
 export * from './BlockRepository';
 export * from './ChainHttp';
 export * from './ChainRepository';
+export * from './FinalizationHttp';
+export * from './FinalizationRepository';
 export * from './HashLockHttp';
 export * from './HashLockRepository';
 export * from './Http';
@@ -28,6 +26,8 @@ export * from './NetworkRepository';
 export * from './NodeHttp';
 export * from './NodeRepository';
 export * from './Page';
+export * from './paginationStreamer';
+export * from './receipt';
 export * from './ReceiptHttp';
 export * from './ReceiptRepository';
 export * from './RepositoryCallError';
@@ -38,8 +38,10 @@ export * from './RestrictionAccountHttp';
 export * from './RestrictionAccountRepository';
 export * from './RestrictionMosaicHttp';
 export * from './RestrictionMosaicRepository';
+export * from './searchCriteria';
 export * from './SecretLockHttp';
 export * from './SecretLockRepository';
+export * from './transaction';
 export * from './TransactionGroup';
 export * from './TransactionHttp';
 export * from './TransactionRepository';

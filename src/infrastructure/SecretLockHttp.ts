@@ -15,16 +15,16 @@
  */
 
 import { Observable } from 'rxjs';
-import { SecretLockRoutesApi, SecretLockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { SecretLockInfoDTO, SecretLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { SecretLockInfo } from '../model/lock/SecretLockInfo';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { Page } from './Page';
-import { SecretLockRepository } from './SecretLockRepository';
-import { SecretLockInfo } from '../model/lock/SecretLockInfo';
 import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCriteria';
+import { SecretLockRepository } from './SecretLockRepository';
 
 /**
  * SecretLock http repository.

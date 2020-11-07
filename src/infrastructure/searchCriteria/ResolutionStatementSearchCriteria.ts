@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
 import { UInt64 } from '../../model/UInt64';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search resolution statement receipts. With this criteria, you can sort and filter

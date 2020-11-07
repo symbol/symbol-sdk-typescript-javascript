@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { UInt64 } from '../UInt64';
-import { MetadataType } from './MetadataType';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { UInt64 } from '../UInt64';
+import { MetadataType } from './MetadataType';
 
 /**
  * A mosaic describes an instance of a mosaic definition.

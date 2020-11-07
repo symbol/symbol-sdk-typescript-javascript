@@ -16,27 +16,27 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    ReceiptRoutesApi,
-    ResolutionStatementDTO,
-    ResolutionEntryDTO,
-    SourceDTO,
-    ResolutionStatementPage,
-    TransactionStatementDTO,
     BalanceChangeReceiptDTO,
+    Pagination,
+    ReceiptRoutesApi,
     ReceiptTypeEnum,
+    ResolutionEntryDTO,
+    ResolutionStatementDTO,
+    ResolutionStatementInfoDTO,
+    ResolutionStatementPage,
+    SourceDTO,
+    TransactionStatementDTO,
+    TransactionStatementInfoDTO,
     TransactionStatementPage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
+import { Convert } from '../../src/core/format/Convert';
+import { RawAddress } from '../../src/core/format/RawAddress';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
+import { MosaicId, NamespaceId, ResolutionType, UInt64 } from '../../src/model';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { UInt64, NamespaceId, MosaicId, ResolutionType } from '../../src/model';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { ResolutionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
-import { Pagination } from 'symbol-openapi-typescript-fetch-client';
-import { RawAddress } from '../../src/core/format/RawAddress';
-import { Convert } from '../../src/core/format/Convert';
-import { TransactionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { BalanceChangeReceipt } from '../../src/model/receipt/BalanceChangeReceipt';
 
 describe('ReceiptHttp', () => {

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { AccountInfo } from './AccountInfo';
 import { ResolvedMosaic } from '../mosaic/ResolvedMosaic';
+import { AccountInfo } from './AccountInfo';
 
 /**
  * Account info with resolved mosaic

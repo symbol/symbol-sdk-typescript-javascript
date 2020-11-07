@@ -15,12 +15,12 @@
  */
 
 import { Observable } from 'rxjs';
-import { ChainRoutesApi, ChainInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { ChainInfoDTO, ChainRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { ChainInfo } from '../model/blockchain/ChainInfo';
+import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 import { UInt64 } from '../model/UInt64';
 import { ChainRepository } from './ChainRepository';
 import { Http } from './Http';
-import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 
 /**
  * Chian http repository.

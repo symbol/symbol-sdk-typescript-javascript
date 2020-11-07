@@ -16,10 +16,10 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../../src/model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { Address } from '../../../src/model/account/Address';
 
 describe('MultisigAccountGraphInfo', () => {
     it('should createComplete an MultisigAccountGraphInfo object', () => {

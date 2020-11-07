@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { ChainInfoDTO, FinalizedBlockDTO, ChainRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { ChainInfoDTO, ChainRoutesApi, FinalizedBlockDTO } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';

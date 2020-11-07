@@ -27,6 +27,7 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { AliasAction } from '../namespace/AliasAction';
@@ -39,7 +40,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 export class MosaicAliasTransaction extends Transaction {
     /**

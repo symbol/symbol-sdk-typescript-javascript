@@ -22,15 +22,17 @@ import {
     MosaicAddressRestrictionTransactionBuilder,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
     UnresolvedAddressDto,
     UnresolvedMosaicIdDto,
-    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
@@ -41,8 +43,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class MosaicAddressRestrictionTransaction extends Transaction {
     /**

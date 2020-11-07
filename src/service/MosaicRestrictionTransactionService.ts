@@ -17,10 +17,14 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
+import { Page } from '../infrastructure/Page';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
+import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
 import { MosaicId } from '../model/mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../model/network/NetworkType';
+import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
 import { MosaicRestrictionType } from '../model/restriction/MosaicRestrictionType';
@@ -29,10 +33,6 @@ import { MosaicAddressRestrictionTransaction } from '../model/transaction/Mosaic
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
-import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
-import { Page } from '../infrastructure/Page';
 
 /**
  * MosaicRestrictionTransactionService service

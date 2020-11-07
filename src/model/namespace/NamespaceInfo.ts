@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
 import { UInt64 } from '../UInt64';
 import { Alias } from './Alias';
 import { NamespaceId } from './NamespaceId';
-import { Address } from '../account/Address';
 
 /**
  * Object containing information of a namespace.

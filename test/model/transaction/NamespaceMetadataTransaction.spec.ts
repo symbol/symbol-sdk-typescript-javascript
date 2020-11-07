@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
+import { deepEqual } from 'assert';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
-import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { deepEqual } from 'assert';
-import { Address } from '../../../src/model/account/Address';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PaginationStreamer } from './PaginationStreamer';
-import { Searcher } from './Searcher';
 import { AccountInfo } from '../../model/account/AccountInfo';
 import { AccountSearchCriteria } from '../searchCriteria/AccountSearchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
+import { Searcher } from './Searcher';
 
 /**
  * A helper object that streams {@link AccountInfo} using the search.

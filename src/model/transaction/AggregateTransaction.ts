@@ -32,7 +32,9 @@ import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { Account } from '../account/Account';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
@@ -45,8 +47,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.

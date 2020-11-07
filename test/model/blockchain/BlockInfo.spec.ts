@@ -16,10 +16,10 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { BlockInfo } from '../../../src/model/blockchain/BlockInfo';
 import { UInt64 } from '../../../src/model/UInt64';
-import { Address } from '../../../src/model/account/Address';
 
 describe('BlockInfo', () => {
     it('should createComplete an BlockInfo object', () => {

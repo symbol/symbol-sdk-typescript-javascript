@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { take, toArray } from 'rxjs/operators';
+import { Order } from '../../src/infrastructure';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
 import { RepositoryCallError } from '../../src/infrastructure/RepositoryCallError';
+import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -33,11 +38,6 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
-import { toArray, take } from 'rxjs/operators';
-import { deepEqual } from 'assert';
-import { Order } from '../../src/infrastructure';
-import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
 
 describe('AccountHttp', () => {
     const helper = new IntegrationTestHelper();

@@ -15,8 +15,8 @@
  */
 
 import { Observable } from 'rxjs';
-import { Searcher } from './paginationStreamer/Searcher';
 import { HashLockInfo } from '../model/lock/HashLockInfo';
+import { Searcher } from './paginationStreamer/Searcher';
 import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria';
 
 /**

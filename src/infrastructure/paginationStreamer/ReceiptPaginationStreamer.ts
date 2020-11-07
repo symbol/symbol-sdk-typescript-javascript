@@ -15,13 +15,13 @@
  */
 
 import { Observable } from 'rxjs/internal/Observable';
-import { Page } from '../Page';
-import { PaginationStreamer } from './PaginationStreamer';
-import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
 import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../../model/receipt/ResolutionStatement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
-import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
+import { Page } from '../Page';
 import { ReceiptRepository } from '../ReceiptRepository';
+import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
+import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
 
 /**
  * A helper object that streams {@link Statement} using the search.

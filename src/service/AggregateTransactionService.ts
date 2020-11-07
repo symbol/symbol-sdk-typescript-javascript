@@ -18,16 +18,16 @@ import { from as observableFrom, Observable, of as observableOf } from 'rxjs';
 import { flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { TransactionMapping } from '../core/utils/TransactionMapping';
 import { MultisigRepository } from '../infrastructure/MultisigRepository';
+import { NetworkRepository } from '../infrastructure/NetworkRepository';
+import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
+import { Address } from '../model/account/Address';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
+import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { TransactionType } from '../model/transaction/TransactionType';
-import { Address } from '../model/account/Address';
-import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
-import { NetworkRepository } from '../infrastructure/NetworkRepository';
-import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
 
 /**
  * Aggregated Transaction service

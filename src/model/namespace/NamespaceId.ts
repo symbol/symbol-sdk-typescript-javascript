@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert, RawAddress, Convert } from '../../core/format';
+import { Convert as convert, Convert, RawAddress } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { Id } from '../Id';
 import { NetworkType } from '../network/NetworkType';

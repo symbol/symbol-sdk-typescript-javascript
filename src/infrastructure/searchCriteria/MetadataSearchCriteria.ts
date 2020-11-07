@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
 import { Address } from '../../model/account/Address';
-import { NamespaceId } from '../../model/namespace/NamespaceId';
-import { MosaicId } from '../../model/mosaic/MosaicId';
 import { MetadataType } from '../../model/metadata/MetadataType';
+import { MosaicId } from '../../model/mosaic/MosaicId';
+import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search metadata. With this criteria, you can sort and filter

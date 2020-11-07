@@ -2,6 +2,8 @@
 
 export * from './account';
 export * from './blockchain';
+export * from './finalization';
+export * from './Id';
 export * from './lock';
 export * from './message';
 export * from './metadata';
@@ -12,6 +14,5 @@ export * from './node';
 export * from './receipt';
 export * from './restriction';
 export * from './transaction';
-export * from './wallet';
-export * from './Id';
 export * from './UInt64';
+export * from './wallet';

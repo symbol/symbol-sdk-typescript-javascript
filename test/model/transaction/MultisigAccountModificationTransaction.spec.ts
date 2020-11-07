@@ -17,13 +17,13 @@
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { Address } from '../../../src/model/account/Address';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('MultisigAccountModificationTransaction', () => {
     let account: Account;

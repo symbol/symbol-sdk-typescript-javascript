@@ -17,16 +17,16 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { AccountInfo } from '../../../src/model/account/AccountInfo';
+import { AccountLinkPublicKey } from '../../../src/model/account/AccountLinkPublicKey';
+import { AccountLinkVotingKey } from '../../../src/model/account/AccountLinkVotingKey';
 import { ActivityBucket } from '../../../src/model/account/ActivityBucket';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { SupplementalPublicKeys } from '../../../src/model/account/SupplementalPublicKeys';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
-import { SupplementalPublicKeys } from '../../../src/model/account/SupplementalPublicKeys';
-import { AccountLinkPublicKey } from '../../../src/model/account/AccountLinkPublicKey';
-import { AccountLinkVotingKey } from '../../../src/model/account/AccountLinkVotingKey';
 
 describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {

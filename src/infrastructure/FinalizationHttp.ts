@@ -16,13 +16,13 @@
 
 import { Observable } from 'rxjs';
 import { FinalizationProofDTO, FinalizationRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { BmTreeSignature } from '../model/finalization/BmTreeSignature';
 import { FinalizationProof } from '../model/finalization/FinalizationProof';
+import { MessageGroup } from '../model/finalization/MessageGroup';
+import { ParentPublicKeySignaturePair } from '../model/finalization/ParentPublicKeySignaturePair';
 import { UInt64 } from '../model/UInt64';
 import { FinalizationRepository } from './FinalizationRepository';
 import { Http } from './Http';
-import { MessageGroup } from '../model/finalization/MessageGroup';
-import { BmTreeSignature } from '../model/finalization/BmTreeSignature';
-import { ParentPublicKeySignaturePair } from '../model/finalization/ParentPublicKeySignaturePair';
 
 /**
  * Chian http repository.

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
+import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../network/NetworkType';
+import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
 import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from './AccountOperationRestrictionTransaction';
 import { Deadline } from './Deadline';
 import { TransactionType } from './TransactionType';
-import { PublicAccount } from '../account/PublicAccount';
-import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
-import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class AccountRestrictionTransaction {
     /**

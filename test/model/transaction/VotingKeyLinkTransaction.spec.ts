@@ -17,13 +17,13 @@
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
+import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { Address } from '../../../src/model/account/Address';
 
 describe('VotingKeyLinkTransaction', () => {
     let account: Account;

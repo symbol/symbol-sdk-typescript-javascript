@@ -16,13 +16,13 @@
 
 import { expect } from 'chai';
 import { Account } from '../../src/model/account/Account';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
-import { AccountService } from '../../src/service/AccountService';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { UInt64 } from '../../src/model/UInt64';
+import { AccountService } from '../../src/service/AccountService';
+import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('AccountService', () => {
     const helper = new IntegrationTestHelper();

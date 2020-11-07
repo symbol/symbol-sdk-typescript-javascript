@@ -24,10 +24,10 @@ import {
     MosaicGlobalRestrictionEntryRestrictionDTO,
     MosaicGlobalRestrictionEntryWrapperDTO,
     MosaicRestrictionEntryTypeEnum,
-    MosaicRestrictionTypeEnum,
-    RestrictionMosaicRoutesApi,
     MosaicRestrictionsPage,
+    MosaicRestrictionTypeEnum,
     Pagination,
+    RestrictionMosaicRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';

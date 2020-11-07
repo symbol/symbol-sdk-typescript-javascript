@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
 import { UInt64 } from '../UInt64';
 import { MosaicFlags } from './MosaicFlags';
 import { MosaicId } from './MosaicId';
-import { Address } from '../account/Address';
 
 /**
  * The mosaic info structure describes a mosaic.

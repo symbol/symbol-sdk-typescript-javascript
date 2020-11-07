@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Crypto } from '../../../src/core/crypto';
+import { sha256 } from 'js-sha256';
 import { sha3_256 } from 'js-sha3';
+import * as ripemd160 from 'ripemd160';
+import { Crypto } from '../../../src/core/crypto';
+import { Convert } from '../../../src/core/format/Convert';
 import { LockHashUtils } from '../../../src/core/utils/LockHashUtils';
 import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
-import { Convert } from '../../../src/core/format/Convert';
-import * as ripemd160 from 'ripemd160';
-import { sha256 } from 'js-sha256';
 
 describe('Hashes', () => {
     it('Op_Sha3_256', () => {

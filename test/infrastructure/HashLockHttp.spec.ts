@@ -15,7 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { Pagination, HashLockInfoDTO, HashLockEntryDTO, HashLockRoutesApi, HashLockPage } from 'symbol-openapi-typescript-fetch-client';
+import { HashLockEntryDTO, HashLockInfoDTO, HashLockPage, HashLockRoutesApi, Pagination } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';

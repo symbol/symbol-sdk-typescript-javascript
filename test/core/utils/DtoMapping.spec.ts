@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import {
-    AccountRestrictionsInfoDTO,
-    AccountRestrictionsDTO,
     AccountRestrictionDTO,
     AccountRestrictionFlagsEnum,
+    AccountRestrictionsDTO,
+    AccountRestrictionsInfoDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('DtoMapping', () => {
     const publicAccount = PublicAccount.createFromPublicKey(

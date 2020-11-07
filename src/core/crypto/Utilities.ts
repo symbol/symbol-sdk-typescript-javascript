@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { RawArray as array } from '../format';
-import * as nacl from './nacl_catapult';
 import * as CryptoJS from 'crypto-js';
+import { WordArray } from 'crypto-js';
 import * as hkdf from 'futoin-hkdf';
 import { sha512 } from 'js-sha512';
-import { WordArray } from 'crypto-js';
+import { RawArray as array } from '../format';
+import * as nacl from './nacl_catapult';
 
 export const Key_Size = 32;
 export const Signature_Size = 64;
