@@ -4,6 +4,7 @@
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
+        "prepack": "npm run build",
         "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
         "e2econfigcopy": "gulp",
         "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
@@ -21,8 +22,8 @@
         "create-index-files": "cti create ./src -b -n",
         "doc": "typedoc --out \"ts-docs/$(npm run version --silent)\" src",
         "bootstrap-clean": "symbol-bootstrap clean -t target/bootstrap-test",
-        "bootstrap-start-detached": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml -t target/bootstrap-test -d --healthCheck",
-        "bootstrap-start": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml -t target/bootstrap-test",
+        "bootstrap-start-detached": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml -t target/bootstrap-test --timeout 120000 -d --healthCheck",
+        "bootstrap-start": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml --timeout 120000 -t target/bootstrap-test",
         "bootstrap-stop": "symbol-bootstrap stop -t target/bootstrap-test",
         "bootstrap-run": "symbol-bootstrap run -t target/bootstrap-test",
         "bootstrap-compose": "symbol-bootstrap compose -t target/bootstrap-test",
@@ -110,7 +111,7 @@
         "ripemd160": "^2.0.2",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.3",
-        "symbol-openapi-typescript-fetch-client": "0.10.0-3",
+        "symbol-openapi-typescript-fetch-client": "0.10.1-SNAPSHOT.202011061706",
         "tweetnacl": "^1.0.3",
         "ws": "^7.3.1"
     },

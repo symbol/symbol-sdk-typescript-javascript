@@ -33,11 +33,11 @@ export class PublicAccount {
      */
     constructor(
         /**
-         * The account public private.
+         * The account's public key.
          */
         public readonly publicKey: string,
         /**
-         * The account address.
+         * The account's address.
          */
         public readonly address: Address,
     ) {}

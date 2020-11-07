@@ -1,7 +1,7 @@
 /*
  * Copyright 2020 NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"),
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-import { Address } from '../../model/account/Address';
-import { SearchCriteria } from './SearchCriteria';
+import { ParentPublicKeySignaturePair } from './ParentPublicKeySignaturePair';
 
 /**
- * Defines the params used to search secret lock. With this criteria, you can sort and filter
+ * BM Tree signature
  */
-export interface SecretLockSearchCriteria extends SearchCriteria {
-    /**
-     * The owner address. (required)
-     */
-    address: Address;
-
-    /**
-     * Optional to search by secret.
-     */
-    secret?: string;
+export class BmTreeSignature {
+    constructor(
+        /**
+         * Root.
+         */
+        public readonly root: ParentPublicKeySignaturePair,
+        /**
+         * Top.
+         */
+        public readonly top: ParentPublicKeySignaturePair,
+        /**
+         * Bottom.
+         */
+        public readonly bottom: ParentPublicKeySignaturePair,
+    ) {}
 }

@@ -67,6 +67,7 @@ describe('Deadline', () => {
         const deadline = Deadline.createFromDTO('1');
         const datetime = deadline.toLocalDateTime(epochAdjustment);
         const datetimeSystemZone = deadline.toLocalDateTimeGivenTimeZone(epochAdjustment, ZoneId.SYSTEM);
+        expect(datetime.month().value()).to.be.equal(11);
         expect(datetime).to.be.deep.eq(datetimeSystemZone);
     });
 

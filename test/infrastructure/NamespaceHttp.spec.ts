@@ -70,6 +70,7 @@ describe('NamespaceHttp', () => {
     namespaceInfoDto.meta = namespaceMetaDto;
     namespaceInfoDto.id = '1';
     namespaceInfoDto.namespace = namespaceDto;
+    namespaceInfoDto.id = '1';
 
     const aliasDtoMosaic = {} as AliasDTO;
     aliasDtoMosaic.mosaicId = mosaicId.toHex();

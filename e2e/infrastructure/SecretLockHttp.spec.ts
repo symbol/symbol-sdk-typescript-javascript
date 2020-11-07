@@ -82,10 +82,15 @@ describe('SecretLockHttp', () => {
      * =========================
      */
 
-    describe('getSecretLock', () => {
+    describe('searchSecretLock using secret', () => {
         it('should return hash lock info given hash', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            const info = await SecretLockRepo.getSecretLock(secret).toPromise();
+
+            const page = await SecretLockRepo.search({ address: account.address, secret }).toPromise();
+            expect(page.data.length).eq(1);
+            expect(page.pageNumber).eq(1);
+
+            const info = page.data[0];
             expect(info.ownerAddress.plain()).to.be.equal(account.address.plain());
             expect(info.recipientAddress.plain()).to.be.equal(account2.address.plain());
             expect(info.amount.toString()).to.be.equal('10');
@@ -106,7 +111,12 @@ describe('SecretLockHttp', () => {
                 .search({ address: account.address, pageSize: 20, order: Order.Asc })
                 .pipe(take(20), toArray())
                 .toPromise();
-            const info = await SecretLockRepo.search({ address: account.address, pageSize: 20, order: Order.Asc }).toPromise();
+            const info = await SecretLockRepo.search({
+                address: account.address,
+                secret: undefined,
+                pageSize: 20,
+                order: Order.Asc,
+            }).toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });

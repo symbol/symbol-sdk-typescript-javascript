@@ -133,6 +133,9 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
                 undefined,
+                undefined,
+                undefined,
+                undefined,
             ),
         ).thenReturn(Promise.resolve(page));
 
@@ -150,12 +153,18 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
                 undefined,
+                undefined,
+                undefined,
+                undefined,
             ),
         ).thenReturn(Promise.resolve(page));
 
         when(
             transactionRoutesApi.searchUnconfirmedTransactions(
                 deepEqual(account.address.plain()),
+                undefined,
+                undefined,
+                undefined,
                 undefined,
                 undefined,
                 undefined,
