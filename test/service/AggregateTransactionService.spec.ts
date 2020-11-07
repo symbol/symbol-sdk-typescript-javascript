@@ -22,7 +22,6 @@ import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';

@@ -21,7 +21,7 @@ import { AccountInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../../../src/core/format';
 import { AccountHttp } from '../../../src/infrastructure';
 import { UInt64 } from '../../../src/model';
-import { AccountInfo, Address, PublicAccount } from '../../../src/model/account';
+import { Address, PublicAccount } from '../../../src/model/account';
 import { MosaicId } from '../../../src/model/mosaic';
 import { NetworkType } from '../../../src/model/network';
 

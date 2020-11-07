@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { of, of as observableOf } from 'rxjs';
+import { of as observableOf, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, when } from 'ts-mockito';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
+import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
+import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
 import { Listener } from '../../src/infrastructure/Listener';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
@@ -34,16 +37,13 @@ import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
 import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
 import { NetworkCurrencies } from '../../src/model/mosaic/NetworkCurrencies';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
-import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
-import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
-import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
-import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {

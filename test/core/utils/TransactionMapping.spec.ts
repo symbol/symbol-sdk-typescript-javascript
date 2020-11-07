@@ -64,7 +64,7 @@ import {
 import { TestingAccount } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../../model/mosaic/Currency.spec';
 
-const assertSerialization = (t: Transaction, expectedHex: string) => {
+const assertSerialization = (t: Transaction, expectedHex: string): void => {
     const serializedHex = t.serialize();
     expect(serializedHex).eq(expectedHex);
     const transaction = TransactionMapping.createFromPayload(serializedHex);

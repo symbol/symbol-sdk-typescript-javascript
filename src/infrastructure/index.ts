@@ -10,6 +10,8 @@ export * from './BlockHttp';
 export * from './BlockRepository';
 export * from './ChainHttp';
 export * from './ChainRepository';
+export * from './FinalizationHttp';
+export * from './FinalizationRepository';
 export * from './HashLockHttp';
 export * from './HashLockRepository';
 export * from './Http';

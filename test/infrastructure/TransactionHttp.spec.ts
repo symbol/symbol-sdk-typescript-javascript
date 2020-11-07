@@ -32,7 +32,6 @@ import {
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';

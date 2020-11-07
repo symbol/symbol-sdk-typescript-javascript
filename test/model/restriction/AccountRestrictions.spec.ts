@@ -21,7 +21,7 @@ import { AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-clie
 import { Convert } from '../../../src/core/format';
 import { DtoMapping } from '../../../src/core/utils';
 import { Address } from '../../../src/model/account';
-import { AccountRestrictions, AddressRestrictionFlag } from '../../../src/model/restriction';
+import { AddressRestrictionFlag } from '../../../src/model/restriction';
 
 describe('AccountRestrictions', () => {
     it('should createComplete an AccountRestrictionsInfo object', () => {

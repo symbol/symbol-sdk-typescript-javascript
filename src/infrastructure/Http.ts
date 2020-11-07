@@ -15,7 +15,7 @@
  */
 
 import fetch from 'node-fetch';
-import { from as observableFrom, Observable, of, of as observableOf, throwError } from 'rxjs';
+import { from as observableFrom, Observable, of as observableOf, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
 import { NetworkType } from '../model/network/NetworkType';
