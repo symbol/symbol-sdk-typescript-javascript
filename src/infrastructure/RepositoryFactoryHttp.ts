@@ -16,6 +16,7 @@
 
 import { defer, Observable, of as observableOf } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { NetworkCurrencies } from '../model/mosaic';
 import { NetworkConfiguration } from '../model/network/NetworkConfiguration';
 import { NetworkType } from '../model/network/NetworkType';
@@ -26,6 +27,8 @@ import { BlockHttp } from './BlockHttp';
 import { BlockRepository } from './BlockRepository';
 import { ChainHttp } from './ChainHttp';
 import { ChainRepository } from './ChainRepository';
+import { HashLockHttp } from './HashLockHttp';
+import { HashLockRepository } from './HashLockRepository';
 import { IListener } from './IListener';
 import { Listener } from './Listener';
 import { MetadataHttp } from './MetadataHttp';
@@ -48,15 +51,13 @@ import { RestrictionAccountHttp } from './RestrictionAccountHttp';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicHttp } from './RestrictionMosaicHttp';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
+import { SecretLockHttp } from './SecretLockHttp';
+import { SecretLockRepository } from './SecretLockRepository';
 import { TransactionHttp } from './TransactionHttp';
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusHttp } from './TransactionStatusHttp';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
-import { HashLockRepository } from './HashLockRepository';
-import { SecretLockRepository } from './SecretLockRepository';
-import { SecretLockHttp } from './SecretLockHttp';
-import { HashLockHttp } from './HashLockHttp';
-import { DtoMapping } from '../core/utils/DtoMapping';
+
 /**
  * Receipt http repository.
  *

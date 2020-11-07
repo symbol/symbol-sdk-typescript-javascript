@@ -15,10 +15,8 @@
  */
 
 import {
-    AddressDto,
     AddressResolutionEntryBuilder,
     AddressResolutionStatementBuilder,
-    MosaicIdDto,
     MosaicResolutionEntryBuilder,
     MosaicResolutionStatementBuilder,
     ReceiptSourceBuilder,
@@ -26,18 +24,17 @@ import {
     UnresolvedMosaicIdDto,
 } from 'catbuffer-typescript';
 import { sha3_256 } from 'js-sha3';
-import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 import { MosaicId } from '../mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 import { ResolutionType } from './ResolutionType';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * ResolutionStatement alias for Addresses receipts.

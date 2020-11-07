@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { AccountRepository } from '../../src/infrastructure';
-import { MosaicRepository } from '../../src/infrastructure';
+import { AccountRepository, MosaicRepository } from '../../src/infrastructure';
 import { Address } from '../../src/model/account';
 import { MosaicService } from '../../src/service';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';

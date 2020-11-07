@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper, KeyDto, SignatureDto, TransactionBuilder } from 'catbuffer-typescript';
+import { EmbeddedTransactionBuilder, KeyDto, SignatureDto, TransactionBuilder } from 'catbuffer-typescript';
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
@@ -30,8 +32,6 @@ import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { Address } from '../account/Address';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.

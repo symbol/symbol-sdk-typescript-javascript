@@ -26,9 +26,9 @@ import {
     NamespaceInfoDTO,
     NamespaceMetaDTO,
     NamespaceNameDTO,
+    NamespacePage,
     NamespaceRoutesApi,
     Pagination,
-    NamespacePage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -49,7 +49,7 @@ describe('NamespaceHttp', () => {
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('testnamespace');
     const namespaceMetaDto = {} as NamespaceMetaDTO;
-    namespaceMetaDto.active = true
+    namespaceMetaDto.active = true;
     namespaceMetaDto.index = 0;
 
     const namespaceDto = {} as NamespaceDTO;

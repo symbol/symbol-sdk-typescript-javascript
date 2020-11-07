@@ -15,6 +15,7 @@
  */
 import { NetworkType } from '../network/NetworkType';
 import { RoleType } from './RoleType';
+
 /**
  * The node info structure describes basic information of a node.
  */

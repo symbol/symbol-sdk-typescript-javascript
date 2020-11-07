@@ -15,8 +15,8 @@
  */
 
 import { Observable } from 'rxjs';
-import { Searcher } from './paginationStreamer/Searcher';
 import { SecretLockInfo } from '../model/lock/SecretLockInfo';
+import { Searcher } from './paginationStreamer/Searcher';
 import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCriteria';
 
 /**

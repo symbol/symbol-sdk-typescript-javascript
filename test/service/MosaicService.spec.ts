@@ -15,23 +15,23 @@
  */
 
 import { expect } from 'chai';
+import { of as observableOf } from 'rxjs';
+import { deepEqual, instance, mock, when } from 'ts-mockito';
+import { AccountRepository } from '../../src/infrastructure/AccountRepository';
+import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
+import { AccountInfo } from '../../src/model/account/AccountInfo';
+import { AccountType } from '../../src/model/account/AccountType';
+import { PublicAccount } from '../../src/model/account/PublicAccount';
+import { SupplementalPublicKeys } from '../../src/model/account/SupplementalPublicKeys';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
 import { UInt64 } from '../../src/model/UInt64';
 import { MosaicAmountView } from '../../src/service/MosaicAmountView';
 import { MosaicService } from '../../src/service/MosaicService';
 import { MosaicView } from '../../src/service/MosaicView';
-import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { mock, when, instance, deepEqual } from 'ts-mockito';
-import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
-import { of as observableOf } from 'rxjs';
-import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { TestingAccount } from '../conf/conf.spec';
-import { AccountType } from '../../src/model/account/AccountType';
-import { AccountInfo } from '../../src/model/account/AccountInfo';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { SupplementalPublicKeys } from '../../src/model/account/SupplementalPublicKeys';
 
 describe('MosaicService', () => {
     const accountRepositoryMock = mock<AccountRepository>();

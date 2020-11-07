@@ -18,18 +18,19 @@ import {
     AmountDto,
     EmbeddedMosaicMetadataTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     MosaicMetadataTransactionBuilder,
-    SignatureDto,
     TimestampDto,
-    UnresolvedMosaicIdDto,
-    UnresolvedAddressDto,
     TransactionBuilder,
+    UnresolvedAddressDto,
+    UnresolvedMosaicIdDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
@@ -40,9 +41,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * Announce an mosaic metadata transaction to associate a key-value state to an account.

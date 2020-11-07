@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
+import * as CryptoJS from 'crypto-js';
 import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
-import { Account } from '../../../src/model/account';
-import { Address } from '../../../src/model/account';
+import { UInt64 } from '../../../src/model';
+import { Account, Address } from '../../../src/model/account';
+import { LockHashAlgorithm } from '../../../src/model/lock';
 import { NamespaceId } from '../../../src/model/namespace';
 import { NetworkType } from '../../../src/model/network';
-import { ReceiptSource } from '../../../src/model/receipt';
-import { ResolutionEntry } from '../../../src/model/receipt';
-import { ResolutionStatement } from '../../../src/model/receipt';
-import { ResolutionType } from '../../../src/model/receipt';
-import { Statement } from '../../../src/model/receipt';
-import { Deadline } from '../../../src/model/transaction';
-import { LockHashAlgorithm } from '../../../src/model/lock';
-import { SecretProofTransaction } from '../../../src/model/transaction';
-import { TransactionInfo } from '../../../src/model/transaction';
-import { UInt64 } from '../../../src/model';
+import { ReceiptSource, ResolutionEntry, ResolutionStatement, ResolutionType, Statement } from '../../../src/model/receipt';
+import { Deadline, SecretProofTransaction, TransactionInfo, TransactionType } from '../../../src/model/transaction';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
-import { TransactionType } from '../../../src/model/transaction';
-import * as CryptoJS from 'crypto-js';
 
 describe('SecretProofTransaction', () => {
     let account: Account;

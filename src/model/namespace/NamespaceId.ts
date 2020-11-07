@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { NamespaceIdDto } from 'catbuffer-typescript';
-import { Convert as convert, RawAddress, Convert } from '../../core/format';
+import { Convert as convert, Convert, RawAddress } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { Id } from '../Id';
 import { NetworkType } from '../network/NetworkType';

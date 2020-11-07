@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { AmountDto, BalanceChangeReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
-import { Convert } from '../../core/format/Convert';
+import { AmountDto, BalanceChangeReceiptBuilder, MosaicBuilder } from 'catbuffer-typescript';
+import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
-import { Address } from '../account/Address';
-import { AddressDto } from 'catbuffer-typescript';
 
 /**
  * Balance Change: A mosaic credit or debit was triggered.

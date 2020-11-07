@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
-import { Account } from '../../src/model/account';
-import { Address } from '../../src/model/account';
+import { expect } from 'chai';
+import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';

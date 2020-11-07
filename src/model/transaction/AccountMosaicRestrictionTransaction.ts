@@ -16,22 +16,24 @@
 
 import {
     AccountMosaicRestrictionTransactionBuilder,
+    AccountRestrictionFlagsDto,
     AmountDto,
     EmbeddedAccountMosaicRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    SignatureDto,
+    GeneratorUtils,
     TimestampDto,
+    TransactionBuilder,
     UnresolvedMosaicIdDto,
-    TransactionBuilder, GeneratorUtils,
 } from 'catbuffer-typescript';
-import { AccountRestrictionFlagsDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
+import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -39,9 +41,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { MosaicRestrictionFlag } from '../restriction/MosaicRestrictionFlag';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class AccountMosaicRestrictionTransaction extends Transaction {
     /**

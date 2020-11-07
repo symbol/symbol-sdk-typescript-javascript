@@ -16,8 +16,8 @@
 
 import { instance, mock } from 'ts-mockito';
 import { RestrictionMosaicPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/RestrictionMosaicPaginationStreamer';
-import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 import { RestrictionMosaicRepository } from '../../../src/infrastructure/RestrictionMosaicRepository';
+import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('MosaicRestrictionPaginationStreamer - transaction', () => {
     it('basicMultiPageTest', () => {

@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { Address } from '../model/account/Address';
 import { AccountRestrictions } from '../model/restriction';
-import { AccountRestriction } from '../model/restriction/AccountRestriction';
 
 export interface RestrictionAccountRepository {
     /**

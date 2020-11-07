@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';

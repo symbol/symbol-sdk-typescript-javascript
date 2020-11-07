@@ -66,8 +66,7 @@ export class MetadataEntry {
          * The target mosaic or namespace identifier
          */
         public readonly targetId?: MosaicId | NamespaceId,
-    ) {
-    }
+    ) {}
 
     /**
      * Generate buffer

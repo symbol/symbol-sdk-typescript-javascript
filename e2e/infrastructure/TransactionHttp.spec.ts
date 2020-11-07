@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import * as CryptoJS from 'crypto-js';
+import { sha256 } from 'js-sha256';
 import { sha3_256 } from 'js-sha3';
+import * as ripemd160 from 'ripemd160';
+import { take, toArray } from 'rxjs/operators';
+import * as secureRandom from 'secure-random';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';
+import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
 import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
+import { TransactionSearchCriteria } from '../../src/infrastructure';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
+import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
 import { Account } from '../../src/model/account/Account';
+import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
@@ -32,7 +44,10 @@ import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
+import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
+import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
 import { AccountAddressRestrictionTransaction } from '../../src/model/transaction/AccountAddressRestrictionTransaction';
 import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
 import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
@@ -46,7 +61,6 @@ import { CosignatureSignedTransaction } from '../../src/model/transaction/Cosign
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
-import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
@@ -57,29 +71,15 @@ import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMet
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
+import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
-import { TransactionSearchCriteria } from '../../src/infrastructure';
-import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
-import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
-import { toArray, take } from 'rxjs/operators';
-import { deepEqual } from 'assert';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
-import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
-import * as ripemd160 from 'ripemd160';
-import { sha256 } from 'js-sha256';
-import * as secureRandom from 'secure-random';
-import * as CryptoJS from 'crypto-js';
 
 describe('TransactionHttp', () => {
     let transactionHash: string;

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer-typescript';
+import { MosaicExpiryReceiptBuilder, NamespaceExpiryReceiptBuilder } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
@@ -43,7 +43,11 @@ export class ArtifactExpiryReceipt extends Receipt {
      */
     public serialize(): Uint8Array {
         if (this.artifactId instanceof MosaicId) {
-            return new MosaicExpiryReceiptBuilder(ReceiptVersion.ARTIFACT_EXPIRY, this.type.valueOf(), this.artifactId.toBuilder()).serialize();
+            return new MosaicExpiryReceiptBuilder(
+                ReceiptVersion.ARTIFACT_EXPIRY,
+                this.type.valueOf(),
+                this.artifactId.toBuilder(),
+            ).serialize();
         }
         return new NamespaceExpiryReceiptBuilder(
             ReceiptVersion.ARTIFACT_EXPIRY,

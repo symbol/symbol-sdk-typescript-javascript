@@ -19,7 +19,6 @@ import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-fetch-cli
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { AccountRestrictions } from '../model/restriction';
-import { AccountRestriction } from '../model/restriction/AccountRestriction';
 import { Http } from './Http';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 

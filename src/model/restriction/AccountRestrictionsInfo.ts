@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { AccountRestrictions } from './AccountRestrictions';
+
 /**
  * Account restrictions structure describes restriction information for an account.
  */
@@ -33,7 +34,4 @@ export class AccountRestrictionsInfo {
          */
         public readonly accountRestrictions: AccountRestrictions,
     ) {}
-
-
-
 }

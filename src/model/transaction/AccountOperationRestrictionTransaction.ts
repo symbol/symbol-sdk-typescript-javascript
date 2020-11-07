@@ -16,19 +16,19 @@
 
 import {
     AccountOperationRestrictionTransactionBuilder,
+    AccountRestrictionFlagsDto,
     AmountDto,
     EmbeddedAccountOperationRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
     GeneratorUtils,
-    KeyDto,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
-import { AccountRestrictionFlagsDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
+import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -36,8 +36,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
     /**

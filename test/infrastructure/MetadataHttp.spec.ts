@@ -16,11 +16,11 @@
 import { expect } from 'chai';
 import {
     MetadataEntryDTO,
+    MetadataInfoDTO,
+    MetadataPage,
     MetadataRoutesApi,
     MetadataTypeEnum,
     Order,
-    MetadataInfoDTO,
-    MetadataPage,
     Pagination,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';

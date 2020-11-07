@@ -21,15 +21,14 @@ import {
     EmbeddedTransactionBuilder,
     Hash256Dto,
     HashLockTransactionBuilder,
-    KeyDto,
-    SignatureDto,
     TimestampDto,
+    TransactionBuilder,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -43,7 +42,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.

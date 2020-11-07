@@ -15,17 +15,14 @@
  */
 
 import { Duration } from '@js-joda/core';
-import { MosaicIdDto } from 'catbuffer-typescript';
-import { AccountRestrictionsDTO, AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Address } from '../../model/account/Address';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../../model/restriction/AccountRestrictions';
-import { AccountRestrictionsInfo } from '../../model/restriction/AccountRestrictionsInfo';
 import { AddressRestrictionFlag } from '../../model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../model/restriction/OperationRestrictionFlag';
-import { TransactionType } from '../../model/transaction';
 
 export class DtoMapping {
     /**

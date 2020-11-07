@@ -17,9 +17,9 @@
 import { Address } from '../account';
 import { MosaicId } from '../mosaic';
 import { TransactionType } from '../transaction';
-import { OperationRestrictionFlag } from './OperationRestrictionFlag';
 import { AddressRestrictionFlag } from './AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from './MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from './OperationRestrictionFlag';
 
 /**
  * Account restriction structure describes restriction information.

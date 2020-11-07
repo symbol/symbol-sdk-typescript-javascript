@@ -19,33 +19,31 @@ import {
     EmbeddedSecretLockTransactionBuilder,
     EmbeddedTransactionBuilder,
     Hash256Dto,
-    KeyDto,
     SecretLockTransactionBuilder,
-    SignatureDto,
     TimestampDto,
+    TransactionBuilder,
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../lock/LockHashAlgorithm';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { LockHashAlgorithmLengthValidator, LockHashAlgorithm } from '../lock/LockHashAlgorithm';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 export class SecretLockTransaction extends Transaction {
     /**

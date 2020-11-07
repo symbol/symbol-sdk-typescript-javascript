@@ -15,8 +15,8 @@ import { Convert } from '../../core/format/Convert';
  * limitations under the License.
  */
 
-import { MessageType } from './MessageType';
 import { Convert } from '../../core/format/Convert';
+import { MessageType } from './MessageType';
 
 /**
  * An abstract message class that serves as the base class of all message types.

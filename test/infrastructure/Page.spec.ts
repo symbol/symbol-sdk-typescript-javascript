@@ -18,9 +18,7 @@ import { expect } from 'chai';
 import { Page } from '../../src/infrastructure';
 import { PlainMessage } from '../../src/model/message';
 import { NetworkType } from '../../src/model/network';
-import { Deadline } from '../../src/model/transaction';
-import { Transaction } from '../../src/model/transaction';
-import { TransferTransaction } from '../../src/model/transaction';
+import { Deadline, Transaction, TransferTransaction } from '../../src/model/transaction';
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('Page', () => {

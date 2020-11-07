@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
+import { ChronoUnit } from '@js-joda/core';
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { take, toArray } from 'rxjs/operators';
+import { HashLockPaginationStreamer, Order } from '../../src/infrastructure';
+import { HashLockRepository } from '../../src/infrastructure/HashLockRepository';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { toArray, take } from 'rxjs/operators';
-import { deepEqual } from 'assert';
-import { Order, HashLockPaginationStreamer } from '../../src/infrastructure';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { ChronoUnit } from '@js-joda/core';
-import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
-import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
-import { HashLockRepository } from '../../src/infrastructure/HashLockRepository';
 
 describe('HashLockHttp', () => {
     const helper = new IntegrationTestHelper();

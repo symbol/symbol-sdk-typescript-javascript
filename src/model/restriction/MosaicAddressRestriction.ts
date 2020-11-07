@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { MosaicAddressRestrictionEntryBuilder } from 'catbuffer-typescript';
-import { AddressDto } from 'catbuffer-typescript';
-import { AddressKeyValueBuilder } from 'catbuffer-typescript';
-import { AddressKeyValueSetBuilder } from 'catbuffer-typescript';
-import { MosaicIdDto } from 'catbuffer-typescript';
-import { MosaicRestrictionKeyDto } from 'catbuffer-typescript';
+import {
+    AddressDto,
+    AddressKeyValueBuilder,
+    AddressKeyValueSetBuilder,
+    MosaicAddressRestrictionEntryBuilder,
+    MosaicIdDto,
+    MosaicRestrictionKeyDto,
+} from 'catbuffer-typescript';
 import { Address } from '../account';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';

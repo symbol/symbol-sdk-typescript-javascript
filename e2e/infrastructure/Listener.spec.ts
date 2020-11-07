@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { assert, expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { assert, expect } from 'chai';
 import { filter, mergeMap } from 'rxjs/operators';
+import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account } from '../../src/model/account';
+import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Currency } from '../../src/model/mosaic';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
-import { Address } from '../../src/model/account';
-import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
-import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { UInt64 } from '../../src/model/UInt64';
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();

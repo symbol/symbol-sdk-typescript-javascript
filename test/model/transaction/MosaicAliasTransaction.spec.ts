@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-import { Convert } from '../../../src/core/format';
-import { Account } from '../../../src/model/account';
-import { MosaicId } from '../../../src/model/mosaic';
-import { AliasAction } from '../../../src/model/namespace';
-import { NamespaceId } from '../../../src/model/namespace';
-import { NetworkType } from '../../../src/model/network';
-import { Deadline } from '../../../src/model/transaction';
-import { MosaicAliasTransaction } from '../../../src/model/transaction';
-import { UInt64 } from '../../../src/model';
-import { TestingAccount } from '../../conf/conf.spec';
 import { deepEqual } from 'assert';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
-import { TransactionType } from '../../../src/model/transaction';
-import { AliasTransaction } from '../../../src/model/transaction';
+import { expect } from 'chai';
+import { Convert } from '../../../src/core/format';
+import { UInt64 } from '../../../src/model';
+import { Account } from '../../../src/model/account';
+import { MosaicId } from '../../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../../src/model/namespace';
+import { NetworkType } from '../../../src/model/network';
+import { AliasTransaction, Deadline, MosaicAliasTransaction, TransactionType } from '../../../src/model/transaction';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;

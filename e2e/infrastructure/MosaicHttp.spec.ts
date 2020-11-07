@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { take, toArray } from 'rxjs/operators';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { Account } from '../../src/model/account/Account';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -29,10 +33,6 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
-import { toArray, take } from 'rxjs/operators';
-import { deepEqual } from 'assert';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;

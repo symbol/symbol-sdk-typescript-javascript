@@ -19,6 +19,7 @@ import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { KeyGenerator } from '../../src/core/format/KeyGenerator';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { Page } from '../../src/infrastructure/Page';
 import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
 import { Account } from '../../src/model/account/Account';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -37,7 +38,6 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
-import { Page } from '../../src/infrastructure/Page';
 
 describe('MosaicRestrictionTransactionService', () => {
     let account: Account;

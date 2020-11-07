@@ -24,6 +24,8 @@ import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 import { MosaicRestrictionEntryType } from '../../src/model/restriction/MosaicRestrictionEntryType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
@@ -34,8 +36,6 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 
 describe('RestrictionHttp', () => {
     const helper = new IntegrationTestHelper();

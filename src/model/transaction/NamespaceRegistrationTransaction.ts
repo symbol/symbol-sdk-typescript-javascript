@@ -19,15 +19,13 @@ import {
     BlockDurationDto,
     EmbeddedNamespaceRegistrationTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    NamespaceIdDto,
     NamespaceRegistrationTransactionBuilder,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceRegistrationType } from '../namespace/NamespaceRegistrationType';
@@ -39,7 +37,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.

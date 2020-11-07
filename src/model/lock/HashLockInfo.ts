@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    AmountDto,
-    BlockDurationDto,
-    HashLockInfoBuilder,
-    HeightDto,
-    MosaicDefinitionBuilder,
-    MosaicIdDto,
-    MosaicPropertiesBuilder,
-} from 'catbuffer-typescript';
-import { AddressDto } from 'catbuffer-typescript';
-import { Hash256Dto } from 'catbuffer-typescript';
-import { MosaicBuilder } from 'catbuffer-typescript';
+import { AddressDto, AmountDto, Hash256Dto, HashLockInfoBuilder, HeightDto, MosaicBuilder } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';

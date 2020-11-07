@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { Metadata } from '../../model/metadata/Metadata';
+import { MetadataSearchCriteria } from '../searchCriteria/MetadataSearchCriteria';
 import { PaginationStreamer } from './PaginationStreamer';
 import { Searcher } from './Searcher';
-import { MetadataSearchCriteria } from '../searchCriteria/MetadataSearchCriteria';
-import { Metadata } from '../../model/metadata/Metadata';
 
 /**
  * A helper object that streams {@link Metadata} using the search.

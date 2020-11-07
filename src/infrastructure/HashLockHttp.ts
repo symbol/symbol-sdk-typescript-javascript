@@ -15,15 +15,15 @@
  */
 
 import { Observable } from 'rxjs';
-import { HashLockRoutesApi, HashLockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { HashLockInfoDTO, HashLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { HashLockInfo } from '../model/lock/HashLockInfo';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
-import { Http } from './Http';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { Page } from './Page';
 import { HashLockRepository } from './HashLockRepository';
-import { HashLockInfo } from '../model/lock/HashLockInfo';
+import { Http } from './Http';
+import { Page } from './Page';
 import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria';
 
 /**

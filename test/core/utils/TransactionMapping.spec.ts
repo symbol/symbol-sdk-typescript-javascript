@@ -17,7 +17,6 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { Crypto } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format';
 import { DtoMapping, TransactionMapping } from '../../../src/core/utils';
 import { Transaction, UInt64 } from '../../../src/model';

@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
+import { AggregateNetworkPropertiesDTO, NetworkConfigurationDTO, PluginsPropertiesDTO } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
+import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
+import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
@@ -31,9 +34,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { NetworkConfigurationDTO, PluginsPropertiesDTO, AggregateNetworkPropertiesDTO } from 'symbol-openapi-typescript-fetch-client';
 
 /**
  * For multi level multisig scenario visit: https://github.com/nemtech/symbol-docs/issues/10

@@ -22,6 +22,7 @@ import {
     MosaicGlobalRestrictionEntryDTO,
     RestrictionMosaicRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { UInt64 } from '../model';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -30,10 +31,9 @@ import { MosaicAddressRestrictionItem } from '../model/restriction/MosaicAddress
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
 import { Http } from './Http';
+import { Page } from './Page';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { RestrictionMosaicSearchCriteria } from './searchCriteria/RestrictionMosaicSearchCriteria';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { Page } from './Page';
 
 /**
  * RestrictionMosaic http repository.

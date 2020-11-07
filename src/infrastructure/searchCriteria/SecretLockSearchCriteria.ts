@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
 import { Address } from '../../model/account/Address';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search secret lock. With this criteria, you can sort and filter

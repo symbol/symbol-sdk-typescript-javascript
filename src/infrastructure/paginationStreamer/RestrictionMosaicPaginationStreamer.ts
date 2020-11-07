@@ -15,12 +15,12 @@
  */
 
 import { Observable } from 'rxjs/internal/Observable';
+import { MosaicAddressRestriction } from '../../model/restriction/MosaicAddressRestriction';
+import { MosaicGlobalRestriction } from '../../model/restriction/MosaicGlobalRestriction';
 import { Page } from '../Page';
-import { PaginationStreamer } from './PaginationStreamer';
 import { RestrictionMosaicRepository } from '../RestrictionMosaicRepository';
 import { RestrictionMosaicSearchCriteria } from '../searchCriteria/RestrictionMosaicSearchCriteria';
-import { MosaicGlobalRestriction } from '../../model/restriction/MosaicGlobalRestriction';
-import { MosaicAddressRestriction } from '../../model/restriction/MosaicAddressRestriction';
+import { PaginationStreamer } from './PaginationStreamer';
 
 /**
  * A helper object that streams {@link RestrictionMosaic} using the search.

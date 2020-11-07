@@ -15,9 +15,9 @@
  */
 
 import { instance, mock } from 'ts-mockito';
+import { AccountRepository } from '../../../src/infrastructure/AccountRepository';
 import { AccountPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
-import { AccountRepository } from '../../../src/infrastructure/AccountRepository';
 
 describe('AccountPaginationStreamer', () => {
     it('basicMultiPageTest', () => {

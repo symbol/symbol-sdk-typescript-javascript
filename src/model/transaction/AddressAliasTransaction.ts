@@ -16,17 +16,13 @@
 
 import {
     AddressAliasTransactionBuilder,
-    AddressDto,
     AmountDto,
     EmbeddedAddressAliasTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    NamespaceIdDto,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
-import { Convert, RawAddress } from '../../core/format';
+import { Convert } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { AliasAction } from '../namespace/AliasAction';

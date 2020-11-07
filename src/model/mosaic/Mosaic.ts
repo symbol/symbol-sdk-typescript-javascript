@@ -49,5 +49,4 @@ export class Mosaic {
             id: this.id.id.toHex(),
         };
     }
-
 }

@@ -23,7 +23,7 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { Account } from '../../src/model/account';
-import { MosaicFlags, MosaicId, MosaicInfo, MosaicNames, Currency } from '../../src/model/mosaic';
+import { Currency, MosaicFlags, MosaicId, MosaicInfo, MosaicNames } from '../../src/model/mosaic';
 import { NamespaceId, NamespaceName } from '../../src/model/namespace';
 import { NetworkConfiguration } from '../../src/model/network/NetworkConfiguration';
 import { NetworkType } from '../../src/model/network/NetworkType';

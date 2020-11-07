@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AccountRestrictionsBuilder, GeneratorUtils } from 'catbuffer-typescript';
-import { AccountRestrictionAddressValueBuilder } from 'catbuffer-typescript';
-import { AccountRestrictionMosaicValueBuilder } from 'catbuffer-typescript';
-import { AccountRestrictionsInfoBuilder } from 'catbuffer-typescript';
-import { AccountRestrictionTransactionTypeValueBuilder } from 'catbuffer-typescript';
-import { AccountRestrictionFlagsDto } from 'catbuffer-typescript';
+import {
+    AccountRestrictionAddressValueBuilder,
+    AccountRestrictionFlagsDto,
+    AccountRestrictionMosaicValueBuilder,
+    AccountRestrictionsBuilder,
+    AccountRestrictionsInfoBuilder,
+    AccountRestrictionTransactionTypeValueBuilder,
+    GeneratorUtils,
+} from 'catbuffer-typescript';
 import { isNumeric } from 'rxjs/internal-compatibility';
 import { Address } from '../account';
 import { MosaicId } from '../mosaic';

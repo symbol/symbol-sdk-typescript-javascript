@@ -20,6 +20,7 @@ import { NetworkType } from '../model/network/NetworkType';
 import { AccountRepository } from './AccountRepository';
 import { BlockRepository } from './BlockRepository';
 import { ChainRepository } from './ChainRepository';
+import { HashLockRepository } from './HashLockRepository';
 import { IListener } from './IListener';
 import { MetadataRepository } from './MetadataRepository';
 import { MosaicRepository } from './MosaicRepository';
@@ -30,10 +31,9 @@ import { NodeRepository } from './NodeRepository';
 import { ReceiptRepository } from './ReceiptRepository';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
+import { SecretLockRepository } from './SecretLockRepository';
 import { TransactionRepository } from './TransactionRepository';
 import { TransactionStatusRepository } from './TransactionStatusRepository';
-import { HashLockRepository } from './HashLockRepository';
-import { SecretLockRepository } from './SecretLockRepository';
 
 /**
  * A repository factory allows clients to create repositories to access NEM Server without knowing

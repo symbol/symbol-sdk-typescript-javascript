@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { UInt64 } from '../UInt64';
+
 /**
  * The node info structure describes basic information of a node.
  */

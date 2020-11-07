@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PaginationStreamer } from './PaginationStreamer';
-import { Searcher } from './Searcher';
 import { HashLockInfo } from '../../model/lock/HashLockInfo';
 import { HashLockSearchCriteria } from '../searchCriteria/HashLockSearchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
+import { Searcher } from './Searcher';
 
 /**
  * A helper object that streams {@link HashLockInfo} using the search.

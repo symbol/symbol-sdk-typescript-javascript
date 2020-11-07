@@ -16,20 +16,20 @@
 
 import { Observable } from 'rxjs';
 import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { AccountInfo } from '../model/account/AccountInfo';
+import { AccountLinkPublicKey } from '../model/account/AccountLinkPublicKey';
+import { AccountLinkVotingKey } from '../model/account/AccountLinkVotingKey';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import { Address } from '../model/account/Address';
+import { SupplementalPublicKeys } from '../model/account/SupplementalPublicKeys';
 import { Mosaic } from '../model/mosaic/Mosaic';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
-import { SupplementalPublicKeys } from '../model/account/SupplementalPublicKeys';
-import { AccountLinkPublicKey } from '../model/account/AccountLinkPublicKey';
-import { AccountLinkVotingKey } from '../model/account/AccountLinkVotingKey';
-import { AccountSearchCriteria } from './searchCriteria/AccountSearchCriteria';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { Page } from './Page';
+import { AccountSearchCriteria } from './searchCriteria/AccountSearchCriteria';
 
 /**
  * Account http repository.

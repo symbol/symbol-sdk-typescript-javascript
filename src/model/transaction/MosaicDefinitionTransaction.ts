@@ -21,11 +21,11 @@ import {
     EmbeddedTransactionBuilder,
     GeneratorUtils,
     MosaicDefinitionTransactionBuilder,
+    MosaicFlagsDto,
     MosaicNonceDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
-import { MosaicFlagsDto } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';

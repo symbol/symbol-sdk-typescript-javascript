@@ -21,11 +21,13 @@ import { Convert } from '../../../src/core/format';
 import { MosaicAddressRestrictionItem, UInt64 } from '../../../src/model';
 import { Address } from '../../../src/model/account';
 import { MosaicId } from '../../../src/model/mosaic';
-import { MosaicAddressRestriction } from '../../../src/model/restriction';
-import { MosaicGlobalRestriction } from '../../../src/model/restriction';
-import { MosaicGlobalRestrictionItem } from '../../../src/model/restriction';
-import { MosaicRestrictionEntryType } from '../../../src/model/restriction';
-import { MosaicRestrictionType } from '../../../src/model/restriction';
+import {
+    MosaicAddressRestriction,
+    MosaicGlobalRestriction,
+    MosaicGlobalRestrictionItem,
+    MosaicRestrictionEntryType,
+    MosaicRestrictionType,
+} from '../../../src/model/restriction';
 
 describe('MosaicRestrictions', () => {
     const hash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';

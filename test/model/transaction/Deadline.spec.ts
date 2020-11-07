@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit, Instant, LocalDateTime, ZoneId } from '@js-joda/core';
+import { expect } from 'chai';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 
 describe('Deadline', () => {

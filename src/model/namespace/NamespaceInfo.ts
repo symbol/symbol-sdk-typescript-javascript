@@ -15,6 +15,7 @@
  */
 
 import {
+    AddressDto,
     HeightDto,
     NamespaceAliasBuilder,
     NamespaceIdDto,
@@ -22,7 +23,6 @@ import {
     NamespacePathBuilder,
     RootNamespaceHistoryBuilder,
 } from 'catbuffer-typescript';
-import { AddressDto } from 'catbuffer-typescript';
 import { Address } from '../account/Address';
 import { UInt64 } from '../UInt64';
 import { Alias } from './Alias';

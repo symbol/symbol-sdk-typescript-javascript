@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-import { GeneratorUtils, MosaicEntryBuilder } from 'catbuffer-typescript';
-import { AmountDto } from 'catbuffer-typescript';
-import { BlockDurationDto } from 'catbuffer-typescript';
-import { HeightDto } from 'catbuffer-typescript';
-import { MosaicDefinitionBuilder } from 'catbuffer-typescript';
-import { MosaicIdDto } from 'catbuffer-typescript';
-import { MosaicPropertiesBuilder } from 'catbuffer-typescript';
-import { MosaicFlagsDto } from 'catbuffer-typescript';
+import {
+    AmountDto,
+    BlockDurationDto,
+    GeneratorUtils,
+    HeightDto,
+    MosaicDefinitionBuilder,
+    MosaicEntryBuilder,
+    MosaicFlagsDto,
+    MosaicIdDto,
+    MosaicPropertiesBuilder,
+} from 'catbuffer-typescript';
+import { Address } from '../account';
 import { UInt64 } from '../UInt64';
 import { MosaicFlags } from './MosaicFlags';
 import { MosaicId } from './MosaicId';
-import { Address } from '../account';
 
 /**
  * The mosaic info structure describes a mosaic.

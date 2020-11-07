@@ -15,6 +15,7 @@
  */
 
 import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -24,7 +25,6 @@ import { AddressAliasTransaction } from './AddressAliasTransaction';
 import { Deadline } from './Deadline';
 import { MosaicAliasTransaction } from './MosaicAliasTransaction';
 import { Transaction } from './Transaction';
-import { PublicAccount } from '../account/PublicAccount';
 
 export abstract class AliasTransaction extends Transaction {
     /**

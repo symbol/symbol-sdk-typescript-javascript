@@ -15,8 +15,8 @@
  */
 
 import { Observable } from 'rxjs';
-import { Address } from '../../model/account/Address';
 import { AccountInfoResolvedMosaic } from '../../model/account/AccountInfoResolvedMosaic';
+import { Address } from '../../model/account/Address';
 import { NamespaceInfoWithName } from '../../model/namespace/NamespaceInfoWithName';
 
 /**

@@ -17,14 +17,15 @@
 import {
     AmountDto,
     EmbeddedTransactionBuilder,
-    TimestampDto,
     EmbeddedVotingKeyLinkTransactionBuilder,
-    VotingKeyLinkTransactionBuilder,
-    VotingKeyDto,
+    FinalizationEpochDto,
+    TimestampDto,
     TransactionBuilder,
+    VotingKeyDto,
+    VotingKeyLinkTransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { PublicAccount } from '../account';
+import { Address, PublicAccount } from '../account';
 import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -34,8 +35,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account';
-import { FinalizationEpochDto } from 'catbuffer-typescript';
 
 export class VotingKeyLinkTransaction extends Transaction {
     /**

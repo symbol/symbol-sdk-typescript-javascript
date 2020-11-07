@@ -16,13 +16,13 @@
 
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/network/NetworkType';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { LinkAction } from '../../src/model/transaction/LinkAction';
+import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
 import { PersistentDelegationRequestTransaction } from '../../src/model/transaction/PersistentDelegationRequestTransaction';
 import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('PersistentHarvesting', () => {
     const helper = new IntegrationTestHelper();

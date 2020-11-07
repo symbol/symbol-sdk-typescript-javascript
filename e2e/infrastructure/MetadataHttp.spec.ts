@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { take, toArray } from 'rxjs/operators';
+import { MetadataPaginationStreamer, Order } from '../../src/infrastructure';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
+import { MetadataType } from '../../src/model';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
@@ -32,10 +36,6 @@ import { NamespaceMetadataTransaction } from '../../src/model/transaction/Namesp
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { MetadataType } from '../../src/model';
-import { Order, MetadataPaginationStreamer } from '../../src/infrastructure';
-import { deepEqual } from 'assert';
-import { take, toArray } from 'rxjs/operators';
 
 describe('MetadataHttp', () => {
     const helper = new IntegrationTestHelper();
