@@ -15,7 +15,8 @@
  */
 
 import {
-    AggregateTransactionBuilder,
+    AggregateBondedTransactionBuilder,
+    AggregateCompleteTransactionBuilder,
     AmountDto,
     CosignatureBuilder,
     EmbeddedTransactionBuilder,
@@ -158,8 +159,7 @@ export class AggregateTransaction extends Transaction {
          * Get transaction type from the payload hex
          * As buffer uses separate builder class for Complete and bonded
          */
-
-        const builder = AggregateTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const builder = AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const type = (builder.type as number) as TransactionType;
         const innerTransactions = builder.getTransactions();
         const networkType = builder.getNetwork().valueOf();
@@ -306,7 +306,9 @@ export class AggregateTransaction extends Transaction {
             return new CosignatureBuilder(cosignature.version.toDTO(), new KeyDto(signerBytes), new SignatureDto(signatureBytes));
         });
 
-        return new AggregateTransactionBuilder(
+        const builder =
+            this.type === TransactionType.AGGREGATE_COMPLETE ? AggregateCompleteTransactionBuilder : AggregateBondedTransactionBuilder;
+        return new builder(
             this.getSignatureAsBuilder(),
             this.getSignerAsBuilder(),
             this.versionToDTO(),
