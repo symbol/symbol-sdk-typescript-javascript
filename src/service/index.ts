@@ -1,10 +1,10 @@
 // created from 'create-ts-index'
 
-export * from './interfaces';
 export * from './AccountService';
 export * from './AggregateTransactionService';
 export * from './BlockService';
 export * from './CurrencyService';
+export * from './interfaces';
 export * from './MetadataTransactionService';
 export * from './MosaicAmountView';
 export * from './MosaicRestrictionTransactionService';
