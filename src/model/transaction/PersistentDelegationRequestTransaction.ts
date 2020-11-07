@@ -15,12 +15,12 @@
  */
 
 import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
 import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { TransferTransaction } from './TransferTransaction';
-import { PublicAccount } from '../account/PublicAccount';
 
 export class PersistentDelegationRequestTransaction extends TransferTransaction {
     /**

@@ -16,12 +16,12 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceInfo } from '../../../src/model/namespace/NamespaceInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
-import { Address } from '../../../src/model/account/Address';
 
 describe('NamespaceInfo', () => {
     let rootNamespaceDTO;

@@ -15,23 +15,22 @@
  */
 
 import { Observable, of } from 'rxjs';
-import { map, withLatestFrom, toArray } from 'rxjs/operators';
-import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
+import { map, mergeMap, toArray, withLatestFrom } from 'rxjs/operators';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { AccountRepository } from '../infrastructure/AccountRepository';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
+import { NamespacePaginationStreamer } from '../infrastructure/paginationStreamer/NamespacePaginationStreamer';
+import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
+import { AccountInfo } from '../model/account/AccountInfo';
+import { AccountInfoResolvedMosaic } from '../model/account/AccountInfoResolvedMosaic';
 import { Address } from '../model/account/Address';
-import { mergeMap } from 'rxjs/operators';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { IAccountService } from './interfaces/IAccountService';
-import { NamespaceInfoWithName } from '../model/namespace/NamespaceInfoWithName';
-import { ResolvedMosaic } from '../model/mosaic/ResolvedMosaic';
 import { Mosaic } from '../model/mosaic/Mosaic';
 import { MosaicId } from '../model/mosaic/MosaicId';
+import { ResolvedMosaic } from '../model/mosaic/ResolvedMosaic';
 import { NamespaceId } from '../model/namespace/NamespaceId';
-import { AccountInfoResolvedMosaic } from '../model/account/AccountInfoResolvedMosaic';
-import { AccountInfo } from '../model/account/AccountInfo';
+import { NamespaceInfoWithName } from '../model/namespace/NamespaceInfoWithName';
 import { NamespaceName } from '../model/namespace/NamespaceName';
-import { NamespacePaginationStreamer } from '../infrastructure/paginationStreamer/NamespacePaginationStreamer';
+import { IAccountService } from './interfaces/IAccountService';
 /**
  * Account Service
  */

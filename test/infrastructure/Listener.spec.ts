@@ -23,6 +23,7 @@ import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepositor
 import { Account } from '../../src/model/account/Account';
 import { AccountNames } from '../../src/model/account/AccountNames';
 import { Address } from '../../src/model/account/Address';
+import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
 import { NewBlock } from '../../src/model/blockchain/NewBlock';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -33,7 +34,6 @@ import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransactionStatusError } from '../../src/model/transaction/TransactionStatusError';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
 
 describe('Listener', () => {
     const account = Account.createFromPrivateKey(

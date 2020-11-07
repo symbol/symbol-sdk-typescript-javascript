@@ -15,10 +15,10 @@
  */
 
 import { instance, mock } from 'ts-mockito';
-import { HashLockPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/HashLockPaginationStreamer';
-import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 import { HashLockRepository } from '../../../src/infrastructure/HashLockRepository';
+import { HashLockPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/HashLockPaginationStreamer';
 import { Address } from '../../../src/model/account/Address';
+import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('HashLockPaginationStreamer', () => {
     const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');

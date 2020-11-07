@@ -20,6 +20,7 @@ import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
+import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 import { NewBlock } from '../model/blockchain/NewBlock';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
@@ -31,7 +32,6 @@ import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
-import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 
 export enum ListenerChannelName {
     block = 'block',

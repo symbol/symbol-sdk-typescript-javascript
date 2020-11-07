@@ -15,9 +15,9 @@
  */
 
 import { instance, mock } from 'ts-mockito';
+import { MetadataRepository } from '../../../src/infrastructure/MetadataRepository';
 import { MetadataPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/MetadataPaginationStreamer';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
-import { MetadataRepository } from '../../../src/infrastructure/MetadataRepository';
 
 describe('MetadataPaginationStreamer', () => {
     it('basicMultiPageTest', () => {

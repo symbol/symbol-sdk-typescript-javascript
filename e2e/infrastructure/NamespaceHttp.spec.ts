@@ -15,7 +15,10 @@
  */
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { take, toArray } from 'rxjs/operators';
+import { Order } from '../../src/infrastructure';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
@@ -25,9 +28,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
-import { take, toArray } from 'rxjs/operators';
-import { Order } from '../../src/infrastructure';
 
 describe('NamespaceHttp', () => {
     let defaultNamespaceId: NamespaceId;

@@ -19,14 +19,14 @@ import {
     AccountDTO,
     AccountIds,
     AccountInfoDTO,
+    AccountLinkPublicKeyDTO,
+    AccountLinkVotingKeyDTO,
+    AccountPage,
     AccountRoutesApi,
     AccountTypeEnum,
     ActivityBucketDTO,
     Mosaic,
-    AccountLinkPublicKeyDTO,
-    AccountLinkVotingKeyDTO,
     Pagination,
-    AccountPage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';

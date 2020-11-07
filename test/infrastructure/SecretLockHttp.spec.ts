@@ -16,12 +16,12 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    Pagination,
-    SecretLockInfoDTO,
-    SecretLockEntryDTO,
-    SecretLockRoutesApi,
-    SecretLockPage,
     LockHashAlgorithmEnum,
+    Pagination,
+    SecretLockEntryDTO,
+    SecretLockInfoDTO,
+    SecretLockPage,
+    SecretLockRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';

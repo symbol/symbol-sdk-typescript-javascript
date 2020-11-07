@@ -27,17 +27,17 @@ import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
+import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
+import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
-import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
-import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
-import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
-import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('TransferTransaction', () => {

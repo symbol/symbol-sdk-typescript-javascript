@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
-import { TransactionStatement } from '../model/receipt/TransactionStatement';
-import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../model/receipt/ResolutionStatement';
 import { Observable } from 'rxjs';
+import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../model/receipt/ResolutionStatement';
+import { TransactionStatement } from '../model/receipt/TransactionStatement';
 import { Page } from './Page';
+import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
 import { TransactionStatementSearchCriteria } from './searchCriteria/TransactionStatementSearchCriteria';
 
 /**

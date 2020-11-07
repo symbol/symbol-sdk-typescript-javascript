@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { Address } from '../../model/account/Address';
+import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
 import { MosaicId } from '../../model/mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../../model/mosaic/UnresolvedMosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NetworkType } from '../../model/network/NetworkType';
 import { Convert } from '../format/Convert';
 import { RawAddress } from '../format/RawAddress';
-import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../../model/mosaic/UnresolvedMosaicId';
 
 /**
  * @internal

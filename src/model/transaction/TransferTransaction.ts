@@ -22,11 +22,11 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
+    TransactionBuilder,
     TransferTransactionBuilder,
     UnresolvedAddressDto,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-    TransactionBuilder,
 } from 'catbuffer-typescript';
 import * as Long from 'long';
 import { Convert } from '../../core/format';
@@ -34,8 +34,12 @@ import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { EncryptedMessage } from '../message/EncryptedMessage';
 import { Message } from '../message/Message';
 import { MessageType } from '../message/MessageType';
+import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
+import { EmptyMessage, PlainMessage } from '../message/PlainMessage';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
@@ -47,10 +51,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { EmptyMessage, PlainMessage } from '../message/PlainMessage';
-import { EncryptedMessage } from '../message/EncryptedMessage';
-import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { expect } from 'chai';
 import { EMPTY, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { IListener } from '../../src/infrastructure/IListener';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account } from '../../src/model/account';
-import { Address } from '../../src/model/account';
+import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';

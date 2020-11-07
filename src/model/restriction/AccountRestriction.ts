@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { OperationRestrictionFlag } from './OperationRestrictionFlag';
 import { AddressRestrictionFlag } from './AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from './MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from './OperationRestrictionFlag';
 
 /**
  * Account restriction structure describes restriction information.

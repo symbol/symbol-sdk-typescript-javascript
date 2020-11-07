@@ -15,20 +15,20 @@
  */
 
 import { assert, expect } from 'chai';
+import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { TransactionStatement } from '../../src/model/receipt/TransactionStatement';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { TransactionStatement } from '../../src/model/receipt/TransactionStatement';
-import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 
 describe('BlockService', () => {
     const helper = new IntegrationTestHelper();

@@ -16,10 +16,10 @@
 
 import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 /**
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.

@@ -17,8 +17,8 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
-import { RestrictionMosaicSearchCriteria } from './searchCriteria/RestrictionMosaicSearchCriteria';
 import { Page } from './Page';
+import { RestrictionMosaicSearchCriteria } from './searchCriteria/RestrictionMosaicSearchCriteria';
 
 export interface RestrictionMosaicRepository {
     /**

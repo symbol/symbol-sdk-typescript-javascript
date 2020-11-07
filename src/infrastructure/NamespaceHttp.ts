@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { NamespaceDTO, NamespaceInfoDTO, NamespaceRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -33,9 +34,8 @@ import { NetworkType } from '../model/network/NetworkType';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
-import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 import { Page } from './Page';
-import { DtoMapping } from '../core/utils/DtoMapping';
+import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 
 /**
  * Namespace http repository.

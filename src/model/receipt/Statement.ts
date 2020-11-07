@@ -15,14 +15,14 @@
  */
 
 import { Address } from '../account/Address';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { AddressResolutionStatement, MosaicIdResolutionStatement } from './ResolutionStatement';
 import { ResolutionType } from './ResolutionType';
 import { TransactionStatement } from './TransactionStatement';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 
 export class Statement {
     /**

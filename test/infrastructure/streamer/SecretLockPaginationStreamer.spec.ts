@@ -16,9 +16,9 @@
 
 import { instance, mock } from 'ts-mockito';
 import { SecretLockPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/SecretLockPaginationStreamer';
-import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 import { SecretLockRepository } from '../../../src/infrastructure/SecretLockRepository';
 import { Address } from '../../../src/model/account/Address';
+import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('SecretLockPaginationStreamer', () => {
     const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');

@@ -15,10 +15,12 @@
  */
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import * as CryptoJS from 'crypto-js';
 import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
+import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
@@ -29,12 +31,10 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import * as CryptoJS from 'crypto-js';
 import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('SecretLockTransaction', () => {

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 import { Observable } from 'rxjs';
-import { MosaicId } from '../../model/mosaic';
-import { Currency } from '../../model/mosaic';
-import { NetworkCurrencies } from '../../model/mosaic';
+import { Currency, MosaicId, NetworkCurrencies } from '../../model/mosaic';
 
 /**
  * A service that allows you loading Network currencies for mosaic creation.

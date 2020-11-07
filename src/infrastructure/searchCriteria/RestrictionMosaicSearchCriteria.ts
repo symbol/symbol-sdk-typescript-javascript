@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
+import { Address } from '../../model/account/Address';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { MosaicRestrictionType } from '../../model/restriction/MosaicRestrictionType';
-import { Address } from '../../model/account/Address';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search mosaic restrictions. With this criteria, you can sort and filter

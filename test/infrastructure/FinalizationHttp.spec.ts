@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as http from 'http';
 import {
+    BmTreeSignature,
+    FinalizationProofDTO,
     FinalizationRoutesApi,
     MessageGroup,
-    StageEnum,
     ParentPublicKeySignaturePair,
-    BmTreeSignature,
+    StageEnum,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { FinalizationProofDTO } from 'symbol-openapi-typescript-fetch-client';
-import { FinalizationProof } from '../../src/model/finalization/FinalizationProof';
-import { deepEqual } from 'assert';
 import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
+import { FinalizationProof } from '../../src/model/finalization/FinalizationProof';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('FinalizationHttp', () => {

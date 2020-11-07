@@ -17,9 +17,11 @@
 import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
+import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
@@ -30,8 +32,6 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 
 describe('Transaction', () => {
     let account: Account;

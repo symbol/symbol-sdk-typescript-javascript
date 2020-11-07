@@ -15,13 +15,13 @@
  */
 
 import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../../src/model/mosaic/MosaicInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { MosaicView } from '../../../src/service/MosaicView';
-import { Address } from '../../../src/model/account/Address';
 
 describe('MosaicView', () => {
     let mosaicInfo: MosaicInfo;

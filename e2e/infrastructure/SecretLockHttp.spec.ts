@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import { sha3_256 } from 'js-sha3';
+import { take, toArray } from 'rxjs/operators';
+import { Crypto } from '../../src/core/crypto';
 import { Order, SecretLockPaginationStreamer } from '../../src/infrastructure';
 import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
-import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
+import { Account } from '../../src/model/account/Account';
 import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
-import { sha3_256 } from 'js-sha3';
-import { Crypto } from '../../src/core/crypto';
+import { NetworkType } from '../../src/model/network/NetworkType';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('SecretLockHttp', () => {
     const helper = new IntegrationTestHelper();

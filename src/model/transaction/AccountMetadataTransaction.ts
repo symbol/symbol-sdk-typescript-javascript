@@ -22,11 +22,15 @@ import {
     KeyDto,
     SignatureDto,
     TimestampDto,
-    UnresolvedAddressDto,
     TransactionBuilder,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -35,10 +39,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 /**
  * Announce an account metadata transaction to associate a key-value state to an account.

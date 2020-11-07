@@ -15,11 +15,11 @@
  */
 
 import { deepEqual } from 'assert';
-import { UInt64 } from '../../../src/model/UInt64';
-import { HashLockInfoDTO, HashLockEntryDTO } from 'symbol-openapi-typescript-fetch-client';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { HashLockEntryDTO, HashLockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Address } from '../../../src/model/account/Address';
 import { HashLockInfo } from '../../../src/model/lock/HashLockInfo';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('HashLockInfo', () => {
     it('should createComplete an HashLockInfo object', () => {

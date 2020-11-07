@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { LocalDateTime } from '@js-joda/core';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import { Address } from '../../../src/model/account/Address';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import ValidateTransaction from './ValidateTransaction';
-import { LocalDateTime } from '@js-joda/core';
 
 describe('CreateTransactionFromDTO', () => {
     describe('TransferTransaction', () => {

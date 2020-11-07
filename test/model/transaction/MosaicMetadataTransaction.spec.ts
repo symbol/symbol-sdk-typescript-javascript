@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -28,11 +30,9 @@ import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
-import { Address } from '../../../src/model/account/Address';
-import { TransactionType } from '../../../src/model/transaction/TransactionType';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;

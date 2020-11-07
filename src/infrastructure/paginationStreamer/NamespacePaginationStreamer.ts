@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { NamespaceInfo } from '../../model/namespace/NamespaceInfo';
+import { NamespaceSearchCriteria } from '../searchCriteria/NamespaceSearchCriteria';
 import { PaginationStreamer } from './PaginationStreamer';
 import { Searcher } from './Searcher';
-import { NamespaceSearchCriteria } from '../searchCriteria/NamespaceSearchCriteria';
-import { NamespaceInfo } from '../../model/namespace/NamespaceInfo';
 
 /**
  * A helper object that streams {@link NamespaceInfo} using the search.

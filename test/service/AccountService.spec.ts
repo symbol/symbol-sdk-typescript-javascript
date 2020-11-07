@@ -17,24 +17,19 @@
 import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { Account } from '../../src/model/account';
-import { UInt64 } from '../../src/model/UInt64';
-import { TestingAccount, MultisigAccount } from '../conf/conf.spec';
-import { AccountService } from '../../src/service/AccountService';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { AccountInfo } from '../../src/model/account';
-import { AccountType } from '../../src/model/account';
-import { ActivityBucket } from '../../src/model/account';
-import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
-import { MosaicId } from '../../src/model/mosaic';
-import { NamespaceName } from '../../src/model/namespace/NamespaceName';
-import { Mosaic } from '../../src/model/mosaic';
-import { SupplementalPublicKeys } from '../../src/model/account';
 import { Page } from '../../src/infrastructure/Page';
+import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { Account, AccountInfo, AccountType, ActivityBucket, SupplementalPublicKeys } from '../../src/model/account';
+import { Mosaic, MosaicId } from '../../src/model/mosaic';
+import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
+import { NamespaceName } from '../../src/model/namespace/NamespaceName';
+import { UInt64 } from '../../src/model/UInt64';
+import { AccountService } from '../../src/service/AccountService';
+import { MultisigAccount, TestingAccount } from '../conf/conf.spec';
 import { NetworkCurrencyLocal, NetworkCurrencyPublic, NetworkHarvestLocal } from '../model/mosaic/Currency.spec';
 
 describe('AccountService', () => {

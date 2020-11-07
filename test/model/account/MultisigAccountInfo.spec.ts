@@ -15,9 +15,9 @@
  */
 
 import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { Address } from '../../../src/model/account/Address';
 
 describe('MultisigAccountInfo', () => {
     const multisigAccountInfoDTO = {
