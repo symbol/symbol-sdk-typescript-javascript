@@ -201,11 +201,11 @@ describe('NodeHttp', () => {
     });
 
     it('getUnlockedAccount', async () => {
-        const body = ['key1', 'key2'];
+        const body = { unlockedAccount: ['key1', 'key2'] };
 
-        when(nodeRoutesApi.getUnlockedAccount()).thenReturn(Promise.resolve(body));
+        when(nodeRoutesApi.getUnlockedAccount('test')).thenReturn(Promise.resolve(body));
 
-        const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
+        const unlockedAccount = await nodeRepository.getUnlockedAccount('test').toPromise();
         expect(unlockedAccount).to.be.not.null;
         expect(unlockedAccount[0]).to.be.equal('key1');
         expect(unlockedAccount[1]).to.be.equal('key2');
