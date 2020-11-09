@@ -21,15 +21,17 @@ before_script:
   - log_env_variables
 script:
   - npm run test:cov
+  - npm run lint
+  - npm run doc
   - if [ "$TRAVIS_NODE_VERSION" = "10" ]; then npm run coveralls-report; fi
 jobs:
   include:
-    - stage: test
-      name: docs
-      script: npm run doc
-    - stage: test
-      name: lint
-      script: npm run lint
+#    - stage: test
+#      name: docs
+#      script: npm run doc
+#    - stage: test
+#      name: lint
+#      script: npm run lint
     - name: e2e
       script: npm run e2e
       if: (branch = env(DEV_BRANCH) AND type = cron) OR (commit_message = e2e)
