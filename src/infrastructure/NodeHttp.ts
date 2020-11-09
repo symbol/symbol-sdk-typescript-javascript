@@ -116,7 +116,9 @@ export class NodeHttp extends Http implements NodeRepository {
      * @returns Observable<string[]>
      */
     getUnlockedAccount(): Observable<string[]> {
-        return this.call(this.nodeRoutesApi.getUnlockedAccount(), (body) => body);
+        return this.call(this.nodeRoutesApi.getUnlockedAccount(), (body) => {
+            return body.unlockedAccount;
+        });
     }
 
     /**

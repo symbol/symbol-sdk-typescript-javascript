@@ -201,7 +201,7 @@ describe('NodeHttp', () => {
     });
 
     it('getUnlockedAccount', async () => {
-        const body = ['key1', 'key2'];
+        const body = { unlockedAccount: ['key1', 'key2'] };
 
         when(nodeRoutesApi.getUnlockedAccount()).thenReturn(Promise.resolve(body));
 
