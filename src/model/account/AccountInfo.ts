@@ -128,7 +128,7 @@ export class AccountInfo {
         const activityBuckets: HeightActivityBucketsBuilder = new HeightActivityBucketsBuilder(
             this.activityBucket.map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
         );
-        const format = this.importance.compare(UInt64.fromUint(0)) > -1 ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
+        const format = this.isHighValue() ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
         return new AccountStateBuilder(
             address,
             addressHeight,
@@ -145,6 +145,16 @@ export class AccountInfo {
             activityBuckets,
             balances,
         ).serialize();
+    }
+
+    private isHighValue(): boolean {
+        if (this.importance.compare(UInt64.fromUint(0)) == 0) {
+            return false;
+        }
+        if (this.activityBucket.length < 5) {
+            return false;
+        }
+        return true;
     }
 
     /**

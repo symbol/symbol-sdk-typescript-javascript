@@ -17,7 +17,9 @@
 import { deepEqual } from 'assert';
 import { MosaicEntryBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
+import { MosaicInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../../../src/core/format';
+import { MosaicHttp } from '../../../src/infrastructure';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -197,6 +199,31 @@ describe('MosaicInfo', () => {
                 UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
             );
             expect(mosaicInfo.isRestrictable()).to.be.equal(false);
+        });
+
+        it('should serialize and state proof', () => {
+            const dto: MosaicInfoDTO = {
+                mosaic: {
+                    id: '725CEC19BBA31720',
+                    supply: '15000000',
+                    startHeight: '1',
+                    ownerAddress: '9857C93C1E3FA4FACA0534AB12B8DE85BB2E7A4ECD24768B',
+                    revision: 1,
+                    flags: 3,
+                    divisibility: 3,
+                    duration: '0',
+                },
+                id: '5FA893BB6D1B44BFCD93AEA4',
+            };
+            const rawMerklePath =
+                '00008080DA9B4AF63BE985715EA635AF98E3CF3B0A22F9A2BE1C7DD40B79948AA63E36586E5D2E9D0C089C1C64BC0D42A11ADBD1CD6CDB4B7C294062F55113525A64AE3CFF3F04A7F2A487B42EA89323C4408F82415223ACFEC7DFA7924EFC31A70778AB17A00C3EAFF635F01BB3B474F0AF1BE99FBDA85EEFB209CC7BD158D3540DE3A3F2D1';
+
+            const info = MosaicHttp.toMosaicInfo(dto);
+
+            const serializedHex = Convert.uint8ToHex(info.serialize());
+            expect(serializedHex).eq(
+                '2017A3BB19EC5C72C0E1E4000000000001000000000000009857C93C1E3FA4FACA0534AB12B8DE85BB2E7A4ECD24768B0100000003030000000000000000',
+            );
         });
     });
 });

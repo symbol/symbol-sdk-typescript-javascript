@@ -75,7 +75,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
                 criteria.offset,
                 DtoMapping.mapEnum(criteria.order),
             ),
-            (body) => super.toPage(body.pagination, body.data, (r) => this.toMosaicRestriction(r)),
+            (body) => super.toPage(body.pagination, body.data, (r) => RestrictionMosaicHttp.toMosaicRestriction(r)),
         );
     }
 
@@ -86,7 +86,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @param {MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO} dto the restriction object from rest.
      * @returns {MosaicAddressRestriction | MosaicGlobalRestriction} a restriction model
      */
-    private toMosaicRestriction(
+    public static toMosaicRestriction(
         dto: MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO,
     ): MosaicAddressRestriction | MosaicGlobalRestriction {
         if ((dto.mosaicRestrictionEntry as any).targetAddress) {
@@ -109,7 +109,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         );
     }
 
-    private toMosaicGlobalRestrictionItem(restriction: MosaicGlobalRestrictionEntryDTO): MosaicGlobalRestrictionItem {
+    private static toMosaicGlobalRestrictionItem(restriction: MosaicGlobalRestrictionEntryDTO): MosaicGlobalRestrictionItem {
         return new MosaicGlobalRestrictionItem(
             UInt64.fromNumericString(restriction.key),
             new MosaicId(restriction.restriction.referenceMosaicId),
@@ -118,7 +118,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         );
     }
 
-    private toMosaicAddressRestrictionItem(restriction: MosaicAddressRestrictionEntryDTO): MosaicAddressRestrictionItem {
+    private static toMosaicAddressRestrictionItem(restriction: MosaicAddressRestrictionEntryDTO): MosaicAddressRestrictionItem {
         return new MosaicAddressRestrictionItem(UInt64.fromNumericString(restriction.key), UInt64.fromNumericString(restriction.value));
     }
 }

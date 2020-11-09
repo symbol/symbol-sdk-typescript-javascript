@@ -24,61 +24,61 @@ import { take, toArray } from 'rxjs/operators';
 import * as secureRandom from 'secure-random';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';
-import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
-import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
-import { TransactionSearchCriteria } from '../../src/infrastructure';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
-import { Account } from '../../src/model/account/Account';
-import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
-import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
-import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
-import { AccountAddressRestrictionTransaction } from '../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
-import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../src/model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../src/model/transaction/AccountOperationRestrictionTransaction';
-import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
-import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { CosignatureSignedTransaction } from '../../src/model/transaction/CosignatureSignedTransaction';
-import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
-import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
-import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
-import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { LockHashUtils, TransactionMapping } from '../../src/core/utils';
+import {
+    NamespaceRepository,
+    TransactionGroup,
+    TransactionRepository,
+    TransactionSearchCriteria,
+    TransactionStatusRepository,
+} from '../../src/infrastructure';
+import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { UInt64 } from '../../src/model';
+import { Account } from '../../src/model/account';
+import { LockHashAlgorithm } from '../../src/model/lock';
+import { PlainMessage } from '../../src/model/message';
+import { Mosaic, MosaicFlags, MosaicId, MosaicNonce, MosaicSupplyChangeAction } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import {
+    AccountRestrictionModificationAction,
+    AddressRestrictionFlag,
+    MosaicRestrictionFlag,
+    MosaicRestrictionType,
+    OperationRestrictionFlag,
+} from '../../src/model/restriction';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountKeyLinkTransaction,
+    AccountMetadataTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AccountRestrictionModification,
+    AccountRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    CosignatureSignedTransaction,
+    CosignatureTransaction,
+    Deadline,
+    HashLockTransaction,
+    LinkAction,
+    LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    MosaicMetadataTransaction,
+    MosaicSupplyChangeTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    TransactionType,
+    TransferTransaction,
+    VotingKeyLinkTransaction,
+    VrfKeyLinkTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('TransactionHttp', () => {

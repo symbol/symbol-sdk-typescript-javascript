@@ -65,7 +65,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo>
      */
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
-        return this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body));
+        return this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => MosaicHttp.toMosaicInfo(body));
     }
 
     /**
@@ -78,7 +78,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
             this.mosaicRoutesApi.getMosaics({
                 mosaicIds: mosaicIds.map((id) => id.toHex()),
             }),
-            (body) => body.map((b) => this.toMosaicInfo(b)),
+            (body) => body.map((b) => MosaicHttp.toMosaicInfo(b)),
         );
     }
 
@@ -99,7 +99,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         criteria.offset,
                         DtoMapping.mapEnum(criteria.order),
                     ),
-                    (body) => super.toPage(body.pagination, body.data, this.toMosaicInfo, networkType),
+                    (body) => super.toPage(body.pagination, body.data, MosaicHttp.toMosaicInfo, networkType),
                 ),
             ),
         );
@@ -111,7 +111,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @param mosaicInfo the dto object.
      * @returns the model object
      */
-    private toMosaicInfo(mosaicInfo: MosaicInfoDTO): MosaicInfo {
+    public static toMosaicInfo(mosaicInfo: MosaicInfoDTO): MosaicInfo {
         return new MosaicInfo(
             mosaicInfo.id,
             new MosaicId(mosaicInfo.mosaic.id),
