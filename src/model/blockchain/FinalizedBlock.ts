@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+import { FinalizationPointDto, FinalizedBlockHeaderBuilder } from 'catbuffer-typescript';
+import { FinalizationEpochDto } from 'catbuffer-typescript/src/FinalizationEpochDto';
+import { FinalizationRoundBuilder } from 'catbuffer-typescript/src/FinalizationRoundBuilder';
+import { Hash256Dto } from 'catbuffer-typescript/src/Hash256Dto';
+import { HeightDto } from 'catbuffer-typescript/src/HeightDto';
+import { Convert } from '../../core/format';
 import { UInt64 } from '../UInt64';
 
 /**
@@ -32,4 +38,17 @@ export class FinalizedBlock {
         public readonly finalizationPoint: number,
         public readonly finalizationEpoch: number,
     ) {}
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const epoch = new FinalizationEpochDto(this.finalizationEpoch);
+        const point = new FinalizationPointDto(this.finalizationPoint);
+        const round: FinalizationRoundBuilder = new FinalizationRoundBuilder(epoch, point);
+        const height: HeightDto = new HeightDto(this.height.toDTO());
+        const hash: Hash256Dto = new Hash256Dto(Convert.hexToUint8(this.hash));
+        return new FinalizedBlockHeaderBuilder(round, height, hash);
+    }
 }
