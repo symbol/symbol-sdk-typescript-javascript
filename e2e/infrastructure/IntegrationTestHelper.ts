@@ -66,8 +66,8 @@ export class IntegrationTestHelper {
         return this.toAccounts(configResult.addresses);
     }
     private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string }> {
-        const target = '../catapult-rest/rest/target';
-        // const target = 'target/bootstrap-test';
+        // const target = '../catapult-rest/rest/target';
+        const target = 'target/bootstrap-test';
         console.log('Loading bootstrap server');
         const addresses = BootstrapUtils.loadExistingAddresses(target);
         return this.toAccounts(addresses);
