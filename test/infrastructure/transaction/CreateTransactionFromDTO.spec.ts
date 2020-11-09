@@ -16,15 +16,35 @@
 import { LocalDateTime } from '@js-joda/core';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
-import { Address } from '../../../src/model/account/Address';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { NamespaceRegistrationTypeEnum, TransactionInfoDTO, TransferTransactionDTO } from 'symbol-openapi-typescript-fetch-client';
+import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction';
+import { Address } from '../../../src/model/account';
+import { TransferTransaction } from '../../../src/model/transaction';
 import ValidateTransaction from './ValidateTransaction';
 
 describe('CreateTransactionFromDTO', () => {
     describe('TransferTransaction', () => {
         it('standalone', () => {
-            const transferTransactionDTO = {
+            const transactionDto = {
+                size: 100,
+                signature:
+                    '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
+                signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
+                version: 1,
+                network: 144,
+                type: 16724,
+                maxFee: '0',
+                deadline: '1000',
+                recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
+                message: '00746573742D6D657373616765',
+                mosaics: [
+                    {
+                        id: '85BBEA6CC462B244',
+                        amount: '10',
+                    },
+                ],
+            } as TransferTransactionDTO;
+            const transferTransactionDTO: TransactionInfoDTO = {
                 id: '5CD2B76B2B3F0F0001751380',
                 meta: {
                     height: '78',
@@ -32,38 +52,18 @@ describe('CreateTransactionFromDTO', () => {
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     index: 0,
                 },
-                transaction: {
-                    size: 100,
-                    signature:
-                        '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
-                    signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
-                    version: 1,
-                    network: 144,
-                    type: 16724,
-                    maxFee: '0',
-                    deadline: '1000',
-                    recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
-                    message: {
-                        payload: '746573742D6D657373616765',
-                        type: 0,
-                    },
-                    mosaics: [
-                        {
-                            id: '85BBEA6CC462B244',
-                            amount: '10',
-                        },
-                    ],
-                },
+                transaction: transactionDto,
             };
 
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
-            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
+            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transactionDto.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('test-message');
             expect(transferTransaction.size).to.be.equal(100);
         });
 
         it('standalone without message', () => {
-            const transferTransactionDTO = {
+            const recipientAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
+            const transferTransactionDTO: TransactionInfoDTO = {
                 id: '5CD2B76B2B3F0F0001751380',
                 meta: {
                     height: '78',
@@ -81,7 +81,7 @@ describe('CreateTransactionFromDTO', () => {
                     type: 16724,
                     maxFee: '0',
                     deadline: '1000',
-                    recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
+                    recipientAddress: recipientAddress,
                     mosaics: [
                         {
                             id: '85BBEA6CC462B244',
@@ -92,7 +92,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
-            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
+            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('');
             expect(transferTransaction.size).to.be.equal(100);
         });
@@ -133,10 +133,7 @@ describe('CreateTransactionFromDTO', () => {
                                 index: 0,
                             },
                             transaction: {
-                                message: {
-                                    payload: '746573742D6D657373616765',
-                                    type: 0,
-                                },
+                                message: '00746573742D6D657373616765',
                                 mosaics: [
                                     {
                                         amount: '1000',
@@ -179,10 +176,7 @@ describe('CreateTransactionFromDTO', () => {
                     network: 144,
                     type: 16724,
                     recipientAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
-                    message: {
-                        payload: '746573742D6D657373616765',
-                        type: 0,
-                    },
+                    message: '00746573742D6D657373616765',
                     mosaics: [
                         {
                             id: '85BBEA6CC462B244',
@@ -218,7 +212,7 @@ describe('CreateTransactionFromDTO', () => {
                         maxFee: '0',
                         name: 'a2p1mg',
                         id: '85BBEA6CC462B244',
-                        registrationType: 0,
+                        registrationType: NamespaceRegistrationTypeEnum.NUMBER_0,
                         signature:
                             '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
                             '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',

@@ -22,6 +22,7 @@ import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account, Address } from '../../../src/model/account';
 import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
+import { MessageMarker } from '../../../src/model/message';
 import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
@@ -1365,5 +1366,17 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
         expect(transaction.value).to.be.equal('Test Value');
+    });
+
+    it('should create from payload with persistent delegate message', () => {
+        const transferTransaction = TransactionMapping.createFromPayload(
+            '2401000000000000B69B5CB2CE79B5E06117D246E84CB21095BAC0E78A4F01E2D4E3F068EF2E3370B907495FE6BC9A130D05A8BDB49E8AD398FBA40569C921907297AB0D5778C00D2D13E2FDC654936417899AB63D709B9A7A603BA1D20557AA06CE5B2C9242F035000000000198544140420F00000000009A19B31107000000981E13520236DBBD06F8C08710289BD9CF598A01C29E04668400000000000000E201735761802AFECBD67E2DBA5D69157CE32874EFDD680E41B1BFFD12B781F84E8AD883920BBB50EA38AFE078E99EE5EE4BDFDA77E8C101EBD3100C0D471673471A61B23E513FC7E21F7803316B906A688F14AA75002913A3B57DD13469BC27CF8C82FD5C4C76867011AEDC7C4870D8C5AF9C175F0DA5A8E2AD3A327D868BFBA34A5E3D',
+        ) as TransferTransaction;
+
+        expect(transferTransaction.message.type).eq(MessageType.PersistentHarvestingDelegationMessage);
+        expect(transferTransaction.message.payload).eq(
+            MessageMarker.PersistentDelegationUnlock +
+                'CBD67E2DBA5D69157CE32874EFDD680E41B1BFFD12B781F84E8AD883920BBB50EA38AFE078E99EE5EE4BDFDA77E8C101EBD3100C0D471673471A61B23E513FC7E21F7803316B906A688F14AA75002913A3B57DD13469BC27CF8C82FD5C4C76867011AEDC7C4870D8C5AF9C175F0DA5A8E2AD3A327D868BFBA34A5E3D',
+        );
     });
 });

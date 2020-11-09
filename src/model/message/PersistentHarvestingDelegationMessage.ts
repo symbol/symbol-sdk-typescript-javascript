@@ -15,9 +15,9 @@
  */
 
 import { Crypto } from '../../core/crypto';
-import { Convert } from '../../core/format/Convert';
-import { Account } from '../account/Account';
-import { NetworkType } from '../network/NetworkType';
+import { Convert } from '../../core/format';
+import { Account } from '../account';
+import { NetworkType } from '../network';
 import { Message } from './Message';
 import { MessageMarker } from './MessageMarker';
 import { MessageType } from './MessageType';

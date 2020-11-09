@@ -14,50 +14,43 @@
  * limitations under the License.
  */
 import { Convert as convert } from '../../core/format';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../../model/account/Address';
-import { PublicAccount } from '../../model/account/PublicAccount';
-import { EncryptedMessage } from '../../model/message/EncryptedMessage';
-import { Message } from '../../model/message/Message';
-import { MessageType } from '../../model/message/MessageType';
-import { PersistentHarvestingDelegationMessage } from '../../model/message/PersistentHarvestingDelegationMessage';
-import { EmptyMessage, PlainMessage } from '../../model/message/PlainMessage';
-import { Mosaic } from '../../model/mosaic/Mosaic';
-import { MosaicFlags } from '../../model/mosaic/MosaicFlags';
-import { MosaicId } from '../../model/mosaic/MosaicId';
-import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
-import { NamespaceId } from '../../model/namespace/NamespaceId';
-import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
-import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
-import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
-import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
-import { AggregateTransactionInfo } from '../../model/transaction/AggregateTransactionInfo';
-import { Deadline } from '../../model/transaction/Deadline';
-import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
-import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
-import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
-import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
-import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
-import { SignedTransaction } from '../../model/transaction/SignedTransaction';
-import { Transaction } from '../../model/transaction/Transaction';
-import { TransactionInfo } from '../../model/transaction/TransactionInfo';
-import { TransactionType } from '../../model/transaction/TransactionType';
-import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { VotingKeyLinkTransaction } from '../../model/transaction/VotingKeyLinkTransaction';
-import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
-import { UInt64 } from '../../model/UInt64';
+import { UnresolvedMapping } from '../../core/utils';
+import { MessageFactory, UInt64 } from '../../model';
+import { Address, PublicAccount } from '../../model/account';
+import { Mosaic, MosaicFlags, MosaicId, MosaicNonce } from '../../model/mosaic';
+import { NamespaceId } from '../../model/namespace';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountKeyLinkTransaction,
+    AccountMetadataTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    AggregateTransactionCosignature,
+    AggregateTransactionInfo,
+    Deadline,
+    LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    MosaicMetadataTransaction,
+    MosaicSupplyChangeTransaction,
+    MultisigAccountModificationTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    SignedTransaction,
+    Transaction,
+    TransactionInfo,
+    TransactionType,
+    TransferTransaction,
+    VotingKeyLinkTransaction,
+    VrfKeyLinkTransaction,
+} from '../../model/transaction';
 
 /**
  * Extract recipientAddress value from encoded hexadecimal notation.
@@ -99,29 +92,6 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
         const id = UnresolvedMapping.toUnresolvedMosaic(mosaicDTO.id);
         return new Mosaic(id, UInt64.fromNumericString(mosaicDTO.amount));
     });
-};
-
-/**
- * Extract message from either JSON payload (unencoded) or DTO (encoded)
- *
- * @param message - message payload
- * @return {Message}
- */
-const extractMessage = (message: any): Message => {
-    let msgObj = EmptyMessage;
-    if (message) {
-        const messagePayload = message.payload ? message.payload : message.substring(2);
-        const messageType = message.type !== undefined ? message.type : convert.hexToUint8(message.substring(0, 2))[0];
-
-        if (messageType === MessageType.PlainMessage) {
-            msgObj = PlainMessage.createFromPayload(messagePayload);
-        } else if (messageType === MessageType.EncryptedMessage) {
-            msgObj = EncryptedMessage.createFromPayload(messagePayload);
-        } else if (messageType === MessageType.PersistentHarvestingDelegationMessage) {
-            msgObj = PersistentHarvestingDelegationMessage.createFromPayload(messagePayload);
-        }
-    }
-    return msgObj;
 };
 
 /**
@@ -168,7 +138,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             extractRecipient(transactionDTO.recipientAddress),
             extractMosaics(transactionDTO.mosaics),
-            extractMessage(transactionDTO.message !== undefined ? transactionDTO.message : undefined),
+            MessageFactory.createMessageFromHex(transactionDTO.message),
             transactionDTO.signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
