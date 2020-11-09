@@ -16,25 +16,22 @@
 
 import {
     AccountAddressRestrictionTransactionBuilder,
+    AccountRestrictionFlagsDto,
     AmountDto,
     EmbeddedAccountAddressRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    SignatureDto,
+    GeneratorUtils,
     TimestampDto,
     TransactionBuilder,
     UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { DtoMapping } from '../../core/utils/DtoMapping';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NetworkType } from '../network/NetworkType';
-import { Statement } from '../receipt/Statement';
-import { AddressRestrictionFlag } from '../restriction/AddressRestrictionFlag';
+import { DtoMapping, UnresolvedMapping } from '../../core/utils';
+import { Address, PublicAccount, UnresolvedAddress } from '../account';
+import { NamespaceId } from '../namespace';
+import { NetworkType } from '../network';
+import { Statement } from '../receipt';
+import { AddressRestrictionFlag } from '../restriction';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -123,7 +120,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountAddressRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionFlags().valueOf(),
+            GeneratorUtils.fromFlags(AccountRestrictionFlagsDto, builder.getRestrictionFlags()),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(addition.unresolvedAddress));
             }),
@@ -143,18 +140,15 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new AccountAddressRestrictionTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),
@@ -171,11 +165,11 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedAccountAddressRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_ADDRESS_RESTRICTION.valueOf(),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedAddressDto(addition.encodeUnresolvedAddress(this.networkType));
             }),

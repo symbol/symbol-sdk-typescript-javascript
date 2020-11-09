@@ -59,7 +59,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo>
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
-        return this.call(this.accountRoutesApi.getAccountInfo(address.plain()), (body) => this.toAccountInfo(body));
+        return this.call(this.accountRoutesApi.getAccountInfo(address.plain()), AccountHttp.toAccountInfo);
     }
 
     /**
@@ -71,7 +71,7 @@ export class AccountHttp extends Http implements AccountRepository {
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(this.toAccountInfo));
+        return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(AccountHttp.toAccountInfo));
     }
 
     /**
@@ -89,7 +89,7 @@ export class AccountHttp extends Http implements AccountRepository {
                 DtoMapping.mapEnum(criteria.orderBy),
                 criteria.mosaicId?.toHex(),
             ),
-            (body) => super.toPage(body.pagination, body.data, this.toAccountInfo),
+            (body) => super.toPage(body.pagination, body.data, AccountHttp.toAccountInfo),
         );
     }
 
@@ -100,8 +100,9 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param {AccountInfoDTO} dto AccountInfoDTO the dto object from rest.
      * @returns AccountInfo model
      */
-    private toAccountInfo(dto: AccountInfoDTO): AccountInfo {
+    public static toAccountInfo(dto: AccountInfoDTO): AccountInfo {
         return new AccountInfo(
+            dto.id,
             Address.createFromEncoded(dto.account.address),
             UInt64.fromNumericString(dto.account.addressHeight),
             dto.account.publicKey,

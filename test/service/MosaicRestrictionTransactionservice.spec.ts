@@ -25,6 +25,7 @@ import { Account } from '../../src/model/account/Account';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { MosaicAddressRestrictionItem } from '../../src/model/restriction';
 import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../../src/model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../../src/model/restriction/MosaicGlobalRestrictionItem';
@@ -48,21 +49,15 @@ describe('MosaicRestrictionTransactionService', () => {
     const key = KeyGenerator.generateUInt64Key('TestKey');
     const invalidKey = KeyGenerator.generateUInt64Key('9999');
     let mosaicIdWrongKey: MosaicId;
-    const globalRestrictionValue = '1000';
+    const globalRestrictionValue = UInt64.fromUint(1000);
     const globalRestrictionType = MosaicRestrictionType.LE;
-    const addressRestrictionValue = '10';
+    const addressRestrictionValue = UInt64.fromUint(10);
     const epochAdjustment = 1573430400;
 
     function mockGlobalRestriction(): Page<MosaicGlobalRestriction> {
-        const restriction = new MosaicGlobalRestriction(
-            '59DFBA84B2E9E7000135E80C',
-            MosaicRestrictionEntryType.GLOBAL,
-            mosaicId,
-            new Map<string, MosaicGlobalRestrictionItem>().set(
-                key.toString(),
-                new MosaicGlobalRestrictionItem(referenceMosaicId, globalRestrictionValue, globalRestrictionType),
-            ),
-        );
+        const restriction = new MosaicGlobalRestriction('59DFBA84B2E9E7000135E80C', MosaicRestrictionEntryType.GLOBAL, mosaicId, [
+            new MosaicGlobalRestrictionItem(key, referenceMosaicId, globalRestrictionValue, globalRestrictionType),
+        ]);
 
         return new Page<MosaicGlobalRestriction>([restriction], 1, 1);
     }
@@ -73,7 +68,7 @@ describe('MosaicRestrictionTransactionService', () => {
             MosaicRestrictionEntryType.GLOBAL,
             mosaicId,
             account.address,
-            new Map<string, string>().set(key.toString(), addressRestrictionValue),
+            [new MosaicAddressRestrictionItem(key, addressRestrictionValue)],
         );
         return new Page<MosaicAddressRestriction>([restriction], 1, 1);
     }
@@ -115,7 +110,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
-                expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue.toString());
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
                 done();
             });
@@ -136,7 +131,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
-                expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue.toString());
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
                 done();
             });
@@ -156,7 +151,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
                 expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
-                expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue.toString());
                 done();
             });
     });
@@ -175,7 +170,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
-                expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue.toString());
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
                 done();
             });
@@ -195,7 +190,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.restrictionKey.toString()).to.be.equal(key.toString());
                 expect(transaction.targetAddressToString()).to.be.equal(unresolvedAddress.toHex());
-                expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue.toString());
                 done();
             });
     });

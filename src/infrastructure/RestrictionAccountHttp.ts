@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
-import { AccountRestriction } from '../model/restriction/AccountRestriction';
+import { AccountRestrictions } from '../model/restriction';
 import { Http } from './Http';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 
@@ -45,13 +45,12 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
 
     /**
      * Get Account restrictions.
-     * @param publicAccount public account
+     * @param address the address
      * @returns Observable<AccountRestrictions[]>
      */
-    public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
-        return this.call(
-            this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain()),
-            (body) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions,
+    public getAccountRestrictions(address: Address): Observable<AccountRestrictions> {
+        return this.call(this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain()), (body) =>
+            DtoMapping.extractAccountRestrictionFromDto(body),
         );
     }
 }

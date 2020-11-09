@@ -6,6 +6,7 @@ export * from './AccountRestrictions';
 export * from './AccountRestrictionsInfo';
 export * from './AddressRestrictionFlag';
 export * from './MosaicAddressRestriction';
+export * from './MosaicAddressRestrictionItem';
 export * from './MosaicGlobalRestriction';
 export * from './MosaicGlobalRestrictionItem';
 export * from './MosaicRestrictionEntryType';

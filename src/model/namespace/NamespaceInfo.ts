@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+import {
+    AddressDto,
+    HeightDto,
+    NamespaceAliasBuilder,
+    NamespaceIdDto,
+    NamespaceLifetimeBuilder,
+    NamespacePathBuilder,
+    RootNamespaceHistoryBuilder,
+} from 'catbuffer-typescript';
 import { Address } from '../account/Address';
 import { UInt64 } from '../UInt64';
 import { Alias } from './Alias';
@@ -26,7 +35,7 @@ export class NamespaceInfo {
     /**
      * @param active
      * @param index
-     * @param metaId
+     * @param recordId
      * @param registrationType
      * @param depth
      * @param levels
@@ -47,7 +56,7 @@ export class NamespaceInfo {
         /**
          * The meta data id.
          */
-        public readonly metaId: string,
+        public readonly recordId: string,
         /**
          * The namespace registration type, namespace and sub namespace.
          */
@@ -123,5 +132,31 @@ export class NamespaceInfo {
             throw new Error('Is a Root Namespace');
         }
         return this.parentId;
+    }
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(children: NamespaceInfo[]): Uint8Array {
+        const id: NamespaceIdDto = this.id.toBuilder();
+        const ownerAddress: AddressDto = this.ownerAddress.toBuilder();
+        const lifetime: NamespaceLifetimeBuilder = new NamespaceLifetimeBuilder(
+            new HeightDto(this.startHeight.toDTO()),
+            new HeightDto(this.endHeight.toDTO()),
+        );
+        const rootAlias = this.alias.type;
+        const paths: NamespacePathBuilder[] = children.map((dto) => this.toNamespaceAliasTypeDto(dto));
+        return new RootNamespaceHistoryBuilder(id, ownerAddress, lifetime, rootAlias, paths).serialize();
+    }
+
+    private toNamespaceAliasTypeDto(namespaceInfo: NamespaceInfo): NamespacePathBuilder {
+        const path: NamespaceIdDto[] = namespaceInfo.levels.map((id) => id.toBuilder());
+        const alias: NamespaceAliasBuilder = new NamespaceAliasBuilder(
+            namespaceInfo.alias.type.valueOf(),
+            namespaceInfo.alias.mosaicId?.toBuilder(),
+            namespaceInfo.alias.address?.toBuilder(),
+        );
+        return new NamespacePathBuilder(path, alias);
     }
 }

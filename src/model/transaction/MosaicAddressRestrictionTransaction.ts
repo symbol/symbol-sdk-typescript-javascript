@@ -18,9 +18,7 @@ import {
     AmountDto,
     EmbeddedMosaicAddressRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     MosaicAddressRestrictionTransactionBuilder,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
     UnresolvedAddressDto,
@@ -192,12 +190,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new MosaicAddressRestrictionTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
@@ -218,7 +213,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedMosaicAddressRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),

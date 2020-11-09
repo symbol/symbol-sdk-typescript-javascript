@@ -16,11 +16,11 @@
 
 import {
     AccountMosaicRestrictionTransactionBuilder,
+    AccountRestrictionFlagsDto,
     AmountDto,
     EmbeddedAccountMosaicRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    SignatureDto,
+    GeneratorUtils,
     TimestampDto,
     TransactionBuilder,
     UnresolvedMosaicIdDto,
@@ -122,7 +122,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountMosaicRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionFlags().valueOf(),
+            GeneratorUtils.fromFlags(AccountRestrictionFlagsDto, builder.getRestrictionFlags()),
             builder.getRestrictionAdditions().map((addition) => {
                 return UnresolvedMapping.toUnresolvedMosaic(new UInt64(addition.unresolvedMosaicId).toHex());
             }),
@@ -142,18 +142,15 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new AccountMosaicRestrictionTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedMosaicIdDto(addition.id.toDTO());
             }),
@@ -170,11 +167,11 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedAccountMosaicRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_MOSAIC_RESTRICTION.valueOf(),
-            this.restrictionFlags.valueOf(),
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
             this.restrictionAdditions.map((addition) => {
                 return new UnresolvedMosaicIdDto(addition.id.toDTO());
             }),

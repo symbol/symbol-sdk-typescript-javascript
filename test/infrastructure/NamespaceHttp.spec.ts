@@ -68,6 +68,7 @@ describe('NamespaceHttp', () => {
 
     const namespaceInfoDto = {} as NamespaceInfoDTO;
     namespaceInfoDto.meta = namespaceMetaDto;
+    namespaceInfoDto.id = '1';
     namespaceInfoDto.namespace = namespaceDto;
     namespaceInfoDto.id = '1';
 
@@ -103,7 +104,7 @@ describe('NamespaceHttp', () => {
         expect(namespace.depth).to.be.equal(1);
         expect(namespace.endHeight.toString()).to.be.equal('12');
         expect(namespace.startHeight.toString()).to.be.equal('10');
-        expect(namespace.metaId).to.be.equal('1');
+        expect(namespace.recordId).to.be.equal('1');
         expect(namespace.index).to.be.equal(0);
         expect(namespace.levels[0].toHex()).to.be.equal(namespaceId.toHex());
         expect(namespace.isRoot()).to.be.true;

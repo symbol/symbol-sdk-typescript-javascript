@@ -61,7 +61,7 @@ describe('RestrictionAccountHttp', () => {
     it('getAccountRestrictions', async () => {
         when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReturn(Promise.resolve(restrictionInfo));
 
-        const restrictions = await restrictionAccountRepository.getAccountRestrictions(address).toPromise();
+        const restrictions = (await restrictionAccountRepository.getAccountRestrictions(address).toPromise()).restrictions;
         expect(restrictions).to.be.not.null;
         expect(restrictions.length).to.be.greaterThan(0);
         expect(restrictions[0].restrictionFlags).to.be.equals(AddressRestrictionFlag.AllowIncomingAddress);

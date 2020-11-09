@@ -19,6 +19,7 @@ import { first, take, toArray } from 'rxjs/operators';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { MosaicId } from '../../src/model/mosaic';
 import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
@@ -114,7 +115,7 @@ describe('TransactionSearch', () => {
                 group: TransactionGroup.Confirmed,
                 pageSize: 10,
                 embedded: true,
-                transferMosaicId: mosaicId,
+                transferMosaicId: mosaicId as MosaicId,
             };
 
             const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
@@ -147,7 +148,7 @@ describe('TransactionSearch', () => {
                 toTransferAmount: mosaic.amount,
                 pageSize: 10,
                 embedded: true,
-                transferMosaicId: mosaicId,
+                transferMosaicId: mosaicId as MosaicId,
             };
 
             const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
@@ -180,7 +181,7 @@ describe('TransactionSearch', () => {
                 fromTransferAmount: mosaic.amount,
                 pageSize: 10,
                 embedded: true,
-                transferMosaicId: mosaicId,
+                transferMosaicId: mosaicId as MosaicId,
             };
 
             const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
@@ -213,7 +214,7 @@ describe('TransactionSearch', () => {
                 toTransferAmount: mosaic.amount,
                 pageSize: 10,
                 embedded: true,
-                transferMosaicId: mosaicId,
+                transferMosaicId: mosaicId as MosaicId,
             };
 
             const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, EmbeddedTransactionHelper, TransactionBuilder } from 'catbuffer-typescript';
+import { EmbeddedTransactionBuilder, KeyDto, SignatureDto, TransactionBuilder } from 'catbuffer-typescript';
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
@@ -286,15 +286,6 @@ export abstract class Transaction {
     }
 
     /**
-     * Takes a transaction and formats bytes to be included in an aggregate transaction.
-     *
-     * @return transaction with signer serialized to be part of an aggregate transaction
-     */
-    public toAggregateTransactionBytes(): Uint8Array {
-        return EmbeddedTransactionHelper.serialize(this.toEmbeddedTransaction());
-    }
-
-    /**
      * Transaction pending to be included in a block
      * @returns {boolean}
      */
@@ -463,5 +454,23 @@ export abstract class Transaction {
      */
     public isSigned(address: Address): boolean {
         return this.signer !== undefined && this.signer!.address.equals(address);
+    }
+
+    /**
+     * @internal
+     *
+     * Converts the optional signer to a KeyDto that can be serialized.
+     */
+    protected getSignerAsBuilder(): KeyDto {
+        return this.signer?.toBuilder() || new KeyDto(new Uint8Array(32));
+    }
+
+    /**
+     * @internal
+     *
+     * Converts the optional signature to a SignatureDto that can be serialized.
+     */
+    protected getSignatureAsBuilder(): SignatureDto {
+        return new SignatureDto(this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64));
     }
 }

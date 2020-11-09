@@ -15,17 +15,14 @@
  */
 
 import { deepEqual } from 'assert';
-import { EmbeddedTransactionBuilder } from 'catbuffer-typescript/dist/EmbeddedTransactionBuilder';
+import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
-import { Convert } from '../../../src/core/format/Convert';
-import { Account } from '../../../src/model/account/Account';
-import { Address } from '../../../src/model/account/Address';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
-import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../../src/model/UInt64';
+import { Convert } from '../../../src/core/format';
+import { UInt64 } from '../../../src/model';
+import { Account, Address } from '../../../src/model/account';
+import { NamespaceId } from '../../../src/model/namespace';
+import { NetworkType } from '../../../src/model/network';
+import { Deadline, NamespaceMetadataTransaction, TransactionType } from '../../../src/model/transaction';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('NamespaceMetadataTransaction', () => {

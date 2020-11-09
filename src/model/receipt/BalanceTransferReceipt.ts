@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { AddressDto, AmountDto, BalanceTransferReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
-import { Convert } from '../../core/format/Convert';
+import { AmountDto, BalanceTransferReceiptBuilder, MosaicBuilder } from 'catbuffer-typescript';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
@@ -70,9 +69,9 @@ export class BalanceTransferReceipt extends Receipt {
         return new BalanceTransferReceiptBuilder(
             ReceiptVersion.BALANCE_TRANSFER,
             this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
-            new AddressDto(Convert.hexToUint8(this.senderAddress.encoded())),
-            new AddressDto(Convert.hexToUint8(this.recipientAddress.encoded())),
+            new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO())),
+            this.senderAddress.toBuilder(),
+            this.recipientAddress.toBuilder(),
         ).serialize();
     }
 }

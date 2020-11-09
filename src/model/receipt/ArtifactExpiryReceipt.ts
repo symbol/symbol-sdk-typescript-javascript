@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MosaicExpiryReceiptBuilder, MosaicIdDto, NamespaceExpiryReceiptBuilder, NamespaceIdDto } from 'catbuffer-typescript';
+import { MosaicExpiryReceiptBuilder, NamespaceExpiryReceiptBuilder } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
 import { Receipt } from './Receipt';
@@ -46,13 +46,13 @@ export class ArtifactExpiryReceipt extends Receipt {
             return new MosaicExpiryReceiptBuilder(
                 ReceiptVersion.ARTIFACT_EXPIRY,
                 this.type.valueOf(),
-                new MosaicIdDto(this.artifactId.toDTO()),
+                this.artifactId.toBuilder(),
             ).serialize();
         }
         return new NamespaceExpiryReceiptBuilder(
             ReceiptVersion.ARTIFACT_EXPIRY,
             this.type.valueOf(),
-            new NamespaceIdDto(this.artifactId.id.toDTO()),
+            this.artifactId.toBuilder(),
         ).serialize();
     }
 }

@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-import { Address } from '../account/Address';
+import {
+    AddressDto,
+    AddressKeyValueBuilder,
+    AddressKeyValueSetBuilder,
+    MosaicAddressRestrictionEntryBuilder,
+    MosaicIdDto,
+    MosaicRestrictionKeyDto,
+} from 'catbuffer-typescript';
+import { Address } from '../account';
 import { MosaicId } from '../mosaic/MosaicId';
+import { UInt64 } from '../UInt64';
+import { MosaicAddressRestrictionItem } from './MosaicAddressRestrictionItem';
 import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
-/**
- * Mosaic address restriction structure describes restriction information for an mosaic.
- */
+
 export class MosaicAddressRestriction {
     /**
      * Constructor
@@ -49,6 +57,32 @@ export class MosaicAddressRestriction {
         /**
          * Mosaic restriction items
          */
-        public readonly restrictions: Map<string, string>,
+        public readonly restrictions: MosaicAddressRestrictionItem[],
     ) {}
+
+    /**
+     * Returns the restriction for a given key.
+     *
+     * @param key the key.
+     */
+    public getRestriction(key: UInt64): MosaicAddressRestrictionItem | undefined {
+        return this.restrictions.find((item) => item.key.equals(key));
+    }
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const mosaicId: MosaicIdDto = this.mosaicId.toBuilder();
+        const address: AddressDto = this.targetAddress.toBuilder();
+        const keyPairs: AddressKeyValueSetBuilder = new AddressKeyValueSetBuilder(
+            this.restrictions.map((item) => {
+                const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
+                const value: number[] = item.restrictionValue.toDTO();
+                return new AddressKeyValueBuilder(key, value);
+            }),
+        );
+        return new MosaicAddressRestrictionEntryBuilder(mosaicId, address, keyPairs).serialize();
+    }
 }

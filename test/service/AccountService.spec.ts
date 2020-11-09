@@ -47,6 +47,7 @@ describe('AccountService', () => {
         }
         return [
             new AccountInfo(
+                'someId',
                 account.address,
                 UInt64.fromUint(100),
                 account.publicKey,

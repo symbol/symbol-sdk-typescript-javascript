@@ -17,13 +17,17 @@
 import { Observable } from 'rxjs';
 import {
     MosaicAddressRestrictionDTO,
+    MosaicAddressRestrictionEntryDTO,
     MosaicGlobalRestrictionDTO,
+    MosaicGlobalRestrictionEntryDTO,
     RestrictionMosaicRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
+import { UInt64 } from '../model';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
+import { MosaicAddressRestrictionItem } from '../model/restriction/MosaicAddressRestrictionItem';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
 import { Http } from './Http';
@@ -71,7 +75,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
                 criteria.offset,
                 DtoMapping.mapEnum(criteria.order),
             ),
-            (body) => super.toPage(body.pagination, body.data, this.toMosaicRestriction),
+            (body) => super.toPage(body.pagination, body.data, (r) => RestrictionMosaicHttp.toMosaicRestriction(r)),
         );
     }
 
@@ -82,38 +86,39 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @param {MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO} dto the restriction object from rest.
      * @returns {MosaicAddressRestriction | MosaicGlobalRestriction} a restriction model
      */
-    private toMosaicRestriction(
+    public static toMosaicRestriction(
         dto: MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO,
     ): MosaicAddressRestriction | MosaicGlobalRestriction {
         if ((dto.mosaicRestrictionEntry as any).targetAddress) {
-            const mosaicAddressrestrictionItems = new Map<string, string>();
-            dto.mosaicRestrictionEntry.restrictions.forEach((restriction) => {
-                mosaicAddressrestrictionItems.set(restriction.key, restriction.value);
-            });
+            const addressRestrictionDto = dto as MosaicAddressRestrictionDTO;
             return new MosaicAddressRestriction(
                 dto.mosaicRestrictionEntry.compositeHash,
                 dto.mosaicRestrictionEntry.entryType.valueOf(),
                 new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
-                Address.createFromEncoded((dto as MosaicAddressRestrictionDTO).mosaicRestrictionEntry.targetAddress),
-                mosaicAddressrestrictionItems,
+                Address.createFromEncoded(addressRestrictionDto.mosaicRestrictionEntry.targetAddress),
+                addressRestrictionDto.mosaicRestrictionEntry.restrictions.map(this.toMosaicAddressRestrictionItem),
             );
         }
-        const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
-        dto.mosaicRestrictionEntry.restrictions.forEach((restriction) =>
-            restirctionItems.set(
-                restriction.key,
-                new MosaicGlobalRestrictionItem(
-                    new MosaicId(restriction.restriction.referenceMosaicId),
-                    restriction.restriction.restrictionValue,
-                    restriction.restriction.restrictionType.valueOf(),
-                ),
-            ),
-        );
+
+        const globalRestrictionDto = dto as MosaicGlobalRestrictionDTO;
         return new MosaicGlobalRestriction(
             dto.mosaicRestrictionEntry.compositeHash,
             dto.mosaicRestrictionEntry.entryType.valueOf(),
             new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
-            restirctionItems,
+            globalRestrictionDto.mosaicRestrictionEntry.restrictions.map((i) => this.toMosaicGlobalRestrictionItem(i)),
         );
+    }
+
+    private static toMosaicGlobalRestrictionItem(restriction: MosaicGlobalRestrictionEntryDTO): MosaicGlobalRestrictionItem {
+        return new MosaicGlobalRestrictionItem(
+            UInt64.fromNumericString(restriction.key),
+            new MosaicId(restriction.restriction.referenceMosaicId),
+            UInt64.fromNumericString(restriction.restriction.restrictionValue),
+            restriction.restriction.restrictionType.valueOf(),
+        );
+    }
+
+    private static toMosaicAddressRestrictionItem(restriction: MosaicAddressRestrictionEntryDTO): MosaicAddressRestrictionItem {
+        return new MosaicAddressRestrictionItem(UInt64.fromNumericString(restriction.key), UInt64.fromNumericString(restriction.value));
     }
 }

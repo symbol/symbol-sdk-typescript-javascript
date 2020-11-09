@@ -31,6 +31,7 @@ import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceInfoWithName } from '../model/namespace/NamespaceInfoWithName';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { IAccountService } from './interfaces/IAccountService';
+
 /**
  * Account Service
  */

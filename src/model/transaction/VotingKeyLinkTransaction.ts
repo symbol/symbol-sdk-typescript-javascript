@@ -18,18 +18,15 @@ import {
     AmountDto,
     EmbeddedTransactionBuilder,
     EmbeddedVotingKeyLinkTransactionBuilder,
-    KeyDto,
-    SignatureDto,
+    FinalizationEpochDto,
     TimestampDto,
     TransactionBuilder,
     VotingKeyDto,
     VotingKeyLinkTransactionBuilder,
 } from 'catbuffer-typescript';
-import { FinalizationEpochDto } from 'catbuffer-typescript/dist/FinalizationEpochDto';
 import { Convert } from '../../core/format';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
+import { Address, PublicAccount } from '../account';
+import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -47,6 +44,7 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @param startEpoch - The start finalization point.
      * @param endEpoch - The end finalization point.
      * @param linkAction - The account link action.
+     * @param networkType = the network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
      * @param signer - (Optional) Signer public account
@@ -152,12 +150,9 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new VotingKeyLinkTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.VOTING_KEY_LINK.valueOf(),
@@ -177,7 +172,7 @@ export class VotingKeyLinkTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedVotingKeyLinkTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.VOTING_KEY_LINK.valueOf(),

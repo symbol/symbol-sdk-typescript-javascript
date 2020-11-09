@@ -107,7 +107,7 @@ describe('NamespaceInfo', () => {
 
         expect(namespaceInfo.active).to.be.equal(rootNamespaceDTO.meta.active);
         expect(namespaceInfo.index).to.be.equal(rootNamespaceDTO.meta.index);
-        expect(namespaceInfo.metaId).to.be.equal(rootNamespaceDTO.meta.id);
+        expect(namespaceInfo.recordId).to.be.equal(rootNamespaceDTO.meta.id);
         expect(namespaceInfo.depth).to.be.equal(rootNamespaceDTO.namespace.depth);
         deepEqual(namespaceInfo.levels[0], rootNamespaceDTO.namespace.level0);
         expect(namespaceInfo.ownerAddress.encoded()).to.be.equal(rootNamespaceDTO.namespace.ownerAddress);

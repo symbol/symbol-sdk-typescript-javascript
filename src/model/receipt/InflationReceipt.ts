@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AmountDto, InflationReceiptBuilder, MosaicBuilder, MosaicIdDto } from 'catbuffer-typescript';
+import { AmountDto, InflationReceiptBuilder, MosaicBuilder } from 'catbuffer-typescript';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
@@ -58,7 +58,7 @@ export class InflationReceipt extends Receipt {
         return new InflationReceiptBuilder(
             ReceiptVersion.INFLATION_RECEIPT,
             this.type.valueOf(),
-            new MosaicBuilder(new MosaicIdDto(this.mosaicId.toDTO()), new AmountDto(this.amount.toDTO())),
+            new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO())),
         ).serialize();
     }
 }

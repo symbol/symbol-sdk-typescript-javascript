@@ -15,10 +15,8 @@
  */
 
 import {
-    AddressDto,
     AddressResolutionEntryBuilder,
     AddressResolutionStatementBuilder,
-    MosaicIdDto,
     MosaicResolutionEntryBuilder,
     MosaicResolutionStatementBuilder,
     ReceiptSourceBuilder,
@@ -26,7 +24,6 @@ import {
     UnresolvedMosaicIdDto,
 } from 'catbuffer-typescript';
 import { sha3_256 } from 'js-sha3';
-import { RawAddress } from '../../core/format/RawAddress';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
@@ -101,7 +98,7 @@ export class ResolutionStatement<U extends UnresolvedAddress | UnresolvedMosaicI
                           (entry) =>
                               new AddressResolutionEntryBuilder(
                                   new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                                  new AddressDto(RawAddress.stringToAddress((entry.resolved as Address).plain())),
+                                  (entry.resolved as Address).toBuilder(),
                               ),
                       ),
                   )
@@ -113,7 +110,7 @@ export class ResolutionStatement<U extends UnresolvedAddress | UnresolvedMosaicI
                           (entry) =>
                               new MosaicResolutionEntryBuilder(
                                   new ReceiptSourceBuilder(entry.source.primaryId, entry.source.secondaryId),
-                                  new MosaicIdDto((entry.resolved as MosaicId).toDTO()),
+                                  (entry.resolved as MosaicId).toBuilder(),
                               ),
                       ),
                   );
