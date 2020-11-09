@@ -28,20 +28,13 @@ import {
 } from 'catbuffer-typescript';
 import * as Long from 'long';
 import { Convert } from '../../core/format';
-import { DtoMapping } from '../../core/utils/DtoMapping';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { EncryptedMessage } from '../message/EncryptedMessage';
-import { Message } from '../message/Message';
-import { MessageType } from '../message/MessageType';
-import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
-import { EmptyMessage, PlainMessage } from '../message/PlainMessage';
-import { Mosaic } from '../mosaic/Mosaic';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NetworkType } from '../network/NetworkType';
-import { Statement } from '../receipt/Statement';
+import { DtoMapping, UnresolvedMapping } from '../../core/utils';
+import { Address, PublicAccount, UnresolvedAddress } from '../account';
+import { EmptyMessage, Message, MessageFactory, MessageType } from '../message';
+import { Mosaic } from '../mosaic';
+import { NamespaceId } from '../namespace';
+import { NetworkType } from '../network';
+import { Statement } from '../receipt';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -149,7 +142,7 @@ export class TransferTransaction extends Transaction {
                 const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
                 return new Mosaic(UnresolvedMapping.toUnresolvedMosaic(id), new UInt64(mosaic.amount.amount));
             }),
-            TransferTransaction.createMessageFromBuffer(builder.getMessage()),
+            MessageFactory.createMessageFromBuffer(builder.getMessage()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
             isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
@@ -293,26 +286,5 @@ export class TransferTransaction extends Transaction {
             this.recipientAddress.equals(address) ||
             alias.find((name) => this.recipientAddress.equals(name)) !== undefined
         );
-    }
-
-    /**
-     * @internal
-     */
-    private static createMessageFromBuffer(messageBuffer: Uint8Array): Message {
-        if (!messageBuffer.length) {
-            return EmptyMessage;
-        }
-        const messageType = messageBuffer[0];
-        const messageHex = Convert.uint8ToHex(messageBuffer).substring(2);
-        switch (messageType) {
-            case MessageType.PlainMessage:
-                return PlainMessage.createFromPayload(messageHex);
-            case MessageType.EncryptedMessage:
-                return EncryptedMessage.createFromPayload(messageHex);
-            case MessageType.PersistentHarvestingDelegationMessage:
-                return PersistentHarvestingDelegationMessage.createFromPayload(messageHex);
-            default:
-                throw new Error('Message Type is not valid');
-        }
     }
 }

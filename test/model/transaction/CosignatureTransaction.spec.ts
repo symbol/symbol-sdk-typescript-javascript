@@ -67,10 +67,7 @@ describe('CosignatureTransaction', () => {
                         index: 0,
                     },
                     transaction: {
-                        message: {
-                            payload: '746573742D6D657373616765',
-                            type: 0,
-                        },
+                        message: '00746573742D6D657373616765',
                         mosaics: [
                             {
                                 amount: '100',

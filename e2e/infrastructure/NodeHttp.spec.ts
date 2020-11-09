@@ -93,7 +93,7 @@ describe('NodeHttp', () => {
 
     describe('getUnlockedAccount', () => {
         it('should return unlocked account', async () => {
-            const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
+            const unlockedAccount = await nodeRepository.getUnlockedAccount('test').toPromise();
             expect(unlockedAccount).not.to.be.null;
             expect(unlockedAccount.length).greaterThan(0);
         });

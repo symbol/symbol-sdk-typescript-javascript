@@ -15,7 +15,7 @@ import { Convert } from '../../core/format/Convert';
  * limitations under the License.
  */
 
-import { Convert } from '../../core/format/Convert';
+import { Convert } from '../../core/format';
 import { MessageType } from './MessageType';
 
 /**
@@ -40,9 +40,9 @@ export abstract class Message {
         /**
          * Message type
          */
-        public readonly type: number,
+        public readonly type: MessageType,
         /**
-         * Message payload
+         * Message payload, it could be the message hex, encryped text or plain text depending on the message type.
          */
         public readonly payload: string,
     ) {}
@@ -54,8 +54,12 @@ export abstract class Message {
         if (!this.payload) {
             return '';
         }
-        return this.type === MessageType.PersistentHarvestingDelegationMessage
-            ? this.payload
-            : this.type.toString(16).padStart(2, '0').toUpperCase() + Convert.utf8ToHex(this.payload);
+        if (this.type === MessageType.PersistentHarvestingDelegationMessage) {
+            return this.payload;
+        }
+        if (this.type === MessageType.RawMessage) {
+            return this.payload;
+        }
+        return this.type.toString(16).padStart(2, '0').toUpperCase() + Convert.utf8ToHex(this.payload);
     }
 }

@@ -14,33 +14,26 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format';
 import { Message } from './Message';
 import { MessageType } from './MessageType';
 
 /**
- * The plain message model defines a plain string. When sending it to the network we transform the payload to hex-string.
+ * The a raw message that doesn't assume any prefix.
  */
-export class PlainMessage extends Message {
+export class RawMessage extends Message {
     /**
      * Create plain message object.
      * @returns PlainMessage
      */
-    public static create(message: string): PlainMessage {
-        return new PlainMessage(message);
+    public static create(payload: Uint8Array): RawMessage {
+        return new RawMessage(Convert.uint8ToHex(payload));
     }
-
-    /**
-     * @internal
-     */
-    public static createFromPayload(payload: string): PlainMessage {
-        return new PlainMessage(this.decodeHex(payload));
-    }
-
     /**
      * @internal
      * @param payload
      */
     constructor(payload: string) {
-        super(MessageType.PlainMessage, payload);
+        super(MessageType.RawMessage, payload);
     }
 }
