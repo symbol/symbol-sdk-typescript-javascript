@@ -97,6 +97,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#key" class="tsd-kind-icon">key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#referencemosaicid" class="tsd-kind-icon">reference<wbr>Mosaic<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#restrictiontype" class="tsd-kind-icon">restriction<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#restrictionvalue" class="tsd-kind-icon">restriction<wbr>Value</a></li>
@@ -111,13 +112,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Mosaic<wbr>Global<wbr>Restriction<wbr>Item<span class="tsd-signature-symbol">(</span>referenceMosaicId<span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a>, restrictionValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, restrictionType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_restriction_mosaicrestrictiontype_.mosaicrestrictiontype.html" class="tsd-signature-type">MosaicRestrictionType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html" class="tsd-signature-type">MosaicGlobalRestrictionItem</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Mosaic<wbr>Global<wbr>Restriction<wbr>Item<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, referenceMosaicId<span class="tsd-signature-symbol">: </span><a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a>, restrictionValue<span class="tsd-signature-symbol">: </span><a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, restrictionType<span class="tsd-signature-symbol">: </span><a href="../enums/_model_restriction_mosaicrestrictiontype_.mosaicrestrictiontype.html" class="tsd-signature-type">MosaicRestrictionType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html" class="tsd-signature-type">MosaicGlobalRestrictionItem</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/e87b852/src/model/restriction/MosaicGlobalRestrictionItem.ts#L22">model/restriction/MosaicGlobalRestrictionItem.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3dbcb24/src/model/restriction/MosaicGlobalRestrictionItem.ts#L24">model/restriction/MosaicGlobalRestrictionItem.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -128,10 +129,18 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
+									<h5>key: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>string,</p>
+										</div>
+									</div>
+								</li>
+								<li>
 									<h5>referenceMosaicId: <a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></h5>
 								</li>
 								<li>
-									<h5>restrictionValue: <span class="tsd-signature-type">string</span></h5>
+									<h5>restrictionValue: <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
 								</li>
 								<li>
 									<h5>restrictionType: <a href="../enums/_model_restriction_mosaicrestrictiontype_.mosaicrestrictiontype.html" class="tsd-signature-type">MosaicRestrictionType</a></h5>
@@ -149,12 +158,27 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="key" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> key</h3>
+					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3dbcb24/src/model/restriction/MosaicGlobalRestrictionItem.ts#L33">model/restriction/MosaicGlobalRestrictionItem.ts:33</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>string,</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="referencemosaicid" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> reference<wbr>Mosaic<wbr>Id</h3>
 					<div class="tsd-signature tsd-kind-icon">reference<wbr>Mosaic<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_model_mosaic_mosaicid_.mosaicid.html" class="tsd-signature-type">MosaicId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/e87b852/src/model/restriction/MosaicGlobalRestrictionItem.ts#L33">model/restriction/MosaicGlobalRestrictionItem.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3dbcb24/src/model/restriction/MosaicGlobalRestrictionItem.ts#L37">model/restriction/MosaicGlobalRestrictionItem.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -169,7 +193,7 @@
 					<div class="tsd-signature tsd-kind-icon">restriction<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_restriction_mosaicrestrictiontype_.mosaicrestrictiontype.html" class="tsd-signature-type">MosaicRestrictionType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/e87b852/src/model/restriction/MosaicGlobalRestrictionItem.ts#L41">model/restriction/MosaicGlobalRestrictionItem.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3dbcb24/src/model/restriction/MosaicGlobalRestrictionItem.ts#L45">model/restriction/MosaicGlobalRestrictionItem.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -180,10 +204,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="restrictionvalue" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> restriction<wbr>Value</h3>
-					<div class="tsd-signature tsd-kind-icon">restriction<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">restriction<wbr>Value<span class="tsd-signature-symbol">:</span> <a href="_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/e87b852/src/model/restriction/MosaicGlobalRestrictionItem.ts#L37">model/restriction/MosaicGlobalRestrictionItem.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/3dbcb24/src/model/restriction/MosaicGlobalRestrictionItem.ts#L41">model/restriction/MosaicGlobalRestrictionItem.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -214,6 +238,9 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#key" class="tsd-kind-icon">key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_restriction_mosaicglobalrestrictionitem_.mosaicglobalrestrictionitem.html#referencemosaicid" class="tsd-kind-icon">reference<wbr>Mosaic<wbr>Id</a>
