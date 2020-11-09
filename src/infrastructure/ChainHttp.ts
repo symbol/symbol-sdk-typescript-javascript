@@ -15,10 +15,9 @@
  */
 
 import { Observable } from 'rxjs';
-import { ChainInfoDTO, ChainRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { ChainInfo } from '../model/blockchain/ChainInfo';
-import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
-import { UInt64 } from '../model/UInt64';
+import { ChainInfoDTO, ChainRoutesApi, FinalizedBlockDTO } from 'symbol-openapi-typescript-fetch-client';
+import { UInt64 } from '../model';
+import { ChainInfo, FinalizedBlock } from '../model/blockchain';
 import { ChainRepository } from './ChainRepository';
 import { Http } from './Http';
 
@@ -49,20 +48,19 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<ChainInfo>
      */
     public getChainInfo(): Observable<ChainInfo> {
-        return this.call(
-            this.chainRoutesApi.getChainInfo(),
-            (body: ChainInfoDTO) =>
-                new ChainInfo(
-                    UInt64.fromNumericString(body.height),
-                    UInt64.fromNumericString(body.scoreLow),
-                    UInt64.fromNumericString(body.scoreHigh),
-                    new FinalizedBlock(
-                        UInt64.fromNumericString(body.latestFinalizedBlock.height),
-                        body.latestFinalizedBlock.hash,
-                        body.latestFinalizedBlock.finalizationPoint,
-                        body.latestFinalizedBlock.finalizationPoint,
-                    ),
-                ),
+        return this.call(this.chainRoutesApi.getChainInfo(), (body: ChainInfoDTO) => ChainHttp.toChainInfo(body));
+    }
+
+    public static toChainInfo(dto: ChainInfoDTO) {
+        return new ChainInfo(
+            UInt64.fromNumericString(dto.height),
+            UInt64.fromNumericString(dto.scoreLow),
+            UInt64.fromNumericString(dto.scoreHigh),
+            ChainHttp.toFinalizationBlock(dto.latestFinalizedBlock),
         );
+    }
+
+    public static toFinalizationBlock(dto: FinalizedBlockDTO) {
+        return new FinalizedBlock(UInt64.fromNumericString(dto.height), dto.hash, dto.finalizationPoint, dto.finalizationPoint);
     }
 }
