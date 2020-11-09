@@ -66,7 +66,8 @@ export interface NodeRepository {
 
     /**
      * Return unlocked harvesting account from node.
+     * @param peer Peer node host name.
      * @returns Observable<string[]>
      */
-    getUnlockedAccount(): Observable<string[]>;
+    getUnlockedAccount(peer: string): Observable<string[]>;
 }

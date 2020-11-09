@@ -113,10 +113,11 @@ export class NodeHttp extends Http implements NodeRepository {
 
     /**
      * Return unlocked harvesting account from node.
+     * @param peer Peer node host name.
      * @returns Observable<string[]>
      */
-    getUnlockedAccount(): Observable<string[]> {
-        return this.call(this.nodeRoutesApi.getUnlockedAccount(), (body) => {
+    getUnlockedAccount(peer: string): Observable<string[]> {
+        return this.call(this.nodeRoutesApi.getUnlockedAccount(peer), (body) => {
             return body.unlockedAccount;
         });
     }
