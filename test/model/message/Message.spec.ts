@@ -15,11 +15,8 @@
  */
 
 import { expect } from 'chai';
-import { Convert } from '../../../src/core/format/Convert';
-import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
-import { Message } from '../../../src/model/message/Message';
-import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
-import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { Convert } from '../../../src/core/format';
+import { EncryptedMessage, Message, PersistentHarvestingDelegationMessage, PlainMessage } from '../../../src/model/message';
 
 describe('Message', () => {
     it('should create an plain message dto object', () => {
@@ -32,9 +29,10 @@ describe('Message', () => {
         expect(message.toDTO()).to.be.equal('01' + Convert.utf8ToHex('test'));
     });
 
-    it('should create an PersistentHarvestingDelegationMessage message dto object', () => {
-        const message = new PersistentHarvestingDelegationMessage('746573742D6D657373616765');
-        expect(message.toDTO()).to.be.equal('746573742D6D657373616765');
+    it('should throw exception on creating PersistentHarvestingDelegationMessage with wrong size', () => {
+        expect(() => {
+            new PersistentHarvestingDelegationMessage('746573742D6D657373616765');
+        }).to.throw(Error, 'Invalid persistent harvesting delegate payload size! Expected 264 but got 24');
     });
 
     it('should throw exception on creating PersistentHarvestingDelegationMessage', () => {

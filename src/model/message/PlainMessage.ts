@@ -30,6 +30,11 @@ export class PlainMessage extends Message {
     }
 
     /**
+     *
+     * It creates the Plain message from a payload hex without the 00 prefix.
+     *
+     * The 00 prefix will be attached to the final payload.
+     *
      * @internal
      */
     public static createFromPayload(payload: string): PlainMessage {

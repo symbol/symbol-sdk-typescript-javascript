@@ -38,23 +38,27 @@ export class MessageFactory {
     }
     /**
      * It creates a message from the hex payload
-     * @param payload the payload as byte array
+     * @param payload the payload as hex
      */
     public static createMessageFromHex(payload?: string): Message {
         if (!payload || !payload.length) {
             return new RawMessage('');
         }
-        if (payload.length == 264 && payload.startsWith(MessageMarker.PersistentDelegationUnlock)) {
-            return new PersistentHarvestingDelegationMessage(payload);
+        const upperCasePayload = payload.toUpperCase();
+        if (
+            upperCasePayload.length == PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE &&
+            upperCasePayload.startsWith(MessageMarker.PersistentDelegationUnlock)
+        ) {
+            return PersistentHarvestingDelegationMessage.createFromPayload(upperCasePayload);
         }
-        const messageType = Convert.hexToUint8(payload)[0];
+        const messageType = Convert.hexToUint8(upperCasePayload)[0];
         switch (messageType) {
             case MessageType.PlainMessage:
-                return new PlainMessage(Message.decodeHex(payload.substring(2)));
+                return PlainMessage.createFromPayload(upperCasePayload.substring(2));
             case MessageType.EncryptedMessage:
-                return new EncryptedMessage(Message.decodeHex(payload.substring(2)));
+                return EncryptedMessage.createFromPayload(upperCasePayload.substring(2));
         }
-        return new RawMessage(payload);
+        return new RawMessage(upperCasePayload);
     }
 }
 

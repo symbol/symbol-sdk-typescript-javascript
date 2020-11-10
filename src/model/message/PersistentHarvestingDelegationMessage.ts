@@ -23,10 +23,22 @@ import { MessageMarker } from './MessageMarker';
 import { MessageType } from './MessageType';
 
 export class PersistentHarvestingDelegationMessage extends Message {
+    public static readonly HEX_PAYLOAD_SIZE = 264;
+
     constructor(payload: string) {
         super(MessageType.PersistentHarvestingDelegationMessage, payload.toUpperCase());
         if (!Convert.isHexString(payload)) {
             throw Error('Payload format is not valid hexadecimal string');
+        }
+        if (payload.length != PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE) {
+            throw Error(
+                `Invalid persistent harvesting delegate payload size! Expected ${PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE} but got ${payload.length}`,
+            );
+        }
+        if (payload.toUpperCase().indexOf(MessageMarker.PersistentDelegationUnlock) != 0) {
+            throw Error(
+                `Invalid persistent harvesting delegate payload! It does not start with ${MessageMarker.PersistentDelegationUnlock}`,
+            );
         }
     }
 
@@ -52,8 +64,10 @@ export class PersistentHarvestingDelegationMessage extends Message {
     }
 
     /**
-     * Create PersistentHarvestingDelegationMessage from DTO payload
+     * Create PersistentHarvestingDelegationMessage from DTO payload with marker.
+     * @internal
      * @param payload
+     *
      */
     public static createFromPayload(payload: string): PersistentHarvestingDelegationMessage {
         return new PersistentHarvestingDelegationMessage(payload);
