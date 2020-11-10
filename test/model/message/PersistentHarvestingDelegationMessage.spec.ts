@@ -54,13 +54,12 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     it('should create a PersistentHarvestingDelegation message from a DTO', () => {
         const payload =
-            'CC71C764BFE598FC121A1816D40600FF3CE1F5C8839DF6EA01A04A630CBEC5C8A' +
-            'C121C890E95BBDC67E50AD37E2442279D1BA2328FB7A1781C59D2F414AEFCA288CD' +
-            '7B2D9F38D11C186CBD33869F2BB6A9F617A4696E4841628F1F396478BDDD0046BA264A1820';
-        const msgTypeHex = MessageType.PersistentHarvestingDelegationMessage.toString(16).toUpperCase();
+            'E201735761802AFEDED358F099E318FEB14C367BEC682476A5B05C985C287561F2ECED84BD22C37BAEB5F56' +
+            '226F8A4DF4C0E65AFD5F29B51C4A88394FD22CAE4FD4489B31D7FF025A16B66006F2F32DB5A8AED18A2A5E10' +
+            '26092A7D9F3EBAFD1B614CF57FFA75C58BFA8872FC2796764F0AF9A515C095A09F3D9AA2BA41EBE043CB0CE27';
         const encryptedMessage = PersistentHarvestingDelegationMessage.createFromPayload(payload);
-        expect(encryptedMessage.payload.substring(2)).to.be.equal(payload);
-        expect(encryptedMessage.payload.substring(0, 2)).to.be.equal(msgTypeHex);
+        expect(encryptedMessage.payload).to.be.equal(payload);
+        expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
     });
 
     it('should throw exception on createFromPayload with wrong format', () => {
@@ -91,7 +90,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
         );
         const signedTransaction = tx.signWith(sender, generationHash);
         const encryptMessage = PersistentHarvestingDelegationMessage.createFromPayload(
-            signedTransaction.payload.substring(322, signedTransaction.payload.length),
+            signedTransaction.payload.substring(320, signedTransaction.payload.length),
         );
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey);
         expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);

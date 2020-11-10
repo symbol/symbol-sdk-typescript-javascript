@@ -56,8 +56,7 @@ export class PersistentHarvestingDelegationMessage extends Message {
      * @param payload
      */
     public static createFromPayload(payload: string): PersistentHarvestingDelegationMessage {
-        const msgTypeHex = MessageType.PersistentHarvestingDelegationMessage.toString(16).toUpperCase();
-        return new PersistentHarvestingDelegationMessage(msgTypeHex + payload.toUpperCase());
+        return new PersistentHarvestingDelegationMessage(payload.toUpperCase());
     }
 
     /**

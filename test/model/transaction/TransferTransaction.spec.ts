@@ -322,7 +322,7 @@ describe('TransferTransaction', () => {
     });
     it('should load message with persistent message delegate', () => {
         const messageHex =
-            'E201735761802AFE9FB4BD2BA099AFA82DDB0212080CF649F0CB0FADAD7BA4CC04BE51E40A4EF0A27B8E2BEAB595F4075BB5A6A481835F3A6E4BBA63091A5866D90D2B7ACBBF158E51FE074619C4B0FF0C4AFEE1AE9A4D83A5A7A156C91CCA3A319D3279A64A63491E19656F7211760BB36EF6B3263C03837CE00E84FD82B32B721120DE';
+            'FE2A8061577301E29FB4BD2BA099AFA82DDB0212080CF649F0CB0FADAD7BA4CC04BE51E40A4EF0A27B8E2BEAB595F4075BB5A6A481835F3A6E4BBA63091A5866D90D2B7ACBBF158E51FE074619C4B0FF0C4AFEE1AE9A4D83A5A7A156C91CCA3A319D3279A64A63491E19656F7211760BB36EF6B3263C03837CE00E84FD82B32B721120DE';
         const payload: TransactionInfoDTO = {
             meta: {
                 height: '108907',
@@ -351,7 +351,6 @@ describe('TransferTransaction', () => {
         const transferTransaction = transaction as TransferTransaction;
         expect(transferTransaction.message.payload).eq(messageHex);
         expect(transferTransaction.message.type).eq(MessageType.PersistentHarvestingDelegationMessage);
-        console.log(transferTransaction.message.payload);
     });
 
     it('should throw exception with invalid private key when creating persistentDelegationRequestTransaction', () => {
