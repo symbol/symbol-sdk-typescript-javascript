@@ -23,22 +23,34 @@ import { MessageMarker } from './MessageMarker';
 import { MessageType } from './MessageType';
 
 export class PersistentHarvestingDelegationMessage extends Message {
+    public static readonly HEX_PAYLOAD_SIZE = 264;
+
     constructor(payload: string) {
-        super(MessageType.PersistentHarvestingDelegationMessage, payload);
+        super(MessageType.PersistentHarvestingDelegationMessage, payload.toUpperCase());
         if (!Convert.isHexString(payload)) {
             throw Error('Payload format is not valid hexadecimal string');
+        }
+        if (payload.length != PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE) {
+            throw Error(
+                `Invalid persistent harvesting delegate payload size! Expected ${PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE} but got ${payload.length}`,
+            );
+        }
+        if (payload.toUpperCase().indexOf(MessageMarker.PersistentDelegationUnlock) != 0) {
+            throw Error(
+                `Invalid persistent harvesting delegate payload! It does not start with ${MessageMarker.PersistentDelegationUnlock}`,
+            );
         }
     }
 
     /**
-     * @param signingPrivateKey - Remote harvester signing private key linked to the main account
+     * @param remoteLinkedPrivateKey - Remote harvester signing private key linked to the main account
      * @param vrfPrivateKey - VRF private key linked to the main account
      * @param nodePublicKey - Node certificate public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
     public static create(
-        signingPrivateKey: string,
+        remoteLinkedPrivateKey: string,
         vrfPrivateKey: string,
         nodePublicKey: string,
         networkType: NetworkType,
@@ -47,17 +59,18 @@ export class PersistentHarvestingDelegationMessage extends Message {
         const encrypted =
             MessageMarker.PersistentDelegationUnlock +
             ephemeralKeypair.publicKey +
-            Crypto.encode(ephemeralKeypair.privateKey, nodePublicKey, signingPrivateKey + vrfPrivateKey, true).toUpperCase();
+            Crypto.encode(ephemeralKeypair.privateKey, nodePublicKey, remoteLinkedPrivateKey + vrfPrivateKey, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
 
     /**
-     * Create PersistentHarvestingDelegationMessage from DTO payload
+     * Create PersistentHarvestingDelegationMessage from DTO payload with marker.
+     * @internal
      * @param payload
+     *
      */
     public static createFromPayload(payload: string): PersistentHarvestingDelegationMessage {
-        const msgTypeHex = MessageType.PersistentHarvestingDelegationMessage.toString(16).toUpperCase();
-        return new PersistentHarvestingDelegationMessage(msgTypeHex + payload.toUpperCase());
+        return new PersistentHarvestingDelegationMessage(payload);
     }
 
     /**

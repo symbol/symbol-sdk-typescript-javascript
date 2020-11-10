@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { Account } from '../../src/model/account/Account';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { PersistentDelegationRequestTransaction } from '../../src/model/transaction/PersistentDelegationRequestTransaction';
-import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
+import { Account } from '../../src/model/account';
+import { NetworkType } from '../../src/model/network';
+import {
+    AccountKeyLinkTransaction,
+    Deadline,
+    LinkAction,
+    NodeKeyLinkTransaction,
+    PersistentDelegationRequestTransaction,
+    VrfKeyLinkTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('PersistentHarvesting', () => {
@@ -29,20 +31,21 @@ describe('PersistentHarvesting', () => {
     let account: Account;
     let generationHash: string;
     let networkType: NetworkType;
+    let vrfAccount: Account;
     let remoteAccount: Account;
-
-    const vrfKeyPair = Account.createFromPrivateKey(
-        '82798EA9A2D2D202AFCCC82C40A287780BCA3C7F7A2FD5B754832804C6BE1BAA',
-        NetworkType.PRIVATE_TEST,
-    );
+    let nodePublicKey: string;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
-            remoteAccount = Account.generateNewAccount(helper.networkType);
-            console.log(remoteAccount.privateKey, remoteAccount.publicAccount);
-            account = helper.harvestingAccount;
-            generationHash = helper.generationHash;
             networkType = helper.networkType;
+            remoteAccount = Account.createFromPrivateKey('CC798EA9A2D2D202AFCCC82C40A287780BCA3C7F7A2FD5B754832804C6BE1BAA', networkType);
+            vrfAccount = Account.createFromPrivateKey('AA798EA9A2D2D202AFCCC82C40A287780BCA3C7F7A2FD5B754832804C6BE1BAA', networkType);
+            account = helper.account;
+            generationHash = helper.generationHash;
+            nodePublicKey = helper.bootstrapAddresses.nodes![0].signing!.publicKey;
+            console.log('Remote: ', remoteAccount.publicAccount);
+            console.log('VRF: ', vrfAccount.publicAccount);
+            console.log('Node Public Key: ', nodePublicKey);
         });
     });
 
@@ -57,7 +60,16 @@ describe('PersistentHarvesting', () => {
      */
 
     describe('AccountKeyLinkTransaction', () => {
-        it('standalone', () => {
+        it('standalone', async () => {
+            const accountInfo = await helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address).toPromise();
+            const publicKey = accountInfo.supplementalPublicKeys?.linked?.publicKey;
+            if (publicKey) {
+                if (publicKey == remoteAccount.publicKey) {
+                    return;
+                }
+                throw new Error(`Account ${accountInfo.address.plain()} already linked to another Remote public key ${publicKey}`);
+            }
+
             const accountLinkTransaction = AccountKeyLinkTransaction.create(
                 Deadline.create(helper.epochAdjustment),
                 remoteAccount.publicKey,
@@ -72,10 +84,20 @@ describe('PersistentHarvesting', () => {
     });
 
     describe('VrfKeyLinkTransaction', () => {
-        it('standalone', () => {
+        it('standalone', async () => {
+            const accountInfo = await helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address).toPromise();
+
+            const publicKey = accountInfo.supplementalPublicKeys?.vrf?.publicKey;
+            if (publicKey) {
+                if (publicKey == vrfAccount.publicKey) {
+                    return;
+                }
+                throw new Error(`Account ${accountInfo.address.plain()} already linked to another VRF public key ${publicKey}`);
+            }
+
             const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                vrfKeyPair.publicKey,
+                vrfAccount.publicKey,
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
@@ -87,10 +109,22 @@ describe('PersistentHarvesting', () => {
     });
 
     describe('NodeKeyLinkTransaction', () => {
-        it('standalone', () => {
+        it('standalone', async () => {
+            const nodePublicKey = helper.bootstrapAddresses.nodes![0].signing!.publicKey;
+
+            const accountInfo = await helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address).toPromise();
+
+            const publicKey = accountInfo.supplementalPublicKeys?.node?.publicKey;
+            if (publicKey) {
+                if (publicKey == nodePublicKey) {
+                    return;
+                }
+                throw new Error(`Account ${accountInfo.address.plain()} already linked to another Node public key ${publicKey}`);
+            }
+
             const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',
+                nodePublicKey,
                 LinkAction.Link,
                 networkType,
                 helper.maxFee,
@@ -107,15 +141,17 @@ describe('PersistentHarvesting', () => {
      */
 
     describe('transactions', () => {
-        it('should create delegated harvesting transaction', () => {
+        it('should create delegated harvesting transaction', async () => {
+            const nodePublicKey = helper.bootstrapAddresses.nodes![0].signing!.publicKey;
             const tx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(helper.epochAdjustment),
                 remoteAccount.privateKey,
-                vrfKeyPair.privateKey,
-                'cfd84eca83508bbee954668e4aecca736caefa615367da76afe6985d695381db',
-                NetworkType.PRIVATE_TEST,
+                vrfAccount.privateKey,
+                nodePublicKey,
+                networkType,
                 helper.maxFee,
             );
+            console.log(tx.message.toDTO());
 
             const signedTransaction = tx.signWith(account, generationHash);
             return helper.announce(signedTransaction);

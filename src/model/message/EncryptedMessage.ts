@@ -15,7 +15,7 @@
  */
 
 import { Crypto } from '../../core/crypto';
-import { PublicAccount } from '../account/PublicAccount';
+import { PublicAccount } from '../account';
 import { Message } from './Message';
 import { MessageType } from './MessageType';
 import { PlainMessage } from './PlainMessage';
@@ -46,7 +46,11 @@ export class EncryptedMessage extends Message {
     }
 
     /**
+     * It creates a encrypted message from the payload hex wihtout the 01 prefix.
      *
+     * The 01 prefix will be attached to the final payload.
+     *
+     * @internal
      * @param payload
      */
     public static createFromPayload(payload: string): EncryptedMessage {

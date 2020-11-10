@@ -24,6 +24,7 @@
         "bootstrap-clean": "symbol-bootstrap clean -t target/bootstrap-test",
         "bootstrap-start-detached": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml -t target/bootstrap-test --timeout 120000 -d --healthCheck",
         "bootstrap-start": "symbol-bootstrap start -r -c ./e2e/e2e-preset.yml --timeout 120000 -t target/bootstrap-test",
+        "bootstrap-upgrade": "symbol-bootstrap compose -r -t target/bootstrap-test",
         "bootstrap-stop": "symbol-bootstrap stop -t target/bootstrap-test",
         "bootstrap-run": "symbol-bootstrap run -t target/bootstrap-test",
         "bootstrap-compose": "symbol-bootstrap compose -t target/bootstrap-test",

@@ -26,12 +26,14 @@ describe('PlainMessage', () => {
         const payload = 'test-message';
         const message = new PlainMessage(payload);
         expect(message.payload).to.be.equal(payload);
+        expect(message.toDTO()).to.be.equal('00746573742D6D657373616765');
     });
 
     it('should createComplete message from payload with static method', () => {
         const payload = '746573742D6D657373616765';
         const message = PlainMessage.createFromPayload(payload);
         expect(message.payload).to.be.equal('test-message');
+        expect(message.toDTO()).to.be.equal('00746573742D6D657373616765');
     });
 
     it('should decode hex message', () => {
