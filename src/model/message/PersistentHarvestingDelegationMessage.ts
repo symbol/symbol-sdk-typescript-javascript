@@ -24,21 +24,21 @@ import { MessageType } from './MessageType';
 
 export class PersistentHarvestingDelegationMessage extends Message {
     constructor(payload: string) {
-        super(MessageType.PersistentHarvestingDelegationMessage, payload);
+        super(MessageType.PersistentHarvestingDelegationMessage, payload.toUpperCase());
         if (!Convert.isHexString(payload)) {
             throw Error('Payload format is not valid hexadecimal string');
         }
     }
 
     /**
-     * @param signingPrivateKey - Remote harvester signing private key linked to the main account
+     * @param remoteLinkedPrivateKey - Remote harvester signing private key linked to the main account
      * @param vrfPrivateKey - VRF private key linked to the main account
      * @param nodePublicKey - Node certificate public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
     public static create(
-        signingPrivateKey: string,
+        remoteLinkedPrivateKey: string,
         vrfPrivateKey: string,
         nodePublicKey: string,
         networkType: NetworkType,
@@ -47,7 +47,7 @@ export class PersistentHarvestingDelegationMessage extends Message {
         const encrypted =
             MessageMarker.PersistentDelegationUnlock +
             ephemeralKeypair.publicKey +
-            Crypto.encode(ephemeralKeypair.privateKey, nodePublicKey, signingPrivateKey + vrfPrivateKey, true).toUpperCase();
+            Crypto.encode(ephemeralKeypair.privateKey, nodePublicKey, remoteLinkedPrivateKey + vrfPrivateKey, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
 
@@ -56,8 +56,7 @@ export class PersistentHarvestingDelegationMessage extends Message {
      * @param payload
      */
     public static createFromPayload(payload: string): PersistentHarvestingDelegationMessage {
-        const msgTypeHex = MessageType.PersistentHarvestingDelegationMessage.toString(16).toUpperCase();
-        return new PersistentHarvestingDelegationMessage(msgTypeHex + payload.toUpperCase());
+        return new PersistentHarvestingDelegationMessage(payload);
     }
 
     /**

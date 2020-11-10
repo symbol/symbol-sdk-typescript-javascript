@@ -1,4 +1,4 @@
 nemesis:
     mosaics:
         - accounts: 10
-symbolRestImage: symbolplatform/symbol-rest:2.1.1-alpha
+symbolRestImage: symbolplatform/symbol-rest:2.1.1-alpha-202011061935

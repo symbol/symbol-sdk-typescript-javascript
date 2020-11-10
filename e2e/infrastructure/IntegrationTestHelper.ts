@@ -48,8 +48,9 @@ export class IntegrationTestHelper {
     public config: StartParams;
     public startEachTime = true;
     public epochAdjustment: number;
+    public bootstrapAddresses: Addresses;
 
-    private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string }> {
+    private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string; addresses: Addresses }> {
         this.config = {
             report: false,
             preset: Preset.bootstrap,
@@ -65,7 +66,7 @@ export class IntegrationTestHelper {
         const configResult = await this.service.start({ ...this.config, detached: true });
         return this.toAccounts(configResult.addresses);
     }
-    private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string }> {
+    private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string; addresses: Addresses }> {
         // const target = '../catapult-rest/rest/target';
         const target = 'target/bootstrap-test';
         console.log('Loading bootstrap server');
@@ -73,12 +74,12 @@ export class IntegrationTestHelper {
         return this.toAccounts(addresses);
     }
 
-    private toAccounts(addresses: Addresses): { accounts: string[]; apiUrl: string } {
+    private toAccounts(addresses: Addresses): { accounts: string[]; apiUrl: string; addresses: Addresses } {
         const accounts = addresses?.mosaics?.[0].accounts.map((n) => n.privateKey);
         if (!accounts) {
             throw new Error('Nemesis accounts could not be loaded!');
         }
-        return { accounts, apiUrl: 'http://localhost:3000' };
+        return { accounts, apiUrl: 'http://localhost:3000', addresses };
     }
 
     async close(): Promise<void> {
@@ -94,6 +95,7 @@ export class IntegrationTestHelper {
         // await this.service.stop(this.config);
         const config = await this.loadBootstrap();
         const accounts = config.accounts;
+        this.bootstrapAddresses = config.addresses;
         this.apiUrl = config.apiUrl;
         this.repositoryFactory = new RepositoryFactoryHttp(this.apiUrl);
         this.transactionService = new TransactionService(

@@ -16,6 +16,7 @@
 
 import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
+import { MessageFactory, MessageMarker } from '../../../src/model/message';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -54,18 +55,18 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     it('should create a PersistentHarvestingDelegation message from a DTO', () => {
         const payload =
-            'CC71C764BFE598FC121A1816D40600FF3CE1F5C8839DF6EA01A04A630CBEC5C8A' +
-            'C121C890E95BBDC67E50AD37E2442279D1BA2328FB7A1781C59D2F414AEFCA288CD' +
-            '7B2D9F38D11C186CBD33869F2BB6A9F617A4696E4841628F1F396478BDDD0046BA264A1820';
-        const msgTypeHex = MessageType.PersistentHarvestingDelegationMessage.toString(16).toUpperCase();
-        const encryptedMessage = PersistentHarvestingDelegationMessage.createFromPayload(payload);
-        expect(encryptedMessage.payload.substring(2)).to.be.equal(payload);
-        expect(encryptedMessage.payload.substring(0, 2)).to.be.equal(msgTypeHex);
+            'FE2A8061577301E231539A87767B731A725E8F87926FDA9968701C082D2AC6CD16C6572F4F3047184D6C4A0443CC5D2565838040CC31B7EA0BA4588728110668BE960A28CAFCDC1703C234903937CCD0CDD6F11DBE7AE4C288FE2E2245BD4BE08C1F864E7FB42C4648E19CA53622AA0C2EAEDB47B8A06B157BD47FD6C230193FCC50F1F9';
+        const encryptedMessage = MessageFactory.createMessageFromHex(payload);
+        expect(encryptedMessage.payload).eq(payload);
+        expect(encryptedMessage.payload.length).eq(264);
+
+        const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey);
+        expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
     });
 
     it('should throw exception on createFromPayload with wrong format', () => {
         expect(() => {
-            PersistentHarvestingDelegationMessage.createFromPayload('test transaction');
+            new PersistentHarvestingDelegationMessage('test transaction');
         }).to.throw(Error, 'Payload format is not valid hexadecimal string');
     });
 
@@ -76,6 +77,15 @@ describe('PersistentHarvestingDelegationMessage', () => {
             recipient.publicKey,
             NetworkType.PRIVATE_TEST,
         );
+        expect(encryptedMessage.payload.indexOf(MessageMarker.PersistentDelegationUnlock)).eq(0);
+        expect(encryptedMessage.payload.length).eq(264);
+
+        console.log(encryptedMessage.payload);
+        const parsed = MessageFactory.createMessageFromHex(encryptedMessage.toDTO());
+        expect(parsed.type).eq(MessageType.PersistentHarvestingDelegationMessage);
+        expect(parsed.payload.length).eq(264);
+        expect(parsed.payload).eq(encryptedMessage.payload);
+
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey);
         expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
     });
@@ -90,8 +100,8 @@ describe('PersistentHarvestingDelegationMessage', () => {
             NetworkType.PRIVATE_TEST,
         );
         const signedTransaction = tx.signWith(sender, generationHash);
-        const encryptMessage = PersistentHarvestingDelegationMessage.createFromPayload(
-            signedTransaction.payload.substring(322, signedTransaction.payload.length),
+        const encryptMessage = MessageFactory.createMessageFromHex(
+            signedTransaction.payload.substring(320, signedTransaction.payload.length),
         );
         const plainMessage = PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey);
         expect(plainMessage).to.be.equal(signingPrivateKey + vrfPrivateKey);
