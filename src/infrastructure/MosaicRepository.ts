@@ -16,10 +16,9 @@
 
 import { Observable } from 'rxjs';
 import { MerkleStateInfo } from '../model/blockchain';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { MosaicInfo } from '../model/mosaic/MosaicInfo';
-import { Searcher } from './paginationStreamer/Searcher';
-import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
+import { MosaicId, MosaicInfo } from '../model/mosaic';
+import { Searcher } from './paginationStreamer';
+import { MosaicSearchCriteria } from './searchCriteria';
 
 /**
  * Mosaic interface repository.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Address } from '../../model/account/Address';
+import { Address } from '../../model/account';
 import { SearchCriteria } from './SearchCriteria';
 
 /**
@@ -24,7 +24,7 @@ export interface SecretLockSearchCriteria extends SearchCriteria {
     /**
      * The owner address. (required)
      */
-    address: Address;
+    address?: Address;
 
     /**
      * Optional to search by secret.

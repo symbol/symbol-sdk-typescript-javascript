@@ -16,15 +16,15 @@
 
 import { Observable } from 'rxjs';
 import { SecretLockInfoDTO, SecretLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { Address } from '../model/account/Address';
-import { MerkleStateInfo } from '../model/blockchain/MerkleStateInfo';
-import { SecretLockInfo } from '../model/lock/SecretLockInfo';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { UInt64 } from '../model/UInt64';
+import { DtoMapping } from '../core/utils';
+import { UInt64 } from '../model';
+import { Address } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { SecretLockInfo } from '../model/lock';
+import { MosaicId } from '../model/mosaic';
 import { Http } from './Http';
 import { Page } from './Page';
-import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCriteria';
+import { SecretLockSearchCriteria } from './searchCriteria';
 import { SecretLockRepository } from './SecretLockRepository';
 
 /**
@@ -65,7 +65,7 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
     public search(criteria: SecretLockSearchCriteria): Observable<Page<SecretLockInfo>> {
         return this.call(
             this.secretLockRoutesApi.searchSecretLock(
-                criteria.address.plain(),
+                criteria.address?.plain(),
                 criteria.secret,
                 criteria.pageSize,
                 criteria.pageNumber,
