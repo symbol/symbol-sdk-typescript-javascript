@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { expect } from 'chai';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -71,6 +72,20 @@ describe('MultisigAccounts', () => {
                 generationHash,
             );
             return helper.announce(signedTransaction);
+        });
+    });
+
+    describe('getMultisigAccountInfo from address', () => {
+        it('should return multisig account infro from address', async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            const multisigRepository = helper.repositoryFactory.createMultisigRepository();
+
+            const infoFromId = await multisigRepository.getMultisigAccountInfo(multisigAccount.address).toPromise();
+            expect(infoFromId).to.not.be.undefined;
+            expect(infoFromId.accountAddress).to.deep.eq(multisigAccount.address);
+            expect(infoFromId.cosignatoryAddresses).to.deep.eq([cosignAccount1.address, cosignAccount3.address, cosignAccount2.address]);
+            const merkleInfo = await multisigRepository.getMultisigAccountInfoMerkle(multisigAccount.address).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 });

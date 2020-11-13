@@ -17,26 +17,22 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { take, toArray } from 'rxjs/operators';
-import { Order } from '../../src/infrastructure';
-import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
-import { RepositoryCallError } from '../../src/infrastructure/RepositoryCallError';
-import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { AccountRepository, MultisigRepository, NamespaceRepository, Order, RepositoryCallError } from '../../src/infrastructure';
+import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { AccountOrderBy } from '../../src/infrastructure/searchCriteria';
+import { UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { PlainMessage } from '../../src/model/message';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import {
+    AddressAliasTransaction,
+    AggregateTransaction,
+    Deadline,
+    MultisigAccountModificationTransaction,
+    NamespaceRegistrationTransaction,
+    TransferTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('AccountHttp', () => {
@@ -172,6 +168,9 @@ describe('AccountHttp', () => {
         it('should return account data given a NEM Address', async () => {
             const accountInfo = await accountRepository.getAccountInfo(accountAddress).toPromise();
             expect(accountInfo.publicKey).to.be.equal(accountPublicKey);
+
+            const merkleInfo = await accountRepository.getAccountsInfoMerkle(accountInfo.address).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 

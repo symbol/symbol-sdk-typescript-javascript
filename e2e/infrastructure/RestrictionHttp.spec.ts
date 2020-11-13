@@ -207,11 +207,18 @@ describe('RestrictionHttp', () => {
             const mosaicRestrictionPage = await restrictionMosaicRepository
                 .search({ mosaicId, targetAddress: account3.address })
                 .toPromise();
-            deepEqual(mosaicRestrictionPage.data[0].mosaicId.toHex(), mosaicId.toHex());
-            deepEqual(mosaicRestrictionPage.data[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-            const addressRestriction = mosaicRestrictionPage.data[0] as MosaicAddressRestriction;
+            const info = mosaicRestrictionPage.data[0];
+            deepEqual(info.mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(info.entryType, MosaicRestrictionEntryType.ADDRESS);
+            const addressRestriction = info as MosaicAddressRestriction;
             deepEqual(addressRestriction.targetAddress.plain(), account3.address.plain());
             deepEqual(addressRestriction.getRestriction(UInt64.fromUint(60641))!.restrictionValue, UInt64.fromUint(2));
+
+            const infoFromId = await restrictionMosaicRepository.getMosaicRestrictions(info.compositeHash).toPromise();
+            expect(infoFromId).to.be.equal(info);
+
+            const merkleInfo = await restrictionMosaicRepository.getMosaicRestrictionsMerkle(info.compositeHash).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 

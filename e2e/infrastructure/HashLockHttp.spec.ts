@@ -156,9 +156,15 @@ describe('HashLockHttp', () => {
     describe('searchHashLock', () => {
         it('should return hash lock page info', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            const info = await hashLockRepo.search({ address: account.address }).toPromise();
-            hash = info.data[0].hash;
-            expect(info.data.length).to.be.greaterThan(0);
+            const page = await hashLockRepo.search({ address: account.address }).toPromise();
+            const info = page.data[0];
+            hash = info.hash;
+            expect(page.data.length).to.be.greaterThan(0);
+
+            const infoFromId = await hashLockRepo.getHashLock(hash).toPromise();
+            expect(infoFromId).deep.eq(info);
+            const merkleInfo = await hashLockRepo.getHashLockMerkle(hash).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 

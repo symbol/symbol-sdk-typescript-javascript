@@ -52,6 +52,11 @@ describe('NamespaceHttp', () => {
         return helper.close();
     });
 
+    const validateMerkle = async (namespaceId: NamespaceId) => {
+        const merkleInfo = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
+        expect(merkleInfo.raw).to.not.be.undefined;
+    };
+
     describe('NamespaceRegistrationTransaction', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
@@ -88,6 +93,7 @@ describe('NamespaceHttp', () => {
             const namespace = await namespaceRepository.getNamespace(defaultNamespaceId).toPromise();
             expect(namespace.startHeight.lower).to.be.equal(1);
             expect(namespace.startHeight.higher).to.be.equal(0);
+            await validateMerkle(namespace.id);
         });
     });
 
@@ -116,6 +122,7 @@ describe('NamespaceHttp', () => {
         it('should return namespace info', async () => {
             const info = await namespaceRepository.search({ ownerAddress: account.address }).toPromise();
             expect(info.data.length).to.be.greaterThan(0);
+            validateMerkle(info.data[0].id);
         });
     });
 
