@@ -15,6 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
+import { MerkleStateInfo } from '../model/blockchain/MerkleStateInfo';
 import { HashLockInfo } from '../model/lock/HashLockInfo';
 import { Searcher } from './paginationStreamer/Searcher';
 import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria';
@@ -24,9 +25,16 @@ import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria'
  */
 export interface HashLockRepository extends Searcher<HashLockInfo, HashLockSearchCriteria> {
     /**
-     * Get hash lock info for an account.
+     * Get hash lock info of the given id
      * @param hash Hashlock hash
      * @returns Observable<HashLockInfo>
      */
     getHashLock(hash: string): Observable<HashLockInfo>;
+
+    /**
+     * Get secret lock merkle info of the given id.
+     * @param hash HashLockInfo hash id
+     * @returns Observable<MerkleStateInfo>
+     */
+    getHashLockMerkle(hash: string): Observable<MerkleStateInfo>;
 }

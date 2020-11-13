@@ -18,11 +18,12 @@ import { Address } from '../../model/account/Address';
 import { SearchCriteria } from './SearchCriteria';
 
 /**
- * Defines the params used to search hash lock. With this criteria, you can sort and filter
+ * Defines the params used to search account restrictions. With this criteria, you can sort and filter
+ * account restriction queries using rest.
  */
-export interface HashLockSearchCriteria extends SearchCriteria {
+export interface RestrictionAccountSearchCriteria extends SearchCriteria {
     /**
-     * The owner address. (required)
+     * Mosaic restriction address. (optional)
      */
     address?: Address;
 }

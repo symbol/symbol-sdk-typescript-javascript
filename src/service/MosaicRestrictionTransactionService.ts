@@ -156,7 +156,7 @@ export class MosaicRestrictionTransactionService {
      * @return {Observable<string | undefined>}
      */
     private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<UInt64 | undefined> {
-        return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId, targetAddress }).pipe(
+        return this.restrictionMosaicRepository.search({ mosaicId, targetAddress }).pipe(
             map((mosaicRestriction) => {
                 return (mosaicRestriction.data[0] as MosaicAddressRestriction).getRestriction(restrictionKey)?.restrictionValue;
             }),
@@ -177,7 +177,7 @@ export class MosaicRestrictionTransactionService {
      * @return {Observable<MosaicGlobalRestrictionItem | undefined>}
      */
     private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
-        return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId }).pipe(
+        return this.restrictionMosaicRepository.search({ mosaicId }).pipe(
             map((mosaicRestrictionPage: Page<MosaicGlobalRestriction>) => {
                 const globalRestriction = mosaicRestrictionPage.data.find((r) => r instanceof MosaicGlobalRestriction);
                 if (globalRestriction !== undefined) {

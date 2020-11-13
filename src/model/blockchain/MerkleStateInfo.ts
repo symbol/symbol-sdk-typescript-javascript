@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import { Address } from '../../model/account/Address';
-import { SearchCriteria } from './SearchCriteria';
-
 /**
- * Defines the params used to search hash lock. With this criteria, you can sort and filter
+ *  The merkle path information clients can use to proof the state of the given entity.
  */
-export interface HashLockSearchCriteria extends SearchCriteria {
+export class MerkleStateInfo {
     /**
-     * The owner address. (required)
+     * Constructor
+     *
+     * @param raw The hex information of the complete merkle tree as returned by server api. More information can be found in chapter 4.3 of the catapult whitepaper.
      */
-    address?: Address;
+    constructor(public readonly raw: string) {}
 }

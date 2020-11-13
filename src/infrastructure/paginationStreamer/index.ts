@@ -8,6 +8,7 @@ export * from './MosaicPaginationStreamer';
 export * from './NamespacePaginationStreamer';
 export * from './PaginationStreamer';
 export * from './ReceiptPaginationStreamer';
+export * from './RestrictionAccountPaginationStreamer';
 export * from './RestrictionMosaicPaginationStreamer';
 export * from './Searcher';
 export * from './SecretLockPaginationStreamer';

@@ -205,7 +205,7 @@ describe('RestrictionHttp', () => {
     describe('search', () => {
         it('should call search successfully', async () => {
             const mosaicRestrictionPage = await restrictionMosaicRepository
-                .searchMosaicRestrictions({ mosaicId, targetAddress: account3.address })
+                .search({ mosaicId, targetAddress: account3.address })
                 .toPromise();
             deepEqual(mosaicRestrictionPage.data[0].mosaicId.toHex(), mosaicId.toHex());
             deepEqual(mosaicRestrictionPage.data[0].entryType, MosaicRestrictionEntryType.ADDRESS);

@@ -15,6 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
 import { Searcher } from './paginationStreamer/Searcher';
@@ -39,4 +40,11 @@ export interface MosaicRepository extends Searcher<MosaicInfo, MosaicSearchCrite
      * @returns Observable<MosaicInfo[]>
      */
     getMosaics(mosaicIds: MosaicId[]): Observable<MosaicInfo[]>;
+
+    /**
+     * Gets a MosaicInfo merkle for a given mosaicId
+     * @param mosaicId - Mosaic id
+     * @returns Observable<MerkleStateInfo>
+     */
+    getMosaicMerkle(mosaicId: MosaicId): Observable<MerkleStateInfo>;
 }

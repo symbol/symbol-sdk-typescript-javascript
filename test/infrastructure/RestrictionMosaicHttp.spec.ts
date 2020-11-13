@@ -99,7 +99,7 @@ describe('RestrictionMosaicHttp', () => {
 
     it('search', async () => {
         when(
-            restrictionMosaicRoutesApi.searchMosaicRestriction(
+            restrictionMosaicRoutesApi.searchMosaicRestrictions(
                 mosaicId.toHex(),
                 undefined,
                 undefined,
@@ -110,7 +110,7 @@ describe('RestrictionMosaicHttp', () => {
             ),
         ).thenReturn(Promise.resolve(body));
 
-        const page = await restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId: mosaicId }).toPromise();
+        const page = await restrictionMosaicRepository.search({ mosaicId: mosaicId }).toPromise();
         expect(page).to.be.not.null;
         expect(page.data.length).to.be.equal(2);
         expect(page.data[1].compositeHash).to.be.equal('hash');
@@ -127,7 +127,7 @@ describe('RestrictionMosaicHttp', () => {
 
     it('search - Error', async () => {
         when(
-            restrictionMosaicRoutesApi.searchMosaicRestriction(
+            restrictionMosaicRoutesApi.searchMosaicRestrictions(
                 mosaicId.toHex(),
                 undefined,
                 undefined,
@@ -138,7 +138,7 @@ describe('RestrictionMosaicHttp', () => {
             ),
         ).thenReject(new Error('Mocked Error'));
         await restrictionMosaicRepository
-            .searchMosaicRestrictions({ mosaicId: mosaicId })
+            .search({ mosaicId: mosaicId })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });

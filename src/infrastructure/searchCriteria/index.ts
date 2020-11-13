@@ -10,6 +10,7 @@ export * from './MosaicSearchCriteria';
 export * from './NamespaceSearchCriteria';
 export * from './Order';
 export * from './ResolutionStatementSearchCriteria';
+export * from './RestrictionAccountSearchCriteria';
 export * from './RestrictionMosaicSearchCriteria';
 export * from './SearchCriteria';
 export * from './SecretLockSearchCriteria';
