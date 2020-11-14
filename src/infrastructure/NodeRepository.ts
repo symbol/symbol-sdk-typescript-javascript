@@ -54,6 +54,7 @@ export interface NodeRepository {
 
     /**
      * Gets blockchain storage info.
+     * @param hostName Peer node host name.
      * @returns Observable<StorageInfo>
      */
     getStorageInfo(): Observable<StorageInfo>;
@@ -66,8 +67,7 @@ export interface NodeRepository {
 
     /**
      * Return unlocked harvesting account from node.
-     * @param peer Peer node host name.
      * @returns Observable<string[]>
      */
-    getUnlockedAccount(peer: string): Observable<string[]>;
+    getUnlockedAccount(): Observable<string[]>;
 }

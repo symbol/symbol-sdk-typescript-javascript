@@ -153,4 +153,9 @@ export interface RepositoryFactory {
      * @returns the network currencies.
      */
     getCurrencies(): Observable<NetworkCurrencies>;
+
+    /**
+     * @returns the node public key
+     */
+    getNodePublicKey(): Observable<string | undefined>;
 }

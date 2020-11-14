@@ -29,6 +29,7 @@ export class NodeInfo {
      * @param roles
      * @param host
      * @param friendlyName
+     * @param nodePublicKey
      */
     constructor(
         /**
@@ -63,5 +64,9 @@ export class NodeInfo {
          * The name of the node.
          */
         public readonly friendlyName: string,
+        /**
+         * The node public key used for NodeKeyLink transaction.
+         */
+        public readonly nodePublicKey?: string,
     ) {}
 }

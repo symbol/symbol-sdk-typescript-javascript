@@ -42,6 +42,7 @@ describe('NodeHttp', () => {
             expect(nodeInfo.publicKey).not.to.be.undefined;
             expect(nodeInfo.roles).not.to.be.undefined;
             expect(nodeInfo.version).not.to.be.undefined;
+            expect(nodeInfo.nodePublicKey).not.to.be.undefined;
         });
     });
 
@@ -93,7 +94,7 @@ describe('NodeHttp', () => {
 
     describe('getUnlockedAccount', () => {
         it('should return unlocked account', async () => {
-            const unlockedAccount = await nodeRepository.getUnlockedAccount('test').toPromise();
+            const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
             expect(unlockedAccount).not.to.be.null;
             expect(unlockedAccount.length).greaterThan(0);
         });
