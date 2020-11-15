@@ -101,6 +101,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#host" class="tsd-kind-icon">host</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#networkgenerationhashseed" class="tsd-kind-icon">network<wbr>Generation<wbr>Hash<wbr>Seed</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#networkidentifier" class="tsd-kind-icon">network<wbr>Identifier</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#nodepublickey" class="tsd-kind-icon">node<wbr>Public<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#port" class="tsd-kind-icon">port</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_model_node_nodeinfo_.nodeinfo.html#roles" class="tsd-kind-icon">roles</a></li>
@@ -116,13 +117,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Node<wbr>Info<span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, networkGenerationHashSeed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, port<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, networkIdentifier<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, roles<span class="tsd-signature-symbol">: </span><a href="../enums/_model_node_roletype_.roletype.html" class="tsd-signature-type">RoleType</a><span class="tsd-signature-symbol">[]</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, friendlyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_node_nodeinfo_.nodeinfo.html" class="tsd-signature-type">NodeInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Node<wbr>Info<span class="tsd-signature-symbol">(</span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, networkGenerationHashSeed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, port<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, networkIdentifier<span class="tsd-signature-symbol">: </span><a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, roles<span class="tsd-signature-symbol">: </span><a href="../enums/_model_node_roletype_.roletype.html" class="tsd-signature-type">RoleType</a><span class="tsd-signature-symbol">[]</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, friendlyName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, nodePublicKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_model_node_nodeinfo_.nodeinfo.html" class="tsd-signature-type">NodeInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L22">model/node/NodeInfo.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L22">model/node/NodeInfo.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -152,6 +153,9 @@
 								</li>
 								<li>
 									<h5>friendlyName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodePublicKey: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 										</div>
@@ -171,11 +175,12 @@
 					<div class="tsd-signature tsd-kind-icon">friendly<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L65">model/node/NodeInfo.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L66">model/node/NodeInfo.ts:66</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
+							<p>The name of the node.</p>
 						</div>
 					</div>
 				</section>
@@ -185,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">host<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L61">model/node/NodeInfo.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L62">model/node/NodeInfo.ts:62</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -200,7 +205,7 @@
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Generation<wbr>Hash<wbr>Seed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L41">model/node/NodeInfo.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L42">model/node/NodeInfo.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -215,7 +220,7 @@
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Identifier<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_network_networktype_.networktype.html" class="tsd-signature-type">NetworkType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L49">model/node/NodeInfo.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L50">model/node/NodeInfo.ts:50</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -225,12 +230,26 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="nodepublickey" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> node<wbr>Public<wbr>Key</h3>
+					<div class="tsd-signature tsd-kind-icon">node<wbr>Public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L70">model/node/NodeInfo.ts:70</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="port" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> port</h3>
 					<div class="tsd-signature tsd-kind-icon">port<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L45">model/node/NodeInfo.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L46">model/node/NodeInfo.ts:46</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -245,7 +264,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L37">model/node/NodeInfo.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L38">model/node/NodeInfo.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -260,7 +279,7 @@
 					<div class="tsd-signature tsd-kind-icon">roles<span class="tsd-signature-symbol">:</span> <a href="../enums/_model_node_roletype_.roletype.html" class="tsd-signature-type">RoleType</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L57">model/node/NodeInfo.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L58">model/node/NodeInfo.ts:58</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -275,7 +294,7 @@
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/901af8e/src/model/node/NodeInfo.ts#L53">model/node/NodeInfo.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/45dc5b6/src/model/node/NodeInfo.ts#L54">model/node/NodeInfo.ts:54</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -318,6 +337,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_node_nodeinfo_.nodeinfo.html#networkidentifier" class="tsd-kind-icon">network<wbr>Identifier</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_model_node_nodeinfo_.nodeinfo.html#nodepublickey" class="tsd-kind-icon">node<wbr>Public<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_model_node_nodeinfo_.nodeinfo.html#port" class="tsd-kind-icon">port</a>
