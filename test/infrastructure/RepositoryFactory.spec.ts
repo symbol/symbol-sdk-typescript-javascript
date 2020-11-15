@@ -105,6 +105,41 @@ describe('RepositoryFactory', () => {
         });
     });
 
+    it('Should get nodePubicKey from cache', (done) => {
+        let counter = 0;
+        const repositoryMock: NodeRepository = mock();
+        const observableOfNodeInfo = observableOf({ nodePublicKey: 'aaaa' } as NodeInfo).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
+        when(repositoryMock.getNodeInfo()).thenReturn(observableOfNodeInfo);
+        expect(observableOfNodeInfo).to.be.equals(observableOfNodeInfo);
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNodeRepository(): NodeRepository {
+                return instance(repositoryMock);
+            }
+        })('http://localhost:3000', {
+            networkType: NetworkType.PRIVATE_TEST,
+        });
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getNodePublicKey().subscribe((gh) => {
+            expect(counter).to.be.equals(1);
+            expect(gh).to.be.equals('aaaa');
+            repositoryFactory.getNodePublicKey().subscribe((g) => {
+                expect(counter).to.be.equals(1);
+                expect(g).to.be.equals('aaaa');
+                repositoryFactory.getNodePublicKey().subscribe((h) => {
+                    expect(counter).to.be.equals(1);
+                    expect(h).to.be.equals('aaaa');
+                    done();
+                });
+            });
+        });
+    });
+
     it('Should get NetworkType from cache', (done) => {
         let counter = 0;
         const repositoryMock: NetworkRepository = mock();

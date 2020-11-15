@@ -51,4 +51,9 @@ export interface RepositoryFactoryConfig {
      * The preconfigured symbol network currencies for offline access. They are loaded from server by default if not provided.
      */
     networkCurrencies?: NetworkCurrencies;
+
+    /**
+     * The node public key used for NodeKeyLink transaction in delegated harvesting.
+     */
+    nodePublicKey?: string;
 }

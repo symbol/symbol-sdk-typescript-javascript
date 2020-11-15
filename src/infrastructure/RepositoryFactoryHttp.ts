@@ -73,6 +73,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     private readonly epochAdjustment: Observable<number>;
     private readonly networkProperties: Observable<NetworkConfiguration>;
     private readonly networkCurrencies: Observable<NetworkCurrencies>;
+    private readonly nodePublicKey: Observable<string | undefined>;
     /**
      * Constructor
      * @param url the server url.
@@ -93,13 +94,14 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
                       }),
                   ),
               );
-        this.generationHash = configs?.generationHash
-            ? observableOf(configs.generationHash)
-            : this.cache(() =>
-                  this.createNodeRepository()
-                      .getNodeInfo()
-                      .pipe(map((b) => b.networkGenerationHashSeed)),
-              );
+        if (configs?.generationHash && configs?.nodePublicKey) {
+            this.generationHash = observableOf(configs.generationHash);
+            this.nodePublicKey = observableOf(configs.nodePublicKey);
+        } else {
+            const nodeInfoObservable = this.createNodeRepository().getNodeInfo();
+            this.generationHash = this.cache(() => nodeInfoObservable.pipe(map((b) => b.networkGenerationHashSeed)));
+            this.nodePublicKey = this.cache(() => nodeInfoObservable.pipe(map((b) => b.nodePublicKey)));
+        }
         this.websocketUrl = configs?.websocketUrl ? configs?.websocketUrl : `${url.replace(/\/$/, '')}/ws`;
         this.websocketInjected = configs?.websocketInjected;
         this.networkCurrencies = configs?.networkCurrencies
@@ -197,5 +199,11 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
 
     getCurrencies(): Observable<NetworkCurrencies> {
         return this.networkCurrencies;
+    }
+    /**
+     * @returns the node public key
+     */
+    getNodePublicKey(): Observable<string | undefined> {
+        return this.nodePublicKey;
     }
 }
