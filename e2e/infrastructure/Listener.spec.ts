@@ -78,7 +78,7 @@ describe('Listener', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
+            Deadline.create(helper.epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             networkType,
             [],

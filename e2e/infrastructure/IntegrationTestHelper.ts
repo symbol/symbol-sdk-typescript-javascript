@@ -15,16 +15,13 @@
  */
 import { map } from 'rxjs/operators';
 import { Addresses, BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
-import { IListener } from '../../src/infrastructure/IListener';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { Account } from '../../src/model/account/Account';
+import { IListener, RepositoryFactory, RepositoryFactoryHttp } from '../../src/infrastructure';
+import { UInt64 } from '../../src/model';
+import { Account } from '../../src/model/account';
 import { Currency, Mosaic } from '../../src/model/mosaic';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
-import { Transaction } from '../../src/model/transaction/Transaction';
-import { UInt64 } from '../../src/model/UInt64';
-import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkType } from '../../src/model/network';
+import { SignedTransaction, Transaction } from '../../src/model/transaction';
+import { TransactionService } from '../../src/service';
 
 export class IntegrationTestHelper {
     public apiUrl: string;

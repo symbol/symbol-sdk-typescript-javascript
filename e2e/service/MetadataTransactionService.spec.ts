@@ -222,7 +222,6 @@ describe('MetadataTransactionService', () => {
 
     describe('Announce transaction through service', () => {
         it('should create MosaicMetadataTransaction and announce', async () => {
-
             const deadline = Deadline.create(helper.epochAdjustment);
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const transaction = await metaDataService
