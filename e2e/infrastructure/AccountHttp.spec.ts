@@ -17,26 +17,22 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { take, toArray } from 'rxjs/operators';
-import { Order } from '../../src/infrastructure';
-import { AccountRepository } from '../../src/infrastructure/AccountRepository';
-import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
-import { RepositoryCallError } from '../../src/infrastructure/RepositoryCallError';
-import { AccountOrderBy } from '../../src/infrastructure/searchCriteria/AccountOrderBy';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { AccountRepository, MultisigRepository, NamespaceRepository, Order, RepositoryCallError } from '../../src/infrastructure';
+import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { AccountOrderBy } from '../../src/infrastructure/searchCriteria';
+import { UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { PlainMessage } from '../../src/model/message';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import {
+    AddressAliasTransaction,
+    AggregateTransaction,
+    Deadline,
+    MultisigAccountModificationTransaction,
+    NamespaceRegistrationTransaction,
+    TransferTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('AccountHttp', () => {
@@ -55,8 +51,6 @@ describe('AccountHttp', () => {
     let namespaceId: NamespaceId;
     let generationHash: string;
     let networkType: NetworkType;
-
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -89,7 +83,7 @@ describe('AccountHttp', () => {
     describe('Make sure test account is not virgin', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
@@ -106,7 +100,7 @@ describe('AccountHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
@@ -121,7 +115,7 @@ describe('AccountHttp', () => {
     describe('Setup test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
@@ -136,7 +130,7 @@ describe('AccountHttp', () => {
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -146,7 +140,7 @@ describe('AccountHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -172,6 +166,9 @@ describe('AccountHttp', () => {
         it('should return account data given a NEM Address', async () => {
             const accountInfo = await accountRepository.getAccountInfo(accountAddress).toPromise();
             expect(accountInfo.publicKey).to.be.equal(accountPublicKey);
+
+            const merkleInfo = await accountRepository.getAccountsInfoMerkle(accountInfo.address).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 
@@ -251,7 +248,7 @@ describe('AccountHttp', () => {
     describe('Remove test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Unlink,
                 namespaceId,
                 account.address,
@@ -266,7 +263,7 @@ describe('AccountHttp', () => {
     describe('Restore test multisig Accounts', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 0,
                 [],
@@ -275,7 +272,7 @@ describe('AccountHttp', () => {
                 helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 0,
                 0,
                 [],
@@ -285,7 +282,7 @@ describe('AccountHttp', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 -1,
                 [],
@@ -295,7 +292,7 @@ describe('AccountHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),

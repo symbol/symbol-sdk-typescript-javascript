@@ -445,6 +445,13 @@ describe('MetadataHttp', () => {
             });
     });
 
+    it('Namespace getMetadata', async () => {
+        Object.assign(metadataPageNamespace, { data: [] });
+        when(metadataRoutesApi.getMetadata('hash123')).thenReturn(Promise.resolve(metadataDTONamespace));
+        const metadata = await metadataRepository.getMetadata('hash123').toPromise();
+        assertMetadataInfo(metadata, metadataDTONamespace);
+    });
+
     it('Address meta no previous value Error', async () => {
         when(
             metadataRoutesApi.searchMetadataEntries(

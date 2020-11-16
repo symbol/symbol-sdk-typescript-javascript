@@ -20,6 +20,7 @@ import { Convert as convert, RawAddress as AddressLibrary } from '../core/format
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import { AddressAlias } from '../model/namespace/AddressAlias';
@@ -119,6 +120,15 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     public getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo> {
         return this.call(this.namespaceRoutesApi.getNamespace(namespaceId.toHex()), (body) => this.toNamespaceInfo(body));
+    }
+
+    /**
+     * Gets a NamespaceInfo merkle for a given namespaceId
+     * @param namespaceId - Namespace id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getNamespaceMerkle(namespaceId: NamespaceId): Observable<MerkleStateInfo> {
+        return this.call(this.namespaceRoutesApi.getNamespaceMerkle(namespaceId.toHex()), DtoMapping.toMerkleStateInfo);
     }
 
     /**

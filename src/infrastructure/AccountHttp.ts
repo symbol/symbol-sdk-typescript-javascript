@@ -16,20 +16,15 @@
 
 import { Observable } from 'rxjs';
 import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { AccountInfo } from '../model/account/AccountInfo';
-import { AccountLinkPublicKey } from '../model/account/AccountLinkPublicKey';
-import { AccountLinkVotingKey } from '../model/account/AccountLinkVotingKey';
-import { ActivityBucket } from '../model/account/ActivityBucket';
-import { Address } from '../model/account/Address';
-import { SupplementalPublicKeys } from '../model/account/SupplementalPublicKeys';
-import { Mosaic } from '../model/mosaic/Mosaic';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { UInt64 } from '../model/UInt64';
+import { DtoMapping } from '../core/utils';
+import { UInt64 } from '../model';
+import { AccountInfo, AccountLinkPublicKey, AccountLinkVotingKey, ActivityBucket, Address, SupplementalPublicKeys } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { Mosaic, MosaicId } from '../model/mosaic';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
 import { Page } from './Page';
-import { AccountSearchCriteria } from './searchCriteria/AccountSearchCriteria';
+import { AccountSearchCriteria } from './searchCriteria';
 
 /**
  * Account http repository.
@@ -91,6 +86,15 @@ export class AccountHttp extends Http implements AccountRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, AccountHttp.toAccountInfo),
         );
+    }
+
+    /**
+     * Returns the merkle information of the given account.
+     *
+     * @param address the address
+     */
+    getAccountsInfoMerkle(address: Address): Observable<MerkleStateInfo> {
+        return this.call(this.accountRoutesApi.getAccountInfoMerkle(address.plain()), DtoMapping.toMerkleStateInfo);
     }
 
     /**

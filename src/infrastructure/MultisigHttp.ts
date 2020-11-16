@@ -16,9 +16,11 @@
 
 import { Observable } from 'rxjs';
 import { MultisigAccountInfoDTO, MultisigRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils';
 import { Address } from '../model/account/Address';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
+import { MerkleStateInfo } from '../model/blockchain';
 import { Http } from './Http';
 import { MultisigRepository } from './MultisigRepository';
 
@@ -51,6 +53,15 @@ export class MultisigHttp extends Http implements MultisigRepository {
      */
     public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
         return this.call(this.multisigRoutesApi.getAccountMultisig(address.plain()), (body) => this.toMultisigAccountInfo(body));
+    }
+
+    /**
+     * Gets a MultisigAccountInfo merkle for an account.
+     * @param address - * Address can be created rawAddress or publicKey
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getMultisigAccountInfoMerkle(address: Address): Observable<MerkleStateInfo> {
+        return this.call(this.multisigRoutesApi.getAccountMultisigMerkle(address.plain()), DtoMapping.toMerkleStateInfo);
     }
 
     /**

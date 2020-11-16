@@ -19,6 +19,7 @@ import { MetadataInfoDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-fe
 import { Convert } from '../core/format/Convert';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataEntry } from '../model/metadata/MetadataEntry';
 import { MetadataType } from '../model/metadata/MetadataType';
@@ -72,6 +73,24 @@ export class MetadataHttp extends Http implements MetadataRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, this.toMetadata),
         );
+    }
+
+    /**
+     * Get metadata of the given id.
+     * @param compositeHash Metadata composite hash id
+     * @returns Observable<Metadata>
+     */
+    public getMetadata(compositeHash: string): Observable<Metadata> {
+        return this.call(this.metadataRoutesApi.getMetadata(compositeHash), (body) => this.toMetadata(body));
+    }
+
+    /**
+     * Get metadata merkle of the given id.
+     * @param compositeHash Metadata composite hash id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getMetadataMerkle(compositeHash: string): Observable<MerkleStateInfo> {
+        return this.call(this.metadataRoutesApi.getMetadataMerkle(compositeHash), DtoMapping.toMerkleStateInfo);
     }
 
     /**

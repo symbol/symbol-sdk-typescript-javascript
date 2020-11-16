@@ -14,11 +14,27 @@
  * limitations under the License.
  */
 
-import { SecretLockInfo } from '../model/lock/SecretLockInfo';
-import { Searcher } from './paginationStreamer/Searcher';
-import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCriteria';
+import { Observable } from 'rxjs';
+import { MerkleStateInfo } from '../model/blockchain/MerkleStateInfo';
+import { SecretLockInfo } from '../model/lock';
+import { Searcher } from './paginationStreamer';
+import { SecretLockSearchCriteria } from './searchCriteria';
 
 /**
  * Secretlock interface repository.
  */
-export type SecretLockRepository = Searcher<SecretLockInfo, SecretLockSearchCriteria>;
+export interface SecretLockRepository extends Searcher<SecretLockInfo, SecretLockSearchCriteria> {
+    /**
+     * Get secret lock info of the given id.
+     * @param compositeHash SecretLockInfo composite hash id
+     * @returns Observable<SecretLockInfo>
+     */
+    getSecretLock(compositeHash: string): Observable<SecretLockInfo>;
+
+    /**
+     * Get secret lock merkle info of the given id.
+     * @param compositeHash SecretLockInfo composite hash id
+     * @returns Observable<MerkleStateInfo>
+     */
+    getSecretLockMerkle(compositeHash: string): Observable<MerkleStateInfo>;
+}

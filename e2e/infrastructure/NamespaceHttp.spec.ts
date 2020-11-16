@@ -16,17 +16,12 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { take, toArray } from 'rxjs/operators';
-import { Order } from '../../src/infrastructure';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { NamespaceRepository, Order } from '../../src/infrastructure';
+import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { AddressAliasTransaction, Deadline, NamespaceRegistrationTransaction } from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NamespaceHttp', () => {
@@ -36,8 +31,6 @@ describe('NamespaceHttp', () => {
     let account: Account;
     let generationHash: string;
     const helper = new IntegrationTestHelper();
-
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -52,11 +45,16 @@ describe('NamespaceHttp', () => {
         return helper.close();
     });
 
+    const validateMerkle = async (namespaceId: NamespaceId) => {
+        const merkleInfo = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
+        expect(merkleInfo.raw).to.not.be.undefined;
+    };
+
     describe('NamespaceRegistrationTransaction', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(1000),
                 helper.networkType,
@@ -70,7 +68,7 @@ describe('NamespaceHttp', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
@@ -88,6 +86,7 @@ describe('NamespaceHttp', () => {
             const namespace = await namespaceRepository.getNamespace(defaultNamespaceId).toPromise();
             expect(namespace.startHeight.lower).to.be.equal(1);
             expect(namespace.startHeight.higher).to.be.equal(0);
+            await validateMerkle(namespace.id);
         });
     });
 
@@ -116,6 +115,7 @@ describe('NamespaceHttp', () => {
         it('should return namespace info', async () => {
             const info = await namespaceRepository.search({ ownerAddress: account.address }).toPromise();
             expect(info.data.length).to.be.greaterThan(0);
+            validateMerkle(info.data[0].id);
         });
     });
 

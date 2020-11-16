@@ -48,8 +48,6 @@ describe('HashLockHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
 
-    const epochAdjustment = 1573430400;
-
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -70,7 +68,7 @@ describe('HashLockHttp', () => {
 
     const createSignedAggregatedBondTransaction = (aggregatedTo: Account, signer: Account, recipient: Address): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             recipient,
             [],
             PlainMessage.create('test-message'),
@@ -79,7 +77,7 @@ describe('HashLockHttp', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
+            Deadline.create(helper.epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             networkType,
             [],
@@ -94,7 +92,7 @@ describe('HashLockHttp', () => {
         mosaicId: UnresolvedMosaicId,
     ): any => {
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
@@ -114,7 +112,7 @@ describe('HashLockHttp', () => {
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -124,7 +122,7 @@ describe('HashLockHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -156,9 +154,15 @@ describe('HashLockHttp', () => {
     describe('searchHashLock', () => {
         it('should return hash lock page info', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            const info = await hashLockRepo.search({ address: account.address }).toPromise();
-            hash = info.data[0].hash;
-            expect(info.data.length).to.be.greaterThan(0);
+            const page = await hashLockRepo.search({ address: account.address }).toPromise();
+            const info = page.data[0];
+            hash = info.hash;
+            expect(page.data.length).to.be.greaterThan(0);
+
+            const infoFromId = await hashLockRepo.getHashLock(hash).toPromise();
+            expect(infoFromId).deep.eq(info);
+            const merkleInfo = await hashLockRepo.getHashLockMerkle(hash).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 
@@ -192,7 +196,7 @@ describe('HashLockHttp', () => {
     describe('Restore test multisig Accounts', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 0,
                 [],
@@ -201,7 +205,7 @@ describe('HashLockHttp', () => {
                 helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 0,
                 0,
                 [],
@@ -211,7 +215,7 @@ describe('HashLockHttp', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 -1,
                 [],
@@ -221,7 +225,7 @@ describe('HashLockHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),

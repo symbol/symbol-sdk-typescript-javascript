@@ -42,8 +42,6 @@ describe('BlockHttp', () => {
     let networkType: NetworkType;
     let transactionHash;
 
-    const epochAdjustment = 1573430400;
-
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -68,7 +66,7 @@ describe('BlockHttp', () => {
     describe('Setup Test Data', () => {
         it('Announce TransferTransaction FER', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),

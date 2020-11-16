@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-import { Metadata } from '../model/metadata/Metadata';
-import { Searcher } from './paginationStreamer/Searcher';
-import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
+import { Observable } from 'rxjs';
+import { MerkleStateInfo } from '../model/blockchain';
+import { Metadata } from '../model/metadata';
+import { Searcher } from './paginationStreamer';
+import { MetadataSearchCriteria } from './searchCriteria';
 
 /**
  * Metadata interface repository.
  *
  * @since 1.0
  */
-export type MetadataRepository = Searcher<Metadata, MetadataSearchCriteria>;
+export interface MetadataRepository extends Searcher<Metadata, MetadataSearchCriteria> {
+    /**
+     * Get metadata of the given id.
+     * @param compositeHash Metadata composite hash id
+     * @returns Observable<Metadata>
+     */
+    getMetadata(compositeHash: string): Observable<Metadata>;
+
+    /**
+     * Get metadata merkle of the given id.
+     * @param compositeHash Metadata composite hash id
+     * @returns Observable<MerkleStateInfo>
+     */
+    getMetadataMerkle(compositeHash: string): Observable<MerkleStateInfo>;
+}

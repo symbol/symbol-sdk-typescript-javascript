@@ -16,7 +16,9 @@
 
 import { Duration } from '@js-joda/core';
 import { AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/index';
 import { Address } from '../../model/account/Address';
+import { MerkleStateInfo } from '../../model/blockchain/MerkleStateInfo';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../../model/restriction/AccountRestrictions';
@@ -131,5 +133,13 @@ export class DtoMapping {
      */
     public static toSimpleHex(serverHex: string): string {
         return serverHex.split("'").join('').replace(/^(0x)/, '');
+    }
+
+    /**
+     * Creates the MerkleStateInfo from the dto
+     * @param dto the dto
+     */
+    public static toMerkleStateInfo(dto: MerkleStateInfoDTO): MerkleStateInfo {
+        return new MerkleStateInfo(dto.raw);
     }
 }

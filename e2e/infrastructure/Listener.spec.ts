@@ -45,8 +45,6 @@ describe('Listener', () => {
     let networkType: NetworkType;
     let transactionRepository: TransactionRepository;
 
-    const epochAdjustment = 1573430400;
-
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -71,7 +69,7 @@ describe('Listener', () => {
 
     const createSignedAggregatedBondTransaction = (aggregatedTo: Account, signer: Account, recipient: Address): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             recipient,
             [],
             PlainMessage.create('test-message'),
@@ -80,7 +78,7 @@ describe('Listener', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
+            Deadline.create(helper.epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             networkType,
             [],
@@ -95,7 +93,7 @@ describe('Listener', () => {
         networkCurrency: Currency,
     ): void => {
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             networkCurrency.createRelative(10),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
@@ -109,7 +107,7 @@ describe('Listener', () => {
     describe('Confirmed', () => {
         it('confirmedTransactionsGiven address signer', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
@@ -125,7 +123,7 @@ describe('Listener', () => {
         it('confirmedTransactionsGiven address recipient', () => {
             const recipientAddress = account2.address;
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 recipientAddress,
                 [],
                 PlainMessage.create('test-message'),
@@ -140,7 +138,7 @@ describe('Listener', () => {
     describe('UnConfirmed', () => {
         it('unconfirmedTransactionsAdded', (done) => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
@@ -159,7 +157,7 @@ describe('Listener', () => {
 
         it('unconfirmedTransactionsRemoved', (done) => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
@@ -180,7 +178,7 @@ describe('Listener', () => {
     describe('TransferTransaction', () => {
         it('standalone', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 cosignAccount1.address,
                 [helper.createCurrency(10, true)],
                 PlainMessage.create('test-message'),
@@ -196,7 +194,7 @@ describe('Listener', () => {
     describe('MultisigAccountModificationTransaction - Create multisig account', () => {
         it('MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -206,7 +204,7 @@ describe('Listener', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -317,7 +315,7 @@ describe('Listener', () => {
     describe('MultisigAccountModificationTransaction - Restore multisig Accounts', () => {
         it('Restore Multisig Account', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 0,
                 [],
@@ -325,7 +323,7 @@ describe('Listener', () => {
                 networkType,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 0,
                 0,
                 [],
@@ -334,7 +332,7 @@ describe('Listener', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 -1,
                 [],
@@ -343,7 +341,7 @@ describe('Listener', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),
@@ -366,7 +364,7 @@ describe('Listener', () => {
         it('transactionStatusGiven', () => {
             const mosaics = [helper.createCurrency(1000000000000)];
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 mosaics,
                 PlainMessage.create('test-message'),

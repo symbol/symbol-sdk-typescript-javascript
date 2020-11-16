@@ -15,19 +15,27 @@
  */
 
 import { Observable } from 'rxjs/internal/Observable';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
-import { Page } from './Page';
+import { Searcher } from './paginationStreamer';
 import { RestrictionMosaicSearchCriteria } from './searchCriteria/RestrictionMosaicSearchCriteria';
 
-export interface RestrictionMosaicRepository {
+export interface RestrictionMosaicRepository
+    extends Searcher<MosaicAddressRestriction | MosaicGlobalRestriction, RestrictionMosaicSearchCriteria> {
     /**
-     * Returns a mosaic restrictions page based on the criteria.
+     * Returns mosaic restrictions by composite hash
      *
-     * @param criteria the criteria
-     * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
+     * @param compositeHash the composite hash
+     * @return Observable<MosaicAddressRestriction | MosaicGlobalRestriction>
      */
-    searchMosaicRestrictions(
-        criteria: RestrictionMosaicSearchCriteria,
-    ): Observable<Page<MosaicAddressRestriction | MosaicGlobalRestriction>>;
+    getMosaicRestrictions(compositeHash: string): Observable<MosaicAddressRestriction | MosaicGlobalRestriction>;
+
+    /**
+     * Returns mosaic restrictions by composite hash
+     *
+     * @param compositeHash the composite hash
+     * @return Observable<MosaicAddressRestriction | MosaicGlobalRestriction>
+     */
+    getMosaicRestrictionsMerkle(compositeHash: string): Observable<MerkleStateInfo>;
 }

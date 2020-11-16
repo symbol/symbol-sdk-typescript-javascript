@@ -1,31 +1,27 @@
 import { expect } from 'chai';
-import { KeyGenerator } from '../../src/core/format/KeyGenerator';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
-import { Account } from '../../src/model/account/Account';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { UInt64 } from '../../src/model/UInt64';
-import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRestrictionTransactionService';
+import { KeyGenerator } from '../../src/core/format';
+import { NamespaceRepository, RestrictionMosaicRepository } from '../../src/infrastructure';
+import { UInt64 } from '../../src/model';
+import { Account } from '../../src/model/account';
+import { MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import { MosaicRestrictionType } from '../../src/model/restriction';
+import {
+    AddressAliasTransaction,
+    AggregateTransaction,
+    Deadline,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    NamespaceRegistrationTransaction,
+    TransactionType,
+} from '../../src/model/transaction';
+import { MosaicRestrictionTransactionService } from '../../src/service';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('MosaicRestrictionTransactionService', () => {
-    const epochAdjustment = 1573430400;
-    const deadline = Deadline.create(epochAdjustment);
     const key = KeyGenerator.generateUInt64Key('TestKey');
     let account: Account;
     let restrictionRepository: RestrictionMosaicRepository;
@@ -62,7 +58,7 @@ describe('MosaicRestrictionTransactionService', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -79,7 +75,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('MosaicGlobalRestrictionTransaction - with referenceMosaicId', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 mosaicId,
                 key,
                 UInt64.fromUint(0),
@@ -98,7 +94,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('MosaicAddressRestrictionTransaction', () => {
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 mosaicId,
                 key,
                 account.address,
@@ -108,7 +104,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -123,7 +119,7 @@ describe('MosaicRestrictionTransactionService', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(50),
                 networkType,
@@ -140,7 +136,7 @@ describe('MosaicRestrictionTransactionService', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(50),
                 networkType,
@@ -156,7 +152,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceIdAddress,
                 account.address,
@@ -172,7 +168,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('MosaicAliasTransaction', () => {
         it('standalone', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceIdMosaic,
                 mosaicId,
@@ -193,6 +189,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('Test new services - MosaicGlobalRestriction', () => {
         it('should create MosaicGlobalRestrictionTransaction', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
+            const deadline = Deadline.create(helper.epochAdjustment);
 
             return service
                 .createMosaicGlobalRestrictionTransaction(
@@ -220,6 +217,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('Test new services - MosaicGlobalRestriction', () => {
         it('should create MosaicGlobalRestrictionTransaction using alias', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
+            const deadline = Deadline.create(helper.epochAdjustment);
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             const transaction = (await service
                 .createMosaicGlobalRestrictionTransaction(
@@ -245,6 +243,7 @@ describe('MosaicRestrictionTransactionService', () => {
     describe('Test new services - MosaicAddressRestriction', () => {
         it('should create MosaicAddressRestrictionTransaction', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
+            const deadline = Deadline.create(helper.epochAdjustment);
             return service
                 .createMosaicAddressRestrictionTransaction(deadline, networkType, mosaicId, key, account.address, '3', helper.maxFee)
                 .toPromise()
@@ -262,6 +261,7 @@ describe('MosaicRestrictionTransactionService', () => {
         it('should create MosaicAddressRestrictionTransaction with address alias', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
 
+            const deadline = Deadline.create(helper.epochAdjustment);
             return service
                 .createMosaicAddressRestrictionTransaction(deadline, networkType, mosaicId, key, namespaceIdAddress, '4', helper.maxFee)
                 .toPromise()
@@ -277,6 +277,7 @@ describe('MosaicRestrictionTransactionService', () => {
 
     describe('Announce MosaicGlobalRestriction through service', () => {
         it('should create MosaicGlobalRestriction and announce', () => {
+            const deadline = Deadline.create(helper.epochAdjustment);
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             return service
                 .createMosaicGlobalRestrictionTransaction(
@@ -292,7 +293,7 @@ describe('MosaicRestrictionTransactionService', () => {
                 .toPromise()
                 .then((transaction: MosaicGlobalRestrictionTransaction) => {
                     const aggregateTransaction = AggregateTransaction.createComplete(
-                        Deadline.create(epochAdjustment),
+                        Deadline.create(helper.epochAdjustment),
                         [transaction.toAggregate(account.publicAccount)],
                         networkType,
                         [],
@@ -306,13 +307,14 @@ describe('MosaicRestrictionTransactionService', () => {
 
     describe('Announce MosaicAddressRestriction through service', () => {
         it('should create MosaicAddressRestriction and announce', () => {
+            const deadline = Deadline.create(helper.epochAdjustment);
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             return service
                 .createMosaicAddressRestrictionTransaction(deadline, networkType, mosaicId, key, account.address, '3', helper.maxFee)
                 .toPromise()
                 .then((transaction: MosaicAddressRestrictionTransaction) => {
                     const aggregateTransaction = AggregateTransaction.createComplete(
-                        Deadline.create(epochAdjustment),
+                        Deadline.create(helper.epochAdjustment),
                         [transaction.toAggregate(account.publicAccount)],
                         networkType,
                         [],

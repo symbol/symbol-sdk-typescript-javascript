@@ -42,7 +42,7 @@ describe('HashLockInfo', () => {
             new MosaicId(lockDto.mosaicId),
             UInt64.fromNumericString(lockDto.amount),
             UInt64.fromNumericString(lockDto.endHeight),
-            lockDto.status,
+            lockDto.status.valueOf(),
             lockDto.hash,
         );
 

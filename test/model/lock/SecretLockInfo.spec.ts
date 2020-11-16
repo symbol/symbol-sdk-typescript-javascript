@@ -42,7 +42,7 @@ describe('SecretLockInfo', () => {
             new MosaicId(lockDto.mosaicId),
             UInt64.fromNumericString(lockDto.amount),
             UInt64.fromNumericString(lockDto.endHeight),
-            lockDto.status,
+            lockDto.status.valueOf(),
             lockDto.hashAlgorithm.valueOf(),
             lockDto.secret,
             Address.createFromRawAddress(lockDto.recipientAddress),

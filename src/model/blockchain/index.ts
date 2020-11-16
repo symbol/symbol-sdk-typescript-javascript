@@ -6,5 +6,6 @@ export * from './FinalizedBlock';
 export * from './MerklePathItem';
 export * from './MerklePosition';
 export * from './MerkleProofInfo';
+export * from './MerkleStateInfo';
 export * from './NewBlock';
 export * from './StorageInfo';

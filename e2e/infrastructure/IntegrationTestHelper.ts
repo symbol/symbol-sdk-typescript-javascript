@@ -15,20 +15,18 @@
  */
 import { map } from 'rxjs/operators';
 import { Addresses, BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
-import { IListener } from '../../src/infrastructure/IListener';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { Account } from '../../src/model/account/Account';
+import { IListener, RepositoryFactory, RepositoryFactoryHttp } from '../../src/infrastructure';
+import { UInt64 } from '../../src/model';
+import { Account } from '../../src/model/account';
 import { Currency, Mosaic } from '../../src/model/mosaic';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
-import { Transaction } from '../../src/model/transaction/Transaction';
-import { UInt64 } from '../../src/model/UInt64';
-import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkType } from '../../src/model/network';
+import { SignedTransaction, Transaction } from '../../src/model/transaction';
+import { TransactionService } from '../../src/service';
 
 export class IntegrationTestHelper {
     public apiUrl: string;
     public repositoryFactory: RepositoryFactory;
+    public accounts: Account[];
     public account: Account;
     public account2: Account;
     public account3: Account;
@@ -67,8 +65,7 @@ export class IntegrationTestHelper {
         return this.toAccounts(configResult.addresses);
     }
     private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string; addresses: Addresses }> {
-        // const target = '../catapult-rest/rest/target';
-        const target = 'target/bootstrap-test';
+        const target = process.env.REST_DEV ? '../catapult-rest/rest/target' : 'target/bootstrap-test';
         console.log('Loading bootstrap server');
         const addresses = BootstrapUtils.loadExistingAddresses(target);
         return this.toAccounts(addresses);
@@ -108,15 +105,16 @@ export class IntegrationTestHelper {
         this.epochAdjustment = await this.repositoryFactory.getEpochAdjustment().toPromise();
 
         let index = 0;
-        this.account = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.account2 = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.account3 = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.multisigAccount = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.cosignAccount1 = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.cosignAccount2 = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.cosignAccount3 = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.cosignAccount4 = Account.createFromPrivateKey(accounts[index++], this.networkType);
-        this.harvestingAccount = Account.createFromPrivateKey(accounts[index++], this.networkType);
+        this.accounts = accounts.map((account) => Account.createFromPrivateKey(account, this.networkType));
+        this.account = this.accounts[index++];
+        this.account2 = this.accounts[index++];
+        this.account3 = this.accounts[index++];
+        this.multisigAccount = this.accounts[index++];
+        this.cosignAccount1 = this.accounts[index++];
+        this.cosignAccount2 = this.accounts[index++];
+        this.cosignAccount3 = this.accounts[index++];
+        this.cosignAccount4 = this.accounts[index++];
+        this.harvestingAccount = this.accounts[index++];
 
         this.listener = this.repositoryFactory.createListener();
 

@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { HashLockInfoDTO, HashLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain/MerkleStateInfo';
 import { HashLockInfo } from '../model/lock/HashLockInfo';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { UInt64 } from '../model/UInt64';
@@ -56,6 +57,14 @@ export class HashLockHttp extends Http implements HashLockRepository {
     public getHashLock(hash: string): Observable<HashLockInfo> {
         return this.call(this.hashLockRoutesApi.getHashLock(hash), (body) => this.toHashLockInfo(body));
     }
+    /**
+     * Get secret lock merkle info of the given id.
+     * @param hash HashLockInfo hash id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getHashLockMerkle(hash: string): Observable<MerkleStateInfo> {
+        return this.call(this.hashLockRoutesApi.getHashLockMerkle(hash), DtoMapping.toMerkleStateInfo);
+    }
 
     /**
      * Gets an array of HashLockInfo.
@@ -65,7 +74,7 @@ export class HashLockHttp extends Http implements HashLockRepository {
     public search(criteria: HashLockSearchCriteria): Observable<Page<HashLockInfo>> {
         return this.call(
             this.hashLockRoutesApi.searchHashLock(
-                criteria.address.plain(),
+                criteria.address?.plain(),
                 criteria.pageSize,
                 criteria.pageNumber,
                 criteria.offset,
@@ -89,7 +98,7 @@ export class HashLockHttp extends Http implements HashLockRepository {
             new MosaicId(dto.lock.mosaicId),
             UInt64.fromNumericString(dto.lock.amount),
             UInt64.fromNumericString(dto.lock.endHeight),
-            dto.lock.status,
+            dto.lock.status.valueOf(),
             dto.lock.hash,
         );
     }

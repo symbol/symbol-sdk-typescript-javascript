@@ -19,6 +19,7 @@ import { mergeMap } from 'rxjs/operators';
 import { MosaicInfoDTO, MosaicRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
@@ -80,6 +81,15 @@ export class MosaicHttp extends Http implements MosaicRepository {
             }),
             (body) => body.map((b) => MosaicHttp.toMosaicInfo(b)),
         );
+    }
+
+    /**
+     * Gets a MosaicInfo merkle for a given mosaicId
+     * @param mosaicId - Mosaic id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getMosaicMerkle(mosaicId: MosaicId): Observable<MerkleStateInfo> {
+        return this.call(this.mosaicRoutesApi.getMosaicMerkle(mosaicId.toHex()), DtoMapping.toMerkleStateInfo);
     }
 
     /**

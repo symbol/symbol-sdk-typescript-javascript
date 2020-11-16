@@ -22,18 +22,20 @@ import {
     MosaicGlobalRestrictionEntryDTO,
     RestrictionMosaicRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { UInt64 } from '../model';
-import { Address } from '../model/account/Address';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
-import { MosaicAddressRestrictionItem } from '../model/restriction/MosaicAddressRestrictionItem';
-import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
-import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
+import { DtoMapping } from '../core/utils';
+import { MerkleStateInfo, UInt64 } from '../model';
+import { Address } from '../model/account';
+import { MosaicId } from '../model/mosaic';
+import {
+    MosaicAddressRestriction,
+    MosaicAddressRestrictionItem,
+    MosaicGlobalRestriction,
+    MosaicGlobalRestrictionItem,
+} from '../model/restriction';
 import { Http } from './Http';
 import { Page } from './Page';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
-import { RestrictionMosaicSearchCriteria } from './searchCriteria/RestrictionMosaicSearchCriteria';
+import { RestrictionMosaicSearchCriteria } from './searchCriteria';
 
 /**
  * RestrictionMosaic http repository.
@@ -62,11 +64,9 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * @param criteria the criteria
      * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
      */
-    public searchMosaicRestrictions(
-        criteria: RestrictionMosaicSearchCriteria,
-    ): Observable<Page<MosaicAddressRestriction | MosaicGlobalRestriction>> {
+    public search(criteria: RestrictionMosaicSearchCriteria): Observable<Page<MosaicAddressRestriction | MosaicGlobalRestriction>> {
         return this.call(
-            this.restrictionMosaicRoutesApi.searchMosaicRestriction(
+            this.restrictionMosaicRoutesApi.searchMosaicRestrictions(
                 criteria.mosaicId?.toHex(),
                 criteria.entryType?.valueOf(),
                 criteria.targetAddress?.plain(),
@@ -120,5 +120,13 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
 
     private static toMosaicAddressRestrictionItem(restriction: MosaicAddressRestrictionEntryDTO): MosaicAddressRestrictionItem {
         return new MosaicAddressRestrictionItem(UInt64.fromNumericString(restriction.key), UInt64.fromNumericString(restriction.value));
+    }
+
+    public getMosaicRestrictions(compositeHash: string): Observable<MosaicAddressRestriction | MosaicGlobalRestriction> {
+        return this.call(this.restrictionMosaicRoutesApi.getMosaicRestrictions(compositeHash), RestrictionMosaicHttp.toMosaicRestriction);
+    }
+
+    public getMosaicRestrictionsMerkle(compositeHash: string): Observable<MerkleStateInfo> {
+        return this.call(this.restrictionMosaicRoutesApi.getMosaicRestrictionsMerkle(compositeHash), DtoMapping.toMerkleStateInfo);
     }
 }

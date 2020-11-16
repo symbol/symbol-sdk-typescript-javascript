@@ -17,6 +17,7 @@
 import { Observable } from 'rxjs';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import { NamespaceId } from '../model/namespace/NamespaceId';
@@ -53,6 +54,13 @@ export interface NamespaceRepository extends Searcher<NamespaceInfo, NamespaceSe
      * @returns Observable<NamespaceInfo>
      */
     getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo>;
+
+    /**
+     * Gets a NamespaceInfo merkle for a given namespaceId
+     * @param namespaceId - Namespace id
+     * @returns Observable<MerkleStateInfo>
+     */
+    getNamespaceMerkle(namespaceId: NamespaceId): Observable<MerkleStateInfo>;
 
     /**
      * Gets array of NamespaceName for different namespaceIds

@@ -16,13 +16,23 @@
 
 import { Observable } from 'rxjs/internal/Observable';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { AccountRestrictions } from '../model/restriction';
+import { Searcher } from './paginationStreamer';
+import { RestrictionMosaicSearchCriteria } from './searchCriteria';
 
-export interface RestrictionAccountRepository {
+export interface RestrictionAccountRepository extends Searcher<AccountRestrictions, RestrictionMosaicSearchCriteria> {
     /**
      * Gets Account restrictions.
-     * @param address list of addresses
-     * @returns Observable<AccountRestrictionsInfo>
+     * @param address the address
+     * @returns Observable<AccountRestrictions>
      */
     getAccountRestrictions(address: Address): Observable<AccountRestrictions>;
+
+    /**
+     * Gets Account restrictions merkle .
+     * @param address the account address.
+     * @returns Observable<MerkleStateInfo>
+     */
+    getAccountRestrictionsMerkle(address: Address): Observable<MerkleStateInfo>;
 }
