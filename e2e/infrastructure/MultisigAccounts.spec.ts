@@ -30,8 +30,6 @@ describe('MultisigAccounts', () => {
     let generationHash: string;
     let networkType: NetworkType;
 
-    const epochAdjustment = 1573430400;
-
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             multisigAccount = helper.multisigAccount;
@@ -50,7 +48,7 @@ describe('MultisigAccounts', () => {
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -60,7 +58,7 @@ describe('MultisigAccounts', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],

@@ -52,8 +52,6 @@ describe('AccountHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
 
-    const epochAdjustment = 1573430400;
-
     before(() => {
         return helper.start({ openListener: true }).then(() => {
             account = helper.account;
@@ -85,7 +83,7 @@ describe('AccountHttp', () => {
     describe('Make sure test account is not virgin', () => {
         it('Announce TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
@@ -102,7 +100,7 @@ describe('AccountHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
@@ -117,7 +115,7 @@ describe('AccountHttp', () => {
     describe('Setup test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 account.address,
@@ -132,7 +130,7 @@ describe('AccountHttp', () => {
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -142,7 +140,7 @@ describe('AccountHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -250,7 +248,7 @@ describe('AccountHttp', () => {
     describe('Remove test AddressAlias', () => {
         it('Announce addressAliasTransaction', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Unlink,
                 namespaceId,
                 account.address,
@@ -265,7 +263,7 @@ describe('AccountHttp', () => {
     describe('Restore test multisig Accounts', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 0,
                 [],
@@ -274,7 +272,7 @@ describe('AccountHttp', () => {
                 helper.maxFee,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 0,
                 0,
                 [],
@@ -284,7 +282,7 @@ describe('AccountHttp', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 -1,
                 [],
@@ -294,7 +292,7 @@ describe('AccountHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),
