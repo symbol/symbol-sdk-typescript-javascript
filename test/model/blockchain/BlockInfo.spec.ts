@@ -18,11 +18,11 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { BlockInfo } from '../../../src/model/blockchain/BlockInfo';
+import { NormalBlockInfo } from '../../../src/model/blockchain/NomalBlockInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 
 describe('BlockInfo', () => {
-    it('should createComplete an BlockInfo object', () => {
+    it('should createComplete an NormalBlockInfo object', () => {
         const blockDTO = {
             id: '12345',
             block: {
@@ -43,7 +43,7 @@ describe('BlockInfo', () => {
                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 beneficiaryAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                 timestamp: new UInt64([0, 0]),
-                type: 32768,
+                type: 33091,
                 version: 1,
                 network: 144,
             },
@@ -58,7 +58,7 @@ describe('BlockInfo', () => {
             },
         };
 
-        const blockInfo = new BlockInfo(
+        const blockInfo = new NormalBlockInfo(
             blockDTO.id,
             blockDTO.block.size,
             blockDTO.meta.hash,

@@ -15,13 +15,17 @@
  */
 
 import { Observable } from 'rxjs';
-import { BlockInfoDTO, BlockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { BlockInfoDTO, BlockRoutesApi, ImportanceBlockDTO } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
+import { BlockType } from '../model/blockchain/BlockType';
+import { ImportanceBlockFooter } from '../model/blockchain/ImportanceBlockFooter';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
+import { NemesisImportanceBlockInfo } from '../model/blockchain/NemesisImportanceBlockInfo';
+import { NormalBlockInfo } from '../model/blockchain/NomalBlockInfo';
 import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
@@ -88,7 +92,8 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     private toBlockInfo(dto: BlockInfoDTO): BlockInfo {
         const networkType = dto.block.network.valueOf();
-        return new BlockInfo(
+        const blockType = dto.block.type;
+        const normalBlock = new NormalBlockInfo(
             dto.id ?? '',
             dto.block.size,
             dto.meta.hash,
@@ -116,6 +121,28 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.meta.transactionsCount,
             dto.meta.statementsCount,
         );
+        if (blockType === BlockType.NormalBlock.valueOf()) {
+            return normalBlock;
+        } else if ([BlockType.ImportanceBlock.valueOf(), BlockType.NemesisBlock.valueOf()].includes(blockType)) {
+            const importanceBlockInfoDto = dto.block as ImportanceBlockDTO;
+            const importanceBlockFooter = new ImportanceBlockFooter(
+                importanceBlockInfoDto.votingEligibleAccountsCount,
+                UInt64.fromNumericString(importanceBlockInfoDto.harvestingEligibleAccountsCount),
+                UInt64.fromNumericString(importanceBlockInfoDto.totalVotingBalance),
+                importanceBlockInfoDto.previousImportanceBlockHash,
+            );
+            return Object.assign(
+                {
+                    __proto__: Object.getPrototypeOf(normalBlock),
+                },
+                normalBlock,
+                {
+                    importanceBlockFooter,
+                },
+            ) as NemesisImportanceBlockInfo;
+        } else {
+            throw new Error(`Block type: ${blockType} invalid.`);
+        }
     }
 
     /**

@@ -29,6 +29,7 @@ import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
 import { MerkleProofInfo } from '../../src/model/blockchain/MerkleProofInfo';
+import { NormalBlockInfo } from '../../src/model/blockchain/NomalBlockInfo';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Transaction } from '../../src/model/transaction/Transaction';
@@ -45,7 +46,7 @@ describe('BlockService', () => {
 
     function mockBlockInfo(isFake = false): BlockInfo {
         if (isFake) {
-            return new BlockInfo(
+            return new NormalBlockInfo(
                 'id',
                 1,
                 'hash',
@@ -74,7 +75,7 @@ describe('BlockService', () => {
                 0,
             );
         }
-        return new BlockInfo(
+        return new NormalBlockInfo(
             'id',
             1,
             'hash',
