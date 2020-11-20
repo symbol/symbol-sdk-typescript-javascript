@@ -164,7 +164,7 @@ export class AggregateTransaction extends Transaction {
         const innerTransactions = builder.getTransactions();
         const networkType = builder.getNetwork().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, false);
         const consignatures = builder.getCosignatures().map((cosig) => {
             return new AggregateTransactionCosignature(
                 Convert.uint8ToHex(cosig.signature.signature),
@@ -182,7 +182,7 @@ export class AggregateTransaction extends Transaction {
                   networkType,
                   consignatures,
                   new UInt64(builder.fee.amount),
-                  signature.match(`^[0]+$`) ? undefined : signature,
+                  signature,
                   signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
               )
             : AggregateTransaction.createBonded(
@@ -193,7 +193,7 @@ export class AggregateTransaction extends Transaction {
                   networkType,
                   consignatures,
                   new UInt64(builder.fee.amount),
-                  signature.match(`^[0]+$`) ? undefined : signature,
+                  signature,
                   signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
               );
     }

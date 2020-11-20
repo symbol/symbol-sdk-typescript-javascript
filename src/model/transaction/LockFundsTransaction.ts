@@ -141,7 +141,7 @@ export class LockFundsTransaction extends Transaction {
             : HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = LockFundsTransaction.create(
             isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as HashLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId), new UInt64(builder.getMosaic().amount.amount)),
@@ -149,7 +149,7 @@ export class LockFundsTransaction extends Transaction {
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;

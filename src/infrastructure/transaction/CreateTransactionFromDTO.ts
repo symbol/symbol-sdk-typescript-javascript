@@ -15,7 +15,7 @@
  */
 import { Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils';
-import { MessageFactory, UInt64 } from '../../model';
+import { MessageFactory, TransactionVersion, UInt64, VotingKeyLinkV1Transaction } from '../../model';
 import { Address, PublicAccount } from '../../model/account';
 import { Mosaic, MosaicFlags, MosaicId, MosaicNonce } from '../../model/mosaic';
 import { NamespaceId } from '../../model/namespace';
@@ -126,206 +126,212 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
  * @internal
  * @param transactionDTO
  * @param transactionInfo
+ * @param isEmbedded
  * @returns {any}
  * @constructor
  */
-const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
-    if (transactionDTO.type === TransactionType.TRANSFER) {
+const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isEmbedded: boolean): Transaction => {
+    const type: number = transactionDTO.type;
+    const version: number = transactionDTO.version;
+    const signature = Transaction.resolveSignature(transactionDTO.signature, false);
+    const maxFee = UInt64.fromNumericString(transactionDTO.maxFee || '0');
+    const deadline = extractDeadline(transactionDTO.deadline);
+    if (type === TransactionType.TRANSFER) {
         return new TransferTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             extractRecipient(transactionDTO.recipientAddress),
             extractMosaics(transactionDTO.mosaics),
             MessageFactory.createMessageFromHex(transactionDTO.message),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.NAMESPACE_REGISTRATION) {
+    } else if (type === TransactionType.NAMESPACE_REGISTRATION) {
         return new NamespaceRegistrationTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.registrationType,
             transactionDTO.name,
             NamespaceId.createFromEncoded(transactionDTO.id),
             transactionDTO.registrationType === 0 ? UInt64.fromNumericString(transactionDTO.duration) : undefined,
             transactionDTO.registrationType === 1 ? NamespaceId.createFromEncoded(transactionDTO.parentId) : undefined,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MOSAIC_DEFINITION) {
+    } else if (type === TransactionType.MOSAIC_DEFINITION) {
         return new MosaicDefinitionTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             MosaicNonce.createFromNumber(transactionDTO.nonce),
             new MosaicId(transactionDTO.id),
             new MosaicFlags(transactionDTO.flags),
             transactionDTO.divisibility,
             UInt64.fromNumericString(transactionDTO.duration),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
+    } else if (type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
         return new MosaicSupplyChangeTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             transactionDTO.action,
             UInt64.fromNumericString(transactionDTO.delta),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
+    } else if (type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
         return new MultisigAccountModificationTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
             transactionDTO.addressAdditions ? transactionDTO.addressAdditions.map((addition) => extractRecipient(addition)) : [],
             transactionDTO.addressDeletions ? transactionDTO.addressDeletions.map((deletion) => extractRecipient(deletion)) : [],
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.HASH_LOCK) {
+    } else if (type === TransactionType.HASH_LOCK) {
         const networkType = transactionDTO.network;
         return new LockFundsTransaction(
             networkType,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             new Mosaic(new MosaicId(transactionDTO.mosaicId), UInt64.fromNumericString(transactionDTO.amount)),
             UInt64.fromNumericString(transactionDTO.duration),
             new SignedTransaction('', transactionDTO.hash, '', TransactionType.AGGREGATE_BONDED, networkType),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, networkType) : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.SECRET_LOCK) {
+    } else if (type === TransactionType.SECRET_LOCK) {
         const recipientAddress = transactionDTO.recipientAddress;
         const mosaicId = UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId);
         return new SecretLockTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             new Mosaic(mosaicId, UInt64.fromNumericString(transactionDTO.amount)),
             UInt64.fromNumericString(transactionDTO.duration),
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
             extractRecipient(recipientAddress),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.SECRET_PROOF) {
+    } else if (type === TransactionType.SECRET_PROOF) {
         const recipientAddress = transactionDTO.recipientAddress;
         return new SecretProofTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
             extractRecipient(recipientAddress),
             transactionDTO.proof,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
+    } else if (type === TransactionType.MOSAIC_ALIAS) {
         return new MosaicAliasTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.aliasAction,
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             new MosaicId(transactionDTO.mosaicId),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
+    } else if (type === TransactionType.ADDRESS_ALIAS) {
         return new AddressAliasTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.aliasAction,
             NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             extractRecipient(transactionDTO.address) as Address,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
+    } else if (type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         return new AccountAddressRestrictionTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.restrictionFlags,
             transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions.map((addition) => extractRecipient(addition)) : [],
             transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions.map((deletion) => extractRecipient(deletion)) : [],
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
+    } else if (type === TransactionType.ACCOUNT_OPERATION_RESTRICTION) {
         return new AccountOperationRestrictionTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.restrictionFlags,
             transactionDTO.restrictionAdditions ? transactionDTO.restrictionAdditions : [],
             transactionDTO.restrictionDeletions ? transactionDTO.restrictionDeletions : [],
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
+    } else if (type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
         return new AccountMosaicRestrictionTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.restrictionFlags,
             transactionDTO.restrictionAdditions
                 ? transactionDTO.restrictionAdditions.map((addition) => UnresolvedMapping.toUnresolvedMosaic(addition))
@@ -333,32 +339,32 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.restrictionDeletions
                 ? transactionDTO.restrictionDeletions.map((deletion) => UnresolvedMapping.toUnresolvedMosaic(deletion))
                 : [],
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_KEY_LINK) {
+    } else if (type === TransactionType.ACCOUNT_KEY_LINK) {
         return new AccountKeyLinkTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.linkedPublicKey,
             transactionDTO.linkAction,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
+    } else if (type === TransactionType.MOSAIC_GLOBAL_RESTRICTION) {
         return new MosaicGlobalRestrictionTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.referenceMosaicId),
             UInt64.fromHex(transactionDTO.restrictionKey),
@@ -366,125 +372,141 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.previousRestrictionType,
             UInt64.fromNumericString(transactionDTO.newRestrictionValue),
             transactionDTO.newRestrictionType,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
+    } else if (type === TransactionType.MOSAIC_ADDRESS_RESTRICTION) {
         return new MosaicAddressRestrictionTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             UInt64.fromHex(transactionDTO.restrictionKey),
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromNumericString(transactionDTO.previousRestrictionValue),
             UInt64.fromNumericString(transactionDTO.newRestrictionValue),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA) {
+    } else if (type === TransactionType.ACCOUNT_METADATA) {
         return new AccountMetadataTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA) {
+    } else if (type === TransactionType.MOSAIC_METADATA) {
         return new MosaicMetadataTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.targetMosaicId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA) {
+    } else if (type === TransactionType.NAMESPACE_METADATA) {
         return new NamespaceMetadataTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             extractRecipient(transactionDTO.targetAddress),
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
             NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.VRF_KEY_LINK) {
+    } else if (type === TransactionType.VRF_KEY_LINK) {
         return new VrfKeyLinkTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.linkedPublicKey,
             transactionDTO.linkAction,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.NODE_KEY_LINK) {
+    } else if (type === TransactionType.NODE_KEY_LINK) {
         return new NodeKeyLinkTransaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.linkedPublicKey,
             transactionDTO.linkAction,
-            transactionDTO.signature,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (transactionDTO.type === TransactionType.VOTING_KEY_LINK) {
-        return new VotingKeyLinkTransaction(
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
+        return new VotingKeyLinkV1Transaction(
             transactionDTO.network,
-            transactionDTO.version,
-            extractDeadline(transactionDTO.deadline),
-            UInt64.fromNumericString(transactionDTO.maxFee || '0'),
+            version,
+            deadline,
+            maxFee,
             transactionDTO.linkedPublicKey,
             transactionDTO.startEpoch,
             transactionDTO.endEpoch,
             transactionDTO.linkAction,
-            transactionDTO.signature,
+            signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        ).setPayloadSize(transactionDTO.size);
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
+        return new VotingKeyLinkTransaction(
+            transactionDTO.network,
+            version,
+            deadline,
+            maxFee,
+            transactionDTO.linkedPublicKey,
+            transactionDTO.startEpoch,
+            transactionDTO.endEpoch,
+            transactionDTO.linkAction,
+            signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
     }
-    throw new Error('Unimplemented transaction with type ' + transactionDTO.type);
+    throw new Error(`Unimplemented transaction with type ${type} for version ${version}`);
 };
 
 /**
@@ -504,7 +526,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                   innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
                   innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
                   innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
+                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo, true);
               })
             : [];
         return new AggregateTransaction(
@@ -533,6 +555,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
         return CreateStandaloneTransactionFromDTO(
             transactionDTO.transaction,
             extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
+            false,
         );
     }
 };

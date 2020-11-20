@@ -16,58 +16,60 @@
 
 import {
     AmountDto,
-    EmbeddedMosaicAliasTransactionBuilder,
     EmbeddedTransactionBuilder,
-    MosaicAliasTransactionBuilder,
+    EmbeddedVotingKeyLinkV1TransactionBuilder,
+    FinalizationEpochDto,
     TimestampDto,
     TransactionBuilder,
+    VotingKeyLinkV1TransactionBuilder,
+    VotingKeyV1Dto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { MosaicId } from '../mosaic/MosaicId';
-import { AliasAction } from '../namespace/AliasAction';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NetworkType } from '../network/NetworkType';
+import { Address, PublicAccount } from '../account';
+import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
+import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
-export class MosaicAliasTransaction extends Transaction {
+export class VotingKeyLinkV1Transaction extends Transaction {
     /**
-     * Create a mosaic alias transaction object
+     * Create a voting key link transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param aliasAction - The alias action type.
-     * @param namespaceId - The namespace id.
-     * @param mosaicId - The mosaic id.
-     * @param networkType - The network type.
+     * @param linkedPublicKey - The public key for voting (48 bytes).
+     * @param startEpoch - The start finalization point.
+     * @param endEpoch - The end finalization point.
+     * @param linkAction - The account link action.
+     * @param networkType = the network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
      * @param signer - (Optional) Signer public account
-     * @returns {MosaicAliasTransaction}
+     * @returns {VotingKeyLinkV1Transaction}
      */
     public static create(
         deadline: Deadline,
-        aliasAction: AliasAction,
-        namespaceId: NamespaceId,
-        mosaicId: MosaicId,
+        linkedPublicKey: string,
+        startEpoch: number,
+        endEpoch: number,
+        linkAction: LinkAction,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
         signer?: PublicAccount,
-    ): MosaicAliasTransaction {
-        return new MosaicAliasTransaction(
+    ): VotingKeyLinkV1Transaction {
+        return new VotingKeyLinkV1Transaction(
             networkType,
-            TransactionVersion.MOSAIC_ALIAS,
+            TransactionVersion.VOTING_KEY_LINK_V1,
             deadline,
             maxFee,
-            aliasAction,
-            namespaceId,
-            mosaicId,
+            linkedPublicKey,
+            startEpoch,
+            endEpoch,
+            linkAction,
             signature,
             signer,
         );
@@ -78,9 +80,10 @@ export class MosaicAliasTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param aliasAction
-     * @param namespaceId
-     * @param mosaicId
+     * @param linkedPublicKey
+     * @param startEpoch
+     * @param endEpoch
+     * @param linkAction
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -91,22 +94,27 @@ export class MosaicAliasTransaction extends Transaction {
         deadline: Deadline,
         maxFee: UInt64,
         /**
-         * The alias action type.
+         * The public key of the remote account.
          */
-        public readonly aliasAction: AliasAction,
+        public readonly linkedPublicKey: string,
         /**
-         * The namespace id that will be an alias.
+         * The start finalization point.
          */
-        public readonly namespaceId: NamespaceId,
+        public readonly startEpoch: number,
         /**
-         * The mosaic id.
+         * The start finalization point.
          */
-        public readonly mosaicId: MosaicId,
+        public readonly endEpoch: number,
+        /**
+         * The account link action.
+         */
+        public readonly linkAction: LinkAction,
         signature?: string,
         signer?: PublicAccount,
         transactionInfo?: TransactionInfo,
     ) {
-        super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.VOTING_KEY_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        Convert.validateHexString(linkedPublicKey, 96, 'Invalid linkedPublicKey');
     }
 
     /**
@@ -117,20 +125,21 @@ export class MosaicAliasTransaction extends Transaction {
      */
     public static createFromPayload(payload: string, isEmbedded = false): Transaction | InnerTransaction {
         const builder = isEmbedded
-            ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
-            : MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+            ? EmbeddedVotingKeyLinkV1TransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
+            : VotingKeyLinkV1TransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
-        const transaction = MosaicAliasTransaction.create(
+        const transaction = VotingKeyLinkV1Transaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
-                : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
-            builder.getAliasAction().valueOf(),
-            new NamespaceId(builder.getNamespaceId().namespaceId),
-            new MosaicId(builder.getMosaicId().mosaicId),
+                : Deadline.createFromDTO((builder as VotingKeyLinkV1TransactionBuilder).getDeadline().timestamp),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().votingKeyV1),
+            builder.getStartEpoch().finalizationEpoch,
+            builder.getEndEpoch().finalizationEpoch,
+            builder.getLinkAction().valueOf(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VotingKeyLinkV1TransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
@@ -142,17 +151,18 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        return new MosaicAliasTransactionBuilder(
+        return new VotingKeyLinkV1TransactionBuilder(
             this.getSignatureAsBuilder(),
             this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.MOSAIC_ALIAS.valueOf(),
+            TransactionType.VOTING_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.namespaceId.toBuilder(),
-            this.mosaicId.toBuilder(),
-            this.aliasAction.valueOf(),
+            new VotingKeyV1Dto(Convert.hexToUint8(this.linkedPublicKey)),
+            new FinalizationEpochDto(this.startEpoch),
+            new FinalizationEpochDto(this.endEpoch),
+            this.linkAction.valueOf(),
         );
     }
 
@@ -161,22 +171,23 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {EmbeddedTransactionBuilder}
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
-        return new EmbeddedMosaicAliasTransactionBuilder(
+        return new EmbeddedVotingKeyLinkV1TransactionBuilder(
             this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
-            TransactionType.MOSAIC_ALIAS.valueOf(),
-            this.namespaceId.toBuilder(),
-            this.mosaicId.toBuilder(),
-            this.aliasAction.valueOf(),
+            TransactionType.VOTING_KEY_LINK.valueOf(),
+            new VotingKeyV1Dto(Convert.hexToUint8(this.linkedPublicKey)),
+            new FinalizationEpochDto(this.startEpoch),
+            new FinalizationEpochDto(this.endEpoch),
+            this.linkAction.valueOf(),
         );
     }
 
     /**
      * @internal
-     * @returns {MosaicAliasTransaction}
+     * @returns {VotingKeyLinkV1Transaction}
      */
-    resolveAliases(): MosaicAliasTransaction {
+    resolveAliases(): VotingKeyLinkV1Transaction {
         return this;
     }
 
@@ -187,6 +198,6 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {boolean}
      */
     public shouldNotifyAccount(address: Address): boolean {
-        return super.isSigned(address);
+        return super.isSigned(address) || Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address);
     }
 }

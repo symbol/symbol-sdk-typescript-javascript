@@ -30,142 +30,148 @@ export class TransactionVersion {
      * Transfer Transaction transaction version.
      * @type {number}
      */
-    public static readonly TRANSFER = 0x01;
+    public static readonly TRANSFER = 1;
 
     /**
      * Register namespace transaction version.
      * @type {number}
      */
-    public static readonly NAMESPACE_REGISTRATION = 0x01;
+    public static readonly NAMESPACE_REGISTRATION = 1;
 
     /**
      * Mosaic definition transaction version.
      * @type {number}
      */
-    public static readonly MOSAIC_DEFINITION = 0x01;
+    public static readonly MOSAIC_DEFINITION = 1;
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    public static readonly MOSAIC_SUPPLY_CHANGE = 0x01;
+    public static readonly MOSAIC_SUPPLY_CHANGE = 1;
 
     /**
      * Modify multisig account transaction version.
      * @type {number}
      */
-    public static readonly MULTISIG_ACCOUNT_MODIFICATION = 0x01;
+    public static readonly MULTISIG_ACCOUNT_MODIFICATION = 1;
 
     /**
      * Aggregate complete transaction version.
      * @type {number}
      */
-    public static readonly AGGREGATE_COMPLETE = 0x01;
+    public static readonly AGGREGATE_COMPLETE = 1;
 
     /**
      * Aggregate bonded transaction version
      */
-    public static readonly AGGREGATE_BONDED = 0x01;
+    public static readonly AGGREGATE_BONDED = 1;
 
     /**
      * Lock transaction version
      * @type {number}
      */
-    public static readonly HASH_LOCK = 0x01;
+    public static readonly HASH_LOCK = 1;
 
     /**
      * Secret Lock transaction version
      * @type {number}
      */
-    public static readonly SECRET_LOCK = 0x01;
+    public static readonly SECRET_LOCK = 1;
 
     /**
      * Secret Proof transaction version
      * @type {number}
      */
-    public static readonly SECRET_PROOF = 0x01;
+    public static readonly SECRET_PROOF = 1;
 
     /**
      * Address Alias transaction version
      * @type {number}
      */
-    public static readonly ADDRESS_ALIAS = 0x01;
+    public static readonly ADDRESS_ALIAS = 1;
 
     /**
      * Mosaic Alias transaction version
      * @type {number}
      */
-    public static readonly MOSAIC_ALIAS = 0x01;
+    public static readonly MOSAIC_ALIAS = 1;
 
     /**
      * Mosaic global restriction transaction version
      * @type {number}
      */
-    public static readonly MOSAIC_GLOBAL_RESTRICTION = 0x01;
+    public static readonly MOSAIC_GLOBAL_RESTRICTION = 1;
 
     /**
      * Mosaic address restriction transaction version
      * @type {number}
      */
-    public static readonly MOSAIC_ADDRESS_RESTRICTION = 0x01;
+    public static readonly MOSAIC_ADDRESS_RESTRICTION = 1;
 
     /**
      * Account Restriction address transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_ADDRESS_RESTRICTION = 0x01;
+    public static readonly ACCOUNT_ADDRESS_RESTRICTION = 1;
 
     /**
      * Account Restriction mosaic transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_MOSAIC_RESTRICTION = 0x01;
+    public static readonly ACCOUNT_MOSAIC_RESTRICTION = 1;
 
     /**
      * Account Restriction operation transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE = 0x01;
+    public static readonly MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE = 1;
 
     /**
      * Link account transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_KEY_LINK = 0x01;
+    public static readonly ACCOUNT_KEY_LINK = 1;
 
     /**
      * Account metadata transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_METADATA = 0x01;
+    public static readonly ACCOUNT_METADATA = 1;
 
     /**
      * Mosaic metadata transaction version
      * @type {number}
      */
-    public static readonly MOSAIC_METADATA = 0x01;
+    public static readonly MOSAIC_METADATA = 1;
 
     /**
      * Namespace metadata transaction version
      * @type {number}
      */
-    public static readonly NAMESPACE_METADATA = 0x01;
+    public static readonly NAMESPACE_METADATA = 1;
 
     /**
      * Vrf key link transaction version.
      * @type {number}
      */
-    public static readonly VRF_KEY_LINK = 0x01;
+    public static readonly VRF_KEY_LINK = 1;
 
     /**
      * Voting key link transaction version.
      * @type {number}
      */
-    public static readonly VOTING_KEY_LINK = 0x01;
+    public static readonly VOTING_KEY_LINK_V1 = 1;
+
+    /**
+     * Voting key link transaction version.
+     * @type {number}
+     */
+    public static readonly VOTING_KEY_LINK = 1;
 
     /**
      * Node key link transaction version.
      * @type {number}
      */
-    public static readonly NODE_KEY_LINK = 0x01;
+    public static readonly NODE_KEY_LINK = 1;
 }

@@ -408,7 +408,7 @@ export abstract class Transaction {
         const commonTransactionObject = {
             type: this.type,
             network: this.networkType,
-            version: this.versionToDTO(),
+            version: this.version,
             maxFee: this.maxFee.toString(),
             deadline: this.deadline.toString(),
             signature: this.signature ? this.signature : '',
@@ -472,5 +472,24 @@ export abstract class Transaction {
      */
     protected getSignatureAsBuilder(): SignatureDto {
         return new SignatureDto(this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64));
+    }
+
+    /**
+     * @internal
+     *
+     * Returns the signature from the serialized payload.
+     */
+    public static getSignatureFromPayload(payload: string, isEmbedded: boolean): string | undefined {
+        const signature = payload.substring(16, 144);
+        return this.resolveSignature(signature, isEmbedded);
+    }
+
+    /**
+     * @internal
+     *
+     * Returns the signature hold in the transaction.
+     */
+    public static resolveSignature(signature: string | undefined, isEmbedded: boolean): string | undefined {
+        return !signature || isEmbedded || signature.match(`^[0]*$`) ? undefined : signature;
     }
 }

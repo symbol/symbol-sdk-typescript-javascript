@@ -33,7 +33,7 @@ import {
     TransactionStatusRepository,
 } from '../../src/infrastructure';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
-import { UInt64 } from '../../src/model';
+import { UInt64, VotingKeyLinkV1Transaction } from '../../src/model';
 import { Account } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -102,6 +102,7 @@ describe('TransactionHttp', () => {
     let transactionRepository: TransactionRepository;
     let transactionStatusRepository: TransactionStatusRepository;
     let votingKey: string;
+    let votingKeyV1: string;
 
     const remoteAccount = Account.generateNewAccount(helper.networkType);
 
@@ -115,7 +116,8 @@ describe('TransactionHttp', () => {
             harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
+            votingKey = Convert.uint8ToHex(Crypto.randomBytes(32));
+            votingKeyV1 = Convert.uint8ToHex(Crypto.randomBytes(48));
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
             transactionStatusRepository = helper.repositoryFactory.createTransactionStatusRepository();
@@ -739,7 +741,33 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
 
+            console.log(signedTransaction.payload);
             return helper.announce(signedTransaction).then((transaction: VotingKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.startEpoch, 'startEpoch').not.to.be.undefined;
+                expect(transaction.endEpoch, 'endEpoch').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+
+    describe('VotingKeyLinkV1Transaction', () => {
+        it('standalone', () => {
+            const votingLinkTransaction = VotingKeyLinkV1Transaction.create(
+                Deadline.create(helper.epochAdjustment),
+                votingKeyV1,
+                100,
+                300,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
+
+            console.log(signedTransaction.payload)
+
+            return helper.announce(signedTransaction).then((transaction: VotingKeyLinkV1Transaction) => {
                 expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
                 expect(transaction.startEpoch, 'startEpoch').not.to.be.undefined;
                 expect(transaction.endEpoch, 'endEpoch').not.to.be.undefined;
