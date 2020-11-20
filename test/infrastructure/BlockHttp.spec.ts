@@ -21,6 +21,7 @@ import {
     BlockMetaDTO,
     BlockPage,
     BlockRoutesApi,
+    ImportanceBlockDTO,
     MerklePathItemDTO,
     MerkleProofInfoDTO,
     NetworkTypeEnum,
@@ -28,11 +29,13 @@ import {
     PositionEnum,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
+import { NemesisImportanceBlockInfo } from '../../src';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { Address } from '../../src/model/account/Address';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
+import { BlockType } from '../../src/model/blockchain/BlockType';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
 import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -46,13 +49,32 @@ describe('BlockHttp', () => {
     blockDTO.feeMultiplier = 3;
     blockDTO.height = '4';
     blockDTO.previousBlockHash = '5';
-    blockDTO.type = 6;
+    blockDTO.type = BlockType.NormalBlock;
     blockDTO.signerPublicKey = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
     blockDTO.timestamp = '7';
     blockDTO.beneficiaryAddress = Address.createFromPublicKey(
         '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
         NetworkType.PRIVATE_TEST,
     ).encoded();
+
+    const importanceBlockDTO = {} as ImportanceBlockDTO;
+    importanceBlockDTO.version = 1;
+    importanceBlockDTO.network = NetworkTypeEnum.NUMBER_152;
+    importanceBlockDTO.difficulty = '2';
+    importanceBlockDTO.feeMultiplier = 3;
+    importanceBlockDTO.height = '4';
+    importanceBlockDTO.previousBlockHash = '5';
+    importanceBlockDTO.type = BlockType.NemesisBlock;
+    importanceBlockDTO.signerPublicKey = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
+    importanceBlockDTO.timestamp = '7';
+    importanceBlockDTO.beneficiaryAddress = Address.createFromPublicKey(
+        '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
+        NetworkType.PRIVATE_TEST,
+    ).encoded();
+    importanceBlockDTO.harvestingEligibleAccountsCount = '1';
+    importanceBlockDTO.previousImportanceBlockHash = 'hash';
+    importanceBlockDTO.votingEligibleAccountsCount = 1;
+    importanceBlockDTO.totalVotingBalance = '1';
 
     const blockMetaDTO = {} as BlockMetaDTO;
     blockMetaDTO.generationHash = 'abc';
@@ -67,6 +89,10 @@ describe('BlockHttp', () => {
     blockInfoDto.block = blockDTO;
     blockInfoDto.meta = blockMetaDTO;
 
+    const importanceBlockInfoDto = {} as BlockInfoDTO;
+    importanceBlockInfoDto.block = importanceBlockDTO;
+    importanceBlockInfoDto.meta = blockMetaDTO;
+
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const blockRoutesApi: BlockRoutesApi = mock();
@@ -79,9 +105,9 @@ describe('BlockHttp', () => {
         reset(blockRoutesApi);
     });
 
-    function assertBlockInfo(blockInfo: BlockInfo): void {
+    function assertBlockInfo(blockInfo: BlockInfo, isImportance = false): void {
         expect(blockInfo).to.be.not.null;
-        expect(blockInfo.type).to.be.equals(blockInfoDto.block.type);
+        expect(blockInfo.type).to.be.equals(isImportance ? importanceBlockInfoDto.block.type : blockInfoDto.block.type);
         expect(blockInfo.previousBlockHash).to.be.equals(blockInfoDto.block.previousBlockHash);
         expect(blockInfo.height.toString()).to.be.equals(blockInfoDto.block.height);
         expect(blockInfo.feeMultiplier).to.be.equals(blockInfoDto.block.feeMultiplier);
@@ -99,12 +125,33 @@ describe('BlockHttp', () => {
         expect(blockInfo.transactionsCount).to.be.equals(blockInfoDto.meta.transactionsCount);
         expect(blockInfo.totalTransactionsCount).to.be.equals(blockInfoDto.meta.totalTransactionsCount);
         expect(blockInfo.totalFee.toString()).to.be.equals(blockInfoDto.meta.totalFee);
+
+        if (isImportance) {
+            expect((blockInfo as NemesisImportanceBlockInfo).harvestingEligibleAccountsCount.toString()).to.be.equals(
+                (importanceBlockInfoDto.block as ImportanceBlockDTO).harvestingEligibleAccountsCount,
+            );
+            expect((blockInfo as NemesisImportanceBlockInfo).previousImportanceBlockHash).to.be.equals(
+                (importanceBlockInfoDto.block as ImportanceBlockDTO).previousImportanceBlockHash,
+            );
+            expect((blockInfo as NemesisImportanceBlockInfo).totalVotingBalance.toString()).to.be.equals(
+                (importanceBlockInfoDto.block as ImportanceBlockDTO).totalVotingBalance,
+            );
+            expect((blockInfo as NemesisImportanceBlockInfo).votingEligibleAccountsCount).to.be.equals(
+                (importanceBlockInfoDto.block as ImportanceBlockDTO).votingEligibleAccountsCount,
+            );
+        }
     }
 
     it('getBlockInfo', async () => {
         when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve(blockInfoDto));
         const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
         assertBlockInfo(blockInfo);
+    });
+
+    it('getImportanceBlockInfo', async () => {
+        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve(importanceBlockInfoDto));
+        const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
+        assertBlockInfo(blockInfo, true);
     });
 
     it('searchBlocks', async () => {
@@ -163,6 +210,20 @@ describe('BlockHttp', () => {
         when(blockRoutesApi.getMerkleReceipts('1', 'Hash')).thenReject(new Error('Mocked Error'));
         await blockRepository
             .getMerkleReceipts(UInt64.fromUint(1), 'Hash')
+            .toPromise()
+            .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('wrong block type - Error', async () => {
+        const wrongBlock = Object.assign({}, blockInfoDto, {
+            block: {
+                ...blockDTO,
+                type: 123,
+            },
+        });
+        when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve(wrongBlock));
+        await blockRepository
+            .getBlockByHeight(UInt64.fromUint(1))
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
     });

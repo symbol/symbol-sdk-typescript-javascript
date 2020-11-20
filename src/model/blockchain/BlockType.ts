@@ -1,7 +1,7 @@
 /*
  * Copyright 2020 NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License"),
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { NemesisImportanceBlockInfo } from './NemesisImportanceBlockInfo';
-import { NormalBlockInfo } from './NomalBlockInfo';
-
-export type BlockInfo = NormalBlockInfo | NemesisImportanceBlockInfo;
+export enum BlockType {
+    NemesisBlock = 0x8043,
+    NormalBlock = 0x8143,
+    ImportanceBlock = 0x8243,
+}
