@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { ImportanceBlockFooter } from './ImportanceBlockFooter';
+import { UInt64 } from '../UInt64';
 import { NormalBlockInfo } from './NomalBlockInfo';
 
-export type NemesisImportanceBlockInfo = NormalBlockInfo & { importanceBlockFooter: ImportanceBlockFooter };
+export type NemesisImportanceBlockInfo = NormalBlockInfo & {
+    votingEligibleAccountsCount: number;
+    harvestingEligibleAccountsCount: UInt64;
+    totalVotingBalance: UInt64;
+    previousImportanceBlockHash: string;
+};

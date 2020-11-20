@@ -4,7 +4,6 @@ export * from './BlockInfo';
 export * from './BlockType';
 export * from './ChainInfo';
 export * from './FinalizedBlock';
-export * from './ImportanceBlockFooter';
 export * from './MerklePathItem';
 export * from './MerklePosition';
 export * from './MerkleProofInfo';

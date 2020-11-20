@@ -21,7 +21,6 @@ import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { BlockType } from '../model/blockchain/BlockType';
-import { ImportanceBlockFooter } from '../model/blockchain/ImportanceBlockFooter';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { NemesisImportanceBlockInfo } from '../model/blockchain/NemesisImportanceBlockInfo';
@@ -125,21 +124,12 @@ export class BlockHttp extends Http implements BlockRepository {
             return normalBlock;
         } else if ([BlockType.ImportanceBlock.valueOf(), BlockType.NemesisBlock.valueOf()].includes(blockType)) {
             const importanceBlockInfoDto = dto.block as ImportanceBlockDTO;
-            const importanceBlockFooter = new ImportanceBlockFooter(
-                importanceBlockInfoDto.votingEligibleAccountsCount,
-                UInt64.fromNumericString(importanceBlockInfoDto.harvestingEligibleAccountsCount),
-                UInt64.fromNumericString(importanceBlockInfoDto.totalVotingBalance),
-                importanceBlockInfoDto.previousImportanceBlockHash,
-            );
-            return Object.assign(
-                {
-                    __proto__: Object.getPrototypeOf(normalBlock),
-                },
-                normalBlock,
-                {
-                    importanceBlockFooter,
-                },
-            ) as NemesisImportanceBlockInfo;
+            return DtoMapping.assign(normalBlock, {
+                votingEligibleAccountsCount: importanceBlockInfoDto.votingEligibleAccountsCount,
+                harvestingEligibleAccountsCount: UInt64.fromNumericString(importanceBlockInfoDto.harvestingEligibleAccountsCount),
+                totalVotingBalance: UInt64.fromNumericString(importanceBlockInfoDto.totalVotingBalance),
+                previousImportanceBlockHash: importanceBlockInfoDto.previousImportanceBlockHash,
+            }) as NemesisImportanceBlockInfo;
         } else {
             throw new Error(`Block type: ${blockType} invalid.`);
         }

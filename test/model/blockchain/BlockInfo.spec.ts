@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { BlockType } from '../../../src';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NormalBlockInfo } from '../../../src/model/blockchain/NomalBlockInfo';
@@ -43,7 +44,7 @@ describe('BlockInfo', () => {
                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 beneficiaryAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                 timestamp: new UInt64([0, 0]),
-                type: 33091,
+                type: BlockType.NormalBlock,
                 version: 1,
                 network: 144,
             },
