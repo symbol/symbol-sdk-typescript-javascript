@@ -766,7 +766,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
 
-            console.log(signedTransaction.payload)
+            console.log(signedTransaction.payload);
 
             return helper.announce(signedTransaction).then((transaction: VotingKeyLinkV1Transaction) => {
                 expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
