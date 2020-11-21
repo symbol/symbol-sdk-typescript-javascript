@@ -473,8 +473,11 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
-        return new VotingKeyLinkV1Transaction(
+    } else if (
+        type === TransactionType.VOTING_KEY_LINK &&
+        (version == TransactionVersion.VOTING_KEY_LINK_V2 || transactionDTO.linkedPublicKey.length === 64)
+    ) {
+        return new VotingKeyLinkTransaction(
             transactionDTO.network,
             version,
             deadline,
@@ -489,8 +492,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
-        return new VotingKeyLinkTransaction(
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
+        return new VotingKeyLinkV1Transaction(
             transactionDTO.network,
             version,
             deadline,

@@ -19,7 +19,7 @@ import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils';
-import { UInt64 } from '../../src/model';
+import { TransactionVersion, UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -423,6 +423,7 @@ describe('SerializeTransactionToJSON', () => {
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         const json = votingKeyLinkTransaction.toJSON();

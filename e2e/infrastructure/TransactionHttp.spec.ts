@@ -33,7 +33,7 @@ import {
     TransactionStatusRepository,
 } from '../../src/infrastructure';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
-import { UInt64, VotingKeyLinkV1Transaction } from '../../src/model';
+import { TransactionVersion, UInt64, VotingKeyLinkV1Transaction } from '../../src/model';
 import { Account } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -737,6 +737,7 @@ describe('TransactionHttp', () => {
                 300,
                 LinkAction.Link,
                 networkType,
+                TransactionVersion.VOTING_KEY_LINK_V2,
                 helper.maxFee,
             );
             const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
@@ -785,6 +786,7 @@ describe('TransactionHttp', () => {
                 300,
                 LinkAction.Unlink,
                 networkType,
+                TransactionVersion.VOTING_KEY_LINK_V2,
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(

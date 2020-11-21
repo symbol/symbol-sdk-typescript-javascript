@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
-import { UInt64 } from '../../../src/model';
+import { TransactionVersion, UInt64 } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
 import { NetworkType } from '../../../src/model/network';
 import { Deadline, LinkAction, VotingKeyLinkTransaction } from '../../../src/model/transaction';
@@ -42,6 +42,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -58,9 +59,11 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            3,
             new UInt64([1, 0]),
         );
 
+        expect(votingKeyLinkTransaction.version).to.be.equal(3);
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
         expect(votingKeyLinkTransaction.maxFee.lower).to.be.equal(1);
         expect(votingKeyLinkTransaction.startEpoch.toString()).to.be.equal('1');
@@ -75,6 +78,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -97,6 +101,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -119,6 +124,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
         expect(votingKeyLinkTransaction.size).to.be.equal(169);
         expect(Convert.hexToUint8(votingKeyLinkTransaction.serialize()).length).to.be.equal(votingKeyLinkTransaction.size);
@@ -132,6 +138,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         ).setMaxFee(2);
         expect(votingKeyLinkTransaction.maxFee.compact()).to.be.equal(338);
 
@@ -147,6 +154,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;

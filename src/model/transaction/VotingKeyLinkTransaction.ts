@@ -34,7 +34,6 @@ import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
-import { TransactionVersion } from './TransactionVersion';
 
 export class VotingKeyLinkTransaction extends Transaction {
     /**
@@ -44,7 +43,8 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @param startEpoch - The start finalization point.
      * @param endEpoch - The end finalization point.
      * @param linkAction - The account link action.
-     * @param networkType = the network type.
+     * @param networkType - the network type.
+     * @param version - The version of the transaction. Depending on the server distribution it could be 1 or 2.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
      * @param signer - (Optional) Signer public account
@@ -57,13 +57,14 @@ export class VotingKeyLinkTransaction extends Transaction {
         endEpoch: number,
         linkAction: LinkAction,
         networkType: NetworkType,
+        version: number,
         maxFee: UInt64 = new UInt64([0, 0]),
         signature?: string,
         signer?: PublicAccount,
     ): VotingKeyLinkTransaction {
         return new VotingKeyLinkTransaction(
             networkType,
-            TransactionVersion.VOTING_KEY_LINK,
+            version,
             deadline,
             maxFee,
             linkedPublicKey,
@@ -80,10 +81,10 @@ export class VotingKeyLinkTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param linkedPublicKey
-     * @param startEpoch
-     * @param endEpoch
-     * @param linkAction
+     * @param linkedPublicKey The public key of the remote account.
+     * @param startEpoch The start finalization point.
+     * @param endEpoch The start finalization point.
+     * @param linkAction The account link action.
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -93,21 +94,9 @@ export class VotingKeyLinkTransaction extends Transaction {
         version: number,
         deadline: Deadline,
         maxFee: UInt64,
-        /**
-         * The public key of the remote account.
-         */
         public readonly linkedPublicKey: string,
-        /**
-         * The start finalization point.
-         */
         public readonly startEpoch: number,
-        /**
-         * The start finalization point.
-         */
         public readonly endEpoch: number,
-        /**
-         * The account link action.
-         */
         public readonly linkAction: LinkAction,
         signature?: string,
         signer?: PublicAccount,
@@ -139,6 +128,7 @@ export class VotingKeyLinkTransaction extends Transaction {
             builder.getEndEpoch().finalizationEpoch,
             builder.getLinkAction().valueOf(),
             networkType,
+            builder.getVersion(),
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VotingKeyLinkTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),

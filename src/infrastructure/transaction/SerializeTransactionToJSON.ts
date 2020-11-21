@@ -273,7 +273,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             linkedPublicKey: nodeKeyLinkTx.linkedPublicKey,
             linkAction: nodeKeyLinkTx.linkAction,
         };
-    } else if (transaction.type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
+    } else if (transaction.type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {
         const votingKeyLinkTx = transaction as VotingKeyLinkTransaction;
         return {
             linkedPublicKey: votingKeyLinkTx.linkedPublicKey,

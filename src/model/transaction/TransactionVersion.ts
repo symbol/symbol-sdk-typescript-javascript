@@ -167,7 +167,7 @@ export class TransactionVersion {
      * Voting key link transaction version.
      * @type {number}
      */
-    public static readonly VOTING_KEY_LINK = 1;
+    public static readonly VOTING_KEY_LINK_V2 = 2;
 
     /**
      * Node key link transaction version.

@@ -80,10 +80,10 @@ export class VotingKeyLinkV1Transaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param linkedPublicKey
-     * @param startEpoch
-     * @param endEpoch
-     * @param linkAction
+     * @param linkedPublicKey The public key of the remote account.
+     * @param startEpoch The start finalization point.
+     * @param endEpoch The start finalization point.
+     * @param linkAction The account link action.
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -93,21 +93,9 @@ export class VotingKeyLinkV1Transaction extends Transaction {
         version: number,
         deadline: Deadline,
         maxFee: UInt64,
-        /**
-         * The public key of the remote account.
-         */
         public readonly linkedPublicKey: string,
-        /**
-         * The start finalization point.
-         */
         public readonly startEpoch: number,
-        /**
-         * The start finalization point.
-         */
         public readonly endEpoch: number,
-        /**
-         * The account link action.
-         */
         public readonly linkAction: LinkAction,
         signature?: string,
         signer?: PublicAccount,

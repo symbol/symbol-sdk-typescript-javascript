@@ -19,7 +19,7 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { Convert } from '../../../src/core/format';
 import { DtoMapping, TransactionMapping } from '../../../src/core/utils';
-import { MessageMarker, Transaction, UInt64, VotingKeyLinkTransaction } from '../../../src/model';
+import { MessageMarker, Transaction, TransactionVersion, UInt64, VotingKeyLinkTransaction } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
 import { LockHashAlgorithm } from '../../../src/model/lock';
 import { EncryptedMessage, MessageType, PlainMessage } from '../../../src/model/message';
@@ -494,6 +494,7 @@ describe('TransactionMapping - createFromPayload', () => {
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
@@ -692,7 +693,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.linkedPublicKey).to.be.equal(account.publicKey);
     });
 
-    it('should create an NodeKeyLinkTransaction object with link action', () => {
+    it('should create an NodeKeyLinkTransaction object with link action ', () => {
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
             Deadline.createFromDTO('555'),
             account.publicKey,
@@ -731,10 +732,64 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = votingKeyLinkV1Transaction.signWith(account, generationHash);
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as VotingKeyLinkV1Transaction;
 
+        expect(transaction.version).to.be.equal(TransactionVersion.VOTING_KEY_LINK_V1);
+        expect(transaction.version).to.be.equal(1);
         expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.startEpoch.toString()).to.be.equal('1');
         expect(transaction.endEpoch.toString()).to.be.equal('3');
         expect(transaction.linkedPublicKey).to.be.equal(key);
+    });
+
+    it('should create VotingKeyLinkTransaction', () => {
+        const key = 'C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75';
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.createFromDTO('555'),
+            key,
+            1,
+            3,
+            LinkAction.Link,
+            NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
+        );
+
+        const expectedHex =
+            'A900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000280434100000000000000002B02000000000000C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75010000000300000001';
+
+        assertSerialization(votingKeyLinkTransaction, expectedHex);
+
+        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
+
+        expect(transaction.version).to.be.equal(TransactionVersion.VOTING_KEY_LINK_V2);
+        expect(transaction.linkedPublicKey).to.be.equal(key);
+        expect(transaction.startEpoch.toString()).to.be.equal('1');
+        expect(transaction.endEpoch.toString()).to.be.equal('3');
+        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create VotingKeyLinkTransaction with V1', () => {
+        const key = 'C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75';
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.createFromDTO('555'),
+            key,
+            1,
+            3,
+            LinkAction.Link,
+            NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V1,
+        );
+
+        const expectedHex =
+            'A900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180434100000000000000002B02000000000000C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75010000000300000001';
+
+        assertSerialization(votingKeyLinkTransaction, expectedHex);
+
+        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
+
+        expect(transaction.version).to.be.equal(TransactionVersion.VOTING_KEY_LINK_V1);
+        expect(transaction.linkedPublicKey).to.be.equal(key);
+        expect(transaction.startEpoch.toString()).to.be.equal('1');
+        expect(transaction.endEpoch.toString()).to.be.equal('3');
+        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
@@ -1099,30 +1154,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         assertSerialization(votingKeyLinkV1Transaction, expectedHex);
 
         const transaction = TransactionMapping.createFromDTO(votingKeyLinkV1Transaction.toJSON()) as VotingKeyLinkV1Transaction;
-
-        expect(transaction.linkedPublicKey).to.be.equal(key);
-        expect(transaction.startEpoch.toString()).to.be.equal('1');
-        expect(transaction.endEpoch.toString()).to.be.equal('3');
-        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
-    });
-
-    it('should create VotingKeyLinkTransaction', () => {
-        const key = 'C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75';
-        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.createFromDTO('555'),
-            key,
-            1,
-            3,
-            LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
-        );
-
-        const expectedHex =
-            'A900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000280434100000000000000002B02000000000000C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75010000000300000001';
-
-        assertSerialization(votingKeyLinkTransaction, expectedHex);
-
-        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
 
         expect(transaction.linkedPublicKey).to.be.equal(key);
         expect(transaction.startEpoch.toString()).to.be.equal('1');

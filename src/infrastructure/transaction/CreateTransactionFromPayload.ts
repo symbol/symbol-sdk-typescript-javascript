@@ -16,33 +16,36 @@
 
 import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typescript';
 import { Convert as convert } from '../../core/format';
-import { TransactionVersion, VotingKeyLinkTransaction } from '../../model/transaction';
-import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
-import { AccountKeyLinkTransaction } from '../../model/transaction/AccountKeyLinkTransaction';
-import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
-import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
-import { InnerTransaction } from '../../model/transaction/InnerTransaction';
-import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
-import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
-import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
-import { NodeKeyLinkTransaction } from '../../model/transaction/NodeKeyLinkTransaction';
-import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
-import { Transaction } from '../../model/transaction/Transaction';
-import { TransactionType } from '../../model/transaction/TransactionType';
-import { TransferTransaction } from '../../model/transaction/TransferTransaction';
-import { VotingKeyLinkV1Transaction } from '../../model/transaction/VotingKeyLinkV1Transaction';
-import { VrfKeyLinkTransaction } from '../../model/transaction/VrfKeyLinkTransaction';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountKeyLinkTransaction,
+    AccountMetadataTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    InnerTransaction,
+    LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    MosaicMetadataTransaction,
+    MosaicSupplyChangeTransaction,
+    MultisigAccountModificationTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    Transaction,
+    TransactionType,
+    TransactionVersion,
+    TransferTransaction,
+    VotingKeyLinkTransaction,
+    VotingKeyLinkV1Transaction,
+    VrfKeyLinkTransaction,
+} from '../../model/transaction';
 
 /**
  * @internal
@@ -57,6 +60,7 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
         : TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
     const type = transactionBuilder.getType().valueOf();
     const version = transactionBuilder.getVersion();
+    console.log(transactionBuilder.type, payload.length);
     if (type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
@@ -99,10 +103,12 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
         return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.NODE_KEY_LINK) {
         return NodeKeyLinkTransaction.createFromPayload(payload, isEmbedded);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
+    } else if (type === TransactionType.VOTING_KEY_LINK && !isEmbedded && payload.length == 338) {
         return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
         return VotingKeyLinkV1Transaction.createFromPayload(payload, isEmbedded);
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {
+        return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.AGGREGATE_COMPLETE || type === TransactionType.AGGREGATE_BONDED) {
         return AggregateTransaction.createFromPayload(payload);
     } else {
