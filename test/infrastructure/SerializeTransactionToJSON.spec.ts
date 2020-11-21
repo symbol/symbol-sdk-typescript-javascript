@@ -19,7 +19,7 @@ import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils';
-import { TransactionVersion, UInt64 } from '../../src/model';
+import { Transaction, TransactionVersion, UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -59,6 +59,14 @@ describe('SerializeTransactionToJSON', () => {
         account = TestingAccount;
     });
 
+    const validateToFromJson = <T extends Transaction>(expectedTransaction: T): any => {
+        const json = expectedTransaction.toJSON();
+        const transaction = TransactionMapping.createFromDTO(json);
+        expect(transaction).deep.eq(expectedTransaction);
+        expect(transaction.toJSON()).deep.eq(json);
+        return json;
+    };
+
     it('should create AccountKeyLinkTransaction', () => {
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
@@ -67,7 +75,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = accountLinkTransaction.toJSON();
+        const json = validateToFromJson(accountLinkTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
@@ -83,7 +91,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = addressRestrictionTransaction.toJSON();
+        const json = validateToFromJson(addressRestrictionTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_ADDRESS_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
@@ -100,7 +108,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicRestrictionTransaction.toJSON();
+        const json = validateToFromJson(mosaicRestrictionTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
@@ -117,7 +125,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = operationRestrictionTransaction.toJSON();
+        const json = validateToFromJson(operationRestrictionTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
@@ -135,7 +143,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = addressAliasTransaction.toJSON();
+        const json = validateToFromJson(addressAliasTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
         expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -151,7 +159,7 @@ describe('SerializeTransactionToJSON', () => {
             mosaicId,
             NetworkType.PRIVATE_TEST,
         );
-        const json = mosaicAliasTransaction.toJSON();
+        const json = validateToFromJson(mosaicAliasTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
         expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -168,7 +176,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicDefinitionTransaction.toJSON();
+        const json = validateToFromJson(mosaicDefinitionTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(json.transaction.flags).to.be.equal(7);
@@ -187,7 +195,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicDefinitionTransaction.toJSON();
+        const json = validateToFromJson(mosaicDefinitionTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(json.transaction.divisibility).to.be.equal(3);
@@ -204,22 +212,25 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicSupplyChangeTransaction.toJSON();
+        const json = validateToFromJson(mosaicSupplyChangeTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
         expect(json.transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
     });
 
     it('should create TransferTransaction', () => {
+        const mosaic = NetworkCurrencyLocal.createRelative(100);
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
-            [NetworkCurrencyLocal.createRelative(100)],
+            [mosaic],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
         );
+        // So deep equals works!
+        delete transferTransaction.mosaics[0].id['fullName'];
 
-        const json = transferTransaction.toJSON();
+        const json = validateToFromJson(transferTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.TRANSFER);
         expect(json.transaction.message).to.be.equal('00746573742D6D657373616765');
@@ -238,7 +249,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = secretLockTransaction.toJSON();
+        const json = validateToFromJson(secretLockTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -255,7 +266,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = secretProofTransaction.toJSON();
+        const json = validateToFromJson(secretProofTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
@@ -273,7 +284,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = modifyMultisigAccountTransaction.toJSON();
+        const json = validateToFromJson(modifyMultisigAccountTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MULTISIG_ACCOUNT_MODIFICATION);
         expect(json.transaction.minApprovalDelta).to.be.equal(2);
@@ -296,7 +307,7 @@ describe('SerializeTransactionToJSON', () => {
             [],
         );
 
-        const json = aggregateTransaction.toJSON();
+        const json = validateToFromJson(aggregateTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(json.transaction.transactions.length).to.be.equal(1);
@@ -318,7 +329,7 @@ describe('SerializeTransactionToJSON', () => {
             [],
         );
 
-        const json = aggregateTransaction.toJSON();
+        const json = validateToFromJson(aggregateTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(json.transaction.transactions.length).to.be.equal(1);
@@ -336,7 +347,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = lockTransaction.toJSON();
+        const json = validateToFromJson(lockTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.HASH_LOCK);
         expect(json.transaction.hash).to.be.equal(signedTransaction.hash);
@@ -349,8 +360,9 @@ describe('SerializeTransactionToJSON', () => {
             UInt64.fromUint(1000),
             NetworkType.PRIVATE_TEST,
         );
-
-        const json = registerNamespaceTransaction.toJSON();
+        // So deep equals works!
+        delete (registerNamespaceTransaction.namespaceId as any).fullName;
+        const json = validateToFromJson(registerNamespaceTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
@@ -363,7 +375,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = registerNamespaceTransaction.toJSON();
+        const json = validateToFromJson(registerNamespaceTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
@@ -375,7 +387,7 @@ describe('SerializeTransactionToJSON', () => {
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
         );
-        const json = vrfKeyLinkTransaction.toJSON();
+        const json = validateToFromJson(vrfKeyLinkTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
@@ -388,7 +400,7 @@ describe('SerializeTransactionToJSON', () => {
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
         );
-        const json = nodeKeyLinkTransaction.toJSON();
+        const json = validateToFromJson(nodeKeyLinkTransaction);
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
@@ -405,7 +417,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = votingKeyLinkV1Transaction.toJSON();
+        const json = validateToFromJson(votingKeyLinkV1Transaction);
 
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
@@ -426,15 +438,12 @@ describe('SerializeTransactionToJSON', () => {
             TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
-        const json = votingKeyLinkTransaction.toJSON();
+        const json = validateToFromJson(votingKeyLinkTransaction);
 
         expect(json.transaction.version).to.be.equal(2);
         expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
         expect(json.transaction.startEpoch).to.be.equal(1);
         expect(json.transaction.endEpoch).to.be.equal(3);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
-
-        const transaction = TransactionMapping.createFromDTO(json);
-        expect(transaction).deep.eq(votingKeyLinkTransaction);
     });
 });

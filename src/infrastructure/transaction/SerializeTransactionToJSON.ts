@@ -77,12 +77,12 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             }),
         };
     } else if (transaction.type === TransactionType.HASH_LOCK) {
-        const LockFundTx = transaction as LockFundsTransaction;
+        const lockFundsTransaction = transaction as LockFundsTransaction;
         return {
-            mosaicId: LockFundTx.mosaic.id.id,
-            amount: LockFundTx.mosaic.amount.toString(),
-            duration: LockFundTx.duration.toString(),
-            hash: LockFundTx.hash,
+            mosaicId: lockFundsTransaction.mosaic.id.toHex(),
+            amount: lockFundsTransaction.mosaic.amount.toString(),
+            duration: lockFundsTransaction.duration.toString(),
+            hash: lockFundsTransaction.hash,
         };
     } else if (transaction.type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         const accountAddressRestrictionTx = transaction as AccountAddressRestrictionTransaction;
@@ -165,7 +165,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
 
         const jsonObject = {
             registrationType: namespaceTx.registrationType,
-            namespaceName: namespaceTx.namespaceName,
+            name: namespaceTx.namespaceName,
             id: namespaceTx.namespaceId.toHex(),
         };
 

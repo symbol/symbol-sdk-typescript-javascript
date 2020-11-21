@@ -60,7 +60,6 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
         : TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
     const type = transactionBuilder.getType().valueOf();
     const version = transactionBuilder.getVersion();
-    console.log(transactionBuilder.type, payload.length);
     if (type === TransactionType.ACCOUNT_ADDRESS_RESTRICTION) {
         return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.ACCOUNT_MOSAIC_RESTRICTION) {
@@ -103,8 +102,6 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
         return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.NODE_KEY_LINK) {
         return NodeKeyLinkTransaction.createFromPayload(payload, isEmbedded);
-    } else if (type === TransactionType.VOTING_KEY_LINK && !isEmbedded && payload.length == 338) {
-        return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
         return VotingKeyLinkV1Transaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {

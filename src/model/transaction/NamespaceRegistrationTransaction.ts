@@ -24,12 +24,10 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NamespaceRegistrationType } from '../namespace/NamespaceRegistrationType';
-import { NetworkType } from '../network/NetworkType';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction';
+import { Address, PublicAccount } from '../account';
+import { NamespaceId, NamespaceRegistrationType } from '../namespace';
+import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';

@@ -473,10 +473,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (
-        type === TransactionType.VOTING_KEY_LINK &&
-        (version == TransactionVersion.VOTING_KEY_LINK_V2 || transactionDTO.linkedPublicKey.length === 64)
-    ) {
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {
         return new VotingKeyLinkTransaction(
             transactionDTO.network,
             version,
@@ -548,7 +545,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                       );
                   })
                 : [],
-            transactionDTO.transaction.signature,
+            Transaction.resolveSignature(transactionDTO.transaction.signature, false),
             transactionDTO.transaction.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.transaction.signerPublicKey, transactionDTO.transaction.network)
                 : undefined,

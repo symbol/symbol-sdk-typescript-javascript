@@ -24,9 +24,8 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
+import { Address, PublicAccount } from '../account';
+import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -133,7 +132,7 @@ export class NodeKeyLinkTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const transactionBuilder = new NodeKeyLinkTransactionBuilder(
+        return new NodeKeyLinkTransactionBuilder(
             this.getSignatureAsBuilder(),
             this.getSignerAsBuilder(),
             this.versionToDTO(),
@@ -144,7 +143,6 @@ export class NodeKeyLinkTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
-        return transactionBuilder;
     }
 
     /**

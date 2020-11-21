@@ -766,31 +766,32 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
-    it('should create VotingKeyLinkTransaction with V1', () => {
-        const key = 'C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75';
-        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-            Deadline.createFromDTO('555'),
-            key,
-            1,
-            3,
-            LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V1,
-        );
-
-        const expectedHex =
-            'A900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180434100000000000000002B02000000000000C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75010000000300000001';
-
-        assertSerialization(votingKeyLinkTransaction, expectedHex);
-
-        const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
-
-        expect(transaction.version).to.be.equal(TransactionVersion.VOTING_KEY_LINK_V1);
-        expect(transaction.linkedPublicKey).to.be.equal(key);
-        expect(transaction.startEpoch.toString()).to.be.equal('1');
-        expect(transaction.endEpoch.toString()).to.be.equal('3');
-        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
-    });
+    // V1 short disabled until publicnet clarification
+    // it('should create VotingKeyLinkTransaction with V1', () => {
+    //     const key = 'C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75';
+    //     const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+    //         Deadline.createFromDTO('555'),
+    //         key,
+    //         1,
+    //         3,
+    //         LinkAction.Link,
+    //         NetworkType.PRIVATE_TEST,
+    //         TransactionVersion.VOTING_KEY_LINK_V1,
+    //     );
+    //
+    //     const expectedHex =
+    //         'A900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000180434100000000000000002B02000000000000C614558647D02037384A2FECA80ACE95B235D9B9D90035FA46102FE79ECCBA75010000000300000001';
+    //
+    //     assertSerialization(votingKeyLinkTransaction, expectedHex);
+    //
+    //     const transaction = TransactionMapping.createFromDTO(votingKeyLinkTransaction.toJSON()) as VotingKeyLinkTransaction;
+    //
+    //     expect(transaction.version).to.be.equal(TransactionVersion.VOTING_KEY_LINK_V1);
+    //     expect(transaction.linkedPublicKey).to.be.equal(key);
+    //     expect(transaction.startEpoch.toString()).to.be.equal('1');
+    //     expect(transaction.endEpoch.toString()).to.be.equal('3');
+    //     expect(transaction.linkAction).to.be.equal(LinkAction.Link);
+    // });
 
     it('should create NamespaceRegistrationTransaction - Root', () => {
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
