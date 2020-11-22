@@ -167,7 +167,7 @@ describe('AccountHttp', () => {
             const accountInfo = await accountRepository.getAccountInfo(accountAddress).toPromise();
             expect(accountInfo.publicKey).to.be.equal(accountPublicKey);
 
-            const merkleInfo = await accountRepository.getAccountsInfoMerkle(accountInfo.address).toPromise();
+            const merkleInfo = await accountRepository.getAccountInfoMerkle(accountInfo.address).toPromise();
             expect(merkleInfo.raw).to.not.be.undefined;
         });
     });

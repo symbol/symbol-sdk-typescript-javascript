@@ -15,12 +15,9 @@
  */
 
 import { Observable } from 'rxjs';
-import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
-import { SignedTransaction } from '../model/transaction/SignedTransaction';
-import { Transaction } from '../model/transaction/Transaction';
-import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
-import { Searcher } from './paginationStreamer/Searcher';
-import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
+import { CosignatureSignedTransaction, SignedTransaction, Transaction, TransactionAnnounceResponse } from '../model/transaction';
+import { Searcher } from './paginationStreamer';
+import { TransactionSearchCriteria } from './searchCriteria';
 import { TransactionGroup } from './TransactionGroup';
 
 /**
