@@ -15,7 +15,7 @@
  */
 
 import { Duration } from '@js-joda/core';
-import { AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { AccountRestrictionsInfoDTO, MerkleTreeBranchDTO, MerkleTreeLeafDTO } from 'symbol-openapi-typescript-fetch-client';
 import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/index';
 import { Address } from '../../model/account/Address';
 import { MerkleStateInfo } from '../../model/blockchain/MerkleStateInfo';
@@ -25,6 +25,11 @@ import { AccountRestrictions } from '../../model/restriction/AccountRestrictions
 import { AddressRestrictionFlag } from '../../model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../model/restriction/OperationRestrictionFlag';
+import { MerkleTree } from '../../model/state/MerkleTree';
+import { MerkleTreeBranch } from '../../model/state/MerkleTreeBranch';
+import { MerkleTreeBranchLink } from '../../model/state/MerkleTreeBranchLink';
+import { MerkleTreeLeaf } from '../../model/state/MerkleTreeLeaf';
+import { MerkleTreeNodeType } from '../../model/state/MerkleTreeNodeType';
 
 export class DtoMapping {
     /**
@@ -140,6 +145,32 @@ export class DtoMapping {
      * @param dto the dto
      */
     public static toMerkleStateInfo(dto: MerkleStateInfoDTO): MerkleStateInfo {
-        return new MerkleStateInfo(dto.raw);
+        const leaf = dto.tree.find((tree) => tree.type.valueOf() === MerkleTreeNodeType.Leaf);
+        if (!leaf) {
+            throw new Error('State merkle proof verification failed. No leaf node found.');
+        }
+        const tree = new MerkleTree(
+            dto.tree
+                .filter((tree) => tree.type.valueOf() === MerkleTreeNodeType.Branch)
+                .map((b) => {
+                    const branch = b as MerkleTreeBranchDTO;
+                    return new MerkleTreeBranch(
+                        branch.type.valueOf(),
+                        branch.path,
+                        branch.encodedPath,
+                        branch.linkMask,
+                        branch.links.map((link) => new MerkleTreeBranchLink(link.bit, link.link)),
+                        branch.branchHash,
+                    );
+                }),
+            new MerkleTreeLeaf(
+                leaf.type.valueOf(),
+                leaf.path,
+                leaf.encodedPath,
+                (leaf as MerkleTreeLeafDTO).value,
+                (leaf as MerkleTreeLeafDTO).leafHash,
+            ),
+        );
+        return new MerkleStateInfo(dto.raw, tree);
     }
 }
