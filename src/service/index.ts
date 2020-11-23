@@ -12,4 +12,5 @@ export * from './MosaicService';
 export * from './MosaicView';
 export * from './Namespace';
 export * from './NamespaceService';
+export * from './StateProofService';
 export * from './TransactionService';
