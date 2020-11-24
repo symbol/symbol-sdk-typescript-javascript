@@ -193,9 +193,7 @@ export class StateProofService {
                 return restrictionRepo.getAccountRestrictionsMerkle(address).pipe(
                     map((merkle) => {
                         const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        console.log(hash);
                         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        console.log(stateHash);
                         if (stateHash === merkle.tree.leaf?.value) {
                             return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                         }
@@ -217,7 +215,6 @@ export class StateProofService {
                     map((merkle) => {
                         const hash = this.version + Convert.uint8ToHex(info.serialize());
                         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        console.log(stateHash);
                         if (stateHash === merkle.tree.leaf?.value) {
                             return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                         }
@@ -240,7 +237,6 @@ export class StateProofService {
                     map((merkle) => {
                         const hash = this.version + Convert.uint8ToHex(info.metadataEntry.serialize());
                         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        console.log(stateHash);
                         if (stateHash === merkle.tree.leaf?.value) {
                             return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                         }
