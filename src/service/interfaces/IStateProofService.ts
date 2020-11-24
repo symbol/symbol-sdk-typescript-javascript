@@ -26,37 +26,49 @@ import { StateMerkleProof } from '../../model/state/StateMerkleProof';
 export interface IStateProofService {
     /**
      * @param address Account address.
-     * @returns {Observable<StateMerkleProof>}
+     * @returns {Observable<StateMerkleProof | undefined>}
      */
     accountProof(address: Address): Observable<StateMerkleProof | undefined>;
 
     /**
      * @param namespaceId Namepace Id.
-     * @returns {Observable<StateMerkleProof>}
+     * @returns {Observable<StateMerkleProof | undefined>}
      */
     namespaceProof(namespaceId: NamespaceId): Observable<StateMerkleProof | undefined>;
 
     /**
      * @param mosaicId Mosaic Id.
-     * @returns {Observable<StateMerkleProof>}
+     * @returns {Observable<StateMerkleProof | undefined>}
      */
     mosaicProof(mosaicId: MosaicId): Observable<StateMerkleProof | undefined>;
 
-    // /**
-    //  * @param compositeHash Composite hash.
-    //  * @returns {Observable<StateMerkleProof>}
-    //  */
-    // hashLockProof(compositeHash: string): Observable<StateMerkleProof | undefined>;
+    /**
+     * @param hash Hash.
+     * @returns {Observable<StateMerkleProof | undefined>}
+     */
+    hashLockProof(hash: string): Observable<StateMerkleProof | undefined>;
 
-    // /**
-    //  * @param compositeHash Composite hash.
-    //  * @returns {Observable<StateMerkleProof>}
-    //  */
-    // secretLockProof(compositeHash: string): Observable<StateMerkleProof | undefined>;
+    /**
+     * @param compositeHash Composite hash.
+     * @returns {Observable<StateMerkleProof | undefined>}
+     */
+    secretLockProof(compositeHash: string): Observable<StateMerkleProof | undefined>;
 
-    // /**
-    //  * @param address Account address.
-    //  * @returns {Observable<StateMerkleProof>}
-    //  */
-    // propertyProof(): Observable<StateMerkleProof | undefined>;
+    /**
+     * @param address Address.
+     * @returns {Observable<StateMerkleProof>}
+     */
+
+    accountRestrictionProof(address: Address): Observable<StateMerkleProof | undefined>;
+    /**
+     * @param compositeHash Composite hash.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    mosaicRestrictionProof(compositeHash: string): Observable<StateMerkleProof | undefined>;
+
+    /**
+     * @param compositeHash Composite hash.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    metadataProof(compositeHash: string): Observable<StateMerkleProof | undefined>;
 }

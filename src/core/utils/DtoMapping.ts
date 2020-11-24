@@ -145,10 +145,7 @@ export class DtoMapping {
      * @param dto the dto
      */
     public static toMerkleStateInfo(dto: MerkleStateInfoDTO): MerkleStateInfo {
-        const leaf = dto.tree.find((tree) => tree.type.valueOf() === MerkleTreeNodeType.Leaf);
-        if (!leaf) {
-            throw new Error('State merkle proof verification failed. No leaf node found.');
-        }
+        const leaf = dto.tree.find((tree) => tree.type.valueOf() === MerkleTreeNodeType.Leaf) as MerkleTreeLeafDTO;
         const tree = new MerkleTree(
             dto.tree
                 .filter((tree) => tree.type.valueOf() === MerkleTreeNodeType.Branch)
@@ -163,13 +160,7 @@ export class DtoMapping {
                         branch.branchHash,
                     );
                 }),
-            new MerkleTreeLeaf(
-                leaf.type.valueOf(),
-                leaf.path,
-                leaf.encodedPath,
-                (leaf as MerkleTreeLeafDTO).value,
-                (leaf as MerkleTreeLeafDTO).leafHash,
-            ),
+            leaf ? new MerkleTreeLeaf(leaf.type.valueOf(), leaf.path, leaf.encodedPath, leaf.value, leaf.leafHash) : undefined,
         );
         return new MerkleStateInfo(dto.raw, tree);
     }

@@ -33,7 +33,8 @@ export class MerkleTree {
         public readonly branches: MerkleTreeBranch[],
         /**
          * Leaf
+         * Undefined leaf means proof verification failed
          */
-        public readonly leaf: MerkleTreeLeaf,
+        public readonly leaf?: MerkleTreeLeaf,
     ) {}
 }

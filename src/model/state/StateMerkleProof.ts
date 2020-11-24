@@ -38,6 +38,6 @@ export class StateMerkleProof {
         /**
          * State hash merkle roots
          */
-        public readonly stateHashSubCacheMerkleRoots: string,
+        public readonly rootHash: string,
     ) {}
 }

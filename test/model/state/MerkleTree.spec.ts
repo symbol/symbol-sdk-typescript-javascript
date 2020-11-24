@@ -65,10 +65,10 @@ describe('MerkleTree', () => {
         deepEqual(tree.tree.branches[0].encodedPath, merkleStateDTO.tree[0].encodedPath);
         deepEqual(tree.tree.branches[0].path, merkleStateDTO.tree[0].path);
         deepEqual(tree.tree.branches[0].linkMask, merkleStateDTO.tree[0].linkMask);
-        deepEqual(tree.tree.leaf.type.valueOf(), merkleStateDTO.tree[1].type);
-        deepEqual(tree.tree.leaf.leafHash, merkleStateDTO.tree[1].leafHash);
-        deepEqual(tree.tree.leaf.encodedPath, merkleStateDTO.tree[1].encodedPath);
-        deepEqual(tree.tree.leaf.path, merkleStateDTO.tree[1].path);
-        deepEqual(tree.tree.leaf.value, merkleStateDTO.tree[1].value);
+        deepEqual(tree.tree.leaf?.type.valueOf(), merkleStateDTO.tree[1].type);
+        deepEqual(tree.tree.leaf?.leafHash, merkleStateDTO.tree[1].leafHash);
+        deepEqual(tree.tree.leaf?.encodedPath, merkleStateDTO.tree[1].encodedPath);
+        deepEqual(tree.tree.leaf?.path, merkleStateDTO.tree[1].path);
+        deepEqual(tree.tree.leaf?.value, merkleStateDTO.tree[1].value);
     });
 });

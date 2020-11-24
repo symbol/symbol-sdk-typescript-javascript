@@ -16,11 +16,13 @@
 
 import { sha3_256 } from 'js-sha3';
 import { Observable } from 'rxjs';
-import { map, mergeMap, toArray } from 'rxjs/operators';
+import { catchError, map, mergeMap, toArray } from 'rxjs/operators';
 import { Convert } from '../core/format/Convert';
+import { BlockRepository } from '../infrastructure/BlockRepository';
+import { Http } from '../infrastructure/Http';
 import { NamespacePaginationStreamer } from '../infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
-import { NamespaceId, NamespaceRegistrationType } from '../model';
+import { MerkleTree, NamespaceId, NamespaceRegistrationType } from '../model';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { StateMerkleProof } from '../model/state/StateMerkleProof';
@@ -30,11 +32,14 @@ import { StateMerkleProof } from '../model/state/StateMerkleProof';
  */
 export class StateProofService {
     private readonly version = '0100'; // TODO: to add version in catbuffer
+    private blockRepo: BlockRepository;
     /**
      * Constructor
      * @param repositoryFactory
      */
-    constructor(private readonly repositoryFactory: RepositoryFactory) {}
+    constructor(private readonly repositoryFactory: RepositoryFactory) {
+        this.blockRepo = repositoryFactory.createBlockRepository();
+    }
 
     /**
      * @param address Account address.
@@ -48,12 +53,13 @@ export class StateProofService {
                     map((merkle) => {
                         const hash = this.version + Convert.uint8ToHex(info.serialize());
                         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, merkle.tree.branches[0].branchHash);
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                         }
                     }),
                 );
             }),
+            catchError(Http.errorHandling),
         );
     }
 
@@ -76,14 +82,15 @@ export class StateProofService {
                                     const hash = this.version + Convert.uint8ToHex(root.serialize(children));
                                     const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
                                     //TODO: serialization seems not correct
-                                    if (stateHash === merkle.tree.leaf.value) {
-                                        return new StateMerkleProof(stateHash, merkle.tree, merkle.tree.branches[0].branchHash);
+                                    if (stateHash === merkle.tree.leaf?.value) {
+                                        return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                                     }
                                 }),
                             );
                         }),
                     );
             }),
+            catchError(Http.errorHandling),
         );
     }
 
@@ -99,12 +106,13 @@ export class StateProofService {
                     map((merkle) => {
                         const hash = this.version + Convert.uint8ToHex(info.serialize());
                         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, merkle.tree.branches[0].branchHash);
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                         }
                     }),
                 );
             }),
+            catchError(Http.errorHandling),
         );
     }
 
@@ -120,31 +128,135 @@ export class StateProofService {
                     map((merkle) => {
                         const hash = this.version + Convert.uint8ToHex(info.serialize());
                         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        console.log(stateHash);
-                        if (stateHash === merkle.tree.leaf.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, merkle.tree.branches[0].branchHash);
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
                         }
                     }),
                 );
             }),
+            catchError(Http.errorHandling),
         );
     }
 
-    // /**
-    //  * @param compositeHash Composite hash.
-    //  * @returns {Observable<StateMerkleProof>}
-    //  */
-    // public hashLockProof(compositeHash: string): Observable<StateMerkleProof>;
+    /**
+     * @param compositeHash Composite hash.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    public secretLockProof(compositeHash: string): Observable<StateMerkleProof | undefined> {
+        const secretLockRepo = this.repositoryFactory.createSecretLockRepository();
+        return secretLockRepo.getSecretLock(compositeHash).pipe(
+            mergeMap((info) => {
+                return secretLockRepo.getSecretLockMerkle(compositeHash).pipe(
+                    map((merkle) => {
+                        const hash = this.version + Convert.uint8ToHex(info.serialize());
+                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
+                        }
+                    }),
+                );
+            }),
+            catchError(Http.errorHandling),
+        );
+    }
 
-    // /**
-    //  * @param compositeHash Composite hash.
-    //  * @returns {Observable<StateMerkleProof>}
-    //  */
-    // public secretLockProof(compositeHash: string): Observable<StateMerkleProof>;
+    /**
+     * @param hash hashs.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    public hashLockProof(hash: string): Observable<StateMerkleProof | undefined> {
+        const hashLockRepo = this.repositoryFactory.createHashLockRepository();
+        return hashLockRepo.getHashLock(hash).pipe(
+            mergeMap((info) => {
+                return hashLockRepo.getHashLockMerkle(hash).pipe(
+                    map((merkle) => {
+                        const hash = this.version + Convert.uint8ToHex(info.serialize());
+                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
+                        }
+                    }),
+                );
+            }),
+            catchError(Http.errorHandling),
+        );
+    }
 
-    // /**
-    //  * @param address Account address.
-    //  * @returns {Observable<StateMerkleProof>}
-    //  */
-    // public propertyProof(): Observable<StateMerkleProof>;
+    /**
+     * @param address Address.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    public accountRestrictionProof(address: Address): Observable<StateMerkleProof | undefined> {
+        const restrictionRepo = this.repositoryFactory.createRestrictionAccountRepository();
+        return restrictionRepo.getAccountRestrictions(address).pipe(
+            mergeMap((info) => {
+                return restrictionRepo.getAccountRestrictionsMerkle(address).pipe(
+                    map((merkle) => {
+                        const hash = this.version + Convert.uint8ToHex(info.serialize());
+                        console.log(hash);
+                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+                        console.log(stateHash);
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
+                        }
+                    }),
+                );
+            }),
+            catchError(Http.errorHandling),
+        );
+    }
+    /**
+     * @param compositeHash Composite hash.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    public mosaicRestrictionProof(compositeHash: string): Observable<StateMerkleProof | undefined> {
+        const restrictionRepo = this.repositoryFactory.createRestrictionMosaicRepository();
+        return restrictionRepo.getMosaicRestrictions(compositeHash).pipe(
+            mergeMap((info) => {
+                return restrictionRepo.getMosaicRestrictionsMerkle(compositeHash).pipe(
+                    map((merkle) => {
+                        const hash = this.version + Convert.uint8ToHex(info.serialize());
+                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+                        console.log(stateHash);
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
+                        }
+                    }),
+                );
+            }),
+            catchError(Http.errorHandling),
+        );
+    }
+
+    /**
+     * @param compositeHash Composite hash.
+     * @returns {Observable<StateMerkleProof>}
+     */
+    public metadataProof(compositeHash: string): Observable<StateMerkleProof | undefined> {
+        const metaDataRepo = this.repositoryFactory.createMetadataRepository();
+        return metaDataRepo.getMetadata(compositeHash).pipe(
+            mergeMap((info) => {
+                return metaDataRepo.getMetadataMerkle(compositeHash).pipe(
+                    map((merkle) => {
+                        const hash = this.version + Convert.uint8ToHex(info.metadataEntry.serialize());
+                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+                        console.log(stateHash);
+                        if (stateHash === merkle.tree.leaf?.value) {
+                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
+                        }
+                    }),
+                );
+            }),
+            catchError(Http.errorHandling),
+        );
+    }
+
+    /**
+     * Get merkle tree root hash
+     * @param tree merkle tree
+     * @returns {string} root hash
+     */
+    private getRootHash(tree: MerkleTree): string {
+        return tree.branches.length ? tree.branches[0].branchHash : tree.leaf!.leafHash;
+    }
 }

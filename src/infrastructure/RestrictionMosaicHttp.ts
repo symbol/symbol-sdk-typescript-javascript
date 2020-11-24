@@ -96,16 +96,17 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
                 dto.mosaicRestrictionEntry.entryType.valueOf(),
                 new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
                 Address.createFromEncoded(addressRestrictionDto.mosaicRestrictionEntry.targetAddress),
-                addressRestrictionDto.mosaicRestrictionEntry.restrictions.map(this.toMosaicAddressRestrictionItem),
+                addressRestrictionDto.mosaicRestrictionEntry.restrictions.map(RestrictionMosaicHttp.toMosaicAddressRestrictionItem),
             );
         }
 
         const globalRestrictionDto = dto as MosaicGlobalRestrictionDTO;
+        console.log(dto);
         return new MosaicGlobalRestriction(
             dto.mosaicRestrictionEntry.compositeHash,
             dto.mosaicRestrictionEntry.entryType.valueOf(),
             new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
-            globalRestrictionDto.mosaicRestrictionEntry.restrictions.map((i) => this.toMosaicGlobalRestrictionItem(i)),
+            globalRestrictionDto.mosaicRestrictionEntry.restrictions.map((i) => RestrictionMosaicHttp.toMosaicGlobalRestrictionItem(i)),
         );
     }
 
