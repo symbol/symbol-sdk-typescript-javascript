@@ -155,12 +155,15 @@ export class DtoMapping {
                         branch.type.valueOf(),
                         branch.path,
                         branch.encodedPath,
+                        branch.nibbleCount,
                         branch.linkMask,
                         branch.links.map((link) => new MerkleTreeBranchLink(link.bit, link.link)),
                         branch.branchHash,
                     );
                 }),
-            leaf ? new MerkleTreeLeaf(leaf.type.valueOf(), leaf.path, leaf.encodedPath, leaf.value, leaf.leafHash) : undefined,
+            leaf
+                ? new MerkleTreeLeaf(leaf.type.valueOf(), leaf.path, leaf.encodedPath, leaf.nibbleCount, leaf.value, leaf.leafHash)
+                : undefined,
         );
         return new MerkleStateInfo(dto.raw, tree);
     }
