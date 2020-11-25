@@ -15,6 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
+import { NamespaceId } from '../model';
 import { Address } from '../model/account/Address';
 import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 import { NewBlock } from '../model/blockchain/NewBlock';
@@ -77,7 +78,7 @@ export interface IListener {
      * @return an observable stream of Transaction with state confirmed
      */
 
-    confirmed(address: Address, transactionHash?: string): Observable<Transaction>;
+    confirmed(address: Address | NamespaceId, transactionHash?: string): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction for a specific address.
@@ -88,7 +89,7 @@ export interface IListener {
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state unconfirmed
      */
-    unconfirmedAdded(address: Address, transactionHash?: string): Observable<Transaction>;
+    unconfirmedAdded(address: Address | NamespaceId, transactionHash?: string): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -99,7 +100,7 @@ export interface IListener {
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    unconfirmedRemoved(address: Address, transactionHash?: string): Observable<string>;
+    unconfirmedRemoved(address: Address | NamespaceId, transactionHash?: string): Observable<string>;
 
     /**
      * Return an observable of {@link AggregateTransaction} for specific address.
@@ -121,7 +122,7 @@ export interface IListener {
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    aggregateBondedRemoved(address: Address, transactionHash?: string): Observable<string>;
+    aggregateBondedRemoved(address: Address | NamespaceId, transactionHash?: string): Observable<string>;
 
     /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.
@@ -132,7 +133,7 @@ export interface IListener {
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of {@link TransactionStatusError}
      */
-    status(address: Address, transactionHash?: string): Observable<TransactionStatusError>;
+    status(address: Address | NamespaceId, transactionHash?: string): Observable<TransactionStatusError>;
 
     /**
      * Returns an observable stream of {@link CosignatureSignedTransaction} for specific address.
@@ -142,5 +143,5 @@ export interface IListener {
      * @param address address we listen when a cosignatory is added to some transaction address sent
      * @return an observable stream of {@link CosignatureSignedTransaction}
      */
-    cosignatureAdded(address: Address): Observable<CosignatureSignedTransaction>;
+    cosignatureAdded(address: Address | NamespaceId): Observable<CosignatureSignedTransaction>;
 }
