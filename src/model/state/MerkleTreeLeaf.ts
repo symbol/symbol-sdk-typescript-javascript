@@ -41,6 +41,10 @@ export class MerkleTreeLeaf {
          */
         public readonly encodedPath: string,
         /**
+         * Leaf nibble count
+         */
+        public readonly nibbleCount: number,
+        /**
          * Leaf node value hash
          */
         public readonly value: string,

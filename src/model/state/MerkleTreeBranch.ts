@@ -43,6 +43,10 @@ export class MerkleTreeBranch {
          */
         public readonly encodedPath: string,
         /**
+         * Leaf nibble count
+         */
+        public readonly nibbleCount: number,
+        /**
          * Branch node link bitmask
          */
         public readonly linkMask: string,
