@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import { of } from 'rxjs';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { deepEqual, instance, verify, when } from 'ts-mockito';
 import { Page } from '../../../src/infrastructure/Page';

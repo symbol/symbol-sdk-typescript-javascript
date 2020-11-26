@@ -29,7 +29,7 @@ import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { Page } from './Page';
-import { AccountPaginationStreamer, BlockPaginationStreamer } from './paginationStreamer';
+import { BlockPaginationStreamer } from './paginationStreamer';
 import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 
 /**

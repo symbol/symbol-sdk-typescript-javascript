@@ -22,9 +22,8 @@ import { MerkleStateInfo } from '../model/blockchain';
 import { AccountRestrictions } from '../model/restriction';
 import { Http } from './Http';
 import { Page } from './Page';
-import { PaginationStreamer, RestrictionAccountPaginationStreamer, RestrictionMosaicPaginationStreamer } from './paginationStreamer';
+import { RestrictionAccountPaginationStreamer } from './paginationStreamer';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
-import { RestrictionMosaicSearchCriteria } from './searchCriteria';
 import { RestrictionAccountSearchCriteria } from './searchCriteria/RestrictionAccountSearchCriteria';
 
 /**
@@ -73,7 +72,7 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * Returns a mosaic restrictions page based on the criteria.
      *
      * @param criteria the criteria
-     * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
+     * @return a page of {@link MosaicRestriction}
      */
     public search(criteria: RestrictionAccountSearchCriteria): Observable<Page<AccountRestrictions>> {
         return this.call(

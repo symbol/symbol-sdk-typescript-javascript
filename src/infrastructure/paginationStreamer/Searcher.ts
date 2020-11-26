@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs';
 import { Page } from '../Page';
 import { SearchCriteria } from '../searchCriteria/SearchCriteria';
-import { PaginationStreamer } from './PaginationStreamer';
 
 /**
  *  Objects of this interface know how to search symbol objects based on a criteria returning a page of these objects.
@@ -33,5 +32,3 @@ export interface Searcher<E, C extends SearchCriteria> {
      */
     search(criteria: C): Observable<Page<E>>;
 }
-
-

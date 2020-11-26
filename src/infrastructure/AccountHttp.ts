@@ -24,7 +24,7 @@ import { Mosaic, MosaicId } from '../model/mosaic';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
 import { Page } from './Page';
-import { AccountPaginationStreamer, TransactionPaginationStreamer } from './paginationStreamer';
+import { AccountPaginationStreamer } from './paginationStreamer';
 import { AccountSearchCriteria } from './searchCriteria';
 
 /**
