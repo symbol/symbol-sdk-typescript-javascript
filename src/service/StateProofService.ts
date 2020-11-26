@@ -25,6 +25,7 @@ import {
     HashLockInfo,
     MerkleStateInfo,
     MerkleTree,
+    Metadata,
     MosaicInfo,
     MultisigAccountInfo,
     NamespaceId,
@@ -34,6 +35,7 @@ import {
 } from '../model';
 import { Address } from '../model/account';
 import { MosaicId } from '../model/mosaic';
+import { MosaicRestriction } from '../model/restriction/MosaicRestriction';
 import { StateMerkleProof } from '../model/state/StateMerkleProof';
 
 /**
@@ -54,7 +56,7 @@ export class StateProofService {
      * @param address Account address.
      * @returns {Observable<StateMerkleProof>}
      */
-    public accountProof(address: Address): Observable<StateMerkleProof> {
+    public accountById(address: Address): Observable<StateMerkleProof> {
         const accountRepo = this.repositoryFactory.createAccountRepository();
         return accountRepo.getAccountInfo(address).pipe(mergeMap((info) => this.account(info)));
     }
@@ -69,7 +71,7 @@ export class StateProofService {
      * @param namespaceId Namepace Id.
      * @returns {Observable<StateMerkleProof>}
      */
-    public namespaceProof(namespaceId: NamespaceId): Observable<StateMerkleProof> {
+    public namespaceById(namespaceId: NamespaceId): Observable<StateMerkleProof> {
         const namespaceRepo = this.repositoryFactory.createNamespaceRepository();
         return namespaceRepo.getNamespace(namespaceId).pipe(
             mergeMap((namespace) => {
@@ -105,7 +107,7 @@ export class StateProofService {
      * @param mosaicId Mosaic Id.
      * @returns {Observable<StateMerkleProof>}
      */
-    public mosaicProof(mosaicId: MosaicId): Observable<StateMerkleProof> {
+    public mosaicById(mosaicId: MosaicId): Observable<StateMerkleProof> {
         const mosaicRepo = this.repositoryFactory.createMosaicRepository();
         return mosaicRepo.getMosaic(mosaicId).pipe(
             mergeMap((info) => {
@@ -127,7 +129,7 @@ export class StateProofService {
      * @param address Multisig account address.
      * @returns {Observable<StateMerkleProof>}
      */
-    public multisigProof(address: Address): Observable<StateMerkleProof> {
+    public multisigById(address: Address): Observable<StateMerkleProof> {
         const multisigRepo = this.repositoryFactory.createMultisigRepository();
         return multisigRepo.getMultisigAccountInfo(address).pipe(
             mergeMap((info) => {
@@ -149,7 +151,7 @@ export class StateProofService {
      * @param compositeHash Composite hash.
      * @returns {Observable<StateMerkleProof>}
      */
-    public secretLockProof(compositeHash: string): Observable<StateMerkleProof> {
+    public secretLockById(compositeHash: string): Observable<StateMerkleProof> {
         const secretLockRepo = this.repositoryFactory.createSecretLockRepository();
         return secretLockRepo.getSecretLock(compositeHash).pipe(
             mergeMap((info) => {
@@ -171,7 +173,7 @@ export class StateProofService {
      * @param hash hashs.
      * @returns {Observable<StateMerkleProof>}
      */
-    public hashLockProof(hash: string): Observable<StateMerkleProof> {
+    public hashLockById(hash: string): Observable<StateMerkleProof> {
         const hashLockRepo = this.repositoryFactory.createHashLockRepository();
         return hashLockRepo.getHashLock(hash).pipe(mergeMap((info) => this.hashLock(info)));
     }
@@ -189,7 +191,7 @@ export class StateProofService {
      * @param address Address.
      * @returns {Observable<StateMerkleProof>}
      */
-    public accountRestrictionProof(address: Address): Observable<StateMerkleProof> {
+    public accountRestrictionById(address: Address): Observable<StateMerkleProof> {
         const restrictionRepo = this.repositoryFactory.createRestrictionAccountRepository();
         return restrictionRepo.getAccountRestrictions(address).pipe(
             mergeMap((info) => {
@@ -214,34 +216,32 @@ export class StateProofService {
      * @param compositeHash Composite hash.
      * @returns {Observable<StateMerkleProof>}
      */
-    public mosaicRestrictionProof(compositeHash: string): Observable<StateMerkleProof> {
+    public mosaicRestrictionById(compositeHash: string): Observable<StateMerkleProof> {
         const restrictionRepo = this.repositoryFactory.createRestrictionMosaicRepository();
-        return restrictionRepo.getMosaicRestrictions(compositeHash).pipe(
-            mergeMap((info) => {
-                return restrictionRepo.getMosaicRestrictionsMerkle(compositeHash).pipe(
-                    map((merkle) => {
-                        return this.toProof(info.serialize(), merkle);
-                    }),
-                );
-            }),
-        );
+        return restrictionRepo.getMosaicRestrictions(compositeHash).pipe(mergeMap((info) => this.mosaicRestriction(info)));
+    }
+
+    public mosaicRestriction(info: MosaicRestriction): Observable<StateMerkleProof> {
+        const restrictionRepo = this.repositoryFactory.createRestrictionMosaicRepository();
+        return restrictionRepo
+            .getMosaicRestrictionsMerkle(info.compositeHash)
+            .pipe(map((merkle) => this.toProof(info.serialize(), merkle)));
     }
 
     /**
      * @param compositeHash Composite hash.
      * @returns {Observable<StateMerkleProof>}
      */
-    public metadataProof(compositeHash: string): Observable<StateMerkleProof> {
+    public metadataById(compositeHash: string): Observable<StateMerkleProof> {
         const metaDataRepo = this.repositoryFactory.createMetadataRepository();
-        return metaDataRepo.getMetadata(compositeHash).pipe(
-            mergeMap((info) => {
-                return metaDataRepo.getMetadataMerkle(compositeHash).pipe(
-                    map((merkle) => {
-                        return this.toProof(info.metadataEntry.serialize(), merkle);
-                    }),
-                );
-            }),
-        );
+        return metaDataRepo.getMetadata(compositeHash).pipe(mergeMap((info) => this.metadata(info)));
+    }
+
+    public metadata(info: Metadata): Observable<StateMerkleProof> {
+        const metaDataRepo = this.repositoryFactory.createMetadataRepository();
+        return metaDataRepo
+            .getMetadataMerkle(info.metadataEntry.compositeHash)
+            .pipe(map((merkle) => this.toProof(info.metadataEntry.serialize(), merkle)));
     }
 
     private toProof(serialized: Uint8Array, merkle: MerkleStateInfo): StateMerkleProof {

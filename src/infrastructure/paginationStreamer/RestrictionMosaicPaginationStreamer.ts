@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MosaicAddressRestriction, MosaicGlobalRestriction } from '../../model/restriction';
+import { MosaicRestriction } from '../../model/restriction/MosaicRestriction';
 import { RestrictionMosaicSearchCriteria } from '../searchCriteria';
 import { PaginationStreamer } from './PaginationStreamer';
 import { Searcher } from './Searcher';
@@ -22,16 +22,13 @@ import { Searcher } from './Searcher';
 /**
  * A helper object that streams {@link RestrictionMosaic} using the search.
  */
-export class RestrictionMosaicPaginationStreamer extends PaginationStreamer<
-    MosaicAddressRestriction | MosaicGlobalRestriction,
-    RestrictionMosaicSearchCriteria
-> {
+export class RestrictionMosaicPaginationStreamer extends PaginationStreamer<MosaicRestriction, RestrictionMosaicSearchCriteria> {
     /**
      * Constructor
      *
      * @param searcher the account repository that will perform the searches
      */
-    constructor(searcher: Searcher<MosaicAddressRestriction | MosaicGlobalRestriction, RestrictionMosaicSearchCriteria>) {
+    constructor(searcher: Searcher<MosaicRestriction, RestrictionMosaicSearchCriteria>) {
         super(searcher);
     }
 }

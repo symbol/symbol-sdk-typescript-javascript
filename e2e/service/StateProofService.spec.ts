@@ -23,7 +23,7 @@ import { StateProofService } from '../../src/service';
 
 const repositoryFactory = new RepositoryFactoryHttp('http://api-01.us-west-2.0.10.0.x.symboldev.network:3000');
 const service = new StateProofService(repositoryFactory);
-const stateCounts = 10;
+const stateCounts = 50;
 //Process the latest data first.
 const order = Order.Desc;
 
@@ -36,7 +36,7 @@ async function test<E, C extends SearchCriteria>(
 ): Promise<void> {
     const streamer = repository.streamer();
     const infos = await streamer
-        .search({ order } as C)
+        .search({ order, pageSize: stateCounts } as C)
         .pipe(take(stateCounts), toArray())
         .toPromise();
     const promises = infos.map(async (info) => {
@@ -44,7 +44,10 @@ async function test<E, C extends SearchCriteria>(
         try {
             const merkle = await merkleMethod(info).toPromise();
             expect(merkle).to.not.undefined;
-            console.log(idText + ' ' + merkle.valid);
+            if (merkle.valid) console.log(idText + ' ' + merkle.valid);
+            else {
+                console.error(idText + ' ' + merkle.valid);
+            }
         } catch (e) {
             console.error(idText + ' ' + e);
             console.error(e);
@@ -91,6 +94,30 @@ describe('StateProofService', () => {
             repositoryFactory.createSecretLockRepository(),
             (info) => service.secretLock(info),
             (info) => info.compositeHash,
+        );
+    });
+
+    it('Account restrictions', async () => {
+        await test(
+            repositoryFactory.createRestrictionAccountRepository(),
+            (info) => service.accountRestriction(info),
+            (info) => info.address.plain(),
+        );
+    });
+
+    it('Mosaic restrictions', async () => {
+        await test(
+            repositoryFactory.createRestrictionMosaicRepository(),
+            (info) => service.mosaicRestriction(info),
+            (info) => info.compositeHash,
+        );
+    });
+
+    it('Metadata', async () => {
+        await test(
+            repositoryFactory.createMetadataRepository(),
+            (info) => service.metadata(info),
+            (info) => info.metadataEntry.compositeHash,
         );
     });
 });

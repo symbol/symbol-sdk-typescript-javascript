@@ -72,7 +72,7 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * Returns a mosaic restrictions page based on the criteria.
      *
      * @param criteria the criteria
-     * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
+     * @return a page of {@link MosaicRestriction}
      */
     public search(criteria: RestrictionAccountSearchCriteria): Observable<Page<AccountRestrictions>> {
         return this.call(

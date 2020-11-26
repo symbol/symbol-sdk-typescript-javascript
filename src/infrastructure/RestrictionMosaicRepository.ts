@@ -25,7 +25,7 @@ export interface RestrictionMosaicRepository extends SearcherRepository<MosaicRe
      * Returns mosaic restrictions by composite hash
      *
      * @param compositeHash the composite hash
-     * @return Observable<MosaicAddressRestriction | MosaicGlobalRestriction>
+     * @return Observable<MosaicRestriction>
      */
     getMosaicRestrictions(compositeHash: string): Observable<MosaicRestriction>;
 
@@ -33,7 +33,7 @@ export interface RestrictionMosaicRepository extends SearcherRepository<MosaicRe
      * Returns mosaic restrictions by composite hash
      *
      * @param compositeHash the composite hash
-     * @return Observable<MosaicAddressRestriction | MosaicGlobalRestriction>
+     * @return Observable<MosaicRestriction>
      */
     getMosaicRestrictionsMerkle(compositeHash: string): Observable<MerkleStateInfo>;
 }
