@@ -17,7 +17,7 @@
 import { Observable } from 'rxjs';
 import { AccountInfo, Address } from '../model/account';
 import { MerkleStateInfo } from '../model/blockchain';
-import { Searcher } from './paginationStreamer';
+import { SearcherRepository } from './paginationStreamer';
 import { AccountSearchCriteria } from './searchCriteria';
 
 /**
@@ -25,7 +25,7 @@ import { AccountSearchCriteria } from './searchCriteria';
  *
  * @since 1.0
  */
-export interface AccountRepository extends Searcher<AccountInfo, AccountSearchCriteria> {
+export interface AccountRepository extends SearcherRepository<AccountInfo, AccountSearchCriteria> {
     /**
      * Gets an AccountInfo for an account.
      * @param address Address

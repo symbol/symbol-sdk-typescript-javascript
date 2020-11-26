@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { Address } from '../model/account/Address';
+import { Observable } from 'rxjs';
+import { Address } from '../model/account';
 import { MerkleStateInfo } from '../model/blockchain';
 import { AccountRestrictions } from '../model/restriction';
-import { Searcher } from './paginationStreamer';
+import { SearcherRepository } from './paginationStreamer';
 import { RestrictionMosaicSearchCriteria } from './searchCriteria';
 
-export interface RestrictionAccountRepository extends Searcher<AccountRestrictions, RestrictionMosaicSearchCriteria> {
+export interface RestrictionAccountRepository extends SearcherRepository<AccountRestrictions, RestrictionMosaicSearchCriteria> {
     /**
      * Gets Account restrictions.
      * @param address the address

@@ -15,26 +15,31 @@ import { MerkleTreeBranch } from './MerkleTreeBranch';
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format';
 import { MerkleTreeBranch } from './MerkleTreeBranch';
 import { MerkleTreeLeaf } from './MerkleTreeLeaf';
+import { MerkleTreeNodeType } from './MerkleTreeNodeType';
+import MerkleTreeParser from './MerkleTreeParser';
 
 /**
  * Merkle tree.
  */
 export class MerkleTree {
     /**
-     * @param bit
-     * @param link
+     * @param branches the branches
+     * @param the leaf the leaf.
      */
-    constructor(
-        /**
-         * Branches
-         */
-        public readonly branches: MerkleTreeBranch[],
-        /**
-         * Leaf
-         * Undefined leaf means proof verification failed
-         */
-        public readonly leaf?: MerkleTreeLeaf,
-    ) {}
+    constructor(public readonly branches: MerkleTreeBranch[], public readonly leaf?: MerkleTreeLeaf) {}
+
+    /***
+     *
+     * @param raw
+     */
+    public static fromRaw(raw: string): MerkleTree {
+        const tree = new MerkleTreeParser().parseMerkleTreeFromRaw(Convert.hexToUint8(raw));
+        return new MerkleTree(
+            tree.filter((b) => b.type == MerkleTreeNodeType.Branch).map((b) => b as MerkleTreeBranch),
+            tree.filter((b) => b.type == MerkleTreeNodeType.Leaf).map((b) => b as MerkleTreeLeaf)?.[0],
+        );
+    }
 }

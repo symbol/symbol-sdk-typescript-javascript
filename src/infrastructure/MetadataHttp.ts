@@ -29,6 +29,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MetadataRepository } from './MetadataRepository';
 import { Page } from './Page';
+import { MetadataPaginationStreamer, NamespacePaginationStreamer } from './paginationStreamer';
 import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
 
 /**
@@ -91,6 +92,10 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     public getMetadataMerkle(compositeHash: string): Observable<MerkleStateInfo> {
         return this.call(this.metadataRoutesApi.getMetadataMerkle(compositeHash), DtoMapping.toMerkleStateInfo);
+    }
+
+    public streamer(): MetadataPaginationStreamer {
+        return new MetadataPaginationStreamer(this);
     }
 
     /**

@@ -145,6 +145,10 @@ export class DtoMapping {
      * @param dto the dto
      */
     public static toMerkleStateInfo(dto: MerkleStateInfoDTO): MerkleStateInfo {
+        if (!dto.tree) {
+            return new MerkleStateInfo(dto.raw, MerkleTree.fromRaw(dto.raw));
+        }
+
         const leaf = dto.tree.find((tree) => tree.type.valueOf() === MerkleTreeNodeType.Leaf) as MerkleTreeLeafDTO;
         const tree = new MerkleTree(
             dto.tree

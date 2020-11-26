@@ -29,6 +29,7 @@ import { UInt64 } from '../model/UInt64';
 import { BlockRepository } from './BlockRepository';
 import { Http } from './Http';
 import { Page } from './Page';
+import { AccountPaginationStreamer, BlockPaginationStreamer } from './paginationStreamer';
 import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
 
 /**
@@ -80,6 +81,10 @@ export class BlockHttp extends Http implements BlockRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, this.toBlockInfo),
         );
+    }
+
+    public streamer(): BlockPaginationStreamer {
+        return new BlockPaginationStreamer(this);
     }
 
     /**

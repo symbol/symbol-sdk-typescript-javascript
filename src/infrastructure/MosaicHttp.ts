@@ -28,6 +28,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MosaicRepository } from './MosaicRepository';
 import { Page } from './Page';
+import { MosaicPaginationStreamer } from './paginationStreamer';
 import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 
 /**
@@ -113,6 +114,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
                 ),
             ),
         );
+    }
+
+    public streamer(): MosaicPaginationStreamer {
+        return new MosaicPaginationStreamer(this);
     }
 
     /**

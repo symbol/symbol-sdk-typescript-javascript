@@ -15,15 +15,15 @@
  */
 
 import { Observable } from 'rxjs';
-import { MerkleStateInfo } from '../model/blockchain/MerkleStateInfo';
-import { HashLockInfo } from '../model/lock/HashLockInfo';
-import { Searcher } from './paginationStreamer/Searcher';
-import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria';
+import { MerkleStateInfo } from '../model/blockchain';
+import { HashLockInfo } from '../model/lock';
+import { SearcherRepository } from './paginationStreamer';
+import { HashLockSearchCriteria } from './searchCriteria';
 
 /**
  * Hashlock interface repository.
  */
-export interface HashLockRepository extends Searcher<HashLockInfo, HashLockSearchCriteria> {
+export interface HashLockRepository extends SearcherRepository<HashLockInfo, HashLockSearchCriteria> {
     /**
      * Get hash lock info of the given id
      * @param hash Hashlock hash

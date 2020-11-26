@@ -36,6 +36,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
 import { Page } from './Page';
+import { NamespacePaginationStreamer, SecretLockPaginationStreamer } from './paginationStreamer';
 import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 
 /**
@@ -170,6 +171,10 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, this.toNamespaceInfo),
         );
+    }
+
+    public streamer(): NamespacePaginationStreamer {
+        return new NamespacePaginationStreamer(this);
     }
 
     /**

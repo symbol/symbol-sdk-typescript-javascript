@@ -24,6 +24,7 @@ import { Mosaic, MosaicId } from '../model/mosaic';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
 import { Page } from './Page';
+import { AccountPaginationStreamer, TransactionPaginationStreamer } from './paginationStreamer';
 import { AccountSearchCriteria } from './searchCriteria';
 
 /**
@@ -86,6 +87,10 @@ export class AccountHttp extends Http implements AccountRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, AccountHttp.toAccountInfo),
         );
+    }
+
+    public streamer(): AccountPaginationStreamer {
+        return new AccountPaginationStreamer(this);
     }
 
     /**

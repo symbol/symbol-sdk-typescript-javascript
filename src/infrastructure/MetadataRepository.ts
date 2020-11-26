@@ -17,7 +17,7 @@
 import { Observable } from 'rxjs';
 import { MerkleStateInfo } from '../model/blockchain';
 import { Metadata } from '../model/metadata';
-import { Searcher } from './paginationStreamer';
+import { SearcherRepository } from './paginationStreamer';
 import { MetadataSearchCriteria } from './searchCriteria';
 
 /**
@@ -25,7 +25,7 @@ import { MetadataSearchCriteria } from './searchCriteria';
  *
  * @since 1.0
  */
-export interface MetadataRepository extends Searcher<Metadata, MetadataSearchCriteria> {
+export interface MetadataRepository extends SearcherRepository<Metadata, MetadataSearchCriteria> {
     /**
      * Get metadata of the given id.
      * @param compositeHash Metadata composite hash id

@@ -23,7 +23,7 @@ import {
     RestrictionMosaicRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils';
-import { MerkleStateInfo, UInt64 } from '../model';
+import { AccountRestrictions, MerkleStateInfo, UInt64 } from '../model';
 import { Address } from '../model/account';
 import { MosaicId } from '../model/mosaic';
 import {
@@ -34,8 +34,9 @@ import {
 } from '../model/restriction';
 import { Http } from './Http';
 import { Page } from './Page';
+import { PaginationStreamer, RestrictionAccountPaginationStreamer, RestrictionMosaicPaginationStreamer } from './paginationStreamer';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
-import { RestrictionMosaicSearchCriteria } from './searchCriteria';
+import { RestrictionAccountSearchCriteria, RestrictionMosaicSearchCriteria } from './searchCriteria';
 
 /**
  * RestrictionMosaic http repository.
@@ -77,6 +78,10 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
             ),
             (body) => super.toPage(body.pagination, body.data, (r) => RestrictionMosaicHttp.toMosaicRestriction(r)),
         );
+    }
+
+    public streamer(): RestrictionMosaicPaginationStreamer {
+        return new RestrictionMosaicPaginationStreamer(this);
     }
 
     /**

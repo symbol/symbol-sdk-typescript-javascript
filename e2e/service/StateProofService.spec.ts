@@ -14,33 +14,83 @@
  * limitations under the License.
  */
 
-import { expect } from "chai";
-import { MosaicId } from '../../src/model/mosaic';
+import { expect } from 'chai';
+import { Observable } from 'rxjs';
+import { take, toArray } from 'rxjs/operators';
+import { Order, RepositoryFactoryHttp, SearchCriteria, SearcherRepository } from '../../src/infrastructure';
+import { StateMerkleProof } from '../../src/model/state/StateMerkleProof';
 import { StateProofService } from '../../src/service';
-import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
+
+const repositoryFactory = new RepositoryFactoryHttp('http://api-01.us-west-2.0.10.0.x.symboldev.network:3000');
+const service = new StateProofService(repositoryFactory);
+const stateCounts = 10;
+//Process the latest data first.
+const order = Order.Desc;
+
+// TODO, create dynamic it tests
+
+async function test<E, C extends SearchCriteria>(
+    repository: SearcherRepository<E, C>,
+    merkleMethod: (state: E) => Observable<StateMerkleProof>,
+    getId: (state: E) => string,
+): Promise<void> {
+    const streamer = repository.streamer();
+    const infos = await streamer
+        .search({ order } as C)
+        .pipe(take(stateCounts), toArray())
+        .toPromise();
+    const promises = infos.map(async (info) => {
+        const idText = getId(info);
+        try {
+            const merkle = await merkleMethod(info).toPromise();
+            expect(merkle).to.not.undefined;
+            console.log(idText + ' ' + merkle.valid);
+        } catch (e) {
+            console.error(idText + ' ' + e);
+            console.error(e);
+        }
+    });
+    await Promise.all(promises);
+}
 
 describe('StateProofService', () => {
-    const helper = new IntegrationTestHelper();
-
-    before(() => {
-        return helper.start({ openListener: false });
+    it('Mosaics', async () => {
+        await test(
+            repositoryFactory.createMosaicRepository(),
+            (info) => service.mosaic(info),
+            (info) => info.id.toHex(),
+        );
     });
 
-    after(() => {
-        return helper.close();
+    it('Namespaces', async () => {
+        await test(
+            repositoryFactory.createNamespaceRepository(),
+            (info) => service.namespaces(info),
+            (info) => info.id.toHex(),
+        );
     });
 
-    describe('Merkles', () => {
-        it('Mosaics', async () => {
-            const service = new StateProofService(helper.repositoryFactory);
-            const page = await helper.repositoryFactory.createMosaicRepository().search({}).toPromise();
+    it('Accounts', async () => {
+        await test(
+            repositoryFactory.createAccountRepository(),
+            (info) => service.account(info),
+            (info) => info.address.plain(),
+        );
+    });
 
-            const promises = page.data.map(async (m) => {
-                const merkle = await service.mosaicProof(m.id).toPromise();
-                expect(merkle).to.not.undefined;
-                console.log(JSON.stringify(merkle, null, 2));
-            });
-            await Promise.all(promises);
-        });
+    it('Hash Lock', async () => {
+        await test(
+            repositoryFactory.createHashLockRepository(),
+            (info) => service.hashLock(info),
+            (info) => info.hash,
+        );
+    });
+
+    it('Secret Lock', async () => {
+        await test(
+            repositoryFactory.createSecretLockRepository(),
+            (info) => service.secretLock(info),
+            (info) => info.compositeHash,
+        );
     });
 });

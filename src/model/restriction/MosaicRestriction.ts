@@ -1,5 +1,4 @@
 /*
-import { MerkleTreeBranch } from './MerkleTreeBranch';
  * Copyright 2020 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +13,10 @@ import { MerkleTreeBranch } from './MerkleTreeBranch';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { MerkleTree } from './MerkleTree';
+import { MosaicAddressRestriction } from './MosaicAddressRestriction';
+import { MosaicGlobalRestriction } from './MosaicGlobalRestriction';
 
 /**
- * StateMerkleProof
+ * A mosaic restriction could be global or targeted to an address.
  */
-export class StateMerkleProof {
-    constructor(
-        public readonly stateHash: string,
-        public readonly merkleTree: MerkleTree,
-        public readonly rootHash: string,
-        public readonly leafValue: string | undefined,
-        public readonly valid: boolean,
-    ) {}
-}
+export type MosaicRestriction = MosaicAddressRestriction | MosaicGlobalRestriction;

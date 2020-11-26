@@ -16,15 +16,24 @@
 
 import { sha3_256 } from 'js-sha3';
 import { Observable } from 'rxjs';
-import { catchError, map, mergeMap, toArray } from 'rxjs/operators';
-import { Convert } from '../core/format/Convert';
-import { BlockRepository } from '../infrastructure/BlockRepository';
-import { Http } from '../infrastructure/Http';
-import { NamespacePaginationStreamer } from '../infrastructure/paginationStreamer/NamespacePaginationStreamer';
-import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
-import { MerkleTree, NamespaceId, NamespaceRegistrationType } from '../model';
-import { Address } from '../model/account/Address';
-import { MosaicId } from '../model/mosaic/MosaicId';
+import { map, mergeMap, toArray } from 'rxjs/operators';
+import { Convert } from '../core/format';
+import { BlockRepository, RepositoryFactory } from '../infrastructure';
+import {
+    AccountInfo,
+    AccountRestrictions,
+    HashLockInfo,
+    MerkleStateInfo,
+    MerkleTree,
+    MosaicInfo,
+    MultisigAccountInfo,
+    NamespaceId,
+    NamespaceInfo,
+    NamespaceRegistrationType,
+    SecretLockInfo,
+} from '../model';
+import { Address } from '../model/account';
+import { MosaicId } from '../model/mosaic';
 import { StateMerkleProof } from '../model/state/StateMerkleProof';
 
 /**
@@ -45,74 +54,61 @@ export class StateProofService {
      * @param address Account address.
      * @returns {Observable<StateMerkleProof>}
      */
-    public accountProof(address: Address): Observable<StateMerkleProof | undefined> {
+    public accountProof(address: Address): Observable<StateMerkleProof> {
         const accountRepo = this.repositoryFactory.createAccountRepository();
-        return accountRepo.getAccountInfo(address).pipe(
-            mergeMap((info) => {
-                return accountRepo.getAccountsInfoMerkle(address).pipe(
-                    map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
-                    }),
-                );
-            }),
-            catchError(Http.errorHandling),
-        );
+        return accountRepo.getAccountInfo(address).pipe(mergeMap((info) => this.account(info)));
+    }
+
+    public account(info: AccountInfo): Observable<StateMerkleProof> {
+        const accountRepo = this.repositoryFactory.createAccountRepository();
+        return accountRepo.getAccountsInfoMerkle(info.address).pipe(map((merkle) => this.toProof(info.serialize(), merkle)));
     }
 
     /**
      * @param namespaceId Namepace Id.
      * @returns {Observable<StateMerkleProof>}
      */
-    public namespaceProof(namespaceId: NamespaceId): Observable<StateMerkleProof | undefined> {
+    public namespaceProof(namespaceId: NamespaceId): Observable<StateMerkleProof> {
         const namespaceRepo = this.repositoryFactory.createNamespaceRepository();
-        const streamer = new NamespacePaginationStreamer(namespaceRepo);
-        return namespaceRepo.getNamespace(namespaceId).pipe(
-            mergeMap((root) => {
-                return streamer
-                    .search({ level0: namespaceId, registrationType: NamespaceRegistrationType.SubNamespace })
-                    .pipe(toArray())
-                    .pipe(
-                        mergeMap((children) => {
-                            return namespaceRepo.getNamespaceMerkle(namespaceId).pipe(
-                                map((merkle) => {
-                                    const hash = this.version + Convert.uint8ToHex(root.serialize(children));
-                                    const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                                    //TODO: serialization seems not correct
-                                    if (stateHash === merkle.tree.leaf?.value) {
-                                        return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                                    }
-                                }),
-                            );
+        return namespaceRepo.getNamespace(namespaceId).pipe(mergeMap((root) => this.namespaces(root)));
+    }
+
+    public namespaces(root: NamespaceInfo): Observable<StateMerkleProof> {
+        const namespaceRepo = this.repositoryFactory.createNamespaceRepository();
+        return namespaceRepo
+            .streamer()
+            .search({ level0: root.id, registrationType: NamespaceRegistrationType.SubNamespace })
+            .pipe(toArray())
+            .pipe(
+                mergeMap((children) => {
+                    return namespaceRepo.getNamespaceMerkle(root.id).pipe(
+                        map((merkle) => {
+                            return this.toProof(root.serialize(children), merkle);
                         }),
                     );
-            }),
-            catchError(Http.errorHandling),
-        );
+                }),
+            );
     }
 
     /**
      * @param mosaicId Mosaic Id.
      * @returns {Observable<StateMerkleProof>}
      */
-    public mosaicProof(mosaicId: MosaicId): Observable<StateMerkleProof | undefined> {
+    public mosaicProof(mosaicId: MosaicId): Observable<StateMerkleProof> {
         const mosaicRepo = this.repositoryFactory.createMosaicRepository();
         return mosaicRepo.getMosaic(mosaicId).pipe(
             mergeMap((info) => {
-                return mosaicRepo.getMosaicMerkle(mosaicId).pipe(
-                    map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
-                    }),
-                );
+                return this.mosaic(info);
             }),
-            catchError(Http.errorHandling),
+        );
+    }
+
+    public mosaic(info: MosaicInfo): Observable<StateMerkleProof> {
+        const mosaicRepo = this.repositoryFactory.createMosaicRepository();
+        return mosaicRepo.getMosaicMerkle(info.id).pipe(
+            map((merkle) => {
+                return this.toProof(info.serialize(), merkle);
+            }),
         );
     }
 
@@ -120,21 +116,21 @@ export class StateProofService {
      * @param address Multisig account address.
      * @returns {Observable<StateMerkleProof>}
      */
-    public multisigProof(address: Address): Observable<StateMerkleProof | undefined> {
+    public multisigProof(address: Address): Observable<StateMerkleProof> {
         const multisigRepo = this.repositoryFactory.createMultisigRepository();
         return multisigRepo.getMultisigAccountInfo(address).pipe(
             mergeMap((info) => {
-                return multisigRepo.getMultisigAccountInfoMerkle(address).pipe(
-                    map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
-                    }),
-                );
+                return this.multisig(info);
             }),
-            catchError(Http.errorHandling),
+        );
+    }
+
+    public multisig(info: MultisigAccountInfo): Observable<StateMerkleProof> {
+        const multisigRepo = this.repositoryFactory.createMultisigRepository();
+        return multisigRepo.getMultisigAccountInfoMerkle(info.accountAddress).pipe(
+            map((merkle) => {
+                return this.toProof(info.serialize(), merkle);
+            }),
         );
     }
 
@@ -142,21 +138,21 @@ export class StateProofService {
      * @param compositeHash Composite hash.
      * @returns {Observable<StateMerkleProof>}
      */
-    public secretLockProof(compositeHash: string): Observable<StateMerkleProof | undefined> {
+    public secretLockProof(compositeHash: string): Observable<StateMerkleProof> {
         const secretLockRepo = this.repositoryFactory.createSecretLockRepository();
         return secretLockRepo.getSecretLock(compositeHash).pipe(
             mergeMap((info) => {
-                return secretLockRepo.getSecretLockMerkle(compositeHash).pipe(
-                    map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
-                    }),
-                );
+                return this.secretLock(info);
             }),
-            catchError(Http.errorHandling),
+        );
+    }
+
+    public secretLock(info: SecretLockInfo): Observable<StateMerkleProof> {
+        const secretLockRepo = this.repositoryFactory.createSecretLockRepository();
+        return secretLockRepo.getSecretLockMerkle(info.compositeHash).pipe(
+            map((merkle) => {
+                return this.toProof(info.serialize(), merkle);
+            }),
         );
     }
 
@@ -164,21 +160,17 @@ export class StateProofService {
      * @param hash hashs.
      * @returns {Observable<StateMerkleProof>}
      */
-    public hashLockProof(hash: string): Observable<StateMerkleProof | undefined> {
+    public hashLockProof(hash: string): Observable<StateMerkleProof> {
         const hashLockRepo = this.repositoryFactory.createHashLockRepository();
-        return hashLockRepo.getHashLock(hash).pipe(
-            mergeMap((info) => {
-                return hashLockRepo.getHashLockMerkle(hash).pipe(
-                    map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
-                    }),
-                );
+        return hashLockRepo.getHashLock(hash).pipe(mergeMap((info) => this.hashLock(info)));
+    }
+
+    public hashLock(info: HashLockInfo): Observable<StateMerkleProof> {
+        const hashLockRepo = this.repositoryFactory.createHashLockRepository();
+        return hashLockRepo.getHashLockMerkle(info.hash).pipe(
+            map((merkle) => {
+                return this.toProof(info.serialize(), merkle);
             }),
-            catchError(Http.errorHandling),
         );
     }
 
@@ -186,42 +178,41 @@ export class StateProofService {
      * @param address Address.
      * @returns {Observable<StateMerkleProof>}
      */
-    public accountRestrictionProof(address: Address): Observable<StateMerkleProof | undefined> {
+    public accountRestrictionProof(address: Address): Observable<StateMerkleProof> {
         const restrictionRepo = this.repositoryFactory.createRestrictionAccountRepository();
         return restrictionRepo.getAccountRestrictions(address).pipe(
             mergeMap((info) => {
                 return restrictionRepo.getAccountRestrictionsMerkle(address).pipe(
                     map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
+                        return this.toProof(info.serialize(), merkle);
                     }),
                 );
             }),
-            catchError(Http.errorHandling),
+        );
+    }
+
+    public accountRestriction(info: AccountRestrictions): Observable<StateMerkleProof> {
+        const restrictionRepo = this.repositoryFactory.createRestrictionAccountRepository();
+        return restrictionRepo.getAccountRestrictionsMerkle(info.address).pipe(
+            map((merkle) => {
+                return this.toProof(info.serialize(), merkle);
+            }),
         );
     }
     /**
      * @param compositeHash Composite hash.
      * @returns {Observable<StateMerkleProof>}
      */
-    public mosaicRestrictionProof(compositeHash: string): Observable<StateMerkleProof | undefined> {
+    public mosaicRestrictionProof(compositeHash: string): Observable<StateMerkleProof> {
         const restrictionRepo = this.repositoryFactory.createRestrictionMosaicRepository();
         return restrictionRepo.getMosaicRestrictions(compositeHash).pipe(
             mergeMap((info) => {
                 return restrictionRepo.getMosaicRestrictionsMerkle(compositeHash).pipe(
                     map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
+                        return this.toProof(info.serialize(), merkle);
                     }),
                 );
             }),
-            catchError(Http.errorHandling),
         );
     }
 
@@ -229,30 +220,27 @@ export class StateProofService {
      * @param compositeHash Composite hash.
      * @returns {Observable<StateMerkleProof>}
      */
-    public metadataProof(compositeHash: string): Observable<StateMerkleProof | undefined> {
+    public metadataProof(compositeHash: string): Observable<StateMerkleProof> {
         const metaDataRepo = this.repositoryFactory.createMetadataRepository();
         return metaDataRepo.getMetadata(compositeHash).pipe(
             mergeMap((info) => {
                 return metaDataRepo.getMetadataMerkle(compositeHash).pipe(
                     map((merkle) => {
-                        const hash = this.version + Convert.uint8ToHex(info.metadataEntry.serialize());
-                        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
-                        if (stateHash === merkle.tree.leaf?.value) {
-                            return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree));
-                        }
+                        return this.toProof(info.metadataEntry.serialize(), merkle);
                     }),
                 );
             }),
-            catchError(Http.errorHandling),
         );
     }
 
-    /**
-     * Get merkle tree root hash
-     * @param tree merkle tree
-     * @returns {string} root hash
-     */
+    private toProof(serialized: Uint8Array, merkle: MerkleStateInfo): StateMerkleProof {
+        const hash = this.version + Convert.uint8ToHex(serialized);
+        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+        const valid = stateHash === merkle.tree.leaf?.value;
+        return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree), merkle.tree.leaf?.value, valid);
+    }
+
     private getRootHash(tree: MerkleTree): string {
-        return tree.branches.length ? tree.branches[0].branchHash : tree.leaf!.leafHash;
+        return tree.branches.length ? tree.branches[0].branchHash : tree?.leaf!.leafHash;
     }
 }
