@@ -24,142 +24,142 @@ export enum TransactionType {
      * Transfer Transaction transaction type.
      * @type {number}
      */
-    TRANSFER = 0x4154,
+    TRANSFER = 16724,
 
     /**
      * Register namespace transaction type.
      * @type {number}
      */
-    NAMESPACE_REGISTRATION = 0x414e,
+    NAMESPACE_REGISTRATION = 16718,
 
     /**
      * Address alias transaction type
      * @type {number}
      */
-    ADDRESS_ALIAS = 0x424e,
+    ADDRESS_ALIAS = 16974,
 
     /**
      * Mosaic alias transaction type
      * @type {number}
      */
-    MOSAIC_ALIAS = 0x434e,
+    MOSAIC_ALIAS = 17230,
 
     /**
      * Mosaic definition transaction type.
      * @type {number}
      */
-    MOSAIC_DEFINITION = 0x414d,
+    MOSAIC_DEFINITION = 16717,
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    MOSAIC_SUPPLY_CHANGE = 0x424d,
+    MOSAIC_SUPPLY_CHANGE = 16973,
 
     /**
      * Modify multisig account transaction type.
      * @type {number}
      */
-    MULTISIG_ACCOUNT_MODIFICATION = 0x4155,
+    MULTISIG_ACCOUNT_MODIFICATION = 16725,
 
     /**
      * Aggregate complete transaction type.
      * @type {number}
      */
-    AGGREGATE_COMPLETE = 0x4141,
+    AGGREGATE_COMPLETE = 16705,
 
     /**
      * Aggregate bonded transaction type
      */
-    AGGREGATE_BONDED = 0x4241,
+    AGGREGATE_BONDED = 16961,
 
     /**
      * Lock transaction type
      * @type {number}
      */
-    HASH_LOCK = 0x4148,
+    HASH_LOCK = 16712,
 
     /**
      * Secret Lock Transaction type
      * @type {number}
      */
-    SECRET_LOCK = 0x4152,
+    SECRET_LOCK = 16722,
 
     /**
      * Secret Proof transaction type
      * @type {number}
      */
-    SECRET_PROOF = 0x4252,
+    SECRET_PROOF = 16978,
 
     /**
      * Account restriction address transaction type
      * @type {number}
      */
-    ACCOUNT_ADDRESS_RESTRICTION = 0x4150,
+    ACCOUNT_ADDRESS_RESTRICTION = 16720,
 
     /**
      * Account restriction mosaic transaction type
      * @type {number}
      */
-    ACCOUNT_MOSAIC_RESTRICTION = 0x4250,
+    ACCOUNT_MOSAIC_RESTRICTION = 16976,
 
     /**
      * Account restriction operation transaction type
      * @type {number}
      */
-    ACCOUNT_OPERATION_RESTRICTION = 0x4350,
+    ACCOUNT_OPERATION_RESTRICTION = 17232,
 
     /**
      * Link account transaction type
      * @type {number}
      */
-    ACCOUNT_KEY_LINK = 0x414c,
+    ACCOUNT_KEY_LINK = 16716,
 
     /**
      * Mosaic address restriction type
      * @type {number}
      */
-    MOSAIC_ADDRESS_RESTRICTION = 0x4251,
+    MOSAIC_ADDRESS_RESTRICTION = 16977,
 
     /**
      * Mosaic global restriction type
      * @type {number}
      */
-    MOSAIC_GLOBAL_RESTRICTION = 0x4151,
+    MOSAIC_GLOBAL_RESTRICTION = 16721,
 
     /**
      * Account metadata transaction
      * @type {number}
      */
-    ACCOUNT_METADATA = 0x4144,
+    ACCOUNT_METADATA = 16708,
 
     /**
      * Mosaic metadata transaction
      * @type {number}
      */
-    MOSAIC_METADATA = 0x4244,
+    MOSAIC_METADATA = 16964,
 
     /**
      * Namespace metadata transaction
      * @type {number}
      */
-    NAMESPACE_METADATA = 0x4344,
+    NAMESPACE_METADATA = 17220,
 
     /**
      * Link vrf key transaction
      * @type {number}
      */
-    VRF_KEY_LINK = 0x4243,
+    VRF_KEY_LINK = 16963,
 
     /**
      * Link voting key transaction
      * @type {number}
      */
-    VOTING_KEY_LINK = 0x4143,
+    VOTING_KEY_LINK = 16707,
 
     /**
      * Link node key transaction
      * @type {number}
      */
-    NODE_KEY_LINK = 0x424c,
+    NODE_KEY_LINK = 16972,
 }

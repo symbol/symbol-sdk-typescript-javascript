@@ -34,9 +34,10 @@ export class Convert {
     /**
      * Determines whether or not a string is a hex string.
      * @param {string} input The string to test.
+     * @param {string} expectedSize the expected size of the input
      * @returns {boolean} true if the input is a hex string, false otherwise.
      */
-    public static isHexString = (input: string): boolean => {
+    public static isHexString = (input: string, expectedSize = 0): boolean => {
         if (0 !== input.length % 2) {
             return false;
         }
@@ -45,7 +46,22 @@ export class Convert {
                 return false;
             }
         }
+        if (expectedSize && expectedSize !== input.length) {
+            return false;
+        }
         return true;
+    };
+
+    /**
+     * Validates if a string is a valid hex of the expected size.
+     * @param {string} input The string to test.
+     * @param {string} expectedSize the expected size of the input
+     * @param {string} message error message.
+     */
+    public static validateHexString = (input: string, expectedSize: number, message: string): void => {
+        if (!Convert.isHexString(input, expectedSize)) {
+            throw new Error(`${message}. Value ${input} is not an hex string of size ${expectedSize}.`);
+        }
     };
 
     /**

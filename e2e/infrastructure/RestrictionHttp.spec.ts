@@ -16,25 +16,25 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { RestrictionAccountRepository } from '../../src/infrastructure/RestrictionAccountRepository';
-import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
-import { MosaicRestrictionEntryType } from '../../src/model/restriction/MosaicRestrictionEntryType';
-import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
-import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { RestrictionAccountRepository, RestrictionMosaicRepository } from '../../src/infrastructure';
+import { UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
+import { NetworkType } from '../../src/model/network';
+import {
+    AddressRestrictionFlag,
+    MosaicAddressRestriction,
+    MosaicRestrictionEntryType,
+    MosaicRestrictionType,
+} from '../../src/model/restriction';
+import {
+    AccountRestrictionTransaction,
+    AggregateTransaction,
+    Deadline,
+    MosaicAddressRestrictionTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('RestrictionHttp', () => {

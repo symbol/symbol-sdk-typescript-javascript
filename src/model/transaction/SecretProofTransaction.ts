@@ -126,7 +126,7 @@ export class SecretProofTransaction extends Transaction {
             : SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = SecretProofTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
@@ -137,7 +137,7 @@ export class SecretProofTransaction extends Transaction {
             Convert.uint8ToHex(builder.getProof()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;

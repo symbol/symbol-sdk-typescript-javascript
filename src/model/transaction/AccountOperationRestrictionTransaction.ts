@@ -112,7 +112,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             : AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = AccountOperationRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
@@ -122,7 +122,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             builder.getRestrictionDeletions() as number[],
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signer.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signer, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType)) : transaction;
