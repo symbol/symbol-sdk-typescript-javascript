@@ -29,7 +29,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MetadataRepository } from './MetadataRepository';
 import { Page } from './Page';
-import { MetadataPaginationStreamer, NamespacePaginationStreamer } from './paginationStreamer';
+import { MetadataPaginationStreamer } from './paginationStreamer';
 import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
 
 /**

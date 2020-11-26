@@ -26,7 +26,7 @@ export default class MerkleTreeParser {
      * @param {number} mask bitmask
      * @returns {string[]} array of the indices of bits
      */
-    getBitsFromMask(mask) {
+    getBitsFromMask(mask): string[] {
         const intValue = parseInt(`0x${Convert.uint8ToHex(mask.reverse())}`, 16);
         let index = 0;
         const bits: string[] = [];
@@ -45,7 +45,7 @@ export default class MerkleTreeParser {
      * @param {number} nibbleCount Nibbles count
      * @returns {number} the length of the path
      */
-    getPathLength(nibbleCount) {
+    getPathLength(nibbleCount): number {
         // 1 nibble = 0.5 bytes.
         // Round up to the whole bytes
         return Math.ceil(parseFloat(nibbleCount) / 2);
@@ -56,7 +56,7 @@ export default class MerkleTreeParser {
      * @param {number} marker node marker
      * @returns {boolean} if tree node is branch
      */
-    isBranch(marker) {
+    isBranch(marker): boolean {
         return 0 === marker;
     }
 
@@ -65,7 +65,7 @@ export default class MerkleTreeParser {
      * @param {number} marker node marker
      * @returns {boolean} if tree node is leaf
      */
-    isLeaf(marker) {
+    isLeaf(marker): boolean {
         return 255 === marker;
     }
 

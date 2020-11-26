@@ -36,7 +36,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
 import { Page } from './Page';
-import { NamespacePaginationStreamer, SecretLockPaginationStreamer } from './paginationStreamer';
+import { NamespacePaginationStreamer } from './paginationStreamer';
 import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 
 /**

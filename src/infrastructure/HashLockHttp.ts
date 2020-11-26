@@ -25,7 +25,7 @@ import { UInt64 } from '../model/UInt64';
 import { HashLockRepository } from './HashLockRepository';
 import { Http } from './Http';
 import { Page } from './Page';
-import { BlockPaginationStreamer, HashLockPaginationStreamer } from './paginationStreamer';
+import { HashLockPaginationStreamer } from './paginationStreamer';
 import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria';
 
 /**

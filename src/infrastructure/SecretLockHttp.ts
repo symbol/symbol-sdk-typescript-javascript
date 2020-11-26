@@ -24,7 +24,7 @@ import { SecretLockInfo } from '../model/lock';
 import { MosaicId } from '../model/mosaic';
 import { Http } from './Http';
 import { Page } from './Page';
-import { RestrictionAccountPaginationStreamer, SecretLockPaginationStreamer } from './paginationStreamer';
+import { SecretLockPaginationStreamer } from './paginationStreamer';
 import { SecretLockSearchCriteria } from './searchCriteria';
 import { SecretLockRepository } from './SecretLockRepository';
 

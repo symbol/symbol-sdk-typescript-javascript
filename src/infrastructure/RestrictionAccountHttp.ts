@@ -22,9 +22,8 @@ import { MerkleStateInfo } from '../model/blockchain';
 import { AccountRestrictions } from '../model/restriction';
 import { Http } from './Http';
 import { Page } from './Page';
-import { PaginationStreamer, RestrictionAccountPaginationStreamer, RestrictionMosaicPaginationStreamer } from './paginationStreamer';
+import { RestrictionAccountPaginationStreamer } from './paginationStreamer';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
-import { RestrictionMosaicSearchCriteria } from './searchCriteria';
 import { RestrictionAccountSearchCriteria } from './searchCriteria/RestrictionAccountSearchCriteria';
 
 /**

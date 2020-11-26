@@ -32,7 +32,7 @@ import { TransactionInfo } from '../model/transaction/TransactionInfo';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { Http } from './Http';
 import { Page } from './Page';
-import { MetadataPaginationStreamer, TransactionPaginationStreamer } from './paginationStreamer';
+import { TransactionPaginationStreamer } from './paginationStreamer';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionGroup } from './TransactionGroup';
