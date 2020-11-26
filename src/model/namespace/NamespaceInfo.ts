@@ -152,18 +152,19 @@ export class NamespaceInfo {
             new HeightDto(root.endHeight.toDTO()),
         );
         const rootAlias = this.getAliasBuilder(root);
-        const paths: NamespacePathBuilder[] = this.getNamespacePath(fullPath);
+        const paths: NamespacePathBuilder[] = this.getNamespacePath(fullPath, root.id);
         return new RootNamespaceHistoryBuilder(id, ownerAddress, lifetime, rootAlias, paths).serialize();
     }
 
     /**
      * Generate the namespace full path builder
      * @param namespaces Full path of namespaces
+     * @param rootId Root namespace id
      * @returns {NamespacePathBuilder[]}
      */
-    private getNamespacePath(namespaces: NamespaceInfo[]): NamespacePathBuilder[] {
+    private getNamespacePath(namespaces: NamespaceInfo[], rootId: NamespaceId): NamespacePathBuilder[] {
         const path: NamespacePathBuilder[] = [];
-        const level1 = this.sortNamespaceInfo(namespaces.filter((n) => n.depth === 2 && n.parentId.equals(this.id)));
+        const level1 = this.sortNamespaceInfo(namespaces.filter((n) => n.depth === 2 && n.parentId.equals(rootId)));
         level1.forEach((n) => {
             const level2 = this.sortNamespaceInfo(namespaces.filter((l) => l.depth === 3 && l.parentId.equals(n.id)));
             path.push(new NamespacePathBuilder([n.id.toBuilder()], this.getAliasBuilder(n)));
