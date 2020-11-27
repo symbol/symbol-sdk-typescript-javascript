@@ -87,6 +87,6 @@ export class MosaicGlobalRestriction {
             }),
         );
         const globalRestrictionBuilder = new MosaicGlobalRestrictionEntryBuilder(mosaicId, keyPairs);
-        return new MosaicRestrictionEntryBuilder(MosaicRestrictionEntryTypeDto.GLOBAL, undefined, globalRestrictionBuilder).serialize();
+        return new MosaicRestrictionEntryBuilder(1, MosaicRestrictionEntryTypeDto.GLOBAL, undefined, globalRestrictionBuilder).serialize();
     }
 }

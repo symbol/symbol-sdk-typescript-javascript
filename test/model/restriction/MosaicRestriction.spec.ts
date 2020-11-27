@@ -56,7 +56,7 @@ describe('MosaicRestrictions', () => {
 
         const serialized = mosaicAddressRestriction.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '007E1261AC604EF67E98090DC48CAE2D6FBF2F9B44CB09DFC2365076550BE017CA01E1EC0000000000000200000000000000',
+            '0100007E1261AC604EF67E98090DC48CAE2D6FBF2F9B44CB09DFC2365076550BE017CA01E1EC0000000000000200000000000000',
         );
         deepEqual(MosaicRestrictionEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
@@ -113,7 +113,7 @@ describe('MosaicRestrictions', () => {
         const info = RestrictionMosaicHttp.toMosaicRestriction(dto);
 
         const serializedHex = Convert.uint8ToHex(info.serialize());
-        expect(serializedHex).eq('01C40A834ECBD8312C01E1EC0000000000000000000000000000010000000000000006');
+        expect(serializedHex).eq('010001C40A834ECBD8312C01E1EC0000000000000000000000000000010000000000000006');
 
         const builder = MosaicRestrictionEntryBuilder.loadFromBinary(Convert.hexToUint8(serializedHex));
         expect(new MosaicId(builder.globalEntry!.mosaicId.getMosaicId()).toHex()).eq(dto.mosaicRestrictionEntry.mosaicId);
@@ -150,7 +150,9 @@ describe('MosaicRestrictions', () => {
         const info = RestrictionMosaicHttp.toMosaicRestriction(dto);
 
         const serializedHex = Convert.uint8ToHex(info.serialize());
-        expect(serializedHex).eq('00C40A834ECBD8312C9884C481C023D730A1C964F26A97DC59B88AC95B5259055001E1EC0000000000000200000000000000');
+        expect(serializedHex).eq(
+            '010000C40A834ECBD8312C9884C481C023D730A1C964F26A97DC59B88AC95B5259055001E1EC0000000000000200000000000000',
+        );
 
         const builder = MosaicRestrictionEntryBuilder.loadFromBinary(Convert.hexToUint8(serializedHex));
         expect(new MosaicId(builder.getAddressEntry().mosaicId.getMosaicId()).toHex()).eq(dto.mosaicRestrictionEntry.mosaicId);

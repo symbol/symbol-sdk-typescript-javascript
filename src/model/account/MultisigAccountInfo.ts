@@ -83,6 +83,7 @@ export class MultisigAccountInfo {
      */
     public serialize(): Uint8Array {
         return new MultisigEntryBuilder(
+            1,
             this.minApproval,
             this.minRemoval,
             this.accountAddress.toBuilder(),

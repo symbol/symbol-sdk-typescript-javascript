@@ -86,6 +86,11 @@ export class MosaicAddressRestriction {
             }),
         );
         const addressRestrictionBuilder = new MosaicAddressRestrictionEntryBuilder(mosaicId, address, keyPairs);
-        return new MosaicRestrictionEntryBuilder(MosaicRestrictionEntryTypeDto.ADDRESS, addressRestrictionBuilder, undefined).serialize();
+        return new MosaicRestrictionEntryBuilder(
+            1,
+            MosaicRestrictionEntryTypeDto.ADDRESS,
+            addressRestrictionBuilder,
+            undefined,
+        ).serialize();
     }
 }

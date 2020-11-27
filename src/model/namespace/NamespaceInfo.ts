@@ -145,9 +145,13 @@ export class NamespaceInfo {
             new HeightDto(this.startHeight.toDTO()),
             new HeightDto(this.endHeight.toDTO()),
         );
-        const rootAlias = this.alias.type;
+        const rootAlias: NamespaceAliasBuilder = new NamespaceAliasBuilder(
+            this.alias.type.valueOf(),
+            this.alias.mosaicId?.toBuilder(),
+            this.alias.address?.toBuilder(),
+        );
         const paths: NamespacePathBuilder[] = children.map((dto) => this.toNamespaceAliasTypeDto(dto));
-        return new RootNamespaceHistoryBuilder(id, ownerAddress, lifetime, rootAlias, paths).serialize();
+        return new RootNamespaceHistoryBuilder(1, id, ownerAddress, lifetime, rootAlias, paths).serialize();
     }
 
     private toNamespaceAliasTypeDto(namespaceInfo: NamespaceInfo): NamespacePathBuilder {

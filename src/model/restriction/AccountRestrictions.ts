@@ -63,6 +63,6 @@ export class AccountRestrictions {
             );
         });
 
-        return new AccountRestrictionsBuilder(address, restrictions).serialize();
+        return new AccountRestrictionsBuilder(1, address, restrictions).serialize();
     }
 }

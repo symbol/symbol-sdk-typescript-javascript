@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { Observable } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { Order, RepositoryFactoryHttp, SearchCriteria, SearcherRepository } from '../../src/infrastructure';
-import { StateMerkleProof } from '../../src/model/state/StateMerkleProof';
+import { StateMerkleProof } from '../../src/model/state';
 import { StateProofService } from '../../src/service';
 
 const repositoryFactory = new RepositoryFactoryHttp('http://api-01.us-west-2.0.10.0.x.symboldev.network:3000');

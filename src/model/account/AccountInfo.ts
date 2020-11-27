@@ -130,6 +130,7 @@ export class AccountInfo {
         );
         const format = this.isHighValue() ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
         return new AccountStateBuilder(
+            1,
             address,
             addressHeight,
             publicKey,

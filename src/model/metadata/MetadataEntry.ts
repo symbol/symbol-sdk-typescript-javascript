@@ -85,6 +85,6 @@ export class MetadataEntry {
         /** Value. */
         const value = new MetadataValueBuilder(Convert.utf8ToUint8(this.value));
 
-        return new MetadataEntryBuilder(sourceAddress, targetAddress, scopedMetadataKey, targetId, metadataType, value).serialize();
+        return new MetadataEntryBuilder(1, sourceAddress, targetAddress, scopedMetadataKey, targetId, metadataType, value).serialize();
     }
 }

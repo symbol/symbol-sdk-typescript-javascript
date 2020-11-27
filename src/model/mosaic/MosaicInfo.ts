@@ -122,6 +122,6 @@ export class MosaicInfo {
         const flags = GeneratorUtils.toFlags(MosaicFlagsDto, this.flags.getValue());
         const properties = new MosaicPropertiesBuilder(flags, this.divisibility, duration);
         const definition = new MosaicDefinitionBuilder(startHeight, ownerAddress, revision, properties);
-        return new MosaicEntryBuilder(mosaicId, supply, definition).serialize();
+        return new MosaicEntryBuilder(1, mosaicId, supply, definition).serialize();
     }
 }

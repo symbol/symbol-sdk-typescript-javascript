@@ -65,6 +65,6 @@ export class HashLockInfo {
         const mosaic: MosaicBuilder = new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO()));
         const endHeight: HeightDto = new HeightDto(this.endHeight.toDTO());
         const hash: Hash256Dto = new Hash256Dto(Convert.hexToUint8(this.hash));
-        return new HashLockInfoBuilder(ownerAddress, mosaic, endHeight, this.status.valueOf(), hash).serialize();
+        return new HashLockInfoBuilder(1, ownerAddress, mosaic, endHeight, this.status.valueOf(), hash).serialize();
     }
 }

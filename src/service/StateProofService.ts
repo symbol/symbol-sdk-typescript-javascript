@@ -35,14 +35,13 @@ import {
 } from '../model';
 import { Address } from '../model/account';
 import { MosaicId } from '../model/mosaic';
-import { MosaicRestriction } from '../model/restriction/MosaicRestriction';
-import { StateMerkleProof } from '../model/state/StateMerkleProof';
+import { MosaicRestriction } from '../model/restriction';
+import { StateMerkleProof } from '../model/state';
 
 /**
  * State Proof Service Interface
  */
 export class StateProofService {
-    private readonly version = '0100'; // TODO: to add version in catbuffer
     private blockRepo: BlockRepository;
     /**
      * Constructor
@@ -234,7 +233,7 @@ export class StateProofService {
     }
 
     private toProof(serialized: Uint8Array, merkle: MerkleStateInfo): StateMerkleProof {
-        const hash = this.version + Convert.uint8ToHex(serialized);
+        const hash = Convert.uint8ToHex(serialized);
         const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
         const valid = stateHash === merkle.tree.leaf?.value;
         return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree), merkle.tree.leaf?.value, valid);
