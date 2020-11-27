@@ -17,6 +17,7 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
+import { MerkleTree } from '../../../src/model/state/MerkleTree';
 
 describe('MerkleTree', () => {
     const merkleStateDTO = {
@@ -70,5 +71,20 @@ describe('MerkleTree', () => {
         deepEqual(tree.tree.leaf?.encodedPath, merkleStateDTO.tree[1].encodedPath);
         deepEqual(tree.tree.leaf?.path, merkleStateDTO.tree[1].path);
         deepEqual(tree.tree.leaf?.value, merkleStateDTO.tree[1].value);
+    });
+
+    it('from raw', () => {
+        const tree = MerkleTree.fromRaw(merkleStateDTO.raw);
+        expect(tree.branches.length).to.be.equal(1);
+        expect(tree.leaf).not.to.be.undefined;
+        deepEqual(tree.branches[0].branchHash, merkleStateDTO.tree[0].branchHash);
+        deepEqual(tree.branches[0].encodedPath, merkleStateDTO.tree[0].encodedPath);
+        deepEqual(tree.branches[0].path, merkleStateDTO.tree[0].path);
+        deepEqual(tree.branches[0].linkMask, merkleStateDTO.tree[0].linkMask);
+        deepEqual(tree.leaf?.type.valueOf(), merkleStateDTO.tree[1].type);
+        deepEqual(tree.leaf?.leafHash, merkleStateDTO.tree[1].leafHash);
+        deepEqual(tree.leaf?.encodedPath, merkleStateDTO.tree[1].encodedPath);
+        deepEqual(tree.leaf?.path, merkleStateDTO.tree[1].path);
+        deepEqual(tree.leaf?.value, merkleStateDTO.tree[1].value);
     });
 });

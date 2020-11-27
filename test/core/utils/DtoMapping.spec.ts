@@ -19,6 +19,8 @@ import {
     AccountRestrictionFlagsEnum,
     AccountRestrictionsDTO,
     AccountRestrictionsInfoDTO,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
@@ -96,5 +98,61 @@ describe('DtoMapping', () => {
         expect(DtoMapping.toSimpleHex("0x017D'1694'0477'B3F5")).to.be.equal('017D16940477B3F5');
         expect(DtoMapping.toSimpleHex('017D16940477B3F5')).to.be.equal('017D16940477B3F5');
         expect(DtoMapping.toSimpleHex("0x29C6'42F2'F432'8612")).to.be.equal('29C642F2F4328612');
+    });
+
+    it('parse merkle tree', () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+        const result = DtoMapping.toMerkleStateInfo(merkleStateInfoDTO);
+        expect(result.raw).to.be.equal('raw');
+        expect(result.tree.leaf).not.to.be.undefined;
+        expect(result.tree.branches.length).to.be.equal(0);
+        expect(result.tree.leaf?.encodedPath).to.be.equal('path');
+        expect(result.tree.leaf?.path).to.be.equal('path');
+        expect(result.tree.leaf?.value).to.be.equal('value');
+        expect(result.tree.leaf?.leafHash).to.be.equal('hash');
+        expect(result.tree.leaf?.type.valueOf()).to.be.equal(255);
+        expect(result.tree.leaf?.nibbleCount).to.be.equal(1);
+    });
+
+    it('parse merkle tree', () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+        const result = DtoMapping.toMerkleStateInfo(merkleStateInfoDTO);
+        expect(result.raw).to.be.equal('raw');
+        expect(result.tree.leaf).not.to.be.undefined;
+        expect(result.tree.branches.length).to.be.equal(0);
+        expect(result.tree.leaf?.encodedPath).to.be.equal('path');
+        expect(result.tree.leaf?.path).to.be.equal('path');
+        expect(result.tree.leaf?.value).to.be.equal('value');
+        expect(result.tree.leaf?.leafHash).to.be.equal('hash');
+        expect(result.tree.leaf?.type.valueOf()).to.be.equal(255);
+        expect(result.tree.leaf?.nibbleCount).to.be.equal(1);
+    });
+
+    it('parse merkle info no tree', () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        merkleStateInfoDTO.raw = '';
+        merkleStateInfoDTO.tree = [];
+        const result = DtoMapping.toMerkleStateInfo(merkleStateInfoDTO);
+        expect(result.raw).to.be.equal('');
+        expect(result.tree.branches.length).to.be.equal(0);
+        expect(result.tree.leaf).to.be.undefined;
     });
 });

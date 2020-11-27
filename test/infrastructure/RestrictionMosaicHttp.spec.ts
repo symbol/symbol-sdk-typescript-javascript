@@ -16,6 +16,8 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
     MosaicAddressRestrictionDTO,
     MosaicAddressRestrictionEntryDTO,
     MosaicAddressRestrictionEntryWrapperDTO,
@@ -31,7 +33,7 @@ import {
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils';
-import { RestrictionMosaicHttp } from '../../src/infrastructure';
+import { RestrictionMosaicHttp, RestrictionMosaicPaginationStreamer } from '../../src/infrastructure';
 import { UInt64 } from '../../src/model';
 import { PublicAccount } from '../../src/model/account';
 import { MosaicId } from '../../src/model/mosaic';
@@ -141,5 +143,28 @@ describe('RestrictionMosaicHttp', () => {
             .search({ mosaicId: mosaicId })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new RestrictionMosaicHttp('url');
+        expect(accountHttp.streamer() instanceof RestrictionMosaicPaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(restrictionMosaicRoutesApi.getMosaicRestrictionsMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await restrictionMosaicRepository.getMosaicRestrictionsMerkle('hash').toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

@@ -29,7 +29,7 @@ import {
     PositionEnum,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
-import { NemesisImportanceBlockInfo } from '../../src';
+import { BlockPaginationStreamer, NemesisImportanceBlockInfo } from '../../src';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
@@ -226,5 +226,10 @@ describe('BlockHttp', () => {
             .getBlockByHeight(UInt64.fromUint(1))
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new BlockHttp('url');
+        expect(accountHttp.streamer() instanceof BlockPaginationStreamer).to.be.true;
     });
 });

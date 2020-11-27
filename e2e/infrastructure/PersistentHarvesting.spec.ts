@@ -151,7 +151,6 @@ describe('PersistentHarvesting', () => {
                 networkType,
                 helper.maxFee,
             );
-            console.log(tx.message.toDTO());
 
             const signedTransaction = tx.signWith(account, generationHash);
             return helper.announce(signedTransaction);

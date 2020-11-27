@@ -16,6 +16,7 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
+    MerkleTreeLeafDTO,
     Mosaic,
     MosaicDTO,
     MosaicIds,
@@ -24,10 +25,12 @@ import {
     MosaicRoutesApi,
     Pagination,
 } from 'symbol-openapi-typescript-fetch-client';
+import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/MerkleStateInfoDTO';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
+import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
@@ -137,5 +140,28 @@ describe('MosaicHttp', () => {
             .search({ ownerAddress: address })
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new MosaicHttp('url');
+        expect(accountHttp.streamer() instanceof MosaicPaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(mosaicRoutesApi.getMosaicMerkle(mosaicId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await mosaicRepository.getMosaicMerkle(mosaicId).toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

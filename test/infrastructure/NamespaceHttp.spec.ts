@@ -20,6 +20,8 @@ import {
     AccountsNamesDTO,
     AliasDTO,
     AliasTypeEnum,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
     MosaicNamesDTO,
     MosaicsNamesDTO,
     NamespaceDTO,
@@ -34,6 +36,7 @@ import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -227,5 +230,28 @@ describe('NamespaceHttp', () => {
         ).thenReturn(Promise.resolve(body));
         const infos = await namespaceRepository.search({ ownerAddress: address }).toPromise();
         assertNamespaceInfo(infos.data[0]);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new NamespaceHttp('url');
+        expect(accountHttp.streamer() instanceof NamespacePaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(namespaceRoutesApi.getNamespaceMerkle(namespaceId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

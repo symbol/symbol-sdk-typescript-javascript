@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { Address } from '../../../src/model/account/Address';
 import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -167,6 +168,23 @@ describe('MultisigAccountInfo', () => {
                     ),
                 ),
             ).to.be.equal(false);
+        });
+
+        it('serliaize', () => {
+            const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.accountAddress,
+                multisigAccountInfoDTO.multisig.minApproval,
+                multisigAccountInfoDTO.multisig.minRemoval,
+                multisigAccountInfoDTO.multisig.cosignatoryAddresses,
+                multisigAccountInfoDTO.multisig.multisigAddresses,
+            );
+
+            expect(Convert.uint8ToHex(multisigAccountInfo.serialize())).to.be.equal(
+                '010003000000030000008044F36772D4842DE0E10CF0315335E672479D9A513519DC030000' +
+                    '000000000080CF2886A23771534F2CEF86094B4C4FBC1E19C286AFAAF68049E14BEBCA9375' +
+                    '8EB36805BAE760A57239976F0094FCC880EB8764327FD32393DB1B0C018C04E4EA69F597D1' +
+                    '281EAF010000000000000080DDD180440B03B7ABA2F6A858D59E0ED4034FCC82C8F242',
+            );
         });
     });
 });
