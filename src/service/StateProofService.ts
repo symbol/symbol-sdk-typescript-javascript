@@ -66,25 +66,36 @@ export class StateProofService {
     }
 
     /**
+     * Namespace proof can only be verified at root level
      * @param namespaceId Namepace Id.
      * @returns {Observable<StateMerkleProof>}
      */
     public namespaceById(namespaceId: NamespaceId): Observable<StateMerkleProof> {
         const namespaceRepo = this.repositoryFactory.createNamespaceRepository();
-        return namespaceRepo.getNamespace(namespaceId).pipe(mergeMap((root) => this.namespaces(root)));
+        return namespaceRepo.getNamespace(namespaceId).pipe(
+            mergeMap((namespace) => {
+                if (namespace.registrationType !== NamespaceRegistrationType.RootNamespace) {
+                    throw new Error('Namespace proof can only be verified at root level.');
+                }
+                return this.namespaces(namespace);
+            }),
+        );
     }
 
     public namespaces(root: NamespaceInfo): Observable<StateMerkleProof> {
+        if (root.registrationType !== NamespaceRegistrationType.RootNamespace) {
+            throw new Error('Namespace proof can only be verified at root level.');
+        }
         const namespaceRepo = this.repositoryFactory.createNamespaceRepository();
         return namespaceRepo
             .streamer()
-            .search({ level0: root.id, registrationType: NamespaceRegistrationType.SubNamespace })
+            .search({ level0: root.id })
             .pipe(toArray())
             .pipe(
-                mergeMap((children) => {
+                mergeMap((fullPath) => {
                     return namespaceRepo.getNamespaceMerkle(root.id).pipe(
                         map((merkle) => {
-                            return this.toProof(root.serialize(children), merkle);
+                            return this.toProof(root.serialize(fullPath), merkle);
                         }),
                     );
                 }),
