@@ -145,7 +145,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             : MosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = MosaicDefinitionTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
@@ -161,7 +161,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             new UInt64(builder.getDuration().blockDuration),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;

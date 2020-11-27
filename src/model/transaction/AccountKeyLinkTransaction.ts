@@ -24,9 +24,8 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../network/NetworkType';
+import { Address, PublicAccount } from '../account';
+import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -46,6 +45,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param linkedPublicKey - The public key of the remote account.
      * @param linkAction - The account link action.
+     * @param networkType - the network type
      * @param maxFee - (Optional) Max fee defined by the sender
      * @param signature - (Optional) Transaction signature
      * @param signer - (Optional) Signer public account
@@ -101,6 +101,7 @@ export class AccountKeyLinkTransaction extends Transaction {
         transactionInfo?: TransactionInfo,
     ) {
         super(TransactionType.ACCOUNT_KEY_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        Convert.validateHexString(linkedPublicKey, 64, 'Invalid linkedPublicKey');
     }
 
     /**
@@ -115,7 +116,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             : AccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = AccountKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
@@ -124,7 +125,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
@@ -135,7 +136,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const transactionBuilder = new AccountKeyLinkTransactionBuilder(
+        return new AccountKeyLinkTransactionBuilder(
             this.getSignatureAsBuilder(),
             this.getSignerAsBuilder(),
             this.versionToDTO(),
@@ -146,7 +147,6 @@ export class AccountKeyLinkTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
-        return transactionBuilder;
     }
 
     /**

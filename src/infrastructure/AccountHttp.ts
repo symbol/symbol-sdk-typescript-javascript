@@ -98,7 +98,7 @@ export class AccountHttp extends Http implements AccountRepository {
      *
      * @param address the address
      */
-    getAccountsInfoMerkle(address: Address): Observable<MerkleStateInfo> {
+    getAccountInfoMerkle(address: Address): Observable<MerkleStateInfo> {
         return this.call(this.accountRoutesApi.getAccountInfoMerkle(address.plain()), DtoMapping.toMerkleStateInfo);
     }
 

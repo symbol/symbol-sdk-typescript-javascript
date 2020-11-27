@@ -17,14 +17,12 @@
 import { EmbeddedTransactionBuilder, KeyDto, SignatureDto, TransactionBuilder } from 'catbuffer-typescript';
 import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
-import { DtoMapping } from '../../core/utils/DtoMapping';
-import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
-import { Account } from '../account/Account';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NetworkType } from '../network/NetworkType';
-import { Statement } from '../receipt/Statement';
+import { DtoMapping } from '../../core/utils';
+import { SerializeTransactionToJSON } from '../../infrastructure/transaction';
+import { Account, Address, PublicAccount } from '../account';
+import { NamespaceId } from '../namespace';
+import { NetworkType } from '../network';
+import { Statement } from '../receipt';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionInfo } from './AggregateTransactionInfo';
 import { Deadline } from './Deadline';
@@ -188,8 +186,8 @@ export abstract class Transaction {
     /**
      * @internal
      * @param statement Block receipt statement
-     * @param AggregateTransactionIndex Transaction index for aggregated transaction
-     * @returns {Observable<Transaction>}
+     * @param aggregateTransactionIndex Transaction index for aggregated transaction
+     * @returns transaction
      */
     abstract resolveAliases(statement?: Statement, aggregateTransactionIndex?: number): Transaction;
 
@@ -408,7 +406,7 @@ export abstract class Transaction {
         const commonTransactionObject = {
             type: this.type,
             network: this.networkType,
-            version: this.versionToDTO(),
+            version: this.version,
             maxFee: this.maxFee.toString(),
             deadline: this.deadline.toString(),
             signature: this.signature ? this.signature : '',
@@ -472,5 +470,24 @@ export abstract class Transaction {
      */
     protected getSignatureAsBuilder(): SignatureDto {
         return new SignatureDto(this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64));
+    }
+
+    /**
+     * @internal
+     *
+     * Returns the signature from the serialized payload.
+     */
+    public static getSignatureFromPayload(payload: string, isEmbedded: boolean): string | undefined {
+        const signature = payload.substring(16, 144);
+        return this.resolveSignature(signature, isEmbedded);
+    }
+
+    /**
+     * @internal
+     *
+     * Returns the signature hold in the transaction.
+     */
+    public static resolveSignature(signature: string | undefined, isEmbedded: boolean): string | undefined {
+        return !signature || isEmbedded || signature.match(`^[0]*$`) ? undefined : signature;
     }
 }

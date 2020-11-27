@@ -62,7 +62,7 @@ export class StateProofService {
 
     public account(info: AccountInfo): Observable<StateMerkleProof> {
         const accountRepo = this.repositoryFactory.createAccountRepository();
-        return accountRepo.getAccountsInfoMerkle(info.address).pipe(map((merkle) => this.toProof(info.serialize(), merkle)));
+        return accountRepo.getAccountInfoMerkle(info.address).pipe(map((merkle) => this.toProof(info.serialize(), merkle)));
     }
 
     /**

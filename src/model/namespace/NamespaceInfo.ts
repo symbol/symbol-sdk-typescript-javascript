@@ -45,6 +45,7 @@ export class NamespaceInfo {
      * @param ownerAddress
      * @param startHeight
      * @param endHeight
+     * @param alias
      */
     constructor(
         /**
@@ -153,7 +154,7 @@ export class NamespaceInfo {
         );
         const rootAlias = this.getAliasBuilder(root);
         const paths: NamespacePathBuilder[] = this.getNamespacePath(fullPath, root.id);
-        return new RootNamespaceHistoryBuilder(id, ownerAddress, lifetime, rootAlias, paths).serialize();
+        return new RootNamespaceHistoryBuilder(1, id, ownerAddress, lifetime, rootAlias, paths).serialize();
     }
 
     /**

@@ -19,9 +19,9 @@ import { Address } from '../model/account';
 import { MerkleStateInfo } from '../model/blockchain';
 import { AccountRestrictions } from '../model/restriction';
 import { SearcherRepository } from './paginationStreamer';
-import { RestrictionMosaicSearchCriteria } from './searchCriteria';
+import { RestrictionAccountSearchCriteria } from './searchCriteria';
 
-export interface RestrictionAccountRepository extends SearcherRepository<AccountRestrictions, RestrictionMosaicSearchCriteria> {
+export interface RestrictionAccountRepository extends SearcherRepository<AccountRestrictions, RestrictionAccountSearchCriteria> {
     /**
      * Gets Account restrictions.
      * @param address the address

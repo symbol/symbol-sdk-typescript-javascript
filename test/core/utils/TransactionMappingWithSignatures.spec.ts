@@ -19,45 +19,48 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format';
-import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
+import { TransactionMapping } from '../../../src/core/utils';
+import { TransactionVersion, UInt64, VotingKeyLinkTransaction, VotingKeyLinkV1Transaction } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
-import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
-import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { LockHashAlgorithm } from '../../../src/model/lock';
+import { PlainMessage } from '../../../src/model/message';
 import { MosaicFlags, MosaicId, MosaicNonce, MosaicSupplyChangeAction } from '../../../src/model/mosaic';
 import { AliasAction, NamespaceId, NamespaceRegistrationType } from '../../../src/model/namespace';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
-import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
-import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
-import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountKeyLinkTransaction } from '../../../src/model/transaction/AccountKeyLinkTransaction';
-import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../../src/model/transaction/AccountOperationRestrictionTransaction';
-import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
-import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LinkAction } from '../../../src/model/transaction/LinkAction';
-import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
-import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigAccountModificationTransaction } from '../../../src/model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../../src/model/transaction/NamespaceRegistrationTransaction';
-import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLinkTransaction';
-import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../../src/model/transaction/SecretProofTransaction';
-import { TransactionType } from '../../../src/model/transaction/TransactionType';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
-import { VrfKeyLinkTransaction } from '../../../src/model/transaction/VrfKeyLinkTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
+import { NetworkType } from '../../../src/model/network';
+import {
+    AddressRestrictionFlag,
+    MosaicRestrictionFlag,
+    MosaicRestrictionType,
+    OperationRestrictionFlag,
+} from '../../../src/model/restriction';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountKeyLinkTransaction,
+    AccountMetadataTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AccountRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    Deadline,
+    LinkAction,
+    LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    MosaicMetadataTransaction,
+    MosaicSupplyChangeTransaction,
+    MultisigAccountModificationTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    TransactionType,
+    TransferTransaction,
+    VrfKeyLinkTransaction,
+} from '../../../src/model/transaction';
 import { TestingAccount } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../../model/mosaic/Currency.spec';
 
@@ -491,13 +494,23 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
         );
-        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+        const votingKeyLinkV1Transaction = VotingKeyLinkV1Transaction.create(
             Deadline.create(epochAdjustment),
             Convert.uint8ToHex(Crypto.randomBytes(48)),
             1,
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+        );
+
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(epochAdjustment),
+            Convert.uint8ToHex(Crypto.randomBytes(32)),
+            2,
+            3,
+            LinkAction.Link,
+            NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(epochAdjustment),
@@ -575,6 +588,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
                 accountLinkTransaction.toAggregate(account.publicAccount),
                 vrfKeyLinkTransaction.toAggregate(account.publicAccount),
                 nodeKeyLinkTransaction.toAggregate(account.publicAccount),
+                votingKeyLinkV1Transaction.toAggregate(account.publicAccount),
                 votingKeyLinkTransaction.toAggregate(account.publicAccount),
                 registerNamespaceTransaction.toAggregate(account.publicAccount),
                 mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount),
@@ -759,8 +773,40 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         expect(transaction.signer).to.be.undefined;
     });
 
-    it('should create an VotingKeyLinkTransaction object with link action', () => {
+    it('should create an VotingKeyLinkV1Transaction object with link action', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(48));
+        const votingKeyLinkV1Transaction = VotingKeyLinkV1Transaction.create(
+            Deadline.create(epochAdjustment),
+            key,
+            1,
+            3,
+            LinkAction.Link,
+            NetworkType.PRIVATE_TEST,
+            undefined,
+            testSignature,
+            account.publicAccount,
+        );
+
+        let signedTransaction = votingKeyLinkV1Transaction.serialize();
+        let transaction = TransactionMapping.createFromPayload(signedTransaction) as VotingKeyLinkV1Transaction;
+
+        expect(transaction.linkAction).to.be.equal(1);
+        expect(transaction.linkedPublicKey).to.be.equal(key);
+        expect(transaction.startEpoch.toString()).to.be.equal('1');
+        expect(transaction.endEpoch.toString()).to.be.equal('3');
+        expect(transaction.signature).to.be.equal(testSignature);
+        expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
+
+        Object.assign(votingKeyLinkV1Transaction, { signature: emtptySignature, signer: undefined });
+        signedTransaction = votingKeyLinkV1Transaction.serialize();
+
+        transaction = TransactionMapping.createFromPayload(signedTransaction) as VotingKeyLinkV1Transaction;
+        expect(transaction.signature).to.be.undefined;
+        expect(transaction.signer).to.be.undefined;
+    });
+
+    it('should create an VotingKeyLinkTransaction object with link action', () => {
+        const key = Convert.uint8ToHex(Crypto.randomBytes(32));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
             key,
@@ -768,6 +814,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
             undefined,
             testSignature,
             account.publicAccount,

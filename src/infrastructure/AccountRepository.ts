@@ -45,5 +45,5 @@ export interface AccountRepository extends SearcherRepository<AccountInfo, Accou
      * @param address Address
      * @returns Observable<MerkleStateInfo>
      */
-    getAccountsInfoMerkle(address: Address): Observable<MerkleStateInfo>;
+    getAccountInfoMerkle(address: Address): Observable<MerkleStateInfo>;
 }

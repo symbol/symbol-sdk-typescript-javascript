@@ -126,7 +126,7 @@ export class AccountInfo {
             new ImportanceHeightDto(this.importanceHeight.toDTO()),
         );
         const activityBuckets: HeightActivityBucketsBuilder = new HeightActivityBucketsBuilder(
-            this.activityBucket.map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
+            this.activityBucket.slice(0, 5).map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
         );
         const format = this.isHighValue() ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
         return new AccountStateBuilder(

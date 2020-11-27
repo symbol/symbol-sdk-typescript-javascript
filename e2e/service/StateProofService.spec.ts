@@ -18,10 +18,12 @@ import { expect } from 'chai';
 import { Observable } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { Order, RepositoryFactoryHttp, SearchCriteria, SearcherRepository } from '../../src/infrastructure';
+import { NamespaceRegistrationType } from '../../src/model/namespace';
 import { StateMerkleProof } from '../../src/model/state';
 import { StateProofService } from '../../src/service';
 
-const repositoryFactory = new RepositoryFactoryHttp('http://api-01.us-west-2.0.10.0.x.symboldev.network:3000');
+const url = 'http://api-01.us-west-2.0.10.0.x.symboldev.network:3000';
+const repositoryFactory = new RepositoryFactoryHttp(url);
 const service = new StateProofService(repositoryFactory);
 const stateCounts = 50;
 //Process the latest data first.
@@ -30,26 +32,26 @@ const order = Order.Desc;
 // TODO, create dynamic it tests
 
 async function test<E, C extends SearchCriteria>(
+    path: string,
     repository: SearcherRepository<E, C>,
     merkleMethod: (state: E) => Observable<StateMerkleProof>,
     getId: (state: E) => string,
+    criteria: C = { order, pageSize: stateCounts } as C,
 ): Promise<void> {
     const streamer = repository.streamer();
-    const infos = await streamer
-        .search({ order, pageSize: stateCounts } as C)
-        .pipe(take(stateCounts), toArray())
-        .toPromise();
+    const infos = await streamer.search(criteria).pipe(take(stateCounts), toArray()).toPromise();
     const promises = infos.map(async (info) => {
         const idText = getId(info);
+        const stateUrl = `${url}/${path}/${idText}`;
         try {
             const merkle = await merkleMethod(info).toPromise();
             expect(merkle).to.not.undefined;
-            if (merkle.valid) console.log(idText + ' ' + merkle.valid);
+            if (merkle.valid) console.log(stateUrl + ' ' + merkle.valid);
             else {
-                console.error(idText + ' ' + merkle.valid);
+                console.error(stateUrl + ' ' + merkle.valid);
             }
         } catch (e) {
-            console.error(idText + ' ' + e);
+            console.error(stateUrl + ' ' + e);
             console.error(e);
         }
     });
@@ -59,6 +61,7 @@ async function test<E, C extends SearchCriteria>(
 describe('StateProofService', () => {
     it('Mosaics', async () => {
         await test(
+            'mosaics',
             repositoryFactory.createMosaicRepository(),
             (info) => service.mosaic(info),
             (info) => info.id.toHex(),
@@ -67,14 +70,17 @@ describe('StateProofService', () => {
 
     it('Namespaces', async () => {
         await test(
+            'namespaces',
             repositoryFactory.createNamespaceRepository(),
             (info) => service.namespaces(info),
             (info) => info.id.toHex(),
+            { order, pageSize: stateCounts, registrationType: NamespaceRegistrationType.RootNamespace },
         );
     });
 
     it('Accounts', async () => {
         await test(
+            'accounts',
             repositoryFactory.createAccountRepository(),
             (info) => service.account(info),
             (info) => info.address.plain(),
@@ -83,6 +89,7 @@ describe('StateProofService', () => {
 
     it('Hash Lock', async () => {
         await test(
+            'lock/hash',
             repositoryFactory.createHashLockRepository(),
             (info) => service.hashLock(info),
             (info) => info.hash,
@@ -91,6 +98,7 @@ describe('StateProofService', () => {
 
     it('Secret Lock', async () => {
         await test(
+            'lock/secret',
             repositoryFactory.createSecretLockRepository(),
             (info) => service.secretLock(info),
             (info) => info.compositeHash,
@@ -99,6 +107,7 @@ describe('StateProofService', () => {
 
     it('Account restrictions', async () => {
         await test(
+            'restrictions/account',
             repositoryFactory.createRestrictionAccountRepository(),
             (info) => service.accountRestriction(info),
             (info) => info.address.plain(),
@@ -107,6 +116,7 @@ describe('StateProofService', () => {
 
     it('Mosaic restrictions', async () => {
         await test(
+            'restrictions/mosaic',
             repositoryFactory.createRestrictionMosaicRepository(),
             (info) => service.mosaicRestriction(info),
             (info) => info.compositeHash,
@@ -115,6 +125,7 @@ describe('StateProofService', () => {
 
     it('Metadata', async () => {
         await test(
+            'metadata',
             repositoryFactory.createMetadataRepository(),
             (info) => service.metadata(info),
             (info) => info.metadataEntry.compositeHash,
