@@ -95,12 +95,27 @@ export class DtoMapping {
      */
     public static parseServerDuration(serverValue: string): Duration {
         const preprocessedValue = serverValue.replace(`'`, '').trim();
-        const regex = `([0-9]+)([hdms]+)[:\\s]?$`;
+        const patten = `([0-9]+)([hdms]+)[:\\s]?`;
+        const regex = new RegExp(patten, 'g');
+
+        // if the input doesn't match the patten, don't bother to do loop
+        if (!preprocessedValue.match(patten)) {
+            throw new Error('Duration value format is not recognized.');
+        }
+
         let duration = Duration.ofSeconds(0);
-        const matcher = preprocessedValue.match(regex);
-        if (matcher && matcher.length === 3) {
-            const num = parseInt(matcher[1]);
-            const type = matcher[2];
+        let match;
+        const types: string[] = [];
+        while ((match = regex.exec(preprocessedValue))) {
+            const num = parseInt(match[1]);
+            const type = match[2];
+
+            // Added check make sure no duplicated types
+            if (types.indexOf(type) >= 0 || !match || match.length !== 3) {
+                throw new Error('Duration value format is not recognized.');
+            }
+            types.push(type);
+
             switch (type) {
                 case 'ms':
                     duration = duration.plusMillis(num);
@@ -120,9 +135,8 @@ export class DtoMapping {
                 default:
                     throw new Error('Duration value format is not recognized.');
             }
-            return duration;
         }
-        throw new Error(`Duration value format is not recognized.`);
+        return duration;
     }
 
     /**
