@@ -49,6 +49,6 @@ export class FinalizedBlock {
         const round: FinalizationRoundBuilder = new FinalizationRoundBuilder(epoch, point);
         const height: HeightDto = new HeightDto(this.height.toDTO());
         const hash: Hash256Dto = new Hash256Dto(Convert.hexToUint8(this.hash));
-        return new FinalizedBlockHeaderBuilder(round, height, hash);
+        return new FinalizedBlockHeaderBuilder(round, height, hash).serialize();
     }
 }
