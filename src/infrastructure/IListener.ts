@@ -15,8 +15,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { NamespaceId } from '../model';
-import { Address } from '../model/account/Address';
+import { UnresolvedAddress } from '../model';
 import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 import { NewBlock } from '../model/blockchain/NewBlock';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
@@ -73,45 +72,45 @@ export interface IListener {
      * Each time a transaction is in confirmed state an it involves the address,
      * it emits a new Transaction in the event stream.
      *
-     * @param address address we listen when a transaction is in confirmed state
+     * @param unresolvedAddress unresolved address we listen when a transaction is in confirmed state
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state confirmed
      */
 
-    confirmed(address: Address | NamespaceId, transactionHash?: string): Observable<Transaction>;
+    confirmed(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction for a specific address.
      * Each time a transaction is in unconfirmed state an it involves the address,
      * it emits a new Transaction in the event stream.
      *
-     * @param address address we listen when a transaction is in unconfirmed state
+     * @param unresolvedAddress unresolved address we listen when a transaction is in unconfirmed state
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state unconfirmed
      */
-    unconfirmedAdded(address: Address | NamespaceId, transactionHash?: string): Observable<Transaction>;
+    unconfirmedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
      * Each time a transaction with state unconfirmed changes its state,
      * it emits a new message with the transaction hash in the event stream.
      *
-     * @param address address we listen when a transaction is removed from unconfirmed state
+     * @param unresolvedAddress unresolved address we listen when a transaction is removed from unconfirmed state
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    unconfirmedRemoved(address: Address | NamespaceId, transactionHash?: string): Observable<string>;
+    unconfirmedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<string>;
 
     /**
      * Return an observable of {@link AggregateTransaction} for specific address.
      * Each time an aggregate bonded transaction is announced,
      * it emits a new {@link AggregateTransaction} in the event stream.
      *
-     * @param address address we listen when a transaction with missing signatures state
+     * @param unresolvedAddress unresolved address we listen when a transaction with missing signatures state
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
-    aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction>;
+    aggregateBondedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<AggregateTransaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -122,26 +121,26 @@ export interface IListener {
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    aggregateBondedRemoved(address: Address | NamespaceId, transactionHash?: string): Observable<string>;
+    aggregateBondedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<string>;
 
     /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.
      * Each time a transaction contains an error,
      * it emits a new message with the transaction status error in the event stream.
      *
-     * @param address address we listen to be notified when some error happened
+     * @param unresolvedAddress unresolved address we listen to be notified when some error happened
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of {@link TransactionStatusError}
      */
-    status(address: Address | NamespaceId, transactionHash?: string): Observable<TransactionStatusError>;
+    status(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<TransactionStatusError>;
 
     /**
      * Returns an observable stream of {@link CosignatureSignedTransaction} for specific address.
      * Each time a cosigner signs a transaction the address initialized,
      * it emits a new message with the cosignatory signed transaction in the even stream.
      *
-     * @param address address we listen when a cosignatory is added to some transaction address sent
+     * @param unresolvedAddress unresolved address we listen when a cosignatory is added to some transaction address sent
      * @return an observable stream of {@link CosignatureSignedTransaction}
      */
-    cosignatureAdded(address: Address | NamespaceId): Observable<CosignatureSignedTransaction>;
+    cosignatureAdded(unresolvedAddress: UnresolvedAddress): Observable<CosignatureSignedTransaction>;
 }
