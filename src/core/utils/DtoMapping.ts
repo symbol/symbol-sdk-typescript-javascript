@@ -106,7 +106,11 @@ export class DtoMapping {
         let duration = Duration.ofSeconds(0);
         let match;
         const types: string[] = [];
+        let matchGroups = '';
         while ((match = regex.exec(preprocessedValue))) {
+            if (!match) {
+                throw new Error('Duration value format is not recognized.');
+            }
             const num = parseInt(match[1]);
             const type = match[2];
 
@@ -135,6 +139,10 @@ export class DtoMapping {
                 default:
                     throw new Error('Duration value format is not recognized.');
             }
+            matchGroups += match[0];
+        }
+        if (!types.length || matchGroups !== preprocessedValue) {
+            throw new Error('Duration value format is not recognized.');
         }
         return duration;
     }

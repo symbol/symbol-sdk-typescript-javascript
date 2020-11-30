@@ -74,7 +74,7 @@ describe('DtoMapping', () => {
         expect(DtoMapping.parseServerDuration('10d:5m100ms').toString()).to.be.equal('PT240H5M0.1S');
         expect(DtoMapping.parseServerDuration('10d:5m1ms').toString()).to.be.equal('PT240H5M0.001S');
         expect(DtoMapping.parseServerDuration(`1'200ms`).toString()).to.be.equal('PT1.2S');
-        expect(DtoMapping.parseServerDuration('5s10x').toString()).to.be.equal('PT5S');
+        expect(DtoMapping.parseServerDuration(`1d 2h`).toString()).to.be.equal('PT26H');
     });
 
     it('parseServerDuration - exception', () => {
@@ -86,6 +86,21 @@ describe('DtoMapping', () => {
         }).to.throw();
         expect(() => {
             DtoMapping.parseServerDuration('abc');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('abc 2s 1234');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('5s10x');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('10d 5m1s 1m');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('5m   10d');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('abc 10d');
         }).to.throw();
     });
 
