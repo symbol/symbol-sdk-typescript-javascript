@@ -23,6 +23,7 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 describe('MultisigAccountInfo', () => {
     const multisigAccountInfoDTO = {
         multisig: {
+            version: 1,
             accountAddress: Address.createFromPublicKey(
                 'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
                 NetworkType.PRIVATE_TEST,
@@ -42,6 +43,7 @@ describe('MultisigAccountInfo', () => {
 
     it('should createComplete an MultisigAccountInfo object', () => {
         const multisigAccountInfo = new MultisigAccountInfo(
+            multisigAccountInfoDTO.multisig.version,
             multisigAccountInfoDTO.multisig.accountAddress,
             multisigAccountInfoDTO.multisig.minApproval,
             multisigAccountInfoDTO.multisig.minRemoval,
@@ -59,6 +61,7 @@ describe('MultisigAccountInfo', () => {
     describe('isMultisig', () => {
         it('should return true when it has minApproval different to 0', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 1,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -70,6 +73,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return true when it has minRemoval different to 0', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 1,
@@ -81,6 +85,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return false when it has minRemoval and minApproval equals to 0', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 0,
                 0,
@@ -94,6 +99,7 @@ describe('MultisigAccountInfo', () => {
     describe('hasCosigner', () => {
         it('should return true when account is in the cosignatories list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -113,6 +119,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return false when account is not in the cosignatories list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -134,6 +141,7 @@ describe('MultisigAccountInfo', () => {
     describe('isCosignerOfMultisigAccount', () => {
         it('should return true when account is in the multisig account list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -153,6 +161,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return false when account is not in the multisig account list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -172,6 +181,7 @@ describe('MultisigAccountInfo', () => {
 
         it('serliaize', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,

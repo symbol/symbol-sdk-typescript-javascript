@@ -240,6 +240,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     private toNamespaceInfo(dto: NamespaceInfoDTO): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version,
             dto.meta.active,
             dto.meta.index,
             dto.id,

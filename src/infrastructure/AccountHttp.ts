@@ -111,6 +111,7 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public static toAccountInfo(dto: AccountInfoDTO): AccountInfo {
         return new AccountInfo(
+            dto.account.version,
             dto.id,
             Address.createFromEncoded(dto.account.address),
             UInt64.fromNumericString(dto.account.addressHeight),

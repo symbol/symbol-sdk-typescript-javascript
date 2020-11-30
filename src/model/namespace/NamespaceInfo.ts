@@ -35,6 +35,7 @@ import Long = require('long');
  */
 export class NamespaceInfo {
     /**
+     * @param version
      * @param active
      * @param index
      * @param recordId
@@ -48,6 +49,10 @@ export class NamespaceInfo {
      * @param alias
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * Namespace is active.
          */
@@ -154,7 +159,7 @@ export class NamespaceInfo {
         );
         const rootAlias = this.getAliasBuilder(root);
         const paths: NamespacePathBuilder[] = this.getNamespacePath(fullPath, root.id);
-        return new RootNamespaceHistoryBuilder(1, id, ownerAddress, lifetime, rootAlias, paths).serialize();
+        return new RootNamespaceHistoryBuilder(this.version, id, ownerAddress, lifetime, rootAlias, paths).serialize();
     }
 
     /**

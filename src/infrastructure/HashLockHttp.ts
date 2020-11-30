@@ -98,6 +98,7 @@ export class HashLockHttp extends Http implements HashLockRepository {
      */
     private toHashLockInfo(dto: HashLockInfoDTO): HashLockInfo {
         return new HashLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromEncoded(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),

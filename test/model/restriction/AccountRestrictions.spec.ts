@@ -27,6 +27,7 @@ describe('AccountRestrictions', () => {
     it('should createComplete an AccountRestrictionsInfo object', () => {
         const accountRestrictionsInfoDTO: AccountRestrictionsInfoDTO = {
             accountRestrictions: {
+                version: 1,
                 address: '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
                 restrictions: [
                     {

@@ -29,6 +29,7 @@ describe('HashLockInfo', () => {
         const dto = {} as HashLockInfoDTO;
         dto.id = '1';
         const lockDto = {} as HashLockEntryDTO;
+        lockDto.version = 1;
         lockDto.amount = '10';
         lockDto.endHeight = '122';
         lockDto.hash = 'BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E';
@@ -37,6 +38,7 @@ describe('HashLockInfo', () => {
         lockDto.status = 1;
         dto.lock = lockDto;
         const info = new HashLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromRawAddress(lockDto.ownerAddress),
             new MosaicId(lockDto.mosaicId),

@@ -96,6 +96,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         if ((dto.mosaicRestrictionEntry as any).targetAddress) {
             const addressRestrictionDto = dto as MosaicAddressRestrictionDTO;
             return new MosaicAddressRestriction(
+                dto.mosaicRestrictionEntry.version,
                 dto.mosaicRestrictionEntry.compositeHash,
                 dto.mosaicRestrictionEntry.entryType.valueOf(),
                 new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
@@ -106,6 +107,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
 
         const globalRestrictionDto = dto as MosaicGlobalRestrictionDTO;
         return new MosaicGlobalRestriction(
+            dto.mosaicRestrictionEntry.version,
             dto.mosaicRestrictionEntry.compositeHash,
             dto.mosaicRestrictionEntry.entryType.valueOf(),
             new MosaicId(dto.mosaicRestrictionEntry.mosaicId),

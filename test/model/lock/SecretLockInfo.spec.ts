@@ -26,6 +26,7 @@ describe('SecretLockInfo', () => {
         const dto = {} as SecretLockInfoDTO;
         const lockDto = {} as SecretLockEntryDTO;
         dto.id = '1';
+        lockDto.version = 1;
         lockDto.amount = '10';
         lockDto.endHeight = '122';
         lockDto.compositeHash = 'AAA';
@@ -37,6 +38,7 @@ describe('SecretLockInfo', () => {
         lockDto.hashAlgorithm = LockHashAlgorithmEnum.NUMBER_0;
         dto.lock = lockDto;
         const info = new SecretLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromRawAddress(lockDto.ownerAddress),
             new MosaicId(lockDto.mosaicId),

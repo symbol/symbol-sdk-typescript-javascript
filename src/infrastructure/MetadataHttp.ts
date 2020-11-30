@@ -120,6 +120,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
         return new Metadata(
             metadata.id,
             new MetadataEntry(
+                metadataEntry.version,
                 metadataEntry.compositeHash,
                 Address.createFromEncoded(metadataEntry.sourceAddress),
                 Address.createFromEncoded(metadataEntry.targetAddress),

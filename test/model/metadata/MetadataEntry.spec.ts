@@ -34,6 +34,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Account Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -44,6 +45,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,
@@ -71,6 +73,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Mosaic Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -82,6 +85,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,
@@ -109,6 +113,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Namespace Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -119,6 +124,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,

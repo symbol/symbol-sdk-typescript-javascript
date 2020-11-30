@@ -55,6 +55,7 @@ describe('CurrencyService', () => {
 
         const account = Account.generateNewAccount(networkType);
         const currencyMosaicInfo = new MosaicInfo(
+            1,
             '111',
             currencyMosaicId,
             UInt64.fromUint(100),
@@ -67,6 +68,7 @@ describe('CurrencyService', () => {
         );
 
         const harvestMosaicInfo = new MosaicInfo(
+            1,
             '222',
             harvestingMosaicId,
             UInt64.fromUint(200),
@@ -139,6 +141,7 @@ describe('CurrencyService', () => {
 
         const account = Account.generateNewAccount(networkType);
         const currencyMosaicInfo = new MosaicInfo(
+            1,
             '111',
             currencyMosaicId,
             UInt64.fromUint(100),
@@ -151,6 +154,7 @@ describe('CurrencyService', () => {
         );
 
         const harvestMosaicInfo = new MosaicInfo(
+            1,
             '222',
             harvestingMosaicId,
             UInt64.fromUint(200),

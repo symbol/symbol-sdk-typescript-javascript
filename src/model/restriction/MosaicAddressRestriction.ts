@@ -33,6 +33,7 @@ import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
 export class MosaicAddressRestriction {
     /**
      * Constructor
+     * @param version
      * @param compositeHash
      * @param entryType
      * @param mosaicId
@@ -40,6 +41,10 @@ export class MosaicAddressRestriction {
      * @param restrictions
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * composite hash
          */
@@ -87,7 +92,7 @@ export class MosaicAddressRestriction {
         );
         const addressRestrictionBuilder = new MosaicAddressRestrictionEntryBuilder(mosaicId, address, keyPairs);
         return new MosaicRestrictionEntryBuilder(
-            1,
+            this.version,
             MosaicRestrictionEntryTypeDto.ADDRESS,
             addressRestrictionBuilder,
             undefined,

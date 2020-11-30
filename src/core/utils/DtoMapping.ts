@@ -39,6 +39,7 @@ export class DtoMapping {
      */
     public static extractAccountRestrictionFromDto(accountRestrictions: AccountRestrictionsInfoDTO): AccountRestrictions {
         return new AccountRestrictions(
+            accountRestrictions.accountRestrictions.version,
             accountRestrictions['id'],
             Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
             accountRestrictions.accountRestrictions.restrictions.map((prop) => {

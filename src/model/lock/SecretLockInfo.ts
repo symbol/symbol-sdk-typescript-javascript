@@ -28,6 +28,10 @@ import { LockStatus } from './LockStatus';
 export class SecretLockInfo {
     constructor(
         /**
+         * Version
+         */
+        public readonly version: number,
+        /**
          * The stored database id.
          */
         public readonly recordId: string,
@@ -80,7 +84,7 @@ export class SecretLockInfo {
         const recipient: AddressDto = this.recipientAddress.toBuilder();
         const secret: Hash256Dto = new Hash256Dto(Convert.hexToUint8(this.secret));
         return new SecretLockInfoBuilder(
-            1,
+            this.version,
             ownerAddress,
             mosaic,
             endHeight,

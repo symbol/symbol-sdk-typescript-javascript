@@ -22,6 +22,7 @@ import { Address } from './Address';
  */
 export class MultisigAccountInfo {
     /**
+     * @param version
      * @param accountAddress
      * @param minApproval
      * @param minRemoval
@@ -29,6 +30,10 @@ export class MultisigAccountInfo {
      * @param multisigAddresses
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The account multisig address.
          */
@@ -83,7 +88,7 @@ export class MultisigAccountInfo {
      */
     public serialize(): Uint8Array {
         return new MultisigEntryBuilder(
-            1,
+            this.version,
             this.minApproval,
             this.minRemoval,
             this.accountAddress.toBuilder(),

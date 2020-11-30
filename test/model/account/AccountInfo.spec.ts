@@ -37,6 +37,7 @@ describe('AccountInfo', () => {
         const accountInfoDTO: AccountInfoDTO = {
             id: 'someId',
             account: {
+                version: 1,
                 address: address.encoded(),
                 addressHeight: addressHeight.toString(),
                 importance: importance.toString(),
@@ -122,6 +123,7 @@ describe('AccountInfo', () => {
     it('should create and validate state hash', () => {
         const dto: AccountInfoDTO = {
             account: {
+                version: 1,
                 address: '98D03B971EEBCE0E72A8EFA9F5CECFF613260B63B645A186',
                 addressHeight: '1',
                 publicKey: '0000000000000000000000000000000000000000000000000000000000000000',

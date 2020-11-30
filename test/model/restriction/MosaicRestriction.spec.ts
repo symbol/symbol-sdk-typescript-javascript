@@ -39,6 +39,7 @@ describe('MosaicRestrictions', () => {
         const value = UInt64.fromUint(2);
 
         const mosaicAddressRestriction = new MosaicAddressRestriction(
+            1,
             hash,
             MosaicRestrictionEntryType.ADDRESS,
             new MosaicId('7EF64E60AC61127E'),
@@ -77,7 +78,7 @@ describe('MosaicRestrictions', () => {
         const key = UInt64.fromUint(10);
         const value = UInt64.fromUint(1000);
 
-        const mosaicGlobalRestriction = new MosaicGlobalRestriction(hash, 0, new MosaicId('85BBEA6CC462B244'), [
+        const mosaicGlobalRestriction = new MosaicGlobalRestriction(1, hash, 0, new MosaicId('85BBEA6CC462B244'), [
             new MosaicGlobalRestrictionItem(key, new MosaicId('85BBEA6CC462B244'), value, 1),
         ]);
 
@@ -94,6 +95,7 @@ describe('MosaicRestrictions', () => {
     it('should serialize global restriction and merkle proof', () => {
         const dto: MosaicGlobalRestrictionDTO = {
             mosaicRestrictionEntry: {
+                version: 1,
                 compositeHash: 'F6F00336ECAAFCCDDB88A52C9766522AC04B6090623D450D52D62889476B4FCC',
                 entryType: 1,
                 mosaicId: '2C31D8CB4E830AC4',
@@ -134,6 +136,7 @@ describe('MosaicRestrictions', () => {
     it('should serialize address restriction and merkle proof', () => {
         const dto: MosaicAddressRestrictionDTO = {
             mosaicRestrictionEntry: {
+                version: 1,
                 compositeHash: '9AFD43230CAC7ACC6D9412623298B305CE593CB96F7487E4969D150FC6A54906',
                 entryType: 0,
                 mosaicId: '2C31D8CB4E830AC4',

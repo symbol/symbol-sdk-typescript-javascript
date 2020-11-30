@@ -28,6 +28,7 @@ describe('MosaicAmountView', () => {
 
     before(() => {
         mosaicInfo = new MosaicInfo(
+            1,
             '123',
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply
@@ -60,6 +61,7 @@ describe('MosaicAmountView', () => {
 
     it('should createComplete a Mosaic Amount View get correct amount divisibility 0', () => {
         const mosaicInfoZero = new MosaicInfo(
+            1,
             '123',
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply

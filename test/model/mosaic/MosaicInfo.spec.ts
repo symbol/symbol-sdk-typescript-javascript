@@ -31,6 +31,7 @@ describe('MosaicInfo', () => {
     const mosaicInfoDTO = {
         id: '59FDA0733F17CF0001772CBC',
         mosaic: {
+            version: 1,
             id: new MosaicId([3646934825, 3576016193]),
             supply: new UInt64([3403414400, 2095475]),
             startHeight: new UInt64([1, 0]),
@@ -47,6 +48,7 @@ describe('MosaicInfo', () => {
 
     it('should createComplete an MosaicInfo object', () => {
         const mosaicInfo = new MosaicInfo(
+            mosaicInfoDTO.mosaic.version,
             mosaicInfoDTO.id,
             mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
@@ -78,6 +80,7 @@ describe('MosaicInfo', () => {
     it('should createComplete an MosaicInfo object without duration', () => {
         mosaicInfoDTO.mosaic.duration = '0';
         const mosaicInfo = new MosaicInfo(
+            mosaicInfoDTO.mosaic.version,
             mosaicInfoDTO.id,
             mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
@@ -109,6 +112,7 @@ describe('MosaicInfo', () => {
     describe('isSupplyMutable', () => {
         it("should return true when it's mutable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -124,6 +128,7 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's immutable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -141,6 +146,7 @@ describe('MosaicInfo', () => {
     describe('isTransferable', () => {
         it("should return true when it's transferable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -156,6 +162,7 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's not transferable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -173,6 +180,7 @@ describe('MosaicInfo', () => {
     describe('isRestrictable', () => {
         it("should return true when it's restrictable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -188,6 +196,7 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's not restrictable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -204,6 +213,7 @@ describe('MosaicInfo', () => {
         it('should serialize and state proof', () => {
             const dto: MosaicInfoDTO = {
                 mosaic: {
+                    version: 1,
                     id: '725CEC19BBA31720',
                     supply: '15000000',
                     startHeight: '1',

@@ -31,6 +31,7 @@ describe('Metadata', () => {
 
     it('should createComplete an Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -49,6 +50,7 @@ describe('Metadata', () => {
         const metadata = new Metadata(
             metadataDTO.meta.id,
             new MetadataEntry(
+                metadataDTO.metadataEntry.version,
                 metadataDTO.metadataEntry.compositeHash,
                 metadataDTO.metadataEntry.sourceAddress,
                 metadataDTO.metadataEntry.targetAddress,

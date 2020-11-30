@@ -93,29 +93,29 @@ describe('AggregateTransactionService', () => {
     const epochAdjustment = 1573430400;
 
     function givenMultisig2AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], []);
+        return new MultisigAccountInfo(1, multisig2.address, 2, 1, [multisig1.address, account1.address], []);
     }
     function givenMultisig3AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig3.address, 2, 2, [account2.address, account3.address], []);
+        return new MultisigAccountInfo(1, multisig3.address, 2, 2, [account2.address, account3.address], []);
     }
 
     function givenAccount1Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account1.address, 0, 0, [], [multisig2.address]);
+        return new MultisigAccountInfo(1, account1.address, 0, 0, [], [multisig2.address]);
     }
     function givenAccount2Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account2.address, 0, 0, [], [multisig2.address, multisig3.address]);
+        return new MultisigAccountInfo(1, account2.address, 0, 0, [], [multisig2.address, multisig3.address]);
     }
     function givenAccount3Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account3.address, 0, 0, [], [multisig2.address, multisig3.address]);
+        return new MultisigAccountInfo(1, account3.address, 0, 0, [], [multisig2.address, multisig3.address]);
     }
     function givenAccount4Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account4.address, 0, 0, [], []);
+        return new MultisigAccountInfo(1, account4.address, 0, 0, [], []);
     }
 
     function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
-            new MultisigAccountInfo(multisig1.address, 1, 1, [account2.address, account3.address], [multisig2.address]),
+        map.set(0, [new MultisigAccountInfo(1, multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
+            new MultisigAccountInfo(1, multisig1.address, 1, 1, [account2.address, account3.address], [multisig2.address]),
         ]);
 
         return new MultisigAccountGraphInfo(map);
@@ -123,8 +123,15 @@ describe('AggregateTransactionService', () => {
 
     function givenMultisig2AccountGraphInfoDuplicated(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
-            new MultisigAccountInfo(multisig1.address, 1, 1, [account1.address, account2.address, account3.address], [multisig2.address]),
+        map.set(0, [new MultisigAccountInfo(1, multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
+            new MultisigAccountInfo(
+                1,
+                multisig1.address,
+                1,
+                1,
+                [account1.address, account2.address, account3.address],
+                [multisig2.address],
+            ),
         ]);
 
         return new MultisigAccountGraphInfo(map);
@@ -132,7 +139,7 @@ describe('AggregateTransactionService', () => {
 
     function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig3.address, 2, 2, [account2.address, account3.address], [])]);
+        map.set(0, [new MultisigAccountInfo(1, multisig3.address, 2, 2, [account2.address, account3.address], [])]);
 
         return new MultisigAccountGraphInfo(map);
     }

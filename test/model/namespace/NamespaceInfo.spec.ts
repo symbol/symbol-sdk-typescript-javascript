@@ -29,6 +29,7 @@ describe('NamespaceInfo', () => {
     let subNamespaceDTO;
     function createRootFromDTO(dto): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version,
             dto.meta.active,
             dto.meta.index,
             dto.meta.id,
@@ -45,6 +46,7 @@ describe('NamespaceInfo', () => {
 
     function createSubnamespaceFromDTO(dto): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version,
             dto.meta.active,
             dto.meta.index,
             dto.meta.id,
@@ -67,6 +69,7 @@ describe('NamespaceInfo', () => {
                 index: 0,
             },
             namespace: {
+                version: 1,
                 depth: 1,
                 endHeight: new UInt64([4294967295, 4294967295]),
                 level0: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
@@ -87,6 +90,7 @@ describe('NamespaceInfo', () => {
                 id: '59DFBA84B2E9E7000135E80E',
             },
             namespace: {
+                version: 1,
                 type: 1,
                 depth: 2,
                 level0: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
