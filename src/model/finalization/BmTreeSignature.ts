@@ -26,10 +26,6 @@ export class BmTreeSignature {
          */
         public readonly root: ParentPublicKeySignaturePair,
         /**
-         * Top.
-         */
-        public readonly top: ParentPublicKeySignaturePair,
-        /**
          * Bottom.
          */
         public readonly bottom: ParentPublicKeySignaturePair,

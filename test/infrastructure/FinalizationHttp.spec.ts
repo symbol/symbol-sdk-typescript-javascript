@@ -54,7 +54,6 @@ describe('FinalizationHttp', () => {
 
     const tree = {} as BmTreeSignature;
     tree.bottom = ps;
-    tree.top = ps;
     tree.root = ps;
 
     mg.signatures = [tree];
