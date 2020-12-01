@@ -127,13 +127,13 @@ describe('BlockHttp', () => {
         expect(blockInfo.totalFee.toString()).to.be.equals(blockInfoDto.meta.totalFee);
 
         if (isImportance) {
-            expect((blockInfo as NemesisImportanceBlockInfo).harvestingEligibleAccountsCount.toString()).to.be.equals(
+            expect((blockInfo as NemesisImportanceBlockInfo).harvestingEligibleAccountsCount!.toString()).to.be.equals(
                 (importanceBlockInfoDto.block as ImportanceBlockDTO).harvestingEligibleAccountsCount,
             );
             expect((blockInfo as NemesisImportanceBlockInfo).previousImportanceBlockHash).to.be.equals(
                 (importanceBlockInfoDto.block as ImportanceBlockDTO).previousImportanceBlockHash,
             );
-            expect((blockInfo as NemesisImportanceBlockInfo).totalVotingBalance.toString()).to.be.equals(
+            expect((blockInfo as NemesisImportanceBlockInfo).totalVotingBalance!.toString()).to.be.equals(
                 (importanceBlockInfoDto.block as ImportanceBlockDTO).totalVotingBalance,
             );
             expect((blockInfo as NemesisImportanceBlockInfo).votingEligibleAccountsCount).to.be.equals(

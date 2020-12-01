@@ -18,8 +18,8 @@ import { UInt64 } from '../UInt64';
 import { NormalBlockInfo } from './NomalBlockInfo';
 
 export type NemesisImportanceBlockInfo = NormalBlockInfo & {
-    votingEligibleAccountsCount: number;
-    harvestingEligibleAccountsCount: UInt64;
-    totalVotingBalance: UInt64;
-    previousImportanceBlockHash: string;
+    votingEligibleAccountsCount?: number;
+    harvestingEligibleAccountsCount?: UInt64;
+    totalVotingBalance?: UInt64;
+    previousImportanceBlockHash?: string;
 };

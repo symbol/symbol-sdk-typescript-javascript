@@ -131,8 +131,12 @@ export class BlockHttp extends Http implements BlockRepository {
             const importanceBlockInfoDto = dto.block as ImportanceBlockDTO;
             return DtoMapping.assign(normalBlock, {
                 votingEligibleAccountsCount: importanceBlockInfoDto.votingEligibleAccountsCount,
-                harvestingEligibleAccountsCount: UInt64.fromNumericString(importanceBlockInfoDto.harvestingEligibleAccountsCount),
-                totalVotingBalance: UInt64.fromNumericString(importanceBlockInfoDto.totalVotingBalance),
+                harvestingEligibleAccountsCount: importanceBlockInfoDto.harvestingEligibleAccountsCount
+                    ? UInt64.fromNumericString(importanceBlockInfoDto.harvestingEligibleAccountsCount)
+                    : undefined,
+                totalVotingBalance: importanceBlockInfoDto.totalVotingBalance
+                    ? UInt64.fromNumericString(importanceBlockInfoDto.totalVotingBalance)
+                    : undefined,
                 previousImportanceBlockHash: importanceBlockInfoDto.previousImportanceBlockHash,
             }) as NemesisImportanceBlockInfo;
         } else {
