@@ -117,7 +117,7 @@ export interface IListener {
      * Each time an aggregate bonded transaction is announced,
      * it emits a new message with the transaction hash in the event stream.
      *
-     * @param address address we listen when a transaction is confirmed or rejected
+     * @param unresolvedAddress unresolved address we listen when a transaction is confirmed or rejected
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
