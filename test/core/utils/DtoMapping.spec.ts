@@ -65,30 +65,42 @@ describe('DtoMapping', () => {
     });
 
     it('parseServerDuration', () => {
-        const epochS = '12345s';
-        expect(DtoMapping.parseServerDuration(epochS).seconds()).to.be.equal(12345);
-        const epochM = '12345m';
-        expect(DtoMapping.parseServerDuration(epochM).toMinutes()).to.be.equal(12345);
-        const epochH = '12345h';
-        expect(DtoMapping.parseServerDuration(epochH).toHours()).to.be.equal(12345);
-        const epochMS = '12345ms';
-        expect(DtoMapping.parseServerDuration(epochMS).toMillis()).to.be.equal(12345);
-        const epochD = '12345d';
-        expect(DtoMapping.parseServerDuration(epochD).toDays()).to.be.equal(12345);
+        expect(DtoMapping.parseServerDuration('15s').toString()).to.be.equal('PT15S');
+        expect(DtoMapping.parseServerDuration('10m:15s').toString()).to.be.equal('PT10M15S');
+        expect(DtoMapping.parseServerDuration('10m').toString()).to.be.equal('PT10M');
+        expect(DtoMapping.parseServerDuration('5h3m1s').toString()).to.be.equal('PT5H3M1S');
+        expect(DtoMapping.parseServerDuration('10d:5m1s').toString()).to.be.equal('PT240H5M1S');
+        expect(DtoMapping.parseServerDuration('10d 5m1s').toString()).to.be.equal('PT240H5M1S');
+        expect(DtoMapping.parseServerDuration('10d:5m100ms').toString()).to.be.equal('PT240H5M0.1S');
+        expect(DtoMapping.parseServerDuration('10d:5m1ms').toString()).to.be.equal('PT240H5M0.001S');
+        expect(DtoMapping.parseServerDuration(`1'200ms`).toString()).to.be.equal('PT1.2S');
+        expect(DtoMapping.parseServerDuration(`1d 2h`).toString()).to.be.equal('PT26H');
     });
 
     it('parseServerDuration - exception', () => {
         expect(() => {
-            const epochS = '12345g';
-            DtoMapping.parseServerDuration(epochS).seconds();
+            DtoMapping.parseServerDuration('5sss');
         }).to.throw();
         expect(() => {
-            const epochS = 'adfs';
-            DtoMapping.parseServerDuration(epochS).seconds();
+            DtoMapping.parseServerDuration('10h:10h');
         }).to.throw();
         expect(() => {
-            const epochS = '123s45';
-            DtoMapping.parseServerDuration(epochS).seconds();
+            DtoMapping.parseServerDuration('abc');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('abc 2s 1234');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('5s10x');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('10d 5m1s 1m');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('5m   10d');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('abc 10d');
         }).to.throw();
     });
 
