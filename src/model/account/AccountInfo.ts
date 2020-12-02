@@ -46,10 +46,11 @@ import { SupplementalPublicKeys } from './SupplementalPublicKeys';
  * The account info structure describes basic information for an account.
  */
 export class AccountInfo {
-    /**
-     *
-     */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The database record id;
          */
@@ -126,10 +127,11 @@ export class AccountInfo {
             new ImportanceHeightDto(this.importanceHeight.toDTO()),
         );
         const activityBuckets: HeightActivityBucketsBuilder = new HeightActivityBucketsBuilder(
-            this.activityBucket.map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
+            this.activityBucket.slice(0, 5).map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
         );
         const format = this.isHighValue() ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
         return new AccountStateBuilder(
+            this.version,
             address,
             addressHeight,
             publicKey,

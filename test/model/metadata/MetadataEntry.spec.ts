@@ -34,6 +34,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Account Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -44,6 +45,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,
@@ -62,7 +64,7 @@ describe('MetadataEntry', () => {
 
         const serialized = metadata.serialize();
         deepEqual(
-            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8500000000000000000005003132333435',
+            '010080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8500000000000000000005003132333435',
             Convert.uint8ToHex(serialized),
         );
 
@@ -71,6 +73,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Mosaic Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -82,6 +85,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,
@@ -101,7 +105,7 @@ describe('MetadataEntry', () => {
 
         const serialized = metadata.serialize();
         deepEqual(
-            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8544B262C46CEABB850105003132333435',
+            '010080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8544B262C46CEABB850105003132333435',
             Convert.uint8ToHex(serialized),
         );
         deepEqual(serialized, MetadataEntryBuilder.loadFromBinary(serialized).serialize());
@@ -109,6 +113,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Namespace Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -119,6 +124,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,

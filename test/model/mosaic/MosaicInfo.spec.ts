@@ -31,6 +31,7 @@ describe('MosaicInfo', () => {
     const mosaicInfoDTO = {
         id: '59FDA0733F17CF0001772CBC',
         mosaic: {
+            version: 1,
             id: new MosaicId([3646934825, 3576016193]),
             supply: new UInt64([3403414400, 2095475]),
             startHeight: new UInt64([1, 0]),
@@ -47,6 +48,7 @@ describe('MosaicInfo', () => {
 
     it('should createComplete an MosaicInfo object', () => {
         const mosaicInfo = new MosaicInfo(
+            mosaicInfoDTO.mosaic.version,
             mosaicInfoDTO.id,
             mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
@@ -70,7 +72,7 @@ describe('MosaicInfo', () => {
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '29CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E811010000000703E803000000000000',
+            '010029CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E811010000000703E803000000000000',
         );
         deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
@@ -78,6 +80,7 @@ describe('MosaicInfo', () => {
     it('should createComplete an MosaicInfo object without duration', () => {
         mosaicInfoDTO.mosaic.duration = '0';
         const mosaicInfo = new MosaicInfo(
+            mosaicInfoDTO.mosaic.version,
             mosaicInfoDTO.id,
             mosaicInfoDTO.mosaic.id,
             mosaicInfoDTO.mosaic.supply,
@@ -101,7 +104,7 @@ describe('MosaicInfo', () => {
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '29CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E8110100000007030000000000000000',
+            '010029CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E8110100000007030000000000000000',
         );
         deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
@@ -109,6 +112,7 @@ describe('MosaicInfo', () => {
     describe('isSupplyMutable', () => {
         it("should return true when it's mutable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -124,6 +128,7 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's immutable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -141,6 +146,7 @@ describe('MosaicInfo', () => {
     describe('isTransferable', () => {
         it("should return true when it's transferable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -156,6 +162,7 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's not transferable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -173,6 +180,7 @@ describe('MosaicInfo', () => {
     describe('isRestrictable', () => {
         it("should return true when it's restrictable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -188,6 +196,7 @@ describe('MosaicInfo', () => {
 
         it("should return false when it's not restrictable", () => {
             const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.mosaic.version,
                 mosaicInfoDTO.id,
                 mosaicInfoDTO.mosaic.id,
                 mosaicInfoDTO.mosaic.supply,
@@ -204,6 +213,7 @@ describe('MosaicInfo', () => {
         it('should serialize and state proof', () => {
             const dto: MosaicInfoDTO = {
                 mosaic: {
+                    version: 1,
                     id: '725CEC19BBA31720',
                     supply: '15000000',
                     startHeight: '1',
@@ -215,14 +225,11 @@ describe('MosaicInfo', () => {
                 },
                 id: '5FA893BB6D1B44BFCD93AEA4',
             };
-            const rawMerklePath =
-                '00008080DA9B4AF63BE985715EA635AF98E3CF3B0A22F9A2BE1C7DD40B79948AA63E36586E5D2E9D0C089C1C64BC0D42A11ADBD1CD6CDB4B7C294062F55113525A64AE3CFF3F04A7F2A487B42EA89323C4408F82415223ACFEC7DFA7924EFC31A70778AB17A00C3EAFF635F01BB3B474F0AF1BE99FBDA85EEFB209CC7BD158D3540DE3A3F2D1';
-
             const info = MosaicHttp.toMosaicInfo(dto);
 
             const serializedHex = Convert.uint8ToHex(info.serialize());
             expect(serializedHex).eq(
-                '2017A3BB19EC5C72C0E1E4000000000001000000000000009857C93C1E3FA4FACA0534AB12B8DE85BB2E7A4ECD24768B0100000003030000000000000000',
+                '01002017A3BB19EC5C72C0E1E4000000000001000000000000009857C93C1E3FA4FACA0534AB12B8DE85BB2E7A4ECD24768B0100000003030000000000000000',
             );
         });
     });

@@ -32,6 +32,7 @@ import { TransactionInfo } from '../model/transaction/TransactionInfo';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { Http } from './Http';
 import { Page } from './Page';
+import { TransactionPaginationStreamer } from './paginationStreamer';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionGroup } from './TransactionGroup';
@@ -190,6 +191,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
         return this.call(this.searchTransactionByGroup(criteria), (body) =>
             super.toPage(body.pagination, body.data, CreateTransactionFromDTO),
         );
+    }
+    public streamer(): TransactionPaginationStreamer {
+        return new TransactionPaginationStreamer(this);
     }
 
     /**

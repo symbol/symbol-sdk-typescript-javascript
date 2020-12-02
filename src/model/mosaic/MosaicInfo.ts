@@ -35,6 +35,7 @@ import { MosaicId } from './MosaicId';
  */
 export class MosaicInfo {
     /**
+     * @param version
      * @param recordId
      * @param id
      * @param supply
@@ -46,6 +47,10 @@ export class MosaicInfo {
      * @param duration
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The database record id.
          */
@@ -122,6 +127,6 @@ export class MosaicInfo {
         const flags = GeneratorUtils.toFlags(MosaicFlagsDto, this.flags.getValue());
         const properties = new MosaicPropertiesBuilder(flags, this.divisibility, duration);
         const definition = new MosaicDefinitionBuilder(startHeight, ownerAddress, revision, properties);
-        return new MosaicEntryBuilder(mosaicId, supply, definition).serialize();
+        return new MosaicEntryBuilder(this.version, mosaicId, supply, definition).serialize();
     }
 }

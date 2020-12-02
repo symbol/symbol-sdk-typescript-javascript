@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { Address } from '../../../src/model/account/Address';
 import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -22,6 +23,7 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 describe('MultisigAccountInfo', () => {
     const multisigAccountInfoDTO = {
         multisig: {
+            version: 1,
             accountAddress: Address.createFromPublicKey(
                 'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
                 NetworkType.PRIVATE_TEST,
@@ -41,6 +43,7 @@ describe('MultisigAccountInfo', () => {
 
     it('should createComplete an MultisigAccountInfo object', () => {
         const multisigAccountInfo = new MultisigAccountInfo(
+            multisigAccountInfoDTO.multisig.version,
             multisigAccountInfoDTO.multisig.accountAddress,
             multisigAccountInfoDTO.multisig.minApproval,
             multisigAccountInfoDTO.multisig.minRemoval,
@@ -58,6 +61,7 @@ describe('MultisigAccountInfo', () => {
     describe('isMultisig', () => {
         it('should return true when it has minApproval different to 0', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 1,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -69,6 +73,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return true when it has minRemoval different to 0', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 1,
@@ -80,6 +85,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return false when it has minRemoval and minApproval equals to 0', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 0,
                 0,
@@ -93,6 +99,7 @@ describe('MultisigAccountInfo', () => {
     describe('hasCosigner', () => {
         it('should return true when account is in the cosignatories list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -112,6 +119,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return false when account is not in the cosignatories list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -133,6 +141,7 @@ describe('MultisigAccountInfo', () => {
     describe('isCosignerOfMultisigAccount', () => {
         it('should return true when account is in the multisig account list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -152,6 +161,7 @@ describe('MultisigAccountInfo', () => {
 
         it('should return false when account is not in the multisig account list', () => {
             const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -167,6 +177,24 @@ describe('MultisigAccountInfo', () => {
                     ),
                 ),
             ).to.be.equal(false);
+        });
+
+        it('serliaize', () => {
+            const multisigAccountInfo = new MultisigAccountInfo(
+                multisigAccountInfoDTO.multisig.version,
+                multisigAccountInfoDTO.multisig.accountAddress,
+                multisigAccountInfoDTO.multisig.minApproval,
+                multisigAccountInfoDTO.multisig.minRemoval,
+                multisigAccountInfoDTO.multisig.cosignatoryAddresses,
+                multisigAccountInfoDTO.multisig.multisigAddresses,
+            );
+
+            expect(Convert.uint8ToHex(multisigAccountInfo.serialize())).to.be.equal(
+                '010003000000030000008044F36772D4842DE0E10CF0315335E672479D9A513519DC030000' +
+                    '000000000080CF2886A23771534F2CEF86094B4C4FBC1E19C286AFAAF68049E14BEBCA9375' +
+                    '8EB36805BAE760A57239976F0094FCC880EB8764327FD32393DB1B0C018C04E4EA69F597D1' +
+                    '281EAF010000000000000080DDD180440B03B7ABA2F6A858D59E0ED4034FCC82C8F242',
+            );
         });
     });
 });

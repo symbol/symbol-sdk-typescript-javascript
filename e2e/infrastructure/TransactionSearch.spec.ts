@@ -81,7 +81,7 @@ describe('TransactionSearch', () => {
         });
     });
 
-    describe('searchTransactions using steamer', () => {
+    describe('searchTransactions using streamer', () => {
         it('should return transaction info given address', async () => {
             const transactionRepository = helper.repositoryFactory.createTransactionRepository();
             const streamer = new TransactionPaginationStreamer(transactionRepository);

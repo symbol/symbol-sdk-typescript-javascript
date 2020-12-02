@@ -19,6 +19,8 @@ import {
     GlobalKeyValueSetBuilder,
     MosaicGlobalRestrictionEntryBuilder,
     MosaicIdDto,
+    MosaicRestrictionEntryBuilder,
+    MosaicRestrictionEntryTypeDto,
     MosaicRestrictionKeyDto,
     RestrictionRuleBuilder,
 } from 'catbuffer-typescript';
@@ -33,12 +35,17 @@ import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
 export class MosaicGlobalRestriction {
     /**
      * Constructor
+     * @param version
      * @param compositeHash
      * @param entryType
      * @param mosaicId
      * @param restrictions
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * composite hash
          */
@@ -84,6 +91,12 @@ export class MosaicGlobalRestriction {
                 return new GlobalKeyValueBuilder(key, restrictionRule);
             }),
         );
-        return new MosaicGlobalRestrictionEntryBuilder(mosaicId, keyPairs).serialize();
+        const globalRestrictionBuilder = new MosaicGlobalRestrictionEntryBuilder(mosaicId, keyPairs);
+        return new MosaicRestrictionEntryBuilder(
+            this.version,
+            MosaicRestrictionEntryTypeDto.GLOBAL,
+            undefined,
+            globalRestrictionBuilder,
+        ).serialize();
     }
 }

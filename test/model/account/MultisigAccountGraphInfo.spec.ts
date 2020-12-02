@@ -28,6 +28,7 @@ describe('MultisigAccountGraphInfo', () => {
             multisigEntries: [
                 {
                     multisig: {
+                        version: 1,
                         accountAddress: Address.createFromPublicKey(
                             'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
                             NetworkType.PRIVATE_TEST,
@@ -64,6 +65,7 @@ describe('MultisigAccountGraphInfo', () => {
             multisigAccountGraphInfoDTO.level,
             multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
                 return new MultisigAccountInfo(
+                    multisigAccountInfoDTO.multisig.version,
                     multisigAccountInfoDTO.multisig.accountAddress,
                     multisigAccountInfoDTO.multisig.minApproval,
                     multisigAccountInfoDTO.multisig.minRemoval,

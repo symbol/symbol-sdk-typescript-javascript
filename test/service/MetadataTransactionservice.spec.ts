@@ -57,6 +57,7 @@ describe('MetadataTransactionService', () => {
         return new Metadata(
             '59DFBA84B2E9E7000135E80C',
             new MetadataEntry(
+                1,
                 '5E628EA59818D97AA4118780D9A88C5512FCE7A21C195E1574727EFCE5DF7C0D',
                 account.address,
                 account.address,

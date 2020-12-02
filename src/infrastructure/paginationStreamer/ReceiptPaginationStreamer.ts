@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../../model/receipt/ResolutionStatement';
-import { TransactionStatement } from '../../model/receipt/TransactionStatement';
+import { Observable } from 'rxjs';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, TransactionStatement } from '../../model/receipt';
 import { Page } from '../Page';
 import { ReceiptRepository } from '../ReceiptRepository';
-import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
-import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
+import { ResolutionStatementSearchCriteria, TransactionStatementSearchCriteria } from '../searchCriteria';
 import { PaginationStreamer } from './PaginationStreamer';
 
 /**

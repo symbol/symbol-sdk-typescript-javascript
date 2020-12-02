@@ -17,7 +17,7 @@
 import { Observable } from 'rxjs';
 import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicId, MosaicInfo } from '../model/mosaic';
-import { Searcher } from './paginationStreamer';
+import { SearcherRepository } from './paginationStreamer';
 import { MosaicSearchCriteria } from './searchCriteria';
 
 /**
@@ -25,7 +25,7 @@ import { MosaicSearchCriteria } from './searchCriteria';
  *
  * @since 1.0
  */
-export interface MosaicRepository extends Searcher<MosaicInfo, MosaicSearchCriteria> {
+export interface MosaicRepository extends SearcherRepository<MosaicInfo, MosaicSearchCriteria> {
     /**
      * Gets a MosaicInfo for a given mosaicId
      * @param mosaicId - Mosaic id

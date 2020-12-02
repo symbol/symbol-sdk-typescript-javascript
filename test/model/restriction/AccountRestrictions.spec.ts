@@ -27,6 +27,7 @@ describe('AccountRestrictions', () => {
     it('should createComplete an AccountRestrictionsInfo object', () => {
         const accountRestrictionsInfoDTO: AccountRestrictionsInfoDTO = {
             accountRestrictions: {
+                version: 1,
                 address: '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
                 restrictions: [
                     {
@@ -49,7 +50,7 @@ describe('AccountRestrictions', () => {
 
         const serialized = accountRestrictionsInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF0100000000000000010001000000000000006826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
+            '01006826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF0100000000000000010001000000000000006826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
         );
         deepEqual(AccountRestrictionsBuilder.loadFromBinary(serialized).serialize(), serialized);
     });

@@ -20,10 +20,13 @@ import {
     AccountRestrictionFlagsEnum,
     AccountRestrictionsDTO,
     AccountRestrictionsInfoDTO,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
     RestrictionAccountRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
+import { RestrictionAccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/RestrictionAccountPaginationStreamer';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
@@ -74,5 +77,28 @@ describe('RestrictionAccountHttp', () => {
             .getAccountRestrictions(address)
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new RestrictionAccountHttp('url');
+        expect(accountHttp.streamer() instanceof RestrictionAccountPaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(restrictionAccountRoutesApi.getAccountRestrictionsMerkle(address.plain())).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await restrictionAccountRepository.getAccountRestrictionsMerkle(address).toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

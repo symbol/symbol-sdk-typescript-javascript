@@ -15,7 +15,7 @@
  */
 
 import { Duration } from '@js-joda/core';
-import { AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { AccountRestrictionsInfoDTO, MerkleTreeBranchDTO, MerkleTreeLeafDTO } from 'symbol-openapi-typescript-fetch-client';
 import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/index';
 import { Address } from '../../model/account/Address';
 import { MerkleStateInfo } from '../../model/blockchain/MerkleStateInfo';
@@ -25,6 +25,11 @@ import { AccountRestrictions } from '../../model/restriction/AccountRestrictions
 import { AddressRestrictionFlag } from '../../model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../model/restriction/OperationRestrictionFlag';
+import { MerkleTree } from '../../model/state/MerkleTree';
+import { MerkleTreeBranch } from '../../model/state/MerkleTreeBranch';
+import { MerkleTreeBranchLink } from '../../model/state/MerkleTreeBranchLink';
+import { MerkleTreeLeaf } from '../../model/state/MerkleTreeLeaf';
+import { MerkleTreeNodeType } from '../../model/state/MerkleTreeNodeType';
 
 export class DtoMapping {
     /**
@@ -34,6 +39,7 @@ export class DtoMapping {
      */
     public static extractAccountRestrictionFromDto(accountRestrictions: AccountRestrictionsInfoDTO): AccountRestrictions {
         return new AccountRestrictions(
+            accountRestrictions.accountRestrictions.version,
             accountRestrictions['id'],
             Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
             accountRestrictions.accountRestrictions.restrictions.map((prop) => {
@@ -162,6 +168,30 @@ export class DtoMapping {
      * @param dto the dto
      */
     public static toMerkleStateInfo(dto: MerkleStateInfoDTO): MerkleStateInfo {
-        return new MerkleStateInfo(dto.raw);
+        if (!dto.tree) {
+            return new MerkleStateInfo(dto.raw, MerkleTree.fromRaw(dto.raw));
+        }
+
+        const leaf = dto.tree.find((tree) => tree.type.valueOf() === MerkleTreeNodeType.Leaf) as MerkleTreeLeafDTO;
+        const tree = new MerkleTree(
+            dto.tree
+                .filter((tree) => tree.type.valueOf() === MerkleTreeNodeType.Branch)
+                .map((b) => {
+                    const branch = b as MerkleTreeBranchDTO;
+                    return new MerkleTreeBranch(
+                        branch.type.valueOf(),
+                        branch.path,
+                        branch.encodedPath,
+                        branch.nibbleCount,
+                        branch.linkMask,
+                        branch.links.map((link) => new MerkleTreeBranchLink(link.bit, link.link)),
+                        branch.branchHash,
+                    );
+                }),
+            leaf
+                ? new MerkleTreeLeaf(leaf.type.valueOf(), leaf.path, leaf.encodedPath, leaf.nibbleCount, leaf.value, leaf.leafHash)
+                : undefined,
+        );
+        return new MerkleStateInfo(dto.raw, tree);
     }
 }

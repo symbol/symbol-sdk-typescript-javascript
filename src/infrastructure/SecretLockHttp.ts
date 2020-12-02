@@ -24,6 +24,7 @@ import { SecretLockInfo } from '../model/lock';
 import { MosaicId } from '../model/mosaic';
 import { Http } from './Http';
 import { Page } from './Page';
+import { SecretLockPaginationStreamer } from './paginationStreamer';
 import { SecretLockSearchCriteria } from './searchCriteria';
 import { SecretLockRepository } from './SecretLockRepository';
 
@@ -76,6 +77,10 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
         );
     }
 
+    public streamer(): SecretLockPaginationStreamer {
+        return new SecretLockPaginationStreamer(this);
+    }
+
     /**
      * This method maps a SecretLockInfoDTO from rest to the SDK's SecretLockInfo model object.
      *
@@ -85,6 +90,7 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
      */
     private toSecretLockInfo(dto: SecretLockInfoDTO): SecretLockInfo {
         return new SecretLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromEncoded(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),

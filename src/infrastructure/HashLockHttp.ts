@@ -25,6 +25,7 @@ import { UInt64 } from '../model/UInt64';
 import { HashLockRepository } from './HashLockRepository';
 import { Http } from './Http';
 import { Page } from './Page';
+import { HashLockPaginationStreamer } from './paginationStreamer';
 import { HashLockSearchCriteria } from './searchCriteria/HashLockSearchCriteria';
 
 /**
@@ -84,6 +85,10 @@ export class HashLockHttp extends Http implements HashLockRepository {
         );
     }
 
+    public streamer(): HashLockPaginationStreamer {
+        return new HashLockPaginationStreamer(this);
+    }
+
     /**
      * This method maps a HashLockInfoDTO from rest to the SDK's HashLockInfo model object.
      *
@@ -93,6 +98,7 @@ export class HashLockHttp extends Http implements HashLockRepository {
      */
     private toHashLockInfo(dto: HashLockInfoDTO): HashLockInfo {
         return new HashLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromEncoded(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),

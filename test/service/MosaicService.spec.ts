@@ -39,6 +39,7 @@ describe('MosaicService', () => {
 
     function buildMosaicInfo(mosaicId: MosaicId, publicAccount: PublicAccount): MosaicInfo {
         return new MosaicInfo(
+            1,
             '123',
             mosaicId,
             UInt64.fromUint(10),
@@ -53,6 +54,7 @@ describe('MosaicService', () => {
 
     function buildAccountInfo(mosaicId: MosaicId, isEmptyMosaic = false): AccountInfo {
         return new AccountInfo(
+            1,
             'someId',
             TestingAccount.address,
             UInt64.fromUint(1),

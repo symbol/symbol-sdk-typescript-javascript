@@ -33,11 +33,17 @@ import { AccountRestriction } from './AccountRestriction';
 export class AccountRestrictions {
     /**
      * Constructor
+     * @param version version
      * @param recordId the data base id.
      * @param address the target address
      * @param restrictions the restrictions
      */
-    constructor(public readonly recordId: string, public readonly address: Address, public readonly restrictions: AccountRestriction[]) {}
+    constructor(
+        public readonly version: number,
+        public readonly recordId: string,
+        public readonly address: Address,
+        public readonly restrictions: AccountRestriction[],
+    ) {}
 
     /**
      * Generate buffer
@@ -63,6 +69,6 @@ export class AccountRestrictions {
             );
         });
 
-        return new AccountRestrictionsBuilder(address, restrictions).serialize();
+        return new AccountRestrictionsBuilder(this.version, address, restrictions).serialize();
     }
 }

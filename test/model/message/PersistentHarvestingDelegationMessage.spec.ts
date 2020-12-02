@@ -88,7 +88,6 @@ describe('PersistentHarvestingDelegationMessage', () => {
         expect(encryptedMessage.payload.indexOf(MessageMarker.PersistentDelegationUnlock)).eq(0);
         expect(encryptedMessage.payload.length).eq(264);
 
-        console.log(encryptedMessage.payload);
         const parsed = MessageFactory.createMessageFromHex(encryptedMessage.toDTO());
         expect(parsed.type).eq(MessageType.PersistentHarvestingDelegationMessage);
         expect(parsed.payload.length).eq(264);

@@ -28,6 +28,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MosaicRepository } from './MosaicRepository';
 import { Page } from './Page';
+import { MosaicPaginationStreamer } from './paginationStreamer';
 import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 
 /**
@@ -115,6 +116,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
         );
     }
 
+    public streamer(): MosaicPaginationStreamer {
+        return new MosaicPaginationStreamer(this);
+    }
+
     /**
      * Maps MosaicInfoDTO to MosaicInfo
      *
@@ -123,6 +128,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      */
     public static toMosaicInfo(mosaicInfo: MosaicInfoDTO): MosaicInfo {
         return new MosaicInfo(
+            mosaicInfo.mosaic.version,
             mosaicInfo.id,
             new MosaicId(mosaicInfo.mosaic.id),
             UInt64.fromNumericString(mosaicInfo.mosaic.supply),

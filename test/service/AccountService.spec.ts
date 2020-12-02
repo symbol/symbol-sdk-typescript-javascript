@@ -47,6 +47,7 @@ describe('AccountService', () => {
         }
         return [
             new AccountInfo(
+                1,
                 'someId',
                 account.address,
                 UInt64.fromUint(100),
@@ -65,6 +66,7 @@ describe('AccountService', () => {
     function mockNamespaceInfo(): NamespaceInfo[] {
         return [
             new NamespaceInfo(
+                1,
                 true,
                 0,
                 'id',
@@ -78,6 +80,7 @@ describe('AccountService', () => {
                 new MosaicAlias(new MosaicId('30BBEA6CC462B244')),
             ),
             new NamespaceInfo(
+                1,
                 true,
                 0,
                 'id',
@@ -91,6 +94,7 @@ describe('AccountService', () => {
                 new MosaicAlias(new MosaicId('31BBEA6CC462B244')),
             ),
             new NamespaceInfo(
+                1,
                 true,
                 0,
                 'id',

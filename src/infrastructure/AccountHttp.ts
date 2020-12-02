@@ -24,6 +24,7 @@ import { Mosaic, MosaicId } from '../model/mosaic';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
 import { Page } from './Page';
+import { AccountPaginationStreamer } from './paginationStreamer';
 import { AccountSearchCriteria } from './searchCriteria';
 
 /**
@@ -88,6 +89,10 @@ export class AccountHttp extends Http implements AccountRepository {
         );
     }
 
+    public streamer(): AccountPaginationStreamer {
+        return new AccountPaginationStreamer(this);
+    }
+
     /**
      * Returns the merkle information of the given account.
      *
@@ -106,6 +111,7 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public static toAccountInfo(dto: AccountInfoDTO): AccountInfo {
         return new AccountInfo(
+            dto.account.version,
             dto.id,
             Address.createFromEncoded(dto.account.address),
             UInt64.fromNumericString(dto.account.addressHeight),

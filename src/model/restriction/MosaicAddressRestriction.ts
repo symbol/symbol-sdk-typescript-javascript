@@ -20,6 +20,8 @@ import {
     AddressKeyValueSetBuilder,
     MosaicAddressRestrictionEntryBuilder,
     MosaicIdDto,
+    MosaicRestrictionEntryBuilder,
+    MosaicRestrictionEntryTypeDto,
     MosaicRestrictionKeyDto,
 } from 'catbuffer-typescript';
 import { Address } from '../account';
@@ -31,6 +33,7 @@ import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
 export class MosaicAddressRestriction {
     /**
      * Constructor
+     * @param version
      * @param compositeHash
      * @param entryType
      * @param mosaicId
@@ -38,6 +41,10 @@ export class MosaicAddressRestriction {
      * @param restrictions
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * composite hash
          */
@@ -83,6 +90,12 @@ export class MosaicAddressRestriction {
                 return new AddressKeyValueBuilder(key, value);
             }),
         );
-        return new MosaicAddressRestrictionEntryBuilder(mosaicId, address, keyPairs).serialize();
+        const addressRestrictionBuilder = new MosaicAddressRestrictionEntryBuilder(mosaicId, address, keyPairs);
+        return new MosaicRestrictionEntryBuilder(
+            this.version,
+            MosaicRestrictionEntryTypeDto.ADDRESS,
+            addressRestrictionBuilder,
+            undefined,
+        ).serialize();
     }
 }

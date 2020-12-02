@@ -45,7 +45,7 @@ describe('NamespaceHttp', () => {
         return helper.close();
     });
 
-    const validateMerkle = async (namespaceId: NamespaceId) => {
+    const validateMerkle = async (namespaceId: NamespaceId): Promise<void> => {
         const merkleInfo = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
         expect(merkleInfo.raw).to.not.be.undefined;
     };

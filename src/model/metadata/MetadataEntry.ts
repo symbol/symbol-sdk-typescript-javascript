@@ -29,6 +29,7 @@ import { MetadataType } from './MetadataType';
 export class MetadataEntry {
     /**
      * Constructor
+     * @param {number} version - The version
      * @param {string} compositeHash - The composite hash
      * @param {string} sourceAddress - The metadata source address (provider)
      * @param {string} targetAddress - The metadata target address
@@ -38,6 +39,10 @@ export class MetadataEntry {
      * @param {UnresolvedMosaicId | undefined} targetId - The target mosaic or namespace identifier
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The composite hash
          */
@@ -85,6 +90,14 @@ export class MetadataEntry {
         /** Value. */
         const value = new MetadataValueBuilder(Convert.utf8ToUint8(this.value));
 
-        return new MetadataEntryBuilder(sourceAddress, targetAddress, scopedMetadataKey, targetId, metadataType, value).serialize();
+        return new MetadataEntryBuilder(
+            this.version,
+            sourceAddress,
+            targetAddress,
+            scopedMetadataKey,
+            targetId,
+            metadataType,
+            value,
+        ).serialize();
     }
 }

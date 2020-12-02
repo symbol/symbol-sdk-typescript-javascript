@@ -27,12 +27,15 @@ import { Address } from '../account/Address';
 import { UInt64 } from '../UInt64';
 import { Alias } from './Alias';
 import { NamespaceId } from './NamespaceId';
+import { NamespaceRegistrationType } from './NamespaceRegistrationType';
+import Long = require('long');
 
 /**
  * Object containing information of a namespace.
  */
 export class NamespaceInfo {
     /**
+     * @param version
      * @param active
      * @param index
      * @param recordId
@@ -43,8 +46,13 @@ export class NamespaceInfo {
      * @param ownerAddress
      * @param startHeight
      * @param endHeight
+     * @param alias
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * Namespace is active.
          */
@@ -60,7 +68,7 @@ export class NamespaceInfo {
         /**
          * The namespace registration type, namespace and sub namespace.
          */
-        private readonly registrationType: number,
+        public readonly registrationType: number,
         /**
          * The level of namespace.
          */
@@ -72,7 +80,7 @@ export class NamespaceInfo {
         /**
          * The namespace parent id.
          */
-        private readonly parentId: NamespaceId,
+        public readonly parentId: NamespaceId,
         /**
          * The namespace owner's address.
          */
@@ -138,25 +146,66 @@ export class NamespaceInfo {
      * Generate buffer
      * @return {Uint8Array}
      */
-    public serialize(children: NamespaceInfo[]): Uint8Array {
-        const id: NamespaceIdDto = this.id.toBuilder();
-        const ownerAddress: AddressDto = this.ownerAddress.toBuilder();
+    public serialize(fullPath: NamespaceInfo[]): Uint8Array {
+        const root = fullPath.find((n) => n.registrationType === NamespaceRegistrationType.RootNamespace);
+        if (!root) {
+            throw new Error('Cannot find root namespace info.');
+        }
+        const id: NamespaceIdDto = root.id.toBuilder();
+        const ownerAddress: AddressDto = root.ownerAddress.toBuilder();
         const lifetime: NamespaceLifetimeBuilder = new NamespaceLifetimeBuilder(
-            new HeightDto(this.startHeight.toDTO()),
-            new HeightDto(this.endHeight.toDTO()),
+            new HeightDto(root.startHeight.toDTO()),
+            new HeightDto(root.endHeight.toDTO()),
         );
-        const rootAlias = this.alias.type;
-        const paths: NamespacePathBuilder[] = children.map((dto) => this.toNamespaceAliasTypeDto(dto));
-        return new RootNamespaceHistoryBuilder(id, ownerAddress, lifetime, rootAlias, paths).serialize();
+        const rootAlias = this.getAliasBuilder(root);
+        const paths: NamespacePathBuilder[] = this.getNamespacePath(fullPath, root.id);
+        return new RootNamespaceHistoryBuilder(this.version, id, ownerAddress, lifetime, rootAlias, paths).serialize();
     }
 
-    private toNamespaceAliasTypeDto(namespaceInfo: NamespaceInfo): NamespacePathBuilder {
-        const path: NamespaceIdDto[] = namespaceInfo.levels.map((id) => id.toBuilder());
-        const alias: NamespaceAliasBuilder = new NamespaceAliasBuilder(
+    /**
+     * Generate the namespace full path builder
+     * @param namespaces Full path of namespaces
+     * @param rootId Root namespace id
+     * @returns {NamespacePathBuilder[]}
+     */
+    private getNamespacePath(namespaces: NamespaceInfo[], rootId: NamespaceId): NamespacePathBuilder[] {
+        const path: NamespacePathBuilder[] = [];
+        const level1 = this.sortNamespaceInfo(namespaces.filter((n) => n.depth === 2 && n.parentId.equals(rootId)));
+        level1.forEach((n) => {
+            const level2 = this.sortNamespaceInfo(namespaces.filter((l) => l.depth === 3 && l.parentId.equals(n.id)));
+            path.push(new NamespacePathBuilder([n.id.toBuilder()], this.getAliasBuilder(n)));
+            if (level2.length) {
+                level2.forEach((l) => {
+                    path.push(new NamespacePathBuilder([n.id.toBuilder(), l.id.toBuilder()], this.getAliasBuilder(l)));
+                });
+            }
+        });
+        return path;
+    }
+
+    /**
+     * Generate namespace alias builder
+     * @param namespaceInfo namespace info
+     * @requires {NamespaceAliasBuilder}
+     */
+    private getAliasBuilder(namespaceInfo: NamespaceInfo): NamespaceAliasBuilder {
+        return new NamespaceAliasBuilder(
             namespaceInfo.alias.type.valueOf(),
             namespaceInfo.alias.mosaicId?.toBuilder(),
             namespaceInfo.alias.address?.toBuilder(),
         );
-        return new NamespacePathBuilder(path, alias);
+    }
+
+    /**
+     * Sort namespace info by namespace id
+     * @param info array of namespace info
+     * @returns {NamespaceInfo[]}
+     */
+    private sortNamespaceInfo(info: NamespaceInfo[]): NamespaceInfo[] {
+        return info.sort((a, b) => {
+            const long_a = Long.fromBits(a.id.id.lower, a.id.id.higher, true);
+            const long_b = Long.fromBits(b.id.id.lower, b.id.id.higher, true);
+            return long_a.compare(long_b);
+        });
     }
 }

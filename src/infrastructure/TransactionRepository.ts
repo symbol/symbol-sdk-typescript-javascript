@@ -16,7 +16,7 @@
 
 import { Observable } from 'rxjs';
 import { CosignatureSignedTransaction, SignedTransaction, Transaction, TransactionAnnounceResponse } from '../model/transaction';
-import { Searcher } from './paginationStreamer';
+import { SearcherRepository } from './paginationStreamer';
 import { TransactionSearchCriteria } from './searchCriteria';
 import { TransactionGroup } from './TransactionGroup';
 
@@ -25,7 +25,7 @@ import { TransactionGroup } from './TransactionGroup';
  *
  * @since 1.0
  */
-export interface TransactionRepository extends Searcher<Transaction, TransactionSearchCriteria> {
+export interface TransactionRepository extends SearcherRepository<Transaction, TransactionSearchCriteria> {
     /**
      * Gets a transaction for a transactionId
      * @param transactionId - Transaction id or hash.

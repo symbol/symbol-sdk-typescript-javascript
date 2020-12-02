@@ -36,6 +36,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
 import { Page } from './Page';
+import { NamespacePaginationStreamer } from './paginationStreamer';
 import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 
 /**
@@ -172,6 +173,10 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         );
     }
 
+    public streamer(): NamespacePaginationStreamer {
+        return new NamespacePaginationStreamer(this);
+    }
+
     /**
      * Gets the MosaicId from a MosaicAlias
      * @param namespaceId - the namespaceId of the namespace
@@ -235,6 +240,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     private toNamespaceInfo(dto: NamespaceInfoDTO): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version,
             dto.meta.active,
             dto.meta.index,
             dto.id,

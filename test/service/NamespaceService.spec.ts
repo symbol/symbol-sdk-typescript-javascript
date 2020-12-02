@@ -30,6 +30,7 @@ import { NamespaceService } from '../../src/service/NamespaceService';
 describe('NamespaceService', () => {
     function givenRootNamespace(): NamespaceInfo {
         return new NamespaceInfo(
+            1,
             true,
             0,
             '59DFBA84B2E9E7000135E80C',
@@ -46,6 +47,7 @@ describe('NamespaceService', () => {
 
     function givenSubnamespace(): NamespaceInfo {
         return new NamespaceInfo(
+            1,
             true,
             0,
             '5A1D85A1D53061000117D1EE',

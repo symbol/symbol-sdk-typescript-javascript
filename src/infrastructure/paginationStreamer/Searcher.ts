@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { Page } from '../Page';
 import { SearchCriteria } from '../searchCriteria/SearchCriteria';
 

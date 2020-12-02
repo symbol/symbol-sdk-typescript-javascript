@@ -22,6 +22,7 @@ import { MerkleStateInfo } from '../model/blockchain';
 import { AccountRestrictions } from '../model/restriction';
 import { Http } from './Http';
 import { Page } from './Page';
+import { RestrictionAccountPaginationStreamer } from './paginationStreamer';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
 import { RestrictionAccountSearchCriteria } from './searchCriteria/RestrictionAccountSearchCriteria';
 
@@ -71,7 +72,7 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
      * Returns a mosaic restrictions page based on the criteria.
      *
      * @param criteria the criteria
-     * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
+     * @return a page of {@link MosaicRestriction}
      */
     public search(criteria: RestrictionAccountSearchCriteria): Observable<Page<AccountRestrictions>> {
         return this.call(
@@ -84,5 +85,9 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
             ),
             (body) => super.toPage(body.pagination, body.data, DtoMapping.extractAccountRestrictionFromDto),
         );
+    }
+
+    public streamer(): RestrictionAccountPaginationStreamer {
+        return new RestrictionAccountPaginationStreamer(this);
     }
 }

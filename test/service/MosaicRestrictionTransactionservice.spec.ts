@@ -55,7 +55,7 @@ describe('MosaicRestrictionTransactionService', () => {
     const epochAdjustment = 1573430400;
 
     function mockGlobalRestriction(): Page<MosaicGlobalRestriction> {
-        const restriction = new MosaicGlobalRestriction('59DFBA84B2E9E7000135E80C', MosaicRestrictionEntryType.GLOBAL, mosaicId, [
+        const restriction = new MosaicGlobalRestriction(1, '59DFBA84B2E9E7000135E80C', MosaicRestrictionEntryType.GLOBAL, mosaicId, [
             new MosaicGlobalRestrictionItem(key, referenceMosaicId, globalRestrictionValue, globalRestrictionType),
         ]);
 
@@ -64,6 +64,7 @@ describe('MosaicRestrictionTransactionService', () => {
 
     function mockAddressRestriction(): Page<MosaicAddressRestriction> {
         const restriction = new MosaicAddressRestriction(
+            1,
             '59DFBA84B2E9E7000135E80C',
             MosaicRestrictionEntryType.GLOBAL,
             mosaicId,

@@ -91,6 +91,7 @@ export class MultisigHttp extends Http implements MultisigRepository {
      */
     private toMultisigAccountInfo(dto: MultisigAccountInfoDTO): MultisigAccountInfo {
         return new MultisigAccountInfo(
+            dto.multisig.version,
             Address.createFromEncoded(dto.multisig.accountAddress),
             dto.multisig.minApproval,
             dto.multisig.minRemoval,

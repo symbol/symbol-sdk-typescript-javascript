@@ -32,8 +32,10 @@ import {
     MosaicGlobalRestriction,
     MosaicGlobalRestrictionItem,
 } from '../model/restriction';
+import { MosaicRestriction } from '../model/restriction/MosaicRestriction';
 import { Http } from './Http';
 import { Page } from './Page';
+import { RestrictionMosaicPaginationStreamer } from './paginationStreamer';
 import { RestrictionMosaicRepository } from './RestrictionMosaicRepository';
 import { RestrictionMosaicSearchCriteria } from './searchCriteria';
 
@@ -62,9 +64,9 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
      * Returns a mosaic restrictions page based on the criteria.
      *
      * @param criteria the criteria
-     * @return a page of {@link MosaicAddressRestriction | MosaicGlobalRestriction}
+     * @return a page of {@link MosaicRestriction}
      */
-    public search(criteria: RestrictionMosaicSearchCriteria): Observable<Page<MosaicAddressRestriction | MosaicGlobalRestriction>> {
+    public search(criteria: RestrictionMosaicSearchCriteria): Observable<Page<MosaicRestriction>> {
         return this.call(
             this.restrictionMosaicRoutesApi.searchMosaicRestrictions(
                 criteria.mosaicId?.toHex(),
@@ -79,33 +81,37 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         );
     }
 
+    public streamer(): RestrictionMosaicPaginationStreamer {
+        return new RestrictionMosaicPaginationStreamer(this);
+    }
+
     /**
      * This method maps a mosaic restriction dto from rest to the SDK's model object.
      *
      * @internal
      * @param {MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO} dto the restriction object from rest.
-     * @returns {MosaicAddressRestriction | MosaicGlobalRestriction} a restriction model
+     * @returns {MosaicRestriction} a restriction model
      */
-    public static toMosaicRestriction(
-        dto: MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO,
-    ): MosaicAddressRestriction | MosaicGlobalRestriction {
+    public static toMosaicRestriction(dto: MosaicAddressRestrictionDTO | MosaicGlobalRestrictionDTO): MosaicRestriction {
         if ((dto.mosaicRestrictionEntry as any).targetAddress) {
             const addressRestrictionDto = dto as MosaicAddressRestrictionDTO;
             return new MosaicAddressRestriction(
+                dto.mosaicRestrictionEntry.version,
                 dto.mosaicRestrictionEntry.compositeHash,
                 dto.mosaicRestrictionEntry.entryType.valueOf(),
                 new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
                 Address.createFromEncoded(addressRestrictionDto.mosaicRestrictionEntry.targetAddress),
-                addressRestrictionDto.mosaicRestrictionEntry.restrictions.map(this.toMosaicAddressRestrictionItem),
+                addressRestrictionDto.mosaicRestrictionEntry.restrictions.map(RestrictionMosaicHttp.toMosaicAddressRestrictionItem),
             );
         }
 
         const globalRestrictionDto = dto as MosaicGlobalRestrictionDTO;
         return new MosaicGlobalRestriction(
+            dto.mosaicRestrictionEntry.version,
             dto.mosaicRestrictionEntry.compositeHash,
             dto.mosaicRestrictionEntry.entryType.valueOf(),
             new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
-            globalRestrictionDto.mosaicRestrictionEntry.restrictions.map((i) => this.toMosaicGlobalRestrictionItem(i)),
+            globalRestrictionDto.mosaicRestrictionEntry.restrictions.map((i) => RestrictionMosaicHttp.toMosaicGlobalRestrictionItem(i)),
         );
     }
 
@@ -122,7 +128,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
         return new MosaicAddressRestrictionItem(UInt64.fromNumericString(restriction.key), UInt64.fromNumericString(restriction.value));
     }
 
-    public getMosaicRestrictions(compositeHash: string): Observable<MosaicAddressRestriction | MosaicGlobalRestriction> {
+    public getMosaicRestrictions(compositeHash: string): Observable<MosaicRestriction> {
         return this.call(this.restrictionMosaicRoutesApi.getMosaicRestrictions(compositeHash), RestrictionMosaicHttp.toMosaicRestriction);
     }
 

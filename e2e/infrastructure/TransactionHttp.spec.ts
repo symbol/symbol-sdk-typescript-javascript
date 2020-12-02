@@ -1577,7 +1577,7 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('searchTransactions using steamer', () => {
+    describe('searchTransactions using streamer', () => {
         it('should return transaction info given address', async () => {
             const streamer = new TransactionPaginationStreamer(transactionRepository);
             const transactionsNoStreamer = await transactionRepository

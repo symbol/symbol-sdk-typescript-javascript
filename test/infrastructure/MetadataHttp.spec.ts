@@ -15,6 +15,8 @@
  */
 import { expect } from 'chai';
 import {
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
     MetadataEntryDTO,
     MetadataInfoDTO,
     MetadataPage,
@@ -27,6 +29,7 @@ import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
+import { MetadataPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MetadataPaginationStreamer';
 import { Address } from '../../src/model/account/Address';
 import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataType } from '../../src/model/metadata/MetadataType';
@@ -539,5 +542,28 @@ describe('MetadataHttp', () => {
             )
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new MetadataHttp('url');
+        expect(accountHttp.streamer() instanceof MetadataPaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(metadataRoutesApi.getMetadataMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await metadataRepository.getMetadataMerkle('hash').toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

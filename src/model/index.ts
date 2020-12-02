@@ -13,6 +13,7 @@ export * from './network';
 export * from './node';
 export * from './receipt';
 export * from './restriction';
+export * from './state';
 export * from './transaction';
 export * from './UInt64';
 export * from './wallet';

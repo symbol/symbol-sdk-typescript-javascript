@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
@@ -28,6 +29,7 @@ describe('NamespaceInfo', () => {
     let subNamespaceDTO;
     function createRootFromDTO(dto): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version,
             dto.meta.active,
             dto.meta.index,
             dto.meta.id,
@@ -44,6 +46,7 @@ describe('NamespaceInfo', () => {
 
     function createSubnamespaceFromDTO(dto): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version,
             dto.meta.active,
             dto.meta.index,
             dto.meta.id,
@@ -66,9 +69,10 @@ describe('NamespaceInfo', () => {
                 index: 0,
             },
             namespace: {
+                version: 1,
                 depth: 1,
                 endHeight: new UInt64([4294967295, 4294967295]),
-                level0: new NamespaceId([929036875, 2226345261]),
+                level0: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
                 ownerAddress: Address.createFromPublicKey(
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     NetworkType.PRIVATE_TEST,
@@ -86,17 +90,18 @@ describe('NamespaceInfo', () => {
                 id: '59DFBA84B2E9E7000135E80E',
             },
             namespace: {
+                version: 1,
                 type: 1,
                 depth: 2,
-                level0: new NamespaceId([3316183705, 3829351378]),
-                level1: new NamespaceId([1781696705, 4157485863]),
-                parentId: new NamespaceId([3316183705, 3829351378]),
+                level0: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
+                level1: NamespaceId.createFromEncoded('9DF9EADD9305A718'),
+                parentId: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
                 ownerAddress: Address.createFromPublicKey(
                     '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
                     NetworkType.PRIVATE_TEST,
                 ).encoded(),
                 startHeight: [795, 0],
-                endHeight: [50795, 0],
+                endHeight: new UInt64([4294967295, 4294967295]),
                 alias: { type: 0 },
             },
         };
@@ -120,12 +125,12 @@ describe('NamespaceInfo', () => {
     it('should return the NamespaceId in string format', () => {
         const namespaceInfo = createRootFromDTO(rootNamespaceDTO);
 
-        expect(namespaceInfo.id.toHex()).to.be.equal('84B3552D375FFA4B');
+        expect(namespaceInfo.id.toHex()).to.be.equal('BD4DD689FD08BCB2');
     });
 
     it('should return the NamespaceId in string format for sub-namespace', () => {
         const namespaceInfo = createSubnamespaceFromDTO(subNamespaceDTO);
-        expect(namespaceInfo.id.toHex()).to.be.equal('F7CE33276A3288C1');
+        expect(namespaceInfo.id.toHex()).to.be.equal('9DF9EADD9305A718');
     });
 
     it('isRoot() should return true when the Namespace has type 0', () => {
@@ -178,5 +183,15 @@ describe('NamespaceInfo', () => {
     it('hasAlias() should return false when the Namespace alias has type 0', () => {
         const namespaceInfo = createSubnamespaceFromDTO(subNamespaceDTO);
         expect(namespaceInfo.hasAlias()).to.be.equal(false);
+    });
+
+    it('serialize', () => {
+        const root = createRootFromDTO(rootNamespaceDTO);
+        const sub = createSubnamespaceFromDTO(subNamespaceDTO);
+        expect(Convert.uint8ToHex(root.serialize([root, sub]))).to.be.equal(
+            '0100B2BC08FD89D64DBD8022D04812D05000F96C283657B0C17990932BC849B1E811010' +
+                '0000000000000FFFFFFFFFFFFFFFF01E329AD1CBE7FC60D01000000000000000118' +
+                'A70593DDEAF99D00',
+        );
     });
 });

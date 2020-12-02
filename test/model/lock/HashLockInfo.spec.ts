@@ -29,6 +29,7 @@ describe('HashLockInfo', () => {
         const dto = {} as HashLockInfoDTO;
         dto.id = '1';
         const lockDto = {} as HashLockEntryDTO;
+        lockDto.version = 1;
         lockDto.amount = '10';
         lockDto.endHeight = '122';
         lockDto.hash = 'BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E';
@@ -37,6 +38,7 @@ describe('HashLockInfo', () => {
         lockDto.status = 1;
         dto.lock = lockDto;
         const info = new HashLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromRawAddress(lockDto.ownerAddress),
             new MosaicId(lockDto.mosaicId),
@@ -56,7 +58,7 @@ describe('HashLockInfo', () => {
 
         const serialized = info.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '8026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A44B262C46CEABB850A000000000000007A0000000000000001BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E',
+            '01008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A44B262C46CEABB850A000000000000007A0000000000000001BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E',
         );
         deepEqual(HashLockInfoBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
