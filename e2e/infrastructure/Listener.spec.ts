@@ -19,9 +19,10 @@ import { filter, mergeMap } from 'rxjs/operators';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account, Address } from '../../src/model/account';
+import { Account, UnresolvedAddress } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Currency } from '../../src/model/mosaic';
+import { NamespaceId } from '../../src/model/namespace';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
@@ -44,6 +45,7 @@ describe('Listener', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionRepository: TransactionRepository;
+    const unresolvedAddress = new NamespaceId('address');
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -67,7 +69,11 @@ describe('Listener', () => {
         setTimeout(done, 200);
     });
 
-    const createSignedAggregatedBondTransaction = (aggregatedTo: Account, signer: Account, recipient: Address): SignedTransaction => {
+    const createSignedAggregatedBondTransaction = (
+        aggregatedTo: Account,
+        signer: Account,
+        recipient: UnresolvedAddress,
+    ): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(helper.epochAdjustment),
             recipient,
@@ -167,6 +173,46 @@ describe('Listener', () => {
             const signedTransaction = account.sign(transferTransaction, generationHash);
             helper.listener
                 .unconfirmedRemoved(account.address)
+                .pipe(filter((hash) => hash === signedTransaction.hash))
+                .subscribe(() => {
+                    done();
+                });
+            transactionRepository.announce(signedTransaction);
+        });
+    });
+
+    describe('UnConfirmed', () => {
+        it('unconfirmedTransactionsAdded with unresolved address', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(helper.epochAdjustment),
+                unresolvedAddress,
+                [],
+                PlainMessage.create('test-message'),
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = account.sign(transferTransaction, generationHash);
+            helper.listener
+                .unconfirmedAdded(unresolvedAddress)
+                .pipe(filter((_) => _.transactionInfo!.hash === signedTransaction.hash))
+                .subscribe(() => {
+                    done();
+                });
+            transactionRepository.announce(signedTransaction);
+        });
+
+        it('unconfirmedTransactionsRemoved with unresolved address', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(helper.epochAdjustment),
+                unresolvedAddress,
+                [],
+                PlainMessage.create('test-message'),
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = account.sign(transferTransaction, generationHash);
+            helper.listener
+                .unconfirmedRemoved(unresolvedAddress)
                 .pipe(filter((hash) => hash === signedTransaction.hash))
                 .subscribe(() => {
                     done();
@@ -305,6 +351,24 @@ describe('Listener', () => {
                 transactionRepository.announceAggregateBonded(signedAggregatedTx);
             });
             helper.listener.status(cosignAccount1.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+        });
+    });
+
+    describe('Aggregate Bonded Transactions', () => {
+        it('aggregateBondedTransactionsAdded', (done) => {
+            const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrency);
+            helper.listener.aggregateBondedAdded(unresolvedAddress).subscribe(() => {
+                done();
+            });
+            helper.listener.confirmed(unresolvedAddress).subscribe(() => {
+                transactionRepository.announceAggregateBonded(signedAggregatedTx);
+            });
+            helper.listener.status(unresolvedAddress).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
