@@ -104,10 +104,11 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#index" class="tsd-kind-icon">index</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#levels" class="tsd-kind-icon">levels</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#owneraddress" class="tsd-kind-icon">owner<wbr>Address</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#parentid" class="tsd-kind-icon">parent<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#parentid" class="tsd-kind-icon">parent<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#recordid" class="tsd-kind-icon">record<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#registrationtype" class="tsd-kind-icon">registration<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#registrationtype" class="tsd-kind-icon">registration<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#startheight" class="tsd-kind-icon">start<wbr>Height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -119,12 +120,14 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#getaliasbuilder" class="tsd-kind-icon">get<wbr>Alias<wbr>Builder</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#getnamespacepath" class="tsd-kind-icon">get<wbr>Namespace<wbr>Path</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#hasalias" class="tsd-kind-icon">has<wbr>Alias</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#isroot" class="tsd-kind-icon">is<wbr>Root</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#issubnamespace" class="tsd-kind-icon">is<wbr>Subnamespace</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#parentnamespaceid" class="tsd-kind-icon">parent<wbr>Namespace<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#serialize" class="tsd-kind-icon">serialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#tonamespacealiastypedto" class="tsd-kind-icon">to<wbr>Namespace<wbr>Alias<wbr>Type<wbr>Dto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#sortnamespaceinfo" class="tsd-kind-icon">sort<wbr>Namespace<wbr>Info</a></li>
 							</ul>
 						</section>
 					</div>
@@ -136,19 +139,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Namespace<wbr>Info<span class="tsd-signature-symbol">(</span>active<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, registrationType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, depth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, levels<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">[]</span>, parentId<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a>, ownerAddress<span class="tsd-signature-symbol">: </span><a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a>, startHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, endHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, alias<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_alias_.alias.html" class="tsd-signature-type">Alias</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Namespace<wbr>Info<span class="tsd-signature-symbol">(</span>version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, active<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, registrationType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, depth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, levels<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">[]</span>, parentId<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a>, ownerAddress<span class="tsd-signature-symbol">: </span><a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a>, startHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, endHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, alias<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_alias_.alias.html" class="tsd-signature-type">Alias</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L34">src/model/namespace/NamespaceInfo.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L36">src/model/namespace/NamespaceInfo.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>version: <span class="tsd-signature-type">number</span></h5>
+								</li>
 								<li>
 									<h5>active: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
@@ -178,13 +184,13 @@
 								</li>
 								<li>
 									<h5>endHeight: <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></h5>
+								</li>
+								<li>
+									<h5>alias: <a href="_src_model_namespace_alias_.alias.html" class="tsd-signature-type">Alias</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 										</div>
 									</div>
-								</li>
-								<li>
-									<h5>alias: <a href="_src_model_namespace_alias_.alias.html" class="tsd-signature-type">Alias</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a></h4>
@@ -200,7 +206,7 @@
 					<div class="tsd-signature tsd-kind-icon">active<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L51">src/model/namespace/NamespaceInfo.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L59">src/model/namespace/NamespaceInfo.ts:59</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -215,12 +221,11 @@
 					<div class="tsd-signature tsd-kind-icon">alias<span class="tsd-signature-symbol">:</span> <a href="_src_model_namespace_alias_.alias.html" class="tsd-signature-type">Alias</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L91">src/model/namespace/NamespaceInfo.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L99">src/model/namespace/NamespaceInfo.ts:99</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The alias linked to a namespace.</p>
 						</div>
 					</div>
 				</section>
@@ -230,7 +235,7 @@
 					<div class="tsd-signature tsd-kind-icon">depth<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L67">src/model/namespace/NamespaceInfo.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L75">src/model/namespace/NamespaceInfo.ts:75</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -245,11 +250,12 @@
 					<div class="tsd-signature tsd-kind-icon">end<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L87">src/model/namespace/NamespaceInfo.ts:87</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L95">src/model/namespace/NamespaceInfo.ts:95</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
+							<p>The height at which the ownership ends.</p>
 						</div>
 					</div>
 				</section>
@@ -259,7 +265,7 @@
 					<div class="tsd-signature tsd-kind-icon">index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L55">src/model/namespace/NamespaceInfo.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L63">src/model/namespace/NamespaceInfo.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -274,7 +280,7 @@
 					<div class="tsd-signature tsd-kind-icon">levels<span class="tsd-signature-symbol">:</span> <a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L71">src/model/namespace/NamespaceInfo.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L79">src/model/namespace/NamespaceInfo.ts:79</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -289,7 +295,7 @@
 					<div class="tsd-signature tsd-kind-icon">owner<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L79">src/model/namespace/NamespaceInfo.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L87">src/model/namespace/NamespaceInfo.ts:87</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -298,13 +304,13 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="parentid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> parent<wbr>Id</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> parent<wbr>Id</h3>
 					<div class="tsd-signature tsd-kind-icon">parent<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L75">src/model/namespace/NamespaceInfo.ts:75</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L83">src/model/namespace/NamespaceInfo.ts:83</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -319,7 +325,7 @@
 					<div class="tsd-signature tsd-kind-icon">record<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L59">src/model/namespace/NamespaceInfo.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L67">src/model/namespace/NamespaceInfo.ts:67</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -328,13 +334,13 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="registrationtype" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> registration<wbr>Type</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> registration<wbr>Type</h3>
 					<div class="tsd-signature tsd-kind-icon">registration<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L63">src/model/namespace/NamespaceInfo.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L71">src/model/namespace/NamespaceInfo.ts:71</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -349,12 +355,27 @@
 					<div class="tsd-signature tsd-kind-icon">start<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L83">src/model/namespace/NamespaceInfo.ts:83</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L91">src/model/namespace/NamespaceInfo.ts:91</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The height at which the ownership begins.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="version" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> version</h3>
+					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L55">src/model/namespace/NamespaceInfo.ts:55</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Version</p>
 						</div>
 					</div>
 				</section>
@@ -371,7 +392,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L98">src/model/namespace/NamespaceInfo.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L106">src/model/namespace/NamespaceInfo.ts:106</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -386,6 +407,79 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getaliasbuilder" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Alias<wbr>Builder</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Alias<wbr>Builder<span class="tsd-signature-symbol">(</span>namespaceInfo<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NamespaceAliasBuilder</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L191">src/model/namespace/NamespaceInfo.ts:191</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate namespace alias builder</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>requires</dt>
+									<dd><p>{NamespaceAliasBuilder}</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>namespaceInfo: <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>namespace info</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">NamespaceAliasBuilder</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getnamespacepath" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Namespace<wbr>Path</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Namespace<wbr>Path<span class="tsd-signature-symbol">(</span>namespaces<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span>, rootId<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NamespacePathBuilder</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L171">src/model/namespace/NamespaceInfo.ts:171</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate the namespace full path builder</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>namespaces: <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Full path of namespaces</p>
+									</div>
+								</li>
+								<li>
+									<h5>rootId: <a href="_src_model_namespace_namespaceid_.namespaceid.html" class="tsd-signature-type">NamespaceId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Root namespace id</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">NamespacePathBuilder</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="hasalias" class="tsd-anchor"></a>
 					<h3>has<wbr>Alias</h3>
@@ -396,7 +490,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L122">src/model/namespace/NamespaceInfo.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L130">src/model/namespace/NamespaceInfo.ts:130</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -418,7 +512,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L106">src/model/namespace/NamespaceInfo.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L114">src/model/namespace/NamespaceInfo.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -440,7 +534,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L114">src/model/namespace/NamespaceInfo.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L122">src/model/namespace/NamespaceInfo.ts:122</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -462,7 +556,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L130">src/model/namespace/NamespaceInfo.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L138">src/model/namespace/NamespaceInfo.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -478,13 +572,13 @@
 					<a name="serialize" class="tsd-anchor"></a>
 					<h3>serialize</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">serialize<span class="tsd-signature-symbol">(</span>children<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+						<li class="tsd-signature tsd-kind-icon">serialize<span class="tsd-signature-symbol">(</span>fullPath<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L141">src/model/namespace/NamespaceInfo.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L149">src/model/namespace/NamespaceInfo.ts:149</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -495,7 +589,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>children: <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>fullPath: <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
@@ -503,25 +597,33 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<a name="tonamespacealiastypedto" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> to<wbr>Namespace<wbr>Alias<wbr>Type<wbr>Dto</h3>
+					<a name="sortnamespaceinfo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> sort<wbr>Namespace<wbr>Info</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>Namespace<wbr>Alias<wbr>Type<wbr>Dto<span class="tsd-signature-symbol">(</span>namespaceInfo<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NamespacePathBuilder</span></li>
+						<li class="tsd-signature tsd-kind-icon">sort<wbr>Namespace<wbr>Info<span class="tsd-signature-symbol">(</span>info<span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/namespace/NamespaceInfo.ts#L153">src/model/namespace/NamespaceInfo.ts:153</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/namespace/NamespaceInfo.ts#L204">src/model/namespace/NamespaceInfo.ts:204</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sort namespace info by namespace id</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>namespaceInfo: <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a></h5>
+									<h5>info: <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>array of namespace info</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">NamespacePathBuilder</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html" class="tsd-signature-type">NamespaceInfo</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -569,20 +671,29 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#owneraddress" class="tsd-kind-icon">owner<wbr>Address</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#parentid" class="tsd-kind-icon">parent<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#recordid" class="tsd-kind-icon">record<wbr>Id</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#registrationtype" class="tsd-kind-icon">registration<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#startheight" class="tsd-kind-icon">start<wbr>Height</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#version" class="tsd-kind-icon">version</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#getaliasbuilder" class="tsd-kind-icon">get<wbr>Alias<wbr>Builder</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#getnamespacepath" class="tsd-kind-icon">get<wbr>Namespace<wbr>Path</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#hasalias" class="tsd-kind-icon">has<wbr>Alias</a>
@@ -600,12 +711,15 @@
 								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#serialize" class="tsd-kind-icon">serialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
-								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#tonamespacealiastypedto" class="tsd-kind-icon">to<wbr>Namespace<wbr>Alias<wbr>Type<wbr>Dto</a>
+								<a href="_src_model_namespace_namespaceinfo_.namespaceinfo.html#sortnamespaceinfo" class="tsd-kind-icon">sort<wbr>Namespace<wbr>Info</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_src_model_namespace_namespaceinfo_.html#long" class="tsd-kind-icon">Long</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -633,11 +747,10 @@
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
 			</ul>
 		</div>
 	</div>

@@ -98,6 +98,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html#raw" class="tsd-kind-icon">raw</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html#tree" class="tsd-kind-icon">tree</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,13 +110,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Merkle<wbr>State<wbr>Info<span class="tsd-signature-symbol">(</span>raw<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html" class="tsd-signature-type">MerkleStateInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Merkle<wbr>State<wbr>Info<span class="tsd-signature-symbol">(</span>raw<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tree<span class="tsd-signature-symbol">: </span><a href="_src_model_state_merkletree_.merkletree.html" class="tsd-signature-type">MerkleTree</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html" class="tsd-signature-type">MerkleStateInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/blockchain/MerkleStateInfo.ts#L20">src/model/blockchain/MerkleStateInfo.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/blockchain/MerkleStateInfo.ts#L22">src/model/blockchain/MerkleStateInfo.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -133,6 +134,14 @@
 										</div>
 									</div>
 								</li>
+								<li>
+									<h5>tree: <a href="_src_model_state_merkletree_.merkletree.html" class="tsd-signature-type">MerkleTree</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The merkle tree object parsed from raw</p>
+										</div>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html" class="tsd-signature-type">MerkleStateInfo</a></h4>
 						</li>
@@ -147,12 +156,27 @@
 					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/blockchain/MerkleStateInfo.ts#L26">src/model/blockchain/MerkleStateInfo.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/blockchain/MerkleStateInfo.ts#L29">src/model/blockchain/MerkleStateInfo.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The hex information of the complete merkle tree as returned by server api. More information can be found in chapter 4.3 of the catapult whitepaper.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="tree" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> tree</h3>
+					<div class="tsd-signature tsd-kind-icon">tree<span class="tsd-signature-symbol">:</span> <a href="_src_model_state_merkletree_.merkletree.html" class="tsd-signature-type">MerkleTree</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/blockchain/MerkleStateInfo.ts#L29">src/model/blockchain/MerkleStateInfo.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The merkle tree object parsed from raw</p>
 						</div>
 					</div>
 				</section>
@@ -181,6 +205,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html#raw" class="tsd-kind-icon">raw</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_model_blockchain_merklestateinfo_.merklestateinfo.html#tree" class="tsd-kind-icon">tree</a>
 							</li>
 						</ul>
 					</li>

@@ -100,6 +100,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#address" class="tsd-kind-icon">address</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#recordid" class="tsd-kind-icon">record<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#restrictions" class="tsd-kind-icon">restrictions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -117,13 +118,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Restrictions<span class="tsd-signature-symbol">(</span>recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, address<span class="tsd-signature-symbol">: </span><a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a>, restrictions<span class="tsd-signature-symbol">: </span><a href="_src_model_restriction_accountrestriction_.accountrestriction.html" class="tsd-signature-type">AccountRestriction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html" class="tsd-signature-type">AccountRestrictions</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Restrictions<span class="tsd-signature-symbol">(</span>version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, address<span class="tsd-signature-symbol">: </span><a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a>, restrictions<span class="tsd-signature-symbol">: </span><a href="_src_model_restriction_accountrestriction_.accountrestriction.html" class="tsd-signature-type">AccountRestriction</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html" class="tsd-signature-type">AccountRestrictions</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/restriction/AccountRestrictions.ts#L33">src/model/restriction/AccountRestrictions.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/restriction/AccountRestrictions.ts#L33">src/model/restriction/AccountRestrictions.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -133,6 +134,14 @@
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>version: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>version</p>
+										</div>
+									</div>
+								</li>
 								<li>
 									<h5>recordId: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
@@ -171,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">address<span class="tsd-signature-symbol">:</span> <a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/restriction/AccountRestrictions.ts#L40">src/model/restriction/AccountRestrictions.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/restriction/AccountRestrictions.ts#L44">src/model/restriction/AccountRestrictions.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -186,7 +195,7 @@
 					<div class="tsd-signature tsd-kind-icon">record<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/restriction/AccountRestrictions.ts#L40">src/model/restriction/AccountRestrictions.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/restriction/AccountRestrictions.ts#L43">src/model/restriction/AccountRestrictions.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -201,12 +210,27 @@
 					<div class="tsd-signature tsd-kind-icon">restrictions<span class="tsd-signature-symbol">:</span> <a href="_src_model_restriction_accountrestriction_.accountrestriction.html" class="tsd-signature-type">AccountRestriction</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/restriction/AccountRestrictions.ts#L40">src/model/restriction/AccountRestrictions.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/restriction/AccountRestrictions.ts#L45">src/model/restriction/AccountRestrictions.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>the restrictions</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="version" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> version</h3>
+					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/restriction/AccountRestrictions.ts#L42">src/model/restriction/AccountRestrictions.ts:42</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>version</p>
 						</div>
 					</div>
 				</section>
@@ -223,7 +247,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/restriction/AccountRestrictions.ts#L46">src/model/restriction/AccountRestrictions.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/restriction/AccountRestrictions.ts#L52">src/model/restriction/AccountRestrictions.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -266,6 +290,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#restrictions" class="tsd-kind-icon">restrictions</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#version" class="tsd-kind-icon">version</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_model_restriction_accountrestrictions_.accountrestrictions.html#serialize" class="tsd-kind-icon">serialize</a>

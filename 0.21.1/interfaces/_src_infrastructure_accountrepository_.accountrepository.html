@@ -85,7 +85,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_src_infrastructure_paginationstreamer_searcher_.searcher.html" class="tsd-signature-type">Searcher</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_accountsearchcriteria_.accountsearchcriteria.html" class="tsd-signature-type">AccountSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_src_infrastructure_paginationstreamer_paginationstreamer_.searcherrepository.html" class="tsd-signature-type">SearcherRepository</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_accountsearchcriteria_.accountsearchcriteria.html" class="tsd-signature-type">AccountSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">AccountRepository</span>
@@ -111,6 +111,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_infrastructure_accountrepository_.accountrepository.html#getaccountinfomerkle" class="tsd-kind-icon">get<wbr>Account<wbr>Info<wbr>Merkle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_infrastructure_accountrepository_.accountrepository.html#getaccountsinfo" class="tsd-kind-icon">get<wbr>Accounts<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_infrastructure_accountrepository_.accountrepository.html#search" class="tsd-kind-icon">search</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_infrastructure_accountrepository_.accountrepository.html#streamer" class="tsd-kind-icon">streamer</a></li>
 							</ul>
 						</section>
 					</div>
@@ -128,7 +129,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/AccountRepository.ts#L34">src/infrastructure/AccountRepository.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/AccountRepository.ts#L34">src/infrastructure/AccountRepository.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -160,7 +161,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/AccountRepository.ts#L48">src/infrastructure/AccountRepository.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/AccountRepository.ts#L48">src/infrastructure/AccountRepository.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -192,7 +193,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/AccountRepository.ts#L41">src/infrastructure/AccountRepository.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/AccountRepository.ts#L41">src/infrastructure/AccountRepository.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -225,7 +226,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_infrastructure_paginationstreamer_searcher_.searcher.html">Searcher</a>.<a href="_src_infrastructure_paginationstreamer_searcher_.searcher.html#search">search</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/paginationStreamer/Searcher.ts#L33">src/infrastructure/paginationStreamer/Searcher.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/paginationStreamer/Searcher.ts#L33">src/infrastructure/paginationStreamer/Searcher.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -244,6 +245,29 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>a page of entities.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="streamer" class="tsd-anchor"></a>
+					<h3>streamer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">streamer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_src_infrastructure_paginationstreamer_paginationstreamer_.paginationstreamer.html" class="tsd-signature-type">PaginationStreamer</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_accountsearchcriteria_.accountsearchcriteria.html" class="tsd-signature-type">AccountSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_infrastructure_paginationstreamer_paginationstreamer_.streamerfactory.html">StreamerFactory</a>.<a href="_src_infrastructure_paginationstreamer_paginationstreamer_.streamerfactory.html#streamer">streamer</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/paginationStreamer/PaginationStreamer.ts#L76">src/infrastructure/paginationStreamer/PaginationStreamer.ts:76</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>It creates a streamer for this searcher.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../classes/_src_infrastructure_paginationstreamer_paginationstreamer_.paginationstreamer.html" class="tsd-signature-type">PaginationStreamer</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_accountsearchcriteria_.accountsearchcriteria.html" class="tsd-signature-type">AccountSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -278,6 +302,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_infrastructure_accountrepository_.accountrepository.html#search" class="tsd-kind-icon">search</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_infrastructure_accountrepository_.accountrepository.html#streamer" class="tsd-kind-icon">streamer</a>
 							</li>
 						</ul>
 					</li>

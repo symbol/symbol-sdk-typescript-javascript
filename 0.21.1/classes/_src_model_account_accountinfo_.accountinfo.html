@@ -108,6 +108,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_account_accountinfo_.accountinfo.html#publickeyheight" class="tsd-kind-icon">public<wbr>Key<wbr>Height</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_account_accountinfo_.accountinfo.html#recordid" class="tsd-kind-icon">record<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_account_accountinfo_.accountinfo.html#supplementalpublickeys" class="tsd-kind-icon">supplemental<wbr>Public<wbr>Keys</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_model_account_accountinfo_.accountinfo.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -137,17 +138,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Info<span class="tsd-signature-symbol">(</span>recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, address<span class="tsd-signature-symbol">: </span><a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a>, addressHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicKeyHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, accountType<span class="tsd-signature-symbol">: </span><a href="../modules/_src_model_index_.html#accounttype" class="tsd-signature-type">AccountType</a>, supplementalPublicKeys<span class="tsd-signature-symbol">: </span><a href="_src_model_account_supplementalpublickeys_.supplementalpublickeys.html" class="tsd-signature-type">SupplementalPublicKeys</a>, activityBucket<span class="tsd-signature-symbol">: </span><a href="_src_model_account_activitybucket_.activitybucket.html" class="tsd-signature-type">ActivityBucket</a><span class="tsd-signature-symbol">[]</span>, mosaics<span class="tsd-signature-symbol">: </span><a href="_src_model_mosaic_mosaic_.mosaic.html" class="tsd-signature-type">Mosaic</a><span class="tsd-signature-symbol">[]</span>, importance<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, importanceHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Info<span class="tsd-signature-symbol">(</span>version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, recordId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, address<span class="tsd-signature-symbol">: </span><a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a>, addressHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicKeyHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, accountType<span class="tsd-signature-symbol">: </span><a href="../modules/_src_model_index_.html#accounttype" class="tsd-signature-type">AccountType</a>, supplementalPublicKeys<span class="tsd-signature-symbol">: </span><a href="_src_model_account_supplementalpublickeys_.supplementalpublickeys.html" class="tsd-signature-type">SupplementalPublicKeys</a>, activityBucket<span class="tsd-signature-symbol">: </span><a href="_src_model_account_activitybucket_.activitybucket.html" class="tsd-signature-type">ActivityBucket</a><span class="tsd-signature-symbol">[]</span>, mosaics<span class="tsd-signature-symbol">: </span><a href="_src_model_mosaic_mosaic_.mosaic.html" class="tsd-signature-type">Mosaic</a><span class="tsd-signature-symbol">[]</span>, importance<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a>, importanceHeight<span class="tsd-signature-symbol">: </span><a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_model_account_accountinfo_.accountinfo.html" class="tsd-signature-type">AccountInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L48">src/model/account/AccountInfo.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L48">src/model/account/AccountInfo.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
+								<li>
+									<h5>version: <span class="tsd-signature-type">number</span></h5>
+								</li>
 								<li>
 									<h5>recordId: <span class="tsd-signature-type">string</span></h5>
 								</li>
@@ -195,7 +199,7 @@
 					<div class="tsd-signature tsd-kind-icon">account<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../modules/_src_model_index_.html#accounttype" class="tsd-signature-type">AccountType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L76">src/model/account/AccountInfo.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L77">src/model/account/AccountInfo.ts:77</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -210,7 +214,7 @@
 					<div class="tsd-signature tsd-kind-icon">activity<wbr>Bucket<span class="tsd-signature-symbol">:</span> <a href="_src_model_account_activitybucket_.activitybucket.html" class="tsd-signature-type">ActivityBucket</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L84">src/model/account/AccountInfo.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L85">src/model/account/AccountInfo.ts:85</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -225,7 +229,7 @@
 					<div class="tsd-signature tsd-kind-icon">address<span class="tsd-signature-symbol">:</span> <a href="_src_model_account_address_.address.html" class="tsd-signature-type">Address</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L60">src/model/account/AccountInfo.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L61">src/model/account/AccountInfo.ts:61</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -240,7 +244,7 @@
 					<div class="tsd-signature tsd-kind-icon">address<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L64">src/model/account/AccountInfo.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L65">src/model/account/AccountInfo.ts:65</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -255,7 +259,7 @@
 					<div class="tsd-signature tsd-kind-icon">importance<span class="tsd-signature-symbol">:</span> <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L92">src/model/account/AccountInfo.ts:92</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L93">src/model/account/AccountInfo.ts:93</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -270,7 +274,7 @@
 					<div class="tsd-signature tsd-kind-icon">importance<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L96">src/model/account/AccountInfo.ts:96</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L97">src/model/account/AccountInfo.ts:97</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -285,7 +289,7 @@
 					<div class="tsd-signature tsd-kind-icon">mosaics<span class="tsd-signature-symbol">:</span> <a href="_src_model_mosaic_mosaic_.mosaic.html" class="tsd-signature-type">Mosaic</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L88">src/model/account/AccountInfo.ts:88</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L89">src/model/account/AccountInfo.ts:89</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -300,7 +304,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L68">src/model/account/AccountInfo.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L69">src/model/account/AccountInfo.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -315,7 +319,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<wbr>Height<span class="tsd-signature-symbol">:</span> <a href="_src_model_uint64_.uint64.html" class="tsd-signature-type">UInt64</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L72">src/model/account/AccountInfo.ts:72</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L73">src/model/account/AccountInfo.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -330,7 +334,7 @@
 					<div class="tsd-signature tsd-kind-icon">record<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L56">src/model/account/AccountInfo.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L57">src/model/account/AccountInfo.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -345,12 +349,27 @@
 					<div class="tsd-signature tsd-kind-icon">supplemental<wbr>Public<wbr>Keys<span class="tsd-signature-symbol">:</span> <a href="_src_model_account_supplementalpublickeys_.supplementalpublickeys.html" class="tsd-signature-type">SupplementalPublicKeys</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L80">src/model/account/AccountInfo.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L81">src/model/account/AccountInfo.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Account keys</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="version" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> version</h3>
+					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L53">src/model/account/AccountInfo.ts:53</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Version</p>
 						</div>
 					</div>
 				</section>
@@ -367,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L103">src/model/account/AccountInfo.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L104">src/model/account/AccountInfo.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -392,7 +411,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L165">src/model/account/AccountInfo.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L167">src/model/account/AccountInfo.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -415,7 +434,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L150">src/model/account/AccountInfo.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L152">src/model/account/AccountInfo.ts:152</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -432,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L111">src/model/account/AccountInfo.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L112">src/model/account/AccountInfo.ts:112</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -454,7 +473,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L197">src/model/account/AccountInfo.ts:197</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L199">src/model/account/AccountInfo.ts:199</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -477,7 +496,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L190">src/model/account/AccountInfo.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L192">src/model/account/AccountInfo.ts:192</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -500,7 +519,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L186">src/model/account/AccountInfo.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L188">src/model/account/AccountInfo.ts:188</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -523,7 +542,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/model/account/AccountInfo.ts#L179">src/model/account/AccountInfo.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/model/account/AccountInfo.ts#L181">src/model/account/AccountInfo.ts:181</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -591,6 +610,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_model_account_accountinfo_.accountinfo.html#supplementalpublickeys" class="tsd-kind-icon">supplemental<wbr>Public<wbr>Keys</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_model_account_accountinfo_.accountinfo.html#version" class="tsd-kind-icon">version</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_src_model_account_accountinfo_.accountinfo.html#publicaccount" class="tsd-kind-icon">public<wbr>Account</a>

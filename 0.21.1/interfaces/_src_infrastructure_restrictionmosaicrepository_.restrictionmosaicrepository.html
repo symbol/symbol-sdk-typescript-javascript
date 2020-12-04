@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_src_infrastructure_paginationstreamer_searcher_.searcher.html" class="tsd-signature-type">Searcher</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_src_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_src_infrastructure_paginationstreamer_paginationstreamer_.searcherrepository.html" class="tsd-signature-type">SearcherRepository</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">RestrictionMosaicRepository</span>
@@ -98,6 +98,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicrestrictions" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Restrictions</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#getmosaicrestrictionsmerkle" class="tsd-kind-icon">get<wbr>Mosaic<wbr>Restrictions<wbr>Merkle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#search" class="tsd-kind-icon">search</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#streamer" class="tsd-kind-icon">streamer</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,13 +110,13 @@
 					<a name="getmosaicrestrictions" class="tsd-anchor"></a>
 					<h3>get<wbr>Mosaic<wbr>Restrictions</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaic<wbr>Restrictions<span class="tsd-signature-symbol">(</span>compositeHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_src_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Mosaic<wbr>Restrictions<span class="tsd-signature-symbol">(</span>compositeHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/RestrictionMosaicRepository.ts#L32">src/infrastructure/RestrictionMosaicRepository.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/RestrictionMosaicRepository.ts#L30">src/infrastructure/RestrictionMosaicRepository.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -132,8 +133,8 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_src_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable&lt;MosaicAddressRestriction | MosaicGlobalRestriction&gt;</p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>Observable<MosaicRestriction></p>
 						</li>
 					</ul>
 				</section>
@@ -147,7 +148,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/RestrictionMosaicRepository.ts#L40">src/infrastructure/RestrictionMosaicRepository.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/RestrictionMosaicRepository.ts#L38">src/infrastructure/RestrictionMosaicRepository.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -165,7 +166,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_blockchain_merklestateinfo_.merklestateinfo.html" class="tsd-signature-type">MerkleStateInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Observable&lt;MosaicAddressRestriction | MosaicGlobalRestriction&gt;</p>
+							<p>Observable<MosaicRestriction></p>
 						</li>
 					</ul>
 				</section>
@@ -173,14 +174,14 @@
 					<a name="search" class="tsd-anchor"></a>
 					<h3>search</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">search<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_src_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_src_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">search<span class="tsd-signature-symbol">(</span>criteria<span class="tsd-signature-symbol">: </span><a href="_src_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_infrastructure_paginationstreamer_searcher_.searcher.html">Searcher</a>.<a href="_src_infrastructure_paginationstreamer_searcher_.searcher.html#search">search</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/eb2e816/src/infrastructure/paginationStreamer/Searcher.ts#L33">src/infrastructure/paginationStreamer/Searcher.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/paginationStreamer/Searcher.ts#L33">src/infrastructure/paginationStreamer/Searcher.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,8 +198,31 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_model_restriction_mosaicaddressrestriction_.mosaicaddressrestriction.html" class="tsd-signature-type">MosaicAddressRestriction</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_src_model_restriction_mosaicglobalrestriction_.mosaicglobalrestriction.html" class="tsd-signature-type">MosaicGlobalRestriction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_src_infrastructure_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>a page of entities.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="streamer" class="tsd-anchor"></a>
+					<h3>streamer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">streamer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_src_infrastructure_paginationstreamer_paginationstreamer_.paginationstreamer.html" class="tsd-signature-type">PaginationStreamer</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_infrastructure_paginationstreamer_paginationstreamer_.streamerfactory.html">StreamerFactory</a>.<a href="_src_infrastructure_paginationstreamer_paginationstreamer_.streamerfactory.html#streamer">streamer</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/6a8ead8/src/infrastructure/paginationStreamer/PaginationStreamer.ts#L76">src/infrastructure/paginationStreamer/PaginationStreamer.ts:76</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>It creates a streamer for this searcher.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../classes/_src_infrastructure_paginationstreamer_paginationstreamer_.paginationstreamer.html" class="tsd-signature-type">PaginationStreamer</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_src_model_restriction_mosaicrestriction_.html#mosaicrestriction" class="tsd-signature-type">MosaicRestriction</a><span class="tsd-signature-symbol">, </span><a href="_src_infrastructure_searchcriteria_restrictionmosaicsearchcriteria_.restrictionmosaicsearchcriteria.html" class="tsd-signature-type">RestrictionMosaicSearchCriteria</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -230,6 +254,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#search" class="tsd-kind-icon">search</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_infrastructure_restrictionmosaicrepository_.restrictionmosaicrepository.html#streamer" class="tsd-kind-icon">streamer</a>
 							</li>
 						</ul>
 					</li>
