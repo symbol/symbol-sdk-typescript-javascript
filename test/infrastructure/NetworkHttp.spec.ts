@@ -23,14 +23,12 @@ import {
     NodeIdentityEqualityStrategy,
     NodeInfoDTO,
     NodeRoutesApi,
-    RolesTypeEnum,
     TransactionFeesDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
-import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
-import { NodeHttp } from '../../src/infrastructure/NodeHttp';
-import { NetworkType } from '../../src/model/network/NetworkType';
+import { DtoMapping } from '../../src/core/utils';
+import { NetworkHttp, NodeHttp } from '../../src/infrastructure';
+import { NetworkType } from '../../src/model/network';
 import * as testResources from '../resource/TestResources';
 
 describe('NetworkHttp', () => {
@@ -94,7 +92,7 @@ describe('NetworkHttp', () => {
             port: 123,
             publicKey: '',
             version: 456,
-            roles: RolesTypeEnum.NUMBER_1,
+            roles: 1,
         };
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
