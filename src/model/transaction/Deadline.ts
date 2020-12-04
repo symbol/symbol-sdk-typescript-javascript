@@ -35,8 +35,7 @@ export class Deadline {
      * @returns {Deadline}
      */
     public static create(epochAdjustment: number, deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
-        const now = Instant.now();
-        const deadlineDateTime = now.plus(deadline, chronoUnit);
+        const deadlineDateTime = Instant.now().plus(deadline, chronoUnit);
 
         if (deadline <= 0) {
             throw new Error('deadline should be greater than 0');
