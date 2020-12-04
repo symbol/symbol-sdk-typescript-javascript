@@ -156,6 +156,12 @@ export class NodeHttp extends Http implements NodeRepository {
         if ((RoleType.VotingNode.valueOf() & roleType) != 0) {
             roles.push(RoleType.VotingNode);
         }
+        if ((RoleType.IPv4.valueOf() & roleType) != 0) {
+            roles.push(RoleType.IPv4);
+        }
+        if ((RoleType.IPv6.valueOf() & roleType) != 0) {
+            roles.push(RoleType.IPv6);
+        }
         return roles;
     }
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as http from 'http';
 import {
@@ -23,7 +24,6 @@ import {
     NodeRoutesApi,
     NodeStatusEnum,
     NodeTimeDTO,
-    RolesTypeEnum,
     ServerDTO,
     ServerInfoDTO,
     StorageInfoDTO,
@@ -81,7 +81,7 @@ describe('NodeHttp', () => {
         body.host = 'Some Host';
         body.port = 1234;
         body.publicKey = 'Some Public Key';
-        body.roles = RolesTypeEnum.NUMBER_1;
+        body.roles = 1;
         body.version = 4567;
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
@@ -112,7 +112,7 @@ describe('NodeHttp', () => {
         body.host = 'Some Host';
         body.port = 1234;
         body.publicKey = 'Some Public Key';
-        body.roles = RolesTypeEnum.NUMBER_7;
+        body.roles = 7;
         body.version = 4567;
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
@@ -146,7 +146,7 @@ describe('NodeHttp', () => {
         body.host = 'Some Host';
         body.port = 1234;
         body.publicKey = 'Some Public Key';
-        body.roles = RolesTypeEnum.NUMBER_1;
+        body.roles = 1;
         body.version = 4567;
 
         when(nodeRoutesApi.getNodePeers()).thenReturn(Promise.resolve([body]));
@@ -260,5 +260,29 @@ describe('NodeHttp', () => {
         } catch (e) {
             expect(e.message).to.deep.equals('{"statusCode":500,"statusMessage":"Some Error","body":"Some body text"}');
         }
+    });
+
+    it('getNodeRoles', () => {
+        const http = new NodeHttp('');
+        let type = 2;
+        deepEqual(http.getNodeRoles(type), [RoleType.ApiNode]);
+        type = 1;
+        deepEqual(http.getNodeRoles(type), [RoleType.PeerNode]);
+        type = 4;
+        deepEqual(http.getNodeRoles(type), [RoleType.VotingNode]);
+        type = 7;
+        deepEqual(http.getNodeRoles(type), [RoleType.ApiNode, RoleType.PeerNode, RoleType.VotingNode]);
+        type = 3;
+        deepEqual(http.getNodeRoles(type), [RoleType.ApiNode, RoleType.PeerNode]);
+        type = 6;
+        deepEqual(http.getNodeRoles(type), [RoleType.ApiNode, RoleType.VotingNode]);
+        type = 64;
+        deepEqual(http.getNodeRoles(type), [RoleType.IPv4]);
+        type = 128;
+        deepEqual(http.getNodeRoles(type), [RoleType.IPv6]);
+        type = 135;
+        deepEqual(http.getNodeRoles(type), [RoleType.ApiNode, RoleType.PeerNode, RoleType.VotingNode, RoleType.IPv6]);
+        type = 71;
+        deepEqual(http.getNodeRoles(type), [RoleType.ApiNode, RoleType.PeerNode, RoleType.VotingNode, RoleType.IPv4]);
     });
 });

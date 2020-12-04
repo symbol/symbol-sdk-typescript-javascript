@@ -18,4 +18,6 @@ export enum RoleType {
     PeerNode = 1,
     ApiNode = 2,
     VotingNode = 4,
+    IPv4 = 64,
+    IPv6 = 128,
 }
