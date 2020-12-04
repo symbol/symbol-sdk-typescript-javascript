@@ -40,7 +40,7 @@ export class Deadline {
         if (deadline <= 0) {
             throw new Error('deadline should be greater than 0');
         }
-        return new Deadline(deadlineDateTime.minusMillis(Duration.ofSeconds(epochAdjustment).toMillis()).toEpochMilli());
+        return new Deadline(deadlineDateTime.minusSeconds(Duration.ofSeconds(epochAdjustment).seconds()).toEpochMilli());
     }
 
     /**
