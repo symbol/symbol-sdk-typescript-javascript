@@ -4,22 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.21.1] - NEXT
+## [0.22.0] - 3-Dec-2020
 
-**Milestone**: Catapult-server finality(0.10.0.3)
+**Milestone**: Catapult-server finality(0.10.0.4)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.21.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.22 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
-Client Library | v0.10.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+SDK Core| v0.22.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.24 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.10.4  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
-- **[BREAKING CHANGE]** `Deadline.create` requires the configurable `epochAdjustment` from the network properties.
-- **[BREAKING CHANGE]** `NetworkCurrency` subclasses replaced with `Currency` objects.
+- **[BREAKING CHANGE]** `Deadline.create` requires the configurable `epochAdjustment` from the network properties. The value can be retrieved using ``RepositoryFactory.getEpochAdjustment()``.
+- **[BREAKING CHANGE]** `NetworkCurrency` subclasses replaced with `Currency` objects. You can retrieve the network currencies with ``RepositoryFactory.getCurrencies()``.
 - **[BREAKING CHANGE]** `SecreatLockRepository.getSecretLock` has been removed. You can now search by secret by using the search criteria.
+- **[BREAKING CHANGE]** Replaced ``BlockInfo`` with the new block types in ``NormalBlockInfo`` and ``NemesisImportanceBlockInfo``.
 - Added `FinalizationRepository`.
 - Added `transferMosaicId`, `fromTransferAmount`, `toTransferAmount` to transaction searches.
 - Added `CurrencyService` to allow loading Network and custom `Currency` objects from the rest service.
 - Added `UnlockedAccount` endpoint in `NodeRepository` for checking delegated harvesting status.
+- Added `StateProofService` to verify the different states.
+- Added `serialize()` to state objects `AccountInfo`, `MosaicInfo`, `NamespaceInfo`, `MultisigAccountInfo`, `AccountRestrictions`, `MosaicGlobalRestriction`, `MosaicAddressRestriction`, `MetadataEntry`, `SecretLockInfo`, `HashLockInfo` to generate the state proof hashes.
+- Added `version` field to state objects.
+- Added `/merkle` endpoints to the repositories of the different states.
+- Added `stremer()` to repositories to simplify `PaginationStreamer` objects creation.
+- Improved `search` endpoints allowing "empty" criteria in order to paginate over all the objects.
+- `Listener` now accepts address aliases as `UnresolvedAddress` objects.
+- Added V1 and V2 Voting Key transaction support.
+- Updated `FinalizationProof` object added ``SignatureSchema`` for server tree testnet/v3
 
 ## [0.21.0] - 25-Sep-2020
 
