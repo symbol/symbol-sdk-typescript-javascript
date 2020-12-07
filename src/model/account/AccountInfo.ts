@@ -130,7 +130,7 @@ export class AccountInfo {
             this.activityBucket.slice(0, 5).map((b) => AccountInfo.toHeightActivityBucketsBuilder(b)),
         );
         const format = this.isHighValue() ? AccountStateFormatDto.HIGH_VALUE : AccountStateFormatDto.REGULAR;
-        const serializedState = new AccountStateBuilder(
+        return new AccountStateBuilder(
             this.version,
             address,
             addressHeight,
@@ -147,8 +147,6 @@ export class AccountInfo {
             activityBuckets,
             balances,
         ).serialize();
-        console.log(Convert.uint8ToHex(serializedState));
-        return serializedState;
     }
 
     private isHighValue(): boolean {
