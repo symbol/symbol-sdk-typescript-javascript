@@ -80,16 +80,18 @@ export class MosaicGlobalRestriction {
     public serialize(): Uint8Array {
         const mosaicId: MosaicIdDto = this.mosaicId.toBuilder();
         const keyPairs: GlobalKeyValueSetBuilder = new GlobalKeyValueSetBuilder(
-            this.restrictions.map((item) => {
-                const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
-                const value: number[] = item.restrictionValue.toDTO();
-                const restrictionRule = new RestrictionRuleBuilder(
-                    item.referenceMosaicId.toBuilder(),
-                    value,
-                    item.restrictionType as number,
-                );
-                return new GlobalKeyValueBuilder(key, restrictionRule);
-            }),
+            this.restrictions
+                .sort((a, b) => a.key.compare(b.key))
+                .map((item) => {
+                    const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
+                    const value: number[] = item.restrictionValue.toDTO();
+                    const restrictionRule = new RestrictionRuleBuilder(
+                        item.referenceMosaicId.toBuilder(),
+                        value,
+                        item.restrictionType as number,
+                    );
+                    return new GlobalKeyValueBuilder(key, restrictionRule);
+                }),
         );
         const globalRestrictionBuilder = new MosaicGlobalRestrictionEntryBuilder(mosaicId, keyPairs);
         return new MosaicRestrictionEntryBuilder(

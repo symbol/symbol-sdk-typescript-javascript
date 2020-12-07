@@ -84,11 +84,13 @@ export class MosaicAddressRestriction {
         const mosaicId: MosaicIdDto = this.mosaicId.toBuilder();
         const address: AddressDto = this.targetAddress.toBuilder();
         const keyPairs: AddressKeyValueSetBuilder = new AddressKeyValueSetBuilder(
-            this.restrictions.map((item) => {
-                const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
-                const value: number[] = item.restrictionValue.toDTO();
-                return new AddressKeyValueBuilder(key, value);
-            }),
+            this.restrictions
+                .sort((a, b) => a.key.compare(b.key))
+                .map((item) => {
+                    const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
+                    const value: number[] = item.restrictionValue.toDTO();
+                    return new AddressKeyValueBuilder(key, value);
+                }),
         );
         const addressRestrictionBuilder = new MosaicAddressRestrictionEntryBuilder(mosaicId, address, keyPairs);
         return new MosaicRestrictionEntryBuilder(
