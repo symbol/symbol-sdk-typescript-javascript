@@ -90,7 +90,7 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
      */
     private toSecretLockInfo(dto: SecretLockInfoDTO): SecretLockInfo {
         return new SecretLockInfo(
-            dto.lock.version,
+            dto.lock.version || 1,
             dto.id,
             Address.createFromEncoded(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),
