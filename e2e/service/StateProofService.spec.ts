@@ -22,7 +22,7 @@ import { NamespaceRegistrationType } from '../../src/model/namespace';
 import { StateMerkleProof } from '../../src/model/state';
 import { StateProofService } from '../../src/service';
 
-const url = 'http://api-01.us-west-2.0.10.0.x.symboldev.network:3000';
+const url = 'http://localhost:3000';
 const repositoryFactory = new RepositoryFactoryHttp(url);
 const service = new StateProofService(repositoryFactory);
 const stateCounts = 50;
@@ -46,7 +46,7 @@ async function test<E, C extends SearchCriteria>(
         try {
             const merkle = await merkleMethod(info).toPromise();
             expect(merkle).to.not.undefined;
-            if (merkle.valid) console.log(stateUrl + ' ' + merkle.valid);
+            if (merkle.valid) console.log(stateUrl + ' ' + merkle.valid + ' ' + merkle.stateHash);
             else {
                 console.error(stateUrl + ' ' + merkle.valid);
             }
