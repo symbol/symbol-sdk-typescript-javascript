@@ -15,7 +15,7 @@ Client Library | v0.10.4  | [symbol-openapi-typescript-fetch-client](https://www
 
 - **[BREAKING CHANGE]** `Deadline.create` requires the configurable `epochAdjustment` from the network properties. The value can be retrieved using ``RepositoryFactory.getEpochAdjustment()`` or calling catapult-rest's `network/properties` endpoint.
 - **[BREAKING CHANGE]** `NetworkCurrency` subclasses replaced with `Currency` objects. You can retrieve the network currencies with ``RepositoryFactory.getCurrencies()``.
-- **[BREAKING CHANGE]** `SecreatLockRepository.getSecretLock` has been removed. You can now search by secret by using the search criteria.
+- **[BREAKING CHANGE]** `SecretLockRepository.getSecretLock` has been updated. It now takes the composite hash as parameter.
 - **[BREAKING CHANGE]** Replaced ``BlockInfo`` with the new block types: ``NormalBlockInfo`` and ``NemesisImportanceBlockInfo``.
 - Added `FinalizationRepository`.
 - Added `transferMosaicId`, `fromTransferAmount`, `toTransferAmount` to transaction searches.
