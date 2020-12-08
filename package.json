@@ -1,6 +1,6 @@
 {
     "name": "symbol-sdk",
-    "version": "0.22.0",
+    "version": "0.22.1",
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
