@@ -16,11 +16,11 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { UInt64 } from '../../../src/model/UInt64';
-import { NewBlock } from '../../../src/model/blockchain/NewBlock';
 import { Address } from '../../../src/model/account/Address';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NewBlock } from '../../../src/model/blockchain/NewBlock';
 import { NetworkType } from '../../../src/model/network/NetworkType';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('NewBlock', () => {
     it('should createComplete an NewBlock object', () => {

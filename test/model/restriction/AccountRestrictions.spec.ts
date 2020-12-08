@@ -15,45 +15,43 @@
  */
 
 import { deepEqual } from 'assert';
+import { AccountRestrictionsBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
-import { Address } from '../../../src/model/account/Address';
-import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
-import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictions } from '../../../src/model/restriction/AccountRestrictions';
-import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
+import { AccountRestrictionsInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { Convert } from '../../../src/core/format';
+import { DtoMapping } from '../../../src/core/utils';
+import { Address } from '../../../src/model/account';
+import { AddressRestrictionFlag } from '../../../src/model/restriction';
 
 describe('AccountRestrictions', () => {
-    it('should createComplete an AccountRestrictions object', () => {
-        const accountRestrictionsDTO = {
-            address: Address.createFromEncoded('6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF'),
-            restrictions: [
-                {
-                    restrictionFlags: AddressRestrictionFlag.AllowIncomingAddress,
-                    values: [
-                        {
-                            modificationAction: AccountRestrictionModificationAction.Add,
-                            value: 'QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ',
-                        },
-                    ],
-                },
-            ],
+    it('should createComplete an AccountRestrictionsInfo object', () => {
+        const accountRestrictionsInfoDTO: AccountRestrictionsInfoDTO = {
+            accountRestrictions: {
+                version: 1,
+                address: '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
+                restrictions: [
+                    {
+                        restrictionFlags: AddressRestrictionFlag.AllowIncomingAddress as number,
+                        values: ['6826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF'],
+                    },
+                ],
+            },
         };
 
-        const accountRestrictions = new AccountRestrictions(
-            accountRestrictionsDTO.address,
-            accountRestrictionsDTO.restrictions.map((r) => {
-                return new AccountRestriction(r.restrictionFlags, r.values);
-            }),
+        const accountRestrictionsInfo = DtoMapping.extractAccountRestrictionFromDto(accountRestrictionsInfoDTO);
+
+        // deepEqual(accountRestrictionsInfo.id, accountRestrictionsInfoDTO.id);
+        deepEqual(accountRestrictionsInfo.address, Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address));
+        deepEqual(accountRestrictionsInfo.restrictions.length, accountRestrictionsInfoDTO.accountRestrictions.restrictions.length);
+        deepEqual(
+            accountRestrictionsInfo.restrictions[0].values[0],
+            Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.restrictions[0].values[0] as string),
         );
 
-        expect(accountRestrictions.address).to.be.equal(accountRestrictionsDTO.address);
-        deepEqual(accountRestrictions.restrictions.length, accountRestrictionsDTO.restrictions.length);
-        deepEqual(accountRestrictions.restrictions[0].restrictionFlags, accountRestrictionsDTO.restrictions[0].restrictionFlags);
-        deepEqual(accountRestrictions.restrictions[0].values.length, accountRestrictionsDTO.restrictions[0].values.length);
-        deepEqual(
-            (accountRestrictions.restrictions[0].values[0] as any).modificationAction,
-            accountRestrictionsDTO.restrictions[0].values[0].modificationAction,
+        const serialized = accountRestrictionsInfo.serialize();
+        expect(Convert.uint8ToHex(serialized)).eq(
+            '01006826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF0100000000000000010001000000000000006826D27E1D0A26CA4E316F901E23E55C8711DB20DF250DEF',
         );
-        deepEqual((accountRestrictions.restrictions[0].values[0] as any).value, accountRestrictionsDTO.restrictions[0].values[0].value);
+        deepEqual(AccountRestrictionsBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
 });

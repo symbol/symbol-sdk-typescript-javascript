@@ -16,17 +16,19 @@
 
 import {
     AccountOperationRestrictionTransactionBuilder,
+    AccountRestrictionFlagsDto,
     AmountDto,
     EmbeddedAccountOperationRestrictionTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    SignatureDto,
+    GeneratorUtils,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
+import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -34,8 +36,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { OperationRestrictionFlag } from '../restriction/OperationRestrictionFlag';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
     /**
@@ -112,17 +112,17 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             : AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = AccountOperationRestrictionTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionFlags().valueOf(),
-            builder.getRestrictionAdditions(),
-            builder.getRestrictionDeletions(),
+            GeneratorUtils.fromFlags(AccountRestrictionFlagsDto, builder.getRestrictionFlags()),
+            builder.getRestrictionAdditions() as number[],
+            builder.getRestrictionDeletions() as number[],
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signer.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signer, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType)) : transaction;
@@ -133,20 +133,17 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new AccountOperationRestrictionTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_OPERATION_RESTRICTION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionFlags.valueOf(),
-            this.restrictionAdditions,
-            this.restrictionDeletions,
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
+            this.restrictionAdditions as number[],
+            this.restrictionDeletions as number[],
         );
         return transactionBuilder;
     }
@@ -157,13 +154,13 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedAccountOperationRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_OPERATION_RESTRICTION.valueOf(),
-            this.restrictionFlags.valueOf(),
-            this.restrictionAdditions,
-            this.restrictionDeletions,
+            GeneratorUtils.toFlags(AccountRestrictionFlagsDto, this.restrictionFlags.valueOf()),
+            this.restrictionAdditions as number[],
+            this.restrictionDeletions as number[],
         );
     }
 

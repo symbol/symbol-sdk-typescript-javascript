@@ -16,67 +16,42 @@
 
 import { instance, mock } from 'ts-mockito';
 import { RestrictionMosaicPaginationStreamer } from '../../../src/infrastructure/paginationStreamer/RestrictionMosaicPaginationStreamer';
-import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 import { RestrictionMosaicRepository } from '../../../src/infrastructure/RestrictionMosaicRepository';
+import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('MosaicRestrictionPaginationStreamer - transaction', () => {
     it('basicMultiPageTest', () => {
         const mosaicRestrictionRepositoryMock: RestrictionMosaicRepository = mock();
-        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(instance(mosaicRestrictionRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(
-            streamer,
-            mock(),
-            { search: mosaicRestrictionRepositoryMock.searchMosaicRestrictions },
-            {},
-        );
+        const streamer = new RestrictionMosaicPaginationStreamer(instance(mosaicRestrictionRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: mosaicRestrictionRepositoryMock.search }, {});
         return tester.basicMultiPageTest();
     });
 
     it('basicSinglePageTest', () => {
         const mosaicRestrictionRepositoryMock: RestrictionMosaicRepository = mock();
-        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(instance(mosaicRestrictionRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(
-            streamer,
-            mock(),
-            { search: mosaicRestrictionRepositoryMock.searchMosaicRestrictions },
-            {},
-        );
+        const streamer = new RestrictionMosaicPaginationStreamer(instance(mosaicRestrictionRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: mosaicRestrictionRepositoryMock.search }, {});
         return tester.basicSinglePageTest();
     });
 
     it('limitToTwoPages', () => {
         const mosaicRestrictionRepositoryMock: RestrictionMosaicRepository = mock();
-        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(instance(mosaicRestrictionRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(
-            streamer,
-            mock(),
-            { search: mosaicRestrictionRepositoryMock.searchMosaicRestrictions },
-            {},
-        );
+        const streamer = new RestrictionMosaicPaginationStreamer(instance(mosaicRestrictionRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: mosaicRestrictionRepositoryMock.search }, {});
         return tester.limitToTwoPages();
     });
 
     it('multipageWithLimit', () => {
         const mosaicRestrictionRepositoryMock: RestrictionMosaicRepository = mock();
-        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(instance(mosaicRestrictionRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(
-            streamer,
-            mock(),
-            { search: mosaicRestrictionRepositoryMock.searchMosaicRestrictions },
-            {},
-        );
+        const streamer = new RestrictionMosaicPaginationStreamer(instance(mosaicRestrictionRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: mosaicRestrictionRepositoryMock.search }, {});
         return tester.multipageWithLimit();
     });
 
     it('limitToThreePages', () => {
         const mosaicRestrictionRepositoryMock: RestrictionMosaicRepository = mock();
-        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(instance(mosaicRestrictionRepositoryMock));
-        const tester = new PaginationStreamerTestHelper(
-            streamer,
-            mock(),
-            { search: mosaicRestrictionRepositoryMock.searchMosaicRestrictions },
-            {},
-        );
+        const streamer = new RestrictionMosaicPaginationStreamer(instance(mosaicRestrictionRepositoryMock));
+        const tester = new PaginationStreamerTestHelper(streamer, mock(), { search: mosaicRestrictionRepositoryMock.search }, {});
         return tester.limitToThreePages();
     });
 });

@@ -15,19 +15,19 @@
  */
 
 import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
 import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { TransferTransaction } from './TransferTransaction';
-import { PublicAccount } from '../account/PublicAccount';
 
 export class PersistentDelegationRequestTransaction extends TransferTransaction {
     /**
      * Create a PersistentDelegationRequestTransaction with special message payload
      * for presistent harvesting delegation unlocking
      * @param deadline - The deadline to include the transaction.
-     * @param signingPrivateKey - Remote harvester signing private key linked to the main account
+     * @param remoteLinkedPrivateKey - Remote harvester signing private key linked to the main account
      * @param vrfPrivateKey - VRF private key linked to the main account
      * @param nodePublicKey - Node certificate public key
      * @param networkType - The network type.
@@ -38,7 +38,7 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
      */
     public static createPersistentDelegationRequestTransaction(
         deadline: Deadline,
-        signingPrivateKey: string,
+        remoteLinkedPrivateKey: string,
         vrfPrivateKey: string,
         nodePublicKey: string,
         networkType: NetworkType,
@@ -46,7 +46,7 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
         signature?: string,
         signer?: PublicAccount,
     ): PersistentDelegationRequestTransaction {
-        const message = PersistentHarvestingDelegationMessage.create(signingPrivateKey, vrfPrivateKey, nodePublicKey, networkType);
+        const message = PersistentHarvestingDelegationMessage.create(remoteLinkedPrivateKey, vrfPrivateKey, nodePublicKey, networkType);
         return super.create(
             deadline,
             Address.createFromPublicKey(nodePublicKey, networkType),

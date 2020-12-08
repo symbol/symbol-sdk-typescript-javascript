@@ -15,22 +15,19 @@
  */
 
 import { Observable } from 'rxjs';
-import { AccountNames } from '../model/account/AccountNames';
-import { Address } from '../model/account/Address';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { MosaicNames } from '../model/mosaic/MosaicNames';
-import { NamespaceId } from '../model/namespace/NamespaceId';
-import { NamespaceInfo } from '../model/namespace/NamespaceInfo';
-import { NamespaceName } from '../model/namespace/NamespaceName';
-import { Searcher } from './paginationStreamer/Searcher';
-import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
+import { AccountNames, Address } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { MosaicId, MosaicNames } from '../model/mosaic';
+import { NamespaceId, NamespaceInfo, NamespaceName } from '../model/namespace';
+import { SearcherRepository } from './paginationStreamer';
+import { NamespaceSearchCriteria } from './searchCriteria';
 
 /**
  * Namespace interface repository.
  *
  * @since 1.0
  */
-export interface NamespaceRepository extends Searcher<NamespaceInfo, NamespaceSearchCriteria> {
+export interface NamespaceRepository extends SearcherRepository<NamespaceInfo, NamespaceSearchCriteria> {
     /**
      * Get readable names for a set of accountIds.
      * Returns friendly names for accounts.
@@ -53,6 +50,13 @@ export interface NamespaceRepository extends Searcher<NamespaceInfo, NamespaceSe
      * @returns Observable<NamespaceInfo>
      */
     getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo>;
+
+    /**
+     * Gets a NamespaceInfo merkle for a given namespaceId
+     * @param namespaceId - Namespace id
+     * @returns Observable<MerkleStateInfo>
+     */
+    getNamespaceMerkle(namespaceId: NamespaceId): Observable<MerkleStateInfo>;
 
     /**
      * Gets array of NamespaceName for different namespaceIds

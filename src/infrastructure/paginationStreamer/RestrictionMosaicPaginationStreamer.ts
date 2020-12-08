@@ -14,31 +14,21 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { Page } from '../Page';
+import { MosaicRestriction } from '../../model/restriction/MosaicRestriction';
+import { RestrictionMosaicSearchCriteria } from '../searchCriteria';
 import { PaginationStreamer } from './PaginationStreamer';
-import { RestrictionMosaicRepository } from '../RestrictionMosaicRepository';
-import { RestrictionMosaicSearchCriteria } from '../searchCriteria/RestrictionMosaicSearchCriteria';
-import { MosaicGlobalRestriction } from '../../model/restriction/MosaicGlobalRestriction';
-import { MosaicAddressRestriction } from '../../model/restriction/MosaicAddressRestriction';
+import { Searcher } from './Searcher';
 
 /**
  * A helper object that streams {@link RestrictionMosaic} using the search.
  */
-export class RestrictionMosaicPaginationStreamer {
+export class RestrictionMosaicPaginationStreamer extends PaginationStreamer<MosaicRestriction, RestrictionMosaicSearchCriteria> {
     /**
-     * It creates a restriction mosaic streamer of MosaicRestriction objects.
+     * Constructor
      *
-     * @param repository the {@link RestrictionMosaicRepository} repository
-     * @return a new Pagination Streamer.
+     * @param searcher the account repository that will perform the searches
      */
-    public static MosaicRestrictions(
-        repository: RestrictionMosaicRepository,
-    ): PaginationStreamer<MosaicAddressRestriction | MosaicGlobalRestriction, RestrictionMosaicSearchCriteria> {
-        return new PaginationStreamer<MosaicAddressRestriction | MosaicGlobalRestriction, RestrictionMosaicSearchCriteria>({
-            search(criteria: RestrictionMosaicSearchCriteria): Observable<Page<MosaicAddressRestriction | MosaicGlobalRestriction>> {
-                return repository.searchMosaicRestrictions(criteria);
-            },
-        });
+    constructor(searcher: Searcher<MosaicRestriction, RestrictionMosaicSearchCriteria>) {
+        super(searcher);
     }
 }

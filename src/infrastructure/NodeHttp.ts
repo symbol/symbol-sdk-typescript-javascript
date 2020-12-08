@@ -16,13 +16,9 @@
 
 import { Observable } from 'rxjs';
 import { NodeInfoDTO, NodeRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { StorageInfo } from '../model/blockchain/StorageInfo';
-import { NodeHealth } from '../model/node/NodeHealth';
-import { NodeInfo } from '../model/node/NodeInfo';
-import { NodeTime } from '../model/node/NodeTime';
-import { RoleType } from '../model/node/RoleType';
-import { ServerInfo } from '../model/node/ServerInfo';
-import { UInt64 } from '../model/UInt64';
+import { UInt64 } from '../model';
+import { StorageInfo } from '../model/blockchain';
+import { NodeHealth, NodeInfo, NodeTime, RoleType, ServerInfo } from '../model/node';
 import { Http } from './Http';
 import { NodeRepository } from './NodeRepository';
 
@@ -112,6 +108,16 @@ export class NodeHttp extends Http implements NodeRepository {
     }
 
     /**
+     * Return unlocked harvesting account from node.
+     * @returns Observable<string[]>
+     */
+    getUnlockedAccount(): Observable<string[]> {
+        return this.call(this.nodeRoutesApi.getUnlockedAccount(), (body) => {
+            return body.unlockedAccount;
+        });
+    }
+
+    /**
      * It maps NodeInfoDTO to NodeInfo
      *
      * @param nodeInfo the dto object.
@@ -124,9 +130,10 @@ export class NodeHttp extends Http implements NodeRepository {
             nodeInfo.port,
             nodeInfo.networkIdentifier,
             nodeInfo.version,
-            this.getNodeRoles(nodeInfo.roles.valueOf()),
+            this.getNodeRoles(nodeInfo.roles),
             nodeInfo.host,
             nodeInfo.friendlyName,
+            nodeInfo.nodePublicKey,
         );
     }
 
@@ -136,14 +143,20 @@ export class NodeHttp extends Http implements NodeRepository {
      */
     public getNodeRoles(roleType: number): RoleType[] {
         const roles: RoleType[] = [];
-        if ((RoleType.ApiNode.valueOf() & roleType) != 0) {
-            roles.push(RoleType.ApiNode);
-        }
         if ((RoleType.PeerNode.valueOf() & roleType) != 0) {
             roles.push(RoleType.PeerNode);
         }
+        if ((RoleType.ApiNode.valueOf() & roleType) != 0) {
+            roles.push(RoleType.ApiNode);
+        }
         if ((RoleType.VotingNode.valueOf() & roleType) != 0) {
             roles.push(RoleType.VotingNode);
+        }
+        if ((RoleType.IPv4Node.valueOf() & roleType) != 0) {
+            roles.push(RoleType.IPv4Node);
+        }
+        if ((RoleType.IPv6Node.valueOf() & roleType) != 0) {
+            roles.push(RoleType.IPv6Node);
         }
         return roles;
     }

@@ -16,6 +16,7 @@
 
 import { PublicAccount } from '../account/PublicAccount';
 import { UInt64 } from '../UInt64';
+
 /**
  * Model representing cosignature of an aggregate transaction.
  */

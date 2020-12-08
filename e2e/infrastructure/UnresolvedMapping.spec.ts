@@ -15,14 +15,10 @@
  */
 import { expect } from 'chai';
 import { Convert } from '../../src/core/format';
-import { Account } from '../../src/model/account/Account';
+import { Account } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
@@ -37,6 +33,7 @@ import { NamespaceRegistrationTransaction } from '../../src/model/transaction/Na
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('Unresolved Mapping', () => {
@@ -48,7 +45,6 @@ describe('Unresolved Mapping', () => {
     let mosaicId: MosaicId;
     let namespaceIdAddress: NamespaceId;
     let namespaceIdMosaic: NamespaceId;
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -74,7 +70,7 @@ describe('Unresolved Mapping', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -93,7 +89,7 @@ describe('Unresolved Mapping', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(50),
                 networkType,
@@ -110,7 +106,7 @@ describe('Unresolved Mapping', () => {
         it('standalone', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(50),
                 networkType,
@@ -126,7 +122,7 @@ describe('Unresolved Mapping', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceIdAddress,
                 account.address,
@@ -142,7 +138,7 @@ describe('Unresolved Mapping', () => {
     describe('MosaicAliasTransaction', () => {
         it('standalone', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceIdMosaic,
                 mosaicId,
@@ -164,7 +160,7 @@ describe('Unresolved Mapping', () => {
     describe('MosaicMetadataTransaction', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 UInt64.fromUint(5),
                 namespaceIdMosaic,
@@ -175,7 +171,7 @@ describe('Unresolved Mapping', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -194,7 +190,7 @@ describe('Unresolved Mapping', () => {
     describe('MosaicGlobalRestrictionTransaction', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceIdMosaic,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -216,7 +212,7 @@ describe('Unresolved Mapping', () => {
     describe('MosaicAddressRestrictionTransaction', () => {
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceIdMosaic,
                 UInt64.fromUint(60641),
                 namespaceIdAddress,
@@ -226,7 +222,7 @@ describe('Unresolved Mapping', () => {
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -246,7 +242,7 @@ describe('Unresolved Mapping', () => {
     describe('TransferTransaction', () => {
         it('standalone', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 [NetworkCurrencyLocal.createAbsolute(1)],
                 PlainMessage.create('test-message'),
@@ -270,7 +266,7 @@ describe('Unresolved Mapping', () => {
     describe('AddressAliasTransaction', () => {
         it('standalone', () => {
             const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Unlink,
                 namespaceIdAddress,
                 account.address,
@@ -290,7 +286,7 @@ describe('Unresolved Mapping', () => {
     describe('MosaicAliasTransaction', () => {
         it('standalone', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Unlink,
                 namespaceIdMosaic,
                 mosaicId,

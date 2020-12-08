@@ -19,6 +19,7 @@ import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { Convert } from '../../src/core/format/Convert';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
+import { Page } from '../../src/infrastructure/Page';
 import { Account } from '../../src/model/account/Account';
 import { Metadata } from '../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../src/model/metadata/MetadataEntry';
@@ -34,7 +35,6 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../src/model/UInt64';
 import { MetadataTransactionService } from '../../src/service/MetadataTransactionService';
 import { TestingAccount } from '../conf/conf.spec';
-import { Page } from '../../src/infrastructure/Page';
 
 describe('MetadataTransactionService', () => {
     let account: Account;
@@ -57,6 +57,7 @@ describe('MetadataTransactionService', () => {
         return new Metadata(
             '59DFBA84B2E9E7000135E80C',
             new MetadataEntry(
+                1,
                 '5E628EA59818D97AA4118780D9A88C5512FCE7A21C195E1574727EFCE5DF7C0D',
                 account.address,
                 account.address,

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
+import { AggregateNetworkPropertiesDTO, NetworkConfigurationDTO, PluginsPropertiesDTO } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
-
+import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
+import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';
@@ -31,9 +33,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { NetworkConfigurationDTO, PluginsPropertiesDTO, AggregateNetworkPropertiesDTO } from 'symbol-openapi-typescript-fetch-client';
 
 /**
  * For multi level multisig scenario visit: https://github.com/nemtech/symbol-docs/issues/10
@@ -94,29 +93,29 @@ describe('AggregateTransactionService', () => {
     const epochAdjustment = 1573430400;
 
     function givenMultisig2AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], []);
+        return new MultisigAccountInfo(1, multisig2.address, 2, 1, [multisig1.address, account1.address], []);
     }
     function givenMultisig3AccountInfo(): MultisigAccountInfo {
-        return new MultisigAccountInfo(multisig3.address, 2, 2, [account2.address, account3.address], []);
+        return new MultisigAccountInfo(1, multisig3.address, 2, 2, [account2.address, account3.address], []);
     }
 
     function givenAccount1Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account1.address, 0, 0, [], [multisig2.address]);
+        return new MultisigAccountInfo(1, account1.address, 0, 0, [], [multisig2.address]);
     }
     function givenAccount2Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account2.address, 0, 0, [], [multisig2.address, multisig3.address]);
+        return new MultisigAccountInfo(1, account2.address, 0, 0, [], [multisig2.address, multisig3.address]);
     }
     function givenAccount3Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account3.address, 0, 0, [], [multisig2.address, multisig3.address]);
+        return new MultisigAccountInfo(1, account3.address, 0, 0, [], [multisig2.address, multisig3.address]);
     }
     function givenAccount4Info(): MultisigAccountInfo {
-        return new MultisigAccountInfo(account4.address, 0, 0, [], []);
+        return new MultisigAccountInfo(1, account4.address, 0, 0, [], []);
     }
 
     function givenMultisig2AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
-            new MultisigAccountInfo(multisig1.address, 1, 1, [account2.address, account3.address], [multisig2.address]),
+        map.set(0, [new MultisigAccountInfo(1, multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
+            new MultisigAccountInfo(1, multisig1.address, 1, 1, [account2.address, account3.address], [multisig2.address]),
         ]);
 
         return new MultisigAccountGraphInfo(map);
@@ -124,8 +123,15 @@ describe('AggregateTransactionService', () => {
 
     function givenMultisig2AccountGraphInfoDuplicated(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
-            new MultisigAccountInfo(multisig1.address, 1, 1, [account1.address, account2.address, account3.address], [multisig2.address]),
+        map.set(0, [new MultisigAccountInfo(1, multisig2.address, 2, 1, [multisig1.address, account1.address], [])]).set(1, [
+            new MultisigAccountInfo(
+                1,
+                multisig1.address,
+                1,
+                1,
+                [account1.address, account2.address, account3.address],
+                [multisig2.address],
+            ),
         ]);
 
         return new MultisigAccountGraphInfo(map);
@@ -133,7 +139,7 @@ describe('AggregateTransactionService', () => {
 
     function givenMultisig3AccountGraphInfo(): MultisigAccountGraphInfo {
         const map = new Map<number, MultisigAccountInfo[]>();
-        map.set(0, [new MultisigAccountInfo(multisig3.address, 2, 2, [account2.address, account3.address], [])]);
+        map.set(0, [new MultisigAccountInfo(1, multisig3.address, 2, 2, [account2.address, account3.address], [])]);
 
         return new MultisigAccountGraphInfo(map);
     }

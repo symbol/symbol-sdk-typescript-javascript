@@ -15,11 +15,20 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
-import { Pagination, HashLockInfoDTO, HashLockEntryDTO, HashLockRoutesApi, HashLockPage } from 'symbol-openapi-typescript-fetch-client';
+import {
+    HashLockEntryDTO,
+    HashLockInfoDTO,
+    HashLockPage,
+    HashLockRoutesApi,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
+    Pagination,
+} from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
 import { HashLockRepository } from '../../src/infrastructure/HashLockRepository';
+import { HashLockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/HashLockPaginationStreamer';
 import { Address } from '../../src/model/account/Address';
 import { HashLockInfo } from '../../src/model/lock/HashLockInfo';
 
@@ -87,5 +96,28 @@ describe('HashLockHttp', () => {
             .getHashLock(lockDto.hash)
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new HashLockHttp('url');
+        expect(accountHttp.streamer() instanceof HashLockPaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(hashLockRoutesApi.getHashLockMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await hashLockRepository.getHashLockMerkle('hash').toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

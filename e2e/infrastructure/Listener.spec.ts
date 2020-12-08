@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { assert, expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { assert, expect } from 'chai';
 import { filter, mergeMap } from 'rxjs/operators';
+import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account } from '../../src/model/account/Account';
+import { Account, UnresolvedAddress } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
+import { Currency } from '../../src/model/mosaic';
+import { NamespaceId } from '../../src/model/namespace';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
-import { Address } from '../../src/model/account/Address';
-import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
-import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { UInt64 } from '../../src/model/UInt64';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
-import { UnresolvedMosaicId } from '../../src/model/mosaic/UnresolvedMosaicId';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('Listener', () => {
     const helper = new IntegrationTestHelper();
@@ -46,8 +45,7 @@ describe('Listener', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionRepository: TransactionRepository;
-
-    const epochAdjustment = 1573430400;
+    const unresolvedAddress = new NamespaceId('address');
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -71,9 +69,13 @@ describe('Listener', () => {
         setTimeout(done, 200);
     });
 
-    const createSignedAggregatedBondTransaction = (aggregatedTo: Account, signer: Account, recipient: Address): SignedTransaction => {
+    const createSignedAggregatedBondTransaction = (
+        aggregatedTo: Account,
+        signer: Account,
+        recipient: UnresolvedAddress,
+    ): SignedTransaction => {
         const transferTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(helper.epochAdjustment),
             recipient,
             [],
             PlainMessage.create('test-message'),
@@ -82,7 +84,7 @@ describe('Listener', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
+            Deadline.create(helper.epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             networkType,
             [],
@@ -94,11 +96,11 @@ describe('Listener', () => {
     const createHashLockTransactionAndAnnounce = (
         signedAggregatedTransaction: SignedTransaction,
         signer: Account,
-        mosaicId: UnresolvedMosaicId,
+        networkCurrency: Currency,
     ): void => {
         const lockFundsTransaction = LockFundsTransaction.create(
-            Deadline.create(epochAdjustment),
-            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+            Deadline.create(helper.epochAdjustment),
+            networkCurrency.createRelative(10),
             UInt64.fromUint(1000),
             signedAggregatedTransaction,
             networkType,
@@ -111,7 +113,7 @@ describe('Listener', () => {
     describe('Confirmed', () => {
         it('confirmedTransactionsGiven address signer', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
@@ -127,7 +129,7 @@ describe('Listener', () => {
         it('confirmedTransactionsGiven address recipient', () => {
             const recipientAddress = account2.address;
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 recipientAddress,
                 [],
                 PlainMessage.create('test-message'),
@@ -142,7 +144,7 @@ describe('Listener', () => {
     describe('UnConfirmed', () => {
         it('unconfirmedTransactionsAdded', (done) => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
@@ -161,7 +163,7 @@ describe('Listener', () => {
 
         it('unconfirmedTransactionsRemoved', (done) => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 [],
                 PlainMessage.create('test-message'),
@@ -179,12 +181,52 @@ describe('Listener', () => {
         });
     });
 
+    describe('UnConfirmed', () => {
+        it('unconfirmedTransactionsAdded with unresolved address', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(helper.epochAdjustment),
+                unresolvedAddress,
+                [],
+                PlainMessage.create('test-message'),
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = account.sign(transferTransaction, generationHash);
+            helper.listener
+                .unconfirmedAdded(unresolvedAddress)
+                .pipe(filter((_) => _.transactionInfo!.hash === signedTransaction.hash))
+                .subscribe(() => {
+                    done();
+                });
+            transactionRepository.announce(signedTransaction);
+        });
+
+        it('unconfirmedTransactionsRemoved with unresolved address', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(helper.epochAdjustment),
+                unresolvedAddress,
+                [],
+                PlainMessage.create('test-message'),
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = account.sign(transferTransaction, generationHash);
+            helper.listener
+                .unconfirmedRemoved(unresolvedAddress)
+                .pipe(filter((hash) => hash === signedTransaction.hash))
+                .subscribe(() => {
+                    done();
+                });
+            transactionRepository.announce(signedTransaction);
+        });
+    });
+
     describe('TransferTransaction', () => {
         it('standalone', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 cosignAccount1.address,
-                [helper.createNetworkCurrency(10, true)],
+                [helper.createCurrency(10, true)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -198,7 +240,7 @@ describe('Listener', () => {
     describe('MultisigAccountModificationTransaction - Create multisig account', () => {
         it('MultisigAccountModificationTransaction', () => {
             const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 2,
                 1,
                 [cosignAccount1.address, cosignAccount2.address, cosignAccount3.address],
@@ -208,7 +250,7 @@ describe('Listener', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
                 networkType,
                 [],
@@ -227,7 +269,7 @@ describe('Listener', () => {
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrencyNamespaceId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrency);
             helper.listener.aggregateBondedAdded(account.address).subscribe(() => {
                 done();
             });
@@ -245,7 +287,7 @@ describe('Listener', () => {
     describe('Aggregate Bonded Transactions', () => {
         it('aggregateBondedTransactionsRemoved', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrency);
             helper.listener.aggregateBondedRemoved(cosignAccount1.address, signedAggregatedTx.hash).subscribe(() => {
                 done();
             });
@@ -289,7 +331,7 @@ describe('Listener', () => {
         it('cosignatureAdded', (done) => {
             const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
 
-            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrencyNamespaceId);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, helper.networkCurrency);
             helper.listener.cosignatureAdded(cosignAccount1.address).subscribe(() => {
                 done();
             });
@@ -316,10 +358,28 @@ describe('Listener', () => {
         });
     });
 
+    describe('Aggregate Bonded Transactions', () => {
+        it('aggregateBondedTransactionsAdded', (done) => {
+            const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrency);
+            helper.listener.aggregateBondedAdded(unresolvedAddress).subscribe(() => {
+                done();
+            });
+            helper.listener.confirmed(unresolvedAddress).subscribe(() => {
+                transactionRepository.announceAggregateBonded(signedAggregatedTx);
+            });
+            helper.listener.status(unresolvedAddress).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+        });
+    });
+
     describe('MultisigAccountModificationTransaction - Restore multisig Accounts', () => {
         it('Restore Multisig Account', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 0,
                 [],
@@ -327,7 +387,7 @@ describe('Listener', () => {
                 networkType,
             );
             const removeCosigner2 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 0,
                 0,
                 [],
@@ -336,7 +396,7 @@ describe('Listener', () => {
             );
 
             const removeCosigner3 = MultisigAccountModificationTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 -1,
                 -1,
                 [],
@@ -345,7 +405,7 @@ describe('Listener', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [
                     removeCosigner1.toAggregate(multisigAccount.publicAccount),
                     removeCosigner2.toAggregate(multisigAccount.publicAccount),
@@ -366,9 +426,9 @@ describe('Listener', () => {
 
     describe('Transactions Status', () => {
         it('transactionStatusGiven', () => {
-            const mosaics = [helper.createNetworkCurrency(1000000000000)];
+            const mosaics = [helper.createCurrency(1000000000000)];
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
                 mosaics,
                 PlainMessage.create('test-message'),

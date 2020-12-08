@@ -15,12 +15,11 @@
  */
 
 import { expect } from 'chai';
-import { Account } from '../../../src/model/account/Account';
-import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
+import { Account } from '../../../src/model/account';
+import { EncryptedMessage } from '../../../src/model/message';
+import { NetworkType } from '../../../src/model/network';
+import { Deadline, TransferTransaction } from '../../../src/model/transaction';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('EncryptedMessage', () => {
     let sender: Account;

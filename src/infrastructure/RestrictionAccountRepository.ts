@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
-import { Address } from '../model/account/Address';
-import { AccountRestriction } from '../model/restriction/AccountRestriction';
+import { Observable } from 'rxjs';
+import { Address } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { AccountRestrictions } from '../model/restriction';
+import { SearcherRepository } from './paginationStreamer';
+import { RestrictionAccountSearchCriteria } from './searchCriteria';
 
-export interface RestrictionAccountRepository {
+export interface RestrictionAccountRepository extends SearcherRepository<AccountRestrictions, RestrictionAccountSearchCriteria> {
     /**
      * Gets Account restrictions.
-     * @param address list of addresses
-     * @returns Observable<AccountRestrictionsInfo>
+     * @param address the address
+     * @returns Observable<AccountRestrictions>
      */
-    getAccountRestrictions(address: Address): Observable<AccountRestriction[]>;
+    getAccountRestrictions(address: Address): Observable<AccountRestrictions>;
+
+    /**
+     * Gets Account restrictions merkle .
+     * @param address the account address.
+     * @returns Observable<MerkleStateInfo>
+     */
+    getAccountRestrictionsMerkle(address: Address): Observable<MerkleStateInfo>;
 }

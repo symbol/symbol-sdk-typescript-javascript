@@ -14,22 +14,38 @@
  * limitations under the License.
  */
 
-import { MosaicId } from '../mosaic/MosaicId';
+import {
+    GlobalKeyValueBuilder,
+    GlobalKeyValueSetBuilder,
+    MosaicGlobalRestrictionEntryBuilder,
+    MosaicIdDto,
+    MosaicRestrictionEntryBuilder,
+    MosaicRestrictionEntryTypeDto,
+    MosaicRestrictionKeyDto,
+    RestrictionRuleBuilder,
+} from 'catbuffer-typescript';
+import { MosaicId } from '../mosaic';
+import { UInt64 } from '../UInt64';
 import { MosaicGlobalRestrictionItem } from './MosaicGlobalRestrictionItem';
 import { MosaicRestrictionEntryType } from './MosaicRestrictionEntryType';
+
 /**
  * Mosaic global restriction structure describes restriction information for an mosaic.
  */
 export class MosaicGlobalRestriction {
     /**
      * Constructor
+     * @param version
      * @param compositeHash
      * @param entryType
      * @param mosaicId
-     * @param targetAddress
      * @param restrictions
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * composite hash
          */
@@ -45,6 +61,44 @@ export class MosaicGlobalRestriction {
         /**
          * Mosaic restriction items
          */
-        public readonly restrictions: Map<string, MosaicGlobalRestrictionItem>,
+        public readonly restrictions: MosaicGlobalRestrictionItem[],
     ) {}
+
+    /**
+     * Returns the restriction for a given key.
+     *
+     * @param key the key.
+     */
+    public getRestriction(key: UInt64): MosaicGlobalRestrictionItem | undefined {
+        return this.restrictions.find((item) => item.key.equals(key));
+    }
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const mosaicId: MosaicIdDto = this.mosaicId.toBuilder();
+        const keyPairs: GlobalKeyValueSetBuilder = new GlobalKeyValueSetBuilder(
+            this.restrictions
+                .sort((a, b) => a.key.compare(b.key))
+                .map((item) => {
+                    const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
+                    const value: number[] = item.restrictionValue.toDTO();
+                    const restrictionRule = new RestrictionRuleBuilder(
+                        item.referenceMosaicId.toBuilder(),
+                        value,
+                        item.restrictionType as number,
+                    );
+                    return new GlobalKeyValueBuilder(key, restrictionRule);
+                }),
+        );
+        const globalRestrictionBuilder = new MosaicGlobalRestrictionEntryBuilder(mosaicId, keyPairs);
+        return new MosaicRestrictionEntryBuilder(
+            this.version,
+            MosaicRestrictionEntryTypeDto.GLOBAL,
+            undefined,
+            globalRestrictionBuilder,
+        ).serialize();
+    }
 }

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
+import { AddressResolutionStatement, MosaicIdResolutionStatement, TransactionStatement } from '../../model/receipt';
 import { Page } from '../Page';
-import { PaginationStreamer } from './PaginationStreamer';
-import { ResolutionStatementSearchCriteria } from '../searchCriteria/ResolutionStatementSearchCriteria';
-import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../../model/receipt/ResolutionStatement';
-import { TransactionStatement } from '../../model/receipt/TransactionStatement';
-import { TransactionStatementSearchCriteria } from '../searchCriteria/TransactionStatementSearchCriteria';
 import { ReceiptRepository } from '../ReceiptRepository';
+import { ResolutionStatementSearchCriteria, TransactionStatementSearchCriteria } from '../searchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
 
 /**
  * A helper object that streams {@link Statement} using the search.

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Address } from './Address';
 import { NamespaceId } from '../namespace/NamespaceId';
+import { Address } from './Address';
 
 /**
  * Custom type for unresolved address

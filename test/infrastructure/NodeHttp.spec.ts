@@ -23,16 +23,15 @@ import {
     NodeRoutesApi,
     NodeStatusEnum,
     NodeTimeDTO,
-    RolesTypeEnum,
     ServerDTO,
     ServerInfoDTO,
     StorageInfoDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
-import { DtoMapping } from '../../src/core/utils/DtoMapping';
-import { NodeHttp } from '../../src/infrastructure/NodeHttp';
-import { RoleType } from '../../src/model/model';
-import { NetworkType } from '../../src/model/network/NetworkType';
+import { DtoMapping } from '../../src/core/utils';
+import { NodeHttp } from '../../src/infrastructure';
+import { RoleType } from '../../src/model';
+import { NetworkType } from '../../src/model/network';
 
 describe('NodeHttp', () => {
     const url = 'http://someHost';
@@ -81,7 +80,7 @@ describe('NodeHttp', () => {
         body.host = 'Some Host';
         body.port = 1234;
         body.publicKey = 'Some Public Key';
-        body.roles = RolesTypeEnum.NUMBER_1;
+        body.roles = 1;
         body.version = 4567;
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
@@ -112,7 +111,7 @@ describe('NodeHttp', () => {
         body.host = 'Some Host';
         body.port = 1234;
         body.publicKey = 'Some Public Key';
-        body.roles = RolesTypeEnum.NUMBER_7;
+        body.roles = 7;
         body.version = 4567;
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
@@ -146,7 +145,7 @@ describe('NodeHttp', () => {
         body.host = 'Some Host';
         body.port = 1234;
         body.publicKey = 'Some Public Key';
-        body.roles = RolesTypeEnum.NUMBER_1;
+        body.roles = 1;
         body.version = 4567;
 
         when(nodeRoutesApi.getNodePeers()).thenReturn(Promise.resolve([body]));
@@ -200,6 +199,17 @@ describe('NodeHttp', () => {
         }
     });
 
+    it('getUnlockedAccount', async () => {
+        const body = { unlockedAccount: ['key1', 'key2'] };
+
+        when(nodeRoutesApi.getUnlockedAccount()).thenReturn(Promise.resolve(body));
+
+        const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
+        expect(unlockedAccount).to.be.not.null;
+        expect(unlockedAccount[0]).to.be.equal('key1');
+        expect(unlockedAccount[1]).to.be.equal('key2');
+    });
+
     it('getStorageInfo', async () => {
         const body = {} as StorageInfoDTO;
         body.numAccounts = 1;
@@ -238,6 +248,18 @@ describe('NodeHttp', () => {
                 '{"statusCode":500,"statusMessage":"Some Error","body":"{\\"someResponse\\":\\"the body\\"}"}',
             );
         }
+    });
+
+    it('getNodeRoles for different values', () => {
+        expect(nodeRepository.getNodeRoles(0)).to.be.deep.eq([]);
+        expect(nodeRepository.getNodeRoles(1)).to.be.deep.eq([RoleType.PeerNode]);
+        expect(nodeRepository.getNodeRoles(2)).to.be.deep.eq([RoleType.ApiNode]);
+        expect(nodeRepository.getNodeRoles(3)).to.be.deep.eq([RoleType.PeerNode, RoleType.ApiNode]);
+        expect(nodeRepository.getNodeRoles(4)).to.be.deep.eq([RoleType.VotingNode]);
+        expect(nodeRepository.getNodeRoles(7)).to.be.deep.eq([RoleType.PeerNode, RoleType.ApiNode, RoleType.VotingNode]);
+        expect(nodeRepository.getNodeRoles(64)).to.be.deep.eq([RoleType.IPv4Node]);
+        expect(nodeRepository.getNodeRoles(128)).to.be.deep.eq([RoleType.IPv6Node]);
+        expect(nodeRepository.getNodeRoles(129)).to.be.deep.eq([RoleType.PeerNode, RoleType.IPv6Node]);
     });
 
     it('getStorageInfo on Exception on fetch response text function', async () => {

@@ -15,30 +15,20 @@
  */
 
 import { expect } from 'chai';
+import { TransactionInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../../../src/core/format';
-import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
-import { Account } from '../../../src/model/account/Account';
-import { Address } from '../../../src/model/account/Address';
-import { MessageMarker } from '../../../src/model/message/MessageMarker';
-import { MessageType } from '../../../src/model/message/MessageType';
-import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
-import { EmptyMessage, PlainMessage } from '../../../src/model/message/PlainMessage';
-import { Mosaic } from '../../../src/model/mosaic/Mosaic';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
-import { Statement } from '../../../src/model/receipt/Statement';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../../src/model/UInt64';
+import { TransactionMapping } from '../../../src/core/utils';
+import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction';
+import { PersistentHarvestingDelegationMessage, UInt64 } from '../../../src/model';
+import { Account, Address } from '../../../src/model/account';
+import { EmptyMessage, MessageMarker, MessageType, PlainMessage } from '../../../src/model/message';
+import { Mosaic, MosaicId } from '../../../src/model/mosaic';
+import { NamespaceId } from '../../../src/model/namespace';
+import { NetworkType } from '../../../src/model/network';
+import { ReceiptSource, ResolutionEntry, ResolutionStatement, ResolutionType, Statement } from '../../../src/model/receipt';
+import { AggregateTransaction, Deadline, TransactionInfo, TransferTransaction } from '../../../src/model/transaction';
 import { TestingAccount } from '../../conf/conf.spec';
-import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
-import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
-import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
-import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
-import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('TransferTransaction', () => {
     let account: Account;
@@ -329,6 +319,38 @@ describe('TransferTransaction', () => {
                 NetworkType.PRIVATE_TEST,
             );
         }).to.throw();
+    });
+    it('should load message with persistent message delegate', () => {
+        const messageHex =
+            'FE2A8061577301E29FB4BD2BA099AFA82DDB0212080CF649F0CB0FADAD7BA4CC04BE51E40A4EF0A27B8E2BEAB595F4075BB5A6A481835F3A6E4BBA63091A5866D90D2B7ACBBF158E51FE074619C4B0FF0C4AFEE1AE9A4D83A5A7A156C91CCA3A319D3279A64A63491E19656F7211760BB36EF6B3263C03837CE00E84FD82B32B721120DE';
+        const payload: TransactionInfoDTO = {
+            meta: {
+                height: '108907',
+                hash: '9661088F22C2DC72E76EE2B0F07BFC0D8E98EEE0CC8AE274362EDBB44F164F16',
+                merkleComponentHash: '9661088F22C2DC72E76EE2B0F07BFC0D8E98EEE0CC8AE274362EDBB44F164F16',
+                index: 0,
+            },
+            transaction: {
+                size: 292,
+                signature:
+                    '494A6AF4CDA3C8B5ED0061F561F65EFCBF911BC5179B120440A753345B209F380CE3417D40B773D755746C5B5DACC2F0C78B6A0EAC093CE96CBA18E45380B50C',
+                signerPublicKey: '60FAE3A39D580BB5118686569D159E3F2B991504D3ED0A304C3B7DA5FCCD0353',
+                version: 1,
+                network: 152,
+                type: 16724,
+                maxFee: '20000000',
+                deadline: '30905923815',
+                recipientAddress: '98BE002792600453CF3A23F9894BDA172CE4EFA7C6F3C109',
+                message: messageHex,
+                mosaics: [],
+            },
+            id: '5FA01EB485AC1F1E51EAA6BF',
+        };
+
+        const transaction = TransactionMapping.createFromDTO(payload);
+        const transferTransaction = transaction as TransferTransaction;
+        expect(transferTransaction.message.payload).eq(messageHex);
+        expect(transferTransaction.message.type).eq(MessageType.PersistentHarvestingDelegationMessage);
     });
 
     it('should throw exception with invalid private key when creating persistentDelegationRequestTransaction', () => {

@@ -15,31 +15,36 @@
  */
 
 import { deepEqual } from 'assert';
-import { UInt64 } from '../../../src/model/UInt64';
-import { HashLockInfoDTO, HashLockEntryDTO } from 'symbol-openapi-typescript-fetch-client';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { HashLockInfoBuilder } from 'catbuffer-typescript';
+import { expect } from 'chai';
+import { HashLockEntryDTO, HashLockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { Convert } from '../../../src/core/format';
 import { Address } from '../../../src/model/account/Address';
 import { HashLockInfo } from '../../../src/model/lock/HashLockInfo';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('HashLockInfo', () => {
     it('should createComplete an HashLockInfo object', () => {
         const dto = {} as HashLockInfoDTO;
         dto.id = '1';
         const lockDto = {} as HashLockEntryDTO;
+        lockDto.version = 1;
         lockDto.amount = '10';
         lockDto.endHeight = '122';
-        lockDto.hash = 'AAA';
+        lockDto.hash = 'BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E';
         lockDto.mosaicId = new MosaicId([3294802500, 2243684972]).toHex();
         lockDto.ownerAddress = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ').plain();
         lockDto.status = 1;
         dto.lock = lockDto;
         const info = new HashLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromRawAddress(lockDto.ownerAddress),
             new MosaicId(lockDto.mosaicId),
             UInt64.fromNumericString(lockDto.amount),
             UInt64.fromNumericString(lockDto.endHeight),
-            lockDto.status,
+            lockDto.status.valueOf(),
             lockDto.hash,
         );
 
@@ -50,5 +55,11 @@ describe('HashLockInfo', () => {
         deepEqual(info.hash, lockDto.hash);
         deepEqual(info.mosaicId.toHex(), lockDto.mosaicId);
         deepEqual(info.status, lockDto.status);
+
+        const serialized = info.serialize();
+        expect(Convert.uint8ToHex(serialized)).eq(
+            '01008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A44B262C46CEABB850A000000000000007A0000000000000001BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E',
+        );
+        deepEqual(HashLockInfoBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
 });

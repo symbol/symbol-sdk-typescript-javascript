@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { concat } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
+import { concat, Observable } from 'rxjs';
 import { defer } from 'rxjs/internal/observable/defer';
 import { from } from 'rxjs/internal/observable/from';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { SearchCriteria } from '../searchCriteria/SearchCriteria';
 import { Searcher } from './Searcher';
 
@@ -55,7 +54,7 @@ export class PaginationStreamer<E, C extends SearchCriteria> {
         return defer(() => {
             const observable = this.searcher.search(criteria);
             return observable.pipe(
-                flatMap((page) => {
+                mergeMap((page) => {
                     if (page.isLastPage) {
                         return from(page.data);
                     } else {
@@ -66,3 +65,18 @@ export class PaginationStreamer<E, C extends SearchCriteria> {
         });
     }
 }
+
+/**
+ * An object that knows how to create a stremer.
+ */
+export interface StreamerFactory<E, C extends SearchCriteria> {
+    /**
+     * It creates a streamer for this searcher.
+     */
+    streamer(): PaginationStreamer<E, C>;
+}
+
+/**
+ * An object that knows how to create a stremer from it's own searcher.
+ */
+export interface SearcherRepository<E, C extends SearchCriteria> extends StreamerFactory<E, C>, Searcher<E, C> {}

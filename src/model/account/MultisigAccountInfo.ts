@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { MultisigEntryBuilder } from 'catbuffer-typescript';
 import { Address } from './Address';
 
 /**
@@ -21,6 +22,7 @@ import { Address } from './Address';
  */
 export class MultisigAccountInfo {
     /**
+     * @param version
      * @param accountAddress
      * @param minApproval
      * @param minRemoval
@@ -28,6 +30,10 @@ export class MultisigAccountInfo {
      * @param multisigAddresses
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The account multisig address.
          */
@@ -74,5 +80,20 @@ export class MultisigAccountInfo {
      */
     public isCosignerOfMultisigAccount(address: Address): boolean {
         return this.multisigAddresses.find((multisig) => multisig.equals(address)) !== undefined;
+    }
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        return new MultisigEntryBuilder(
+            this.version,
+            this.minApproval,
+            this.minRemoval,
+            this.accountAddress.toBuilder(),
+            this.cosignatoryAddresses.map((cosig) => cosig.toBuilder()),
+            this.multisigAddresses.map((address) => address.toBuilder()),
+        ).serialize();
     }
 }

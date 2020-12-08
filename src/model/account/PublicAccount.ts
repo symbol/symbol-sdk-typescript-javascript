@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { KeyDto } from 'catbuffer-typescript';
 import { KeyPair } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { NetworkType } from '../network/NetworkType';
@@ -32,11 +33,11 @@ export class PublicAccount {
      */
     constructor(
         /**
-         * The account public private.
+         * The account's public key.
          */
         public readonly publicKey: string,
         /**
-         * The account address.
+         * The account's address.
          */
         public readonly address: Address,
     ) {}
@@ -96,5 +97,11 @@ export class PublicAccount {
             publicKey: this.publicKey,
             address: this.address.toDTO(),
         };
+    }
+    /**
+     * Create Builder object
+     */
+    toBuilder(): KeyDto {
+        return new KeyDto(Convert.hexToUint8(this.publicKey));
     }
 }

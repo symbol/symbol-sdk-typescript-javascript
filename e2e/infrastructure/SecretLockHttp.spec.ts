@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { sha3_256 } from 'js-sha3';
+import { take, toArray } from 'rxjs/operators';
+import { Crypto } from '../../src/core/crypto';
+import { Order, SecretLockPaginationStreamer } from '../../src/infrastructure';
+import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
 import { Account } from '../../src/model/account/Account';
+import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { toArray, take } from 'rxjs/operators';
-import { deepEqual } from 'assert';
-import { Order, SecretLockPaginationStreamer } from '../../src/infrastructure/infrastructure';
-import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
-import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
-import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
-import { sha3_256 } from 'js-sha3';
-import { Crypto } from '../../src/core/crypto';
 
 describe('SecretLockHttp', () => {
     const helper = new IntegrationTestHelper();
     let account: Account;
     let account2: Account;
-    let SecretLockRepo: SecretLockRepository;
+    let secretLockRepository: SecretLockRepository;
     let generationHash: string;
     let networkType: NetworkType;
     let secret: string;
@@ -44,7 +44,7 @@ describe('SecretLockHttp', () => {
             account2 = helper.account2;
             networkType = helper.networkType;
             generationHash = helper.generationHash;
-            SecretLockRepo = helper.repositoryFactory.createSecretLockRepository();
+            secretLockRepository = helper.repositoryFactory.createSecretLockRepository();
             secret = sha3_256.create().update(Crypto.randomBytes(20)).hex();
         });
     });
@@ -63,7 +63,7 @@ describe('SecretLockHttp', () => {
         it('Announce SecretLockTransaction', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 secret,
@@ -82,31 +82,48 @@ describe('SecretLockHttp', () => {
      * =========================
      */
 
-    describe('getSecretLock', () => {
+    describe('searchSecretLock using secret', () => {
         it('should return hash lock info given hash', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            const info = await SecretLockRepo.getSecretLock(secret).toPromise();
+
+            const page = await secretLockRepository.search({ address: account.address, secret }).toPromise();
+            expect(page.data.length).eq(1);
+            expect(page.pageNumber).eq(1);
+
+            const info = page.data[0];
             expect(info.ownerAddress.plain()).to.be.equal(account.address.plain());
             expect(info.recipientAddress.plain()).to.be.equal(account2.address.plain());
             expect(info.amount.toString()).to.be.equal('10');
+
+            const infoFromId = await secretLockRepository.getSecretLock(info.compositeHash).toPromise();
+            expect(infoFromId).deep.eq(info);
+            const merkleInfo = await secretLockRepository.getSecretLockMerkle(info.compositeHash).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 
     describe('searchSecretLock', () => {
         it('should return hash lock page info', async () => {
-            const info = await SecretLockRepo.search({ address: account.address }).toPromise();
+            const info = await secretLockRepository.search({ address: account.address }).toPromise();
             expect(info.data.length).to.be.greaterThan(0);
         });
     });
 
     describe('searchSecretLock with streamer', () => {
         it('should return hash lock page info', async () => {
-            const streamer = new SecretLockPaginationStreamer(SecretLockRepo);
+            const streamer = new SecretLockPaginationStreamer(secretLockRepository);
             const infoStreamer = await streamer
                 .search({ address: account.address, pageSize: 20, order: Order.Asc })
                 .pipe(take(20), toArray())
                 .toPromise();
-            const info = await SecretLockRepo.search({ address: account.address, pageSize: 20, order: Order.Asc }).toPromise();
+            const info = await secretLockRepository
+                .search({
+                    address: account.address,
+                    secret: undefined,
+                    pageSize: 20,
+                    order: Order.Asc,
+                })
+                .toPromise();
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });

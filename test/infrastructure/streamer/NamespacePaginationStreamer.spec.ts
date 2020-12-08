@@ -15,9 +15,9 @@
  */
 
 import { instance, mock } from 'ts-mockito';
+import { NamespaceRepository } from '../../../src/infrastructure/NamespaceRepository';
 import { NamespacePaginationStreamer } from '../../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
-import { NamespaceRepository } from '../../../src/infrastructure/NamespaceRepository';
 
 describe('NamespacePaginationStreamer', () => {
     it('basicMultiPageTest', () => {

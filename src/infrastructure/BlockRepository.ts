@@ -15,18 +15,17 @@
  */
 
 import { Observable } from 'rxjs';
-import { BlockInfo } from '../model/blockchain/BlockInfo';
-import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { UInt64 } from '../model/UInt64';
-import { Searcher } from './paginationStreamer/Searcher';
-import { BlockSearchCriteria } from './searchCriteria/BlockSearchCriteria';
+import { UInt64 } from '../model';
+import { BlockInfo, MerkleProofInfo } from '../model/blockchain';
+import { SearcherRepository } from './paginationStreamer';
+import { BlockSearchCriteria } from './searchCriteria';
 
 /**
  * Blockchain interface repository.
  *
  * @since 1.0
  */
-export interface BlockRepository extends Searcher<BlockInfo, BlockSearchCriteria> {
+export interface BlockRepository extends SearcherRepository<BlockInfo, BlockSearchCriteria> {
     /**
      * Gets a BlockInfo for a given block height
      * @param height - Block height

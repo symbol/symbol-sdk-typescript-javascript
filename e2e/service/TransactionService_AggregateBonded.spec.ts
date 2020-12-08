@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
+import { expect } from 'chai';
+import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -34,6 +28,7 @@ import { TransactionType } from '../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService - AggregateBonded', () => {
@@ -44,11 +39,9 @@ describe('TransactionService - AggregateBonded', () => {
     let cosignAccount1: Account;
     let cosignAccount2: Account;
     let cosignAccount3: Account;
-    let namespaceRepository: NamespaceRepository;
     let generationHash: string;
     let networkType: NetworkType;
     let transactionService: TransactionService;
-    let NetworkCurrencyLocalId: MosaicId;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -60,7 +53,6 @@ describe('TransactionService - AggregateBonded', () => {
             cosignAccount3 = helper.cosignAccount3;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionService = new TransactionService(
                 helper.repositoryFactory.createTransactionRepository(),
                 helper.repositoryFactory.createReceiptRepository(),
@@ -91,22 +83,6 @@ describe('TransactionService - AggregateBonded', () => {
         );
         return signer.sign(aggregateTransaction, generationHash);
     };
-
-    /**
-     * =========================
-     * Setup test data
-     * =========================
-     */
-    describe('Get network currency mosaic id', () => {
-        it('get mosaicId', () => {
-            return namespaceRepository
-                .getLinkedMosaicId(new NamespaceId('cat.currency'))
-                .toPromise()
-                .then((networkMosaicId: MosaicId) => {
-                    NetworkCurrencyLocalId = networkMosaicId;
-                });
-        });
-    });
 
     describe('Setup test multisig account', () => {
         it('Announce MultisigAccountModificationTransaction', () => {
@@ -170,7 +146,7 @@ describe('TransactionService - AggregateBonded', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+                helper.networkCurrency.createRelative(10),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType,
@@ -190,7 +166,7 @@ describe('TransactionService - AggregateBonded', () => {
             const signedAggregatedTransaction = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+                helper.networkCurrency.createRelative(10),
                 UInt64.fromUint(1000),
                 signedAggregatedTransaction,
                 networkType,

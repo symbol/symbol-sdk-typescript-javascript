@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { NetworkCurrencies } from '../model/mosaic/NetworkCurrencies';
 import { NetworkType } from '../model/network/NetworkType';
 
 export interface RepositoryFactoryConfig {
@@ -45,4 +46,14 @@ export interface RepositoryFactoryConfig {
      * The nemesis block creation epoch
      */
     epochAdjustment?: number;
+
+    /**
+     * The preconfigured symbol network currencies for offline access. They are loaded from server by default if not provided.
+     */
+    networkCurrencies?: NetworkCurrencies;
+
+    /**
+     * The node public key used for NodeKeyLink transaction in delegated harvesting.
+     */
+    nodePublicKey?: string;
 }

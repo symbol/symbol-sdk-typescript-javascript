@@ -18,42 +18,39 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
-import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
-import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
-import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
-import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
-import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { TransactionMapping } from '../../src/core/utils';
+import { Transaction, TransactionVersion, UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { LockHashAlgorithm } from '../../src/model/lock';
+import { PlainMessage } from '../../src/model/message';
+import { MosaicFlags, MosaicId, MosaicNonce, MosaicSupplyChangeAction } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from '../../src/model/restriction';
+import {
+    AccountKeyLinkTransaction,
+    AccountRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    Deadline,
+    LinkAction,
+    LockFundsTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicSupplyChangeTransaction,
+    MultisigAccountModificationTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    TransactionType,
+    TransferTransaction,
+    VotingKeyLinkTransaction,
+    VotingKeyLinkV1Transaction,
+    VrfKeyLinkTransaction,
+} from '../../src/model/transaction';
 import { TestingAccount } from '../conf/conf.spec';
+import { NetworkCurrencyLocal } from '../model/mosaic/Currency.spec';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
@@ -61,6 +58,14 @@ describe('SerializeTransactionToJSON', () => {
     before(() => {
         account = TestingAccount;
     });
+
+    const validateToFromJson = <T extends Transaction>(expectedTransaction: T): any => {
+        const json = expectedTransaction.toJSON();
+        const transaction = TransactionMapping.createFromDTO(json);
+        expect(transaction).deep.eq(expectedTransaction);
+        expect(transaction.toJSON()).deep.eq(json);
+        return json;
+    };
 
     it('should create AccountKeyLinkTransaction', () => {
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
@@ -70,8 +75,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = accountLinkTransaction.toJSON();
-
+        const json = validateToFromJson(accountLinkTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
@@ -86,8 +91,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = addressRestrictionTransaction.toJSON();
-
+        const json = validateToFromJson(addressRestrictionTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_ADDRESS_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(AddressRestrictionFlag.AllowIncomingAddress);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
@@ -103,8 +108,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicRestrictionTransaction.toJSON();
-
+        const json = validateToFromJson(mosaicRestrictionTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_MOSAIC_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(MosaicRestrictionFlag.AllowMosaic);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
@@ -120,8 +125,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = operationRestrictionTransaction.toJSON();
-
+        const json = validateToFromJson(operationRestrictionTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_OPERATION_RESTRICTION);
         expect(json.transaction.restrictionFlags).to.be.equal(OperationRestrictionFlag.AllowOutgoingTransactionType);
         expect(json.transaction.restrictionAdditions.length).to.be.equal(1);
@@ -138,8 +143,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = addressAliasTransaction.toJSON();
-
+        const json = validateToFromJson(addressAliasTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
         expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
     });
@@ -154,8 +159,8 @@ describe('SerializeTransactionToJSON', () => {
             mosaicId,
             NetworkType.PRIVATE_TEST,
         );
-        const json = mosaicAliasTransaction.toJSON();
-
+        const json = validateToFromJson(mosaicAliasTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
         expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
     });
@@ -171,8 +176,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicDefinitionTransaction.toJSON();
-
+        const json = validateToFromJson(mosaicDefinitionTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(json.transaction.flags).to.be.equal(7);
         expect(json.transaction.divisibility).to.be.equal(5);
@@ -190,8 +195,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicDefinitionTransaction.toJSON();
-
+        const json = validateToFromJson(mosaicDefinitionTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(json.transaction.divisibility).to.be.equal(3);
         expect(json.transaction.flags).to.be.equal(1);
@@ -207,23 +212,26 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = mosaicSupplyChangeTransaction.toJSON();
-
+        const json = validateToFromJson(mosaicSupplyChangeTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
         expect(json.transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
     });
 
     it('should create TransferTransaction', () => {
+        const mosaic = NetworkCurrencyLocal.createRelative(100);
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
-            [NetworkCurrencyLocal.createRelative(100)],
+            [mosaic],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
         );
+        // So deep equals works!
+        delete transferTransaction.mosaics[0].id['fullName'];
 
-        const json = transferTransaction.toJSON();
-
+        const json = validateToFromJson(transferTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.TRANSFER);
         expect(json.transaction.message).to.be.equal('00746573742D6D657373616765');
     });
@@ -241,8 +249,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = secretLockTransaction.toJSON();
-
+        const json = validateToFromJson(secretLockTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
     });
@@ -258,8 +266,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = secretProofTransaction.toJSON();
-
+        const json = validateToFromJson(secretProofTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
         expect(json.transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
@@ -276,8 +284,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = modifyMultisigAccountTransaction.toJSON();
-
+        const json = validateToFromJson(modifyMultisigAccountTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MULTISIG_ACCOUNT_MODIFICATION);
         expect(json.transaction.minApprovalDelta).to.be.equal(2);
         expect(json.transaction.minRemovalDelta).to.be.equal(1);
@@ -299,8 +307,8 @@ describe('SerializeTransactionToJSON', () => {
             [],
         );
 
-        const json = aggregateTransaction.toJSON();
-
+        const json = validateToFromJson(aggregateTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(json.transaction.transactions.length).to.be.equal(1);
     });
@@ -321,8 +329,8 @@ describe('SerializeTransactionToJSON', () => {
             [],
         );
 
-        const json = aggregateTransaction.toJSON();
-
+        const json = validateToFromJson(aggregateTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(json.transaction.transactions.length).to.be.equal(1);
     });
@@ -339,8 +347,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = lockTransaction.toJSON();
-
+        const json = validateToFromJson(lockTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.HASH_LOCK);
         expect(json.transaction.hash).to.be.equal(signedTransaction.hash);
     });
@@ -352,9 +360,10 @@ describe('SerializeTransactionToJSON', () => {
             UInt64.fromUint(1000),
             NetworkType.PRIVATE_TEST,
         );
-
-        const json = registerNamespaceTransaction.toJSON();
-
+        // So deep equals works!
+        delete (registerNamespaceTransaction.namespaceId as any).fullName;
+        const json = validateToFromJson(registerNamespaceTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
 
@@ -366,8 +375,8 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = registerNamespaceTransaction.toJSON();
-
+        const json = validateToFromJson(registerNamespaceTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.NAMESPACE_REGISTRATION);
     });
 
@@ -378,8 +387,8 @@ describe('SerializeTransactionToJSON', () => {
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
         );
-        const json = vrfKeyLinkTransaction.toJSON();
-
+        const json = validateToFromJson(vrfKeyLinkTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
@@ -391,15 +400,15 @@ describe('SerializeTransactionToJSON', () => {
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
         );
-        const json = nodeKeyLinkTransaction.toJSON();
-
+        const json = validateToFromJson(nodeKeyLinkTransaction);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
-    it('should create VotingKeyLinkTransaction', () => {
+    it('should create VotingKeyLinkV1Transaction', () => {
         const votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
-        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+        const votingKeyLinkV1Transaction = VotingKeyLinkV1Transaction.create(
             Deadline.create(epochAdjustment),
             votingKey,
             1,
@@ -408,11 +417,33 @@ describe('SerializeTransactionToJSON', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        const json = votingKeyLinkTransaction.toJSON();
+        const json = validateToFromJson(votingKeyLinkV1Transaction);
 
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
-        expect(json.transaction.startEpoch).to.be.equal('1');
-        expect(json.transaction.endEpoch.toString()).to.be.equal('3');
+        expect(json.transaction.startEpoch).to.be.equal(1);
+        expect(json.transaction.endEpoch).to.be.equal(3);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create VotingKeyLinkTransaction', () => {
+        const votingKey = Convert.uint8ToHex(Crypto.randomBytes(32));
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(epochAdjustment),
+            votingKey,
+            1,
+            3,
+            LinkAction.Link,
+            NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
+        );
+
+        const json = validateToFromJson(votingKeyLinkTransaction);
+
+        expect(json.transaction.version).to.be.equal(2);
+        expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
+        expect(json.transaction.startEpoch).to.be.equal(1);
+        expect(json.transaction.endEpoch).to.be.equal(3);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 });

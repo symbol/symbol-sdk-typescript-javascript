@@ -17,27 +17,20 @@
 import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
-import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { Account } from '../../src/model/account/Account';
-import { UInt64 } from '../../src/model/UInt64';
-import { TestingAccount, MultisigAccount } from '../conf/conf.spec';
-import { AccountService } from '../../src/service/AccountService';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { AccountInfo } from '../../src/model/account/AccountInfo';
-import { AccountType } from '../../src/model/account/AccountType';
-import { ActivityBucket } from '../../src/model/account/ActivityBucket';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NetworkCurrencyPublic } from '../../src/model/mosaic/NetworkCurrencyPublic';
-import { NetworkHarvestLocal } from '../../src/model/mosaic/NetworkHarvestLocal';
-import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { NamespaceName } from '../../src/model/namespace/NamespaceName';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { SupplementalPublicKeys } from '../../src/model/account/SupplementalPublicKeys';
 import { Page } from '../../src/infrastructure/Page';
+import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { Account, AccountInfo, AccountType, ActivityBucket, SupplementalPublicKeys } from '../../src/model/account';
+import { Mosaic, MosaicId } from '../../src/model/mosaic';
+import { MosaicAlias } from '../../src/model/namespace/MosaicAlias';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { NamespaceInfo } from '../../src/model/namespace/NamespaceInfo';
+import { NamespaceName } from '../../src/model/namespace/NamespaceName';
+import { UInt64 } from '../../src/model/UInt64';
+import { AccountService } from '../../src/service/AccountService';
+import { MultisigAccount, TestingAccount } from '../conf/conf.spec';
+import { NetworkCurrencyLocal, NetworkCurrencyPublic, NetworkHarvestLocal } from '../model/mosaic/Currency.spec';
 
 describe('AccountService', () => {
     let accountService: AccountService;
@@ -54,6 +47,8 @@ describe('AccountService', () => {
         }
         return [
             new AccountInfo(
+                1,
+                'someId',
                 account.address,
                 UInt64.fromUint(100),
                 account.publicKey,
@@ -71,12 +66,13 @@ describe('AccountService', () => {
     function mockNamespaceInfo(): NamespaceInfo[] {
         return [
             new NamespaceInfo(
+                1,
                 true,
                 0,
                 'id',
                 1,
                 1,
-                [NetworkCurrencyLocal.NAMESPACE_ID],
+                [NetworkCurrencyLocal.namespaceId!],
                 NamespaceId.createFromEncoded('0000000000000000'),
                 account.address,
                 UInt64.fromUint(10),
@@ -84,12 +80,13 @@ describe('AccountService', () => {
                 new MosaicAlias(new MosaicId('30BBEA6CC462B244')),
             ),
             new NamespaceInfo(
+                1,
                 true,
                 0,
                 'id',
                 1,
                 1,
-                [NetworkCurrencyPublic.NAMESPACE_ID],
+                [NetworkCurrencyPublic.namespaceId!],
                 NamespaceId.createFromEncoded('0000000000000000'),
                 account.address,
                 UInt64.fromUint(10),
@@ -97,12 +94,13 @@ describe('AccountService', () => {
                 new MosaicAlias(new MosaicId('31BBEA6CC462B244')),
             ),
             new NamespaceInfo(
+                1,
                 true,
                 0,
                 'id',
                 1,
                 1,
-                [NetworkHarvestLocal.NAMESPACE_ID],
+                [NetworkHarvestLocal.namespaceId!],
                 NamespaceId.createFromEncoded('0000000000000000'),
                 account.address,
                 UInt64.fromUint(10),
@@ -139,25 +137,25 @@ describe('AccountService', () => {
             observableOf(new Page<NamespaceInfo>(mockNamespaceInfo(), 1, 20)),
         );
 
-        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyLocal.NAMESPACE_ID]))).thenReturn(
-            observableOf([mockNamespaceName(NetworkCurrencyLocal.NAMESPACE_ID, 'catapult.currency')]),
+        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyLocal.namespaceId!]))).thenReturn(
+            observableOf([mockNamespaceName(NetworkCurrencyLocal.namespaceId!, 'catapult.currency')]),
         );
-        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyPublic.NAMESPACE_ID]))).thenReturn(
-            observableOf([mockNamespaceName(NetworkCurrencyPublic.NAMESPACE_ID, 'symbol.xym')]),
+        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkCurrencyPublic.namespaceId!]))).thenReturn(
+            observableOf([mockNamespaceName(NetworkCurrencyPublic.namespaceId!, 'symbol.xym')]),
         );
-        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkHarvestLocal.NAMESPACE_ID]))).thenReturn(
-            observableOf([mockNamespaceName(NetworkHarvestLocal.NAMESPACE_ID, 'catapult.harvest')]),
+        when(mockNamespaceRepository.getNamespacesNames(deepEqual([NetworkHarvestLocal.namespaceId!]))).thenReturn(
+            observableOf([mockNamespaceName(NetworkHarvestLocal.namespaceId!, 'catapult.harvest')]),
         );
 
         when(
             mockNamespaceRepository.getNamespacesNames(
-                deepEqual([NetworkCurrencyLocal.NAMESPACE_ID, NetworkCurrencyPublic.NAMESPACE_ID, NetworkHarvestLocal.NAMESPACE_ID]),
+                deepEqual([NetworkCurrencyLocal.namespaceId!, NetworkCurrencyPublic.namespaceId!, NetworkHarvestLocal.namespaceId!]),
             ),
         ).thenReturn(
             observableOf([
-                mockNamespaceName(NetworkCurrencyLocal.NAMESPACE_ID, 'catapult.currency'),
-                mockNamespaceName(NetworkCurrencyPublic.NAMESPACE_ID, 'symbol.xym'),
-                mockNamespaceName(NetworkHarvestLocal.NAMESPACE_ID, 'catapult.harvest'),
+                mockNamespaceName(NetworkCurrencyLocal.namespaceId!, 'catapult.currency'),
+                mockNamespaceName(NetworkCurrencyPublic.namespaceId!, 'symbol.xym'),
+                mockNamespaceName(NetworkHarvestLocal.namespaceId!, 'catapult.harvest'),
             ]),
         );
 

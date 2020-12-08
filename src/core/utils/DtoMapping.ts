@@ -15,50 +15,60 @@
  */
 
 import { Duration } from '@js-joda/core';
+import { AccountRestrictionsInfoDTO, MerkleTreeBranchDTO, MerkleTreeLeafDTO } from 'symbol-openapi-typescript-fetch-client';
+import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/index';
 import { Address } from '../../model/account/Address';
+import { MerkleStateInfo } from '../../model/blockchain/MerkleStateInfo';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { AccountRestriction } from '../../model/restriction/AccountRestriction';
 import { AccountRestrictions } from '../../model/restriction/AccountRestrictions';
-import { AccountRestrictionsInfo } from '../../model/restriction/AccountRestrictionsInfo';
 import { AddressRestrictionFlag } from '../../model/restriction/AddressRestrictionFlag';
 import { MosaicRestrictionFlag } from '../../model/restriction/MosaicRestrictionFlag';
 import { OperationRestrictionFlag } from '../../model/restriction/OperationRestrictionFlag';
+import { MerkleTree } from '../../model/state/MerkleTree';
+import { MerkleTreeBranch } from '../../model/state/MerkleTreeBranch';
+import { MerkleTreeBranchLink } from '../../model/state/MerkleTreeBranchLink';
+import { MerkleTreeLeaf } from '../../model/state/MerkleTreeLeaf';
+import { MerkleTreeNodeType } from '../../model/state/MerkleTreeNodeType';
 
 export class DtoMapping {
     /**
      * Create AccountRestrictionsInfo class from Json.
-     * @param {object} dataJson The account restriction json object.
-     * @returns {module: model/Account/AccountRestrictionsInfo} The AccountRestrictionsInfo class.
+     * @param accountRestrictions.
+     * @returns {module: model/Account/AccountRestrictions} The AccountRestrictionsInfo class.
      */
-    public static extractAccountRestrictionFromDto(accountRestrictions): AccountRestrictionsInfo {
-        return new AccountRestrictionsInfo(
-            accountRestrictions.meta,
-            new AccountRestrictions(
-                Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
-                accountRestrictions.accountRestrictions.restrictions.map((prop) => {
-                    switch (prop.restrictionFlags) {
-                        case AddressRestrictionFlag.AllowIncomingAddress:
-                        case AddressRestrictionFlag.BlockIncomingAddress:
-                        case AddressRestrictionFlag.AllowOutgoingAddress:
-                        case AddressRestrictionFlag.BlockOutgoingAddress:
-                            return new AccountRestriction(
-                                prop.restrictionFlags,
-                                prop.values.map((value) => Address.createFromEncoded(value)),
-                            );
-                        case MosaicRestrictionFlag.AllowMosaic:
-                        case MosaicRestrictionFlag.BlockMosaic:
-                            return new AccountRestriction(
-                                prop.restrictionFlags,
-                                prop.values.map((value) => new MosaicId(value)),
-                            );
-                        case OperationRestrictionFlag.AllowOutgoingTransactionType:
-                        case OperationRestrictionFlag.BlockOutgoingTransactionType:
-                            return new AccountRestriction(prop.restrictionFlags, prop.values);
-                        default:
-                            throw new Error(`Invalid restriction type: ${prop.restrictionFlags}`);
-                    }
-                }),
-            ),
+    public static extractAccountRestrictionFromDto(accountRestrictions: AccountRestrictionsInfoDTO): AccountRestrictions {
+        return new AccountRestrictions(
+            accountRestrictions.accountRestrictions.version || 1,
+            accountRestrictions['id'],
+            Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
+            accountRestrictions.accountRestrictions.restrictions.map((prop) => {
+                const restrictionFlags = prop.restrictionFlags as number;
+                switch (restrictionFlags) {
+                    case AddressRestrictionFlag.AllowIncomingAddress:
+                    case AddressRestrictionFlag.BlockIncomingAddress:
+                    case AddressRestrictionFlag.AllowOutgoingAddress:
+                    case AddressRestrictionFlag.BlockOutgoingAddress:
+                        return new AccountRestriction(
+                            restrictionFlags,
+                            prop.values.map((value) => Address.createFromEncoded(value as string)),
+                        );
+                    case MosaicRestrictionFlag.AllowMosaic:
+                    case MosaicRestrictionFlag.BlockMosaic:
+                        return new AccountRestriction(
+                            restrictionFlags,
+                            prop.values.map((value) => new MosaicId(value as string)),
+                        );
+                    case OperationRestrictionFlag.AllowOutgoingTransactionType:
+                    case OperationRestrictionFlag.BlockOutgoingTransactionType:
+                        return new AccountRestriction(
+                            restrictionFlags,
+                            prop.values.map((value) => value as number),
+                        );
+                    default:
+                        throw new Error(`Invalid restriction type: ${restrictionFlags}`);
+                }
+            }),
         );
     }
 
@@ -91,12 +101,31 @@ export class DtoMapping {
      */
     public static parseServerDuration(serverValue: string): Duration {
         const preprocessedValue = serverValue.replace(`'`, '').trim();
-        const regex = `([0-9]+)([hdms]+)[:\\s]?$`;
+        const patten = `([0-9]+)([hdms]+)[:\\s]?`;
+        const regex = new RegExp(patten, 'g');
+
+        // if the input doesn't match the patten, don't bother to do loop
+        if (!preprocessedValue.match(patten)) {
+            throw new Error('Duration value format is not recognized.');
+        }
+
         let duration = Duration.ofSeconds(0);
-        const matcher = preprocessedValue.match(regex);
-        if (matcher && matcher.length === 3) {
-            const num = parseInt(matcher[1]);
-            const type = matcher[2];
+        let match;
+        const types: string[] = [];
+        let matchGroups = '';
+        while ((match = regex.exec(preprocessedValue))) {
+            if (!match) {
+                throw new Error('Duration value format is not recognized.');
+            }
+            const num = parseInt(match[1]);
+            const type = match[2];
+
+            // Added check make sure no duplicated types
+            if (types.indexOf(type) >= 0 || !match || match.length !== 3) {
+                throw new Error('Duration value format is not recognized.');
+            }
+            types.push(type);
+
             switch (type) {
                 case 'ms':
                     duration = duration.plusMillis(num);
@@ -116,8 +145,53 @@ export class DtoMapping {
                 default:
                     throw new Error('Duration value format is not recognized.');
             }
-            return duration;
+            matchGroups += match[0];
         }
-        throw new Error(`Duration value format is not recognized.`);
+        if (!types.length || matchGroups !== preprocessedValue) {
+            throw new Error('Duration value format is not recognized.');
+        }
+        return duration;
+    }
+
+    /**
+     *
+     * It converts a server Hex like 0x017D'1694'0477'B3F5 to 017D16940477B3F5
+     *
+     * @param serverHex
+     */
+    public static toSimpleHex(serverHex: string): string {
+        return serverHex.split("'").join('').replace(/^(0x)/, '');
+    }
+
+    /**
+     * Creates the MerkleStateInfo from the dto
+     * @param dto the dto
+     */
+    public static toMerkleStateInfo(dto: MerkleStateInfoDTO): MerkleStateInfo {
+        if (!dto.tree) {
+            return new MerkleStateInfo(dto.raw, MerkleTree.fromRaw(dto.raw));
+        }
+
+        const leaf = dto.tree.find((tree) => tree.type.valueOf() === MerkleTreeNodeType.Leaf) as MerkleTreeLeafDTO;
+        const tree = new MerkleTree(
+            dto.tree
+                .filter((tree) => tree.type.valueOf() === MerkleTreeNodeType.Branch)
+                .map((b) => {
+                    const branch = b as MerkleTreeBranchDTO;
+                    return new MerkleTreeBranch(
+                        branch.type.valueOf(),
+                        branch.path,
+                        branch.encodedPath,
+                        branch.nibbleCount,
+                        branch.linkMask,
+                        branch.links.map((link) => new MerkleTreeBranchLink(link.bit, link.link)),
+                        branch.branchHash,
+                    );
+                }),
+            leaf
+                ? new MerkleTreeLeaf(leaf.type.valueOf(), leaf.path, leaf.encodedPath, leaf.nibbleCount, leaf.value, leaf.leafHash)
+                : undefined,
+        );
+        return new MerkleStateInfo(dto.raw, tree);
     }
 }

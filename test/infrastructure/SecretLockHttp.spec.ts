@@ -16,15 +16,18 @@
 import { expect } from 'chai';
 import * as http from 'http';
 import {
-    Pagination,
-    SecretLockInfoDTO,
-    SecretLockEntryDTO,
-    SecretLockRoutesApi,
-    SecretLockPage,
     LockHashAlgorithmEnum,
+    MerkleTreeLeafDTO,
+    Pagination,
+    SecretLockEntryDTO,
+    SecretLockInfoDTO,
+    SecretLockPage,
+    SecretLockRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
+import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/MerkleStateInfoDTO';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
+import { SecretLockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/SecretLockPaginationStreamer';
 import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
 import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
 import { Address } from '../../src/model/account/Address';
@@ -73,12 +76,6 @@ describe('SecretLockHttp', () => {
         expect(info.status).to.be.equal(lockDto.status);
     }
 
-    it('getSecretLockInfo', async () => {
-        when(secretLockRoutesApi.getSecretLock(lockDto.secret)).thenReturn(Promise.resolve(dto));
-        const hashInfo = await secretLockRepository.getSecretLock(lockDto.secret).toPromise();
-        assertHashInfo(hashInfo);
-    });
-
     it('search', async () => {
         const pagination = {} as Pagination;
         pagination.pageNumber = 1;
@@ -87,18 +84,33 @@ describe('SecretLockHttp', () => {
         const body = {} as SecretLockPage;
         body.data = [dto];
         body.pagination = pagination;
-        when(secretLockRoutesApi.searchSecretLock(address.plain(), undefined, undefined, undefined, undefined)).thenReturn(
+        when(secretLockRoutesApi.searchSecretLock(address.plain(), lockDto.secret, undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve(body),
         );
-        const infos = await secretLockRepository.search({ address }).toPromise();
+        const infos = await secretLockRepository.search({ address, secret: lockDto.secret }).toPromise();
         assertHashInfo(infos.data[0]);
     });
 
-    it('getSecretLockInfo - Error', async () => {
-        when(secretLockRoutesApi.getSecretLock(lockDto.secret)).thenReject(new Error('Mocked Error'));
-        await secretLockRepository
-            .getSecretLock(lockDto.secret)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+    it('streamer', async () => {
+        const accountHttp = new SecretLockHttp('url');
+        expect(accountHttp.streamer() instanceof SecretLockPaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(secretLockRoutesApi.getSecretLockMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await secretLockRepository.getSecretLockMerkle('hash').toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

@@ -15,12 +15,12 @@
  */
 
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { TestingAccount } from '../../conf/conf.spec';
-import { Convert } from '../../../src/core/format/Convert';
 
 describe('ResolutionEntry', () => {
     const address = TestingAccount.address;

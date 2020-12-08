@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect } from 'chai';
-import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { Account } from '../../src/model/account/Account';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
-import { toArray, take } from 'rxjs/operators';
 import { deepEqual } from 'assert';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { expect } from 'chai';
+import { take, toArray } from 'rxjs/operators';
+import { MosaicRepository, NamespaceRepository, TransactionGroup } from '../../src/infrastructure';
+import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { UInt64 } from '../../src/model';
+import { Account } from '../../src/model/account';
+import { MosaicFlags, MosaicId, MosaicInfo, MosaicNonce } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import {
+    Deadline,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    NamespaceRegistrationTransaction,
+} from '../../src/model/transaction';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
@@ -43,8 +40,6 @@ describe('MosaicHttp', () => {
     let generationHash: string;
     const helper = new IntegrationTestHelper();
     let networkType: NetworkType;
-
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -60,6 +55,11 @@ describe('MosaicHttp', () => {
         return helper.close();
     });
 
+    const validateMerkle = async (info: MosaicInfo): Promise<void> => {
+        const merkleInfo = await mosaicRepository.getMosaicMerkle(info.id).toPromise();
+        expect(merkleInfo.raw).to.not.be.undefined;
+    };
+
     /**
      * =========================
      * Setup Test Data
@@ -72,7 +72,7 @@ describe('MosaicHttp', () => {
             expect(nonce.toHex()).to.be.equals('22EA84A6');
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, false),
@@ -102,7 +102,7 @@ describe('MosaicHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(1000),
                 networkType,
@@ -117,7 +117,7 @@ describe('MosaicHttp', () => {
     describe('Setup test MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
@@ -141,6 +141,7 @@ describe('MosaicHttp', () => {
             expect(mosaicInfo.divisibility).to.be.equal(3);
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
             expect(mosaicInfo.isTransferable()).to.be.equal(true);
+            await validateMerkle(mosaicInfo);
         });
     });
 
@@ -151,6 +152,7 @@ describe('MosaicHttp', () => {
             expect(mosaicInfos[0].divisibility).to.be.equal(3);
             expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
             expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
+            await validateMerkle(mosaicInfos[0]);
         });
     });
 
@@ -166,6 +168,8 @@ describe('MosaicHttp', () => {
             const mosaics = await mosaicRepository.search({ ownerAddress: account.address }).toPromise();
             expect(mosaics.data.length).to.be.greaterThan(0);
             expect(mosaics.data.find((m) => m.id.toHex() === mosaicId.toHex()) !== undefined).to.be.true;
+
+            await Promise.all(mosaics.data.map((m) => validateMerkle(m)));
         });
     });
 
@@ -191,7 +195,7 @@ describe('MosaicHttp', () => {
     describe('Remove test MosaicAlias', () => {
         it('Announce MosaicAliasTransaction', () => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AliasAction.Unlink,
                 namespaceId,
                 mosaicId,

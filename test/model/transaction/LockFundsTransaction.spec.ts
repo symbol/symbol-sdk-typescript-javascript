@@ -19,7 +19,6 @@ import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
@@ -33,6 +32,7 @@ import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTr
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('LockFundsTransaction', () => {
     let account: Account;
@@ -96,7 +96,7 @@ describe('LockFundsTransaction', () => {
             signedTransaction,
             NetworkType.PRIVATE_TEST,
         );
-        deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyLocal.namespaceId!.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });

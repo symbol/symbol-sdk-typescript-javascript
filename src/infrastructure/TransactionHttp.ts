@@ -32,6 +32,7 @@ import { TransactionInfo } from '../model/transaction/TransactionInfo';
 import { TransactionType } from '../model/transaction/TransactionType';
 import { Http } from './Http';
 import { Page } from './Page';
+import { TransactionPaginationStreamer } from './paginationStreamer';
 import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 import { TransactionGroup } from './TransactionGroup';
@@ -191,6 +192,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
             super.toPage(body.pagination, body.data, CreateTransactionFromDTO),
         );
     }
+    public streamer(): TransactionPaginationStreamer {
+        return new TransactionPaginationStreamer(this);
+    }
 
     /**
      * @internal
@@ -226,8 +230,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.height?.toString(),
                     criteria.fromHeight?.toString(),
                     criteria.toHeight?.toString(),
+                    criteria.fromTransferAmount?.toString(),
+                    criteria.toTransferAmount?.toString(),
                     criteria.type?.map((type) => type.valueOf()),
                     criteria.embedded,
+                    criteria.transferMosaicId?.toHex(),
                     criteria.pageSize,
                     criteria.pageNumber,
                     criteria.offset,
@@ -241,8 +248,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.height?.toString(),
                     criteria.fromHeight?.toString(),
                     criteria.toHeight?.toString(),
+                    criteria.fromTransferAmount?.toString(),
+                    criteria.toTransferAmount?.toString(),
                     criteria.type?.map((type) => type.valueOf()),
                     criteria.embedded,
+                    criteria.transferMosaicId?.toHex(),
                     criteria.pageSize,
                     criteria.pageNumber,
                     criteria.offset,
@@ -256,8 +266,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     criteria.height?.toString(),
                     criteria.fromHeight?.toString(),
                     criteria.toHeight?.toString(),
+                    criteria.fromTransferAmount?.toString(),
+                    criteria.toTransferAmount?.toString(),
                     criteria.type?.map((type) => type.valueOf()),
                     criteria.embedded,
+                    criteria.transferMosaicId?.toHex(),
                     criteria.pageSize,
                     criteria.pageNumber,
                     criteria.offset,

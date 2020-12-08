@@ -16,20 +16,16 @@
 
 import { Observable } from 'rxjs';
 import { AccountInfoDTO, AccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { AccountInfo } from '../model/account/AccountInfo';
-import { ActivityBucket } from '../model/account/ActivityBucket';
-import { Address } from '../model/account/Address';
-import { Mosaic } from '../model/mosaic/Mosaic';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { UInt64 } from '../model/UInt64';
+import { DtoMapping } from '../core/utils';
+import { UInt64 } from '../model';
+import { AccountInfo, AccountLinkPublicKey, AccountLinkVotingKey, ActivityBucket, Address, SupplementalPublicKeys } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { Mosaic, MosaicId } from '../model/mosaic';
 import { AccountRepository } from './AccountRepository';
 import { Http } from './Http';
-import { SupplementalPublicKeys } from '../model/account/SupplementalPublicKeys';
-import { AccountLinkPublicKey } from '../model/account/AccountLinkPublicKey';
-import { AccountLinkVotingKey } from '../model/account/AccountLinkVotingKey';
-import { AccountSearchCriteria } from './searchCriteria/AccountSearchCriteria';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { Page } from './Page';
+import { AccountPaginationStreamer } from './paginationStreamer';
+import { AccountSearchCriteria } from './searchCriteria';
 
 /**
  * Account http repository.
@@ -59,7 +55,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo>
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
-        return this.call(this.accountRoutesApi.getAccountInfo(address.plain()), (body) => this.toAccountInfo(body));
+        return this.call(this.accountRoutesApi.getAccountInfo(address.plain()), AccountHttp.toAccountInfo);
     }
 
     /**
@@ -71,7 +67,7 @@ export class AccountHttp extends Http implements AccountRepository {
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(this.toAccountInfo));
+        return this.call(this.accountRoutesApi.getAccountsInfo(accountIds), (body) => body.map(AccountHttp.toAccountInfo));
     }
 
     /**
@@ -89,8 +85,21 @@ export class AccountHttp extends Http implements AccountRepository {
                 DtoMapping.mapEnum(criteria.orderBy),
                 criteria.mosaicId?.toHex(),
             ),
-            (body) => super.toPage(body.pagination, body.data, this.toAccountInfo),
+            (body) => super.toPage(body.pagination, body.data, AccountHttp.toAccountInfo),
         );
+    }
+
+    public streamer(): AccountPaginationStreamer {
+        return new AccountPaginationStreamer(this);
+    }
+
+    /**
+     * Returns the merkle information of the given account.
+     *
+     * @param address the address
+     */
+    getAccountInfoMerkle(address: Address): Observable<MerkleStateInfo> {
+        return this.call(this.accountRoutesApi.getAccountInfoMerkle(address.plain()), DtoMapping.toMerkleStateInfo);
     }
 
     /**
@@ -100,8 +109,10 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param {AccountInfoDTO} dto AccountInfoDTO the dto object from rest.
      * @returns AccountInfo model
      */
-    private toAccountInfo(dto: AccountInfoDTO): AccountInfo {
+    public static toAccountInfo(dto: AccountInfoDTO): AccountInfo {
         return new AccountInfo(
+            dto.account.version || 1,
+            dto.id,
             Address.createFromEncoded(dto.account.address),
             UInt64.fromNumericString(dto.account.addressHeight),
             dto.account.publicKey,

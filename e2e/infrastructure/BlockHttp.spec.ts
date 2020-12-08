@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { mergeMap, toArray } from 'rxjs/operators';
+import { mergeMap, take, toArray } from 'rxjs/operators';
+import { Order } from '../../src/infrastructure';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
+import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
+import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
+import { TransactionStatement } from '../../src/model';
 import { Account } from '../../src/model/account/Account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -25,12 +30,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { BlockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/BlockPaginationStreamer';
-import { deepEqual } from 'assert';
-import { take } from 'rxjs/operators';
-import { TransactionStatement } from '../../src/model/model';
-import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
-import { Order } from '../../src/infrastructure/infrastructure';
 
 describe('BlockHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -42,8 +41,6 @@ describe('BlockHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let transactionHash;
-
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -69,9 +66,9 @@ describe('BlockHttp', () => {
     describe('Setup Test Data', () => {
         it('Announce TransferTransaction FER', () => {
             const transferTransaction = TransferTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account2.address,
-                [helper.createNetworkCurrency(1, false)],
+                [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,

@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { expect } from 'chai';
 import { EMPTY, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { IListener } from '../../src/infrastructure/IListener';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
+import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -37,6 +32,7 @@ import { TransactionStatusError } from '../../src/model/transaction/TransactionS
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkCurrencyLocal } from '../model/mosaic/Currency.spec';
 
 /**
  * Unit test of TransactionService
@@ -69,7 +65,7 @@ describe('TransactionService', () => {
 
     const hashLockTransaction = HashLockTransaction.create(
         Deadline.create(epochAdjustment),
-        new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyLocal.DIVISIBILITY))),
+        NetworkCurrencyLocal.createRelative(10),
         UInt64.fromUint(10000),
         account.sign(aggregateBondedTransaction, generationHash),
         NetworkType.PRIVATE_TEST,

@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
-import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { UInt64 } from '../../src/model/UInt64';
-import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { MetadataType } from '../../src/model/model';
-import { Order, MetadataPaginationStreamer } from '../../src/infrastructure/infrastructure';
 import { deepEqual } from 'assert';
+import { expect } from 'chai';
 import { take, toArray } from 'rxjs/operators';
+import { MetadataPaginationStreamer, MetadataRepository, Order } from '../../src/infrastructure';
+import { Metadata, MetadataType, UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
+import { NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import {
+    AccountMetadataTransaction,
+    AggregateTransaction,
+    Deadline,
+    MosaicDefinitionTransaction,
+    MosaicMetadataTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+} from '../../src/model/transaction';
+import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('MetadataHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -46,8 +43,6 @@ describe('MetadataHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let metadataRepository: MetadataRepository;
-
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -63,6 +58,14 @@ describe('MetadataHttp', () => {
         return helper.close();
     });
 
+    const validateMerkle = async (info: Metadata): Promise<void> => {
+        const infoFromId = await metadataRepository.getMetadata(info.metadataEntry.compositeHash).toPromise();
+        expect(infoFromId).to.be.equal(info);
+
+        const merkleInfo = await metadataRepository.getMetadataMerkle(info.metadataEntry.compositeHash).toPromise();
+        expect(merkleInfo.raw).to.not.be.undefined;
+    };
+
     /**
      * =========================
      * Setup test data
@@ -74,7 +77,7 @@ describe('MetadataHttp', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -92,7 +95,7 @@ describe('MetadataHttp', () => {
         it('Announce NamespaceRegistrationTransaction', () => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 namespaceName,
                 UInt64.fromUint(9),
                 networkType,
@@ -107,7 +110,7 @@ describe('MetadataHttp', () => {
     describe('AccountMetadataTransaction', () => {
         it('aggregate', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 UInt64.fromUint(6),
                 23,
@@ -117,7 +120,7 @@ describe('MetadataHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [accountMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -131,7 +134,7 @@ describe('MetadataHttp', () => {
     describe('MosaicMetadataTransaction', () => {
         it('aggregate', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 UInt64.fromUint(6),
                 mosaicId,
@@ -142,7 +145,7 @@ describe('MetadataHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -156,7 +159,7 @@ describe('MetadataHttp', () => {
     describe('NamespaceMetadataTransaction', () => {
         it('aggregate', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 account.address,
                 UInt64.fromUint(6),
                 namespaceId,
@@ -167,7 +170,7 @@ describe('MetadataHttp', () => {
             );
 
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [namespaceMetadataTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -190,12 +193,14 @@ describe('MetadataHttp', () => {
                 .search({ targetAddress: accountAddress, metadataType: MetadataType.Account, order: Order.Desc })
                 .toPromise();
             expect(metadata.data.length).to.be.greaterThan(0);
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetId).to.be.undefined;
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test account meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(23);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetId).to.be.undefined;
+            expect(info.metadataEntry.value).to.be.equal('Test account meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(23);
+            await validateMerkle(info);
         });
     });
 
@@ -210,12 +215,14 @@ describe('MetadataHttp', () => {
                 })
                 .toPromise();
             expect(metadata.data.length).to.be.greaterThan(0);
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetId).to.be.undefined;
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test account meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(23);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetId).to.be.undefined;
+            expect(info.metadataEntry.value).to.be.equal('Test account meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(23);
+            await validateMerkle(info);
         });
     });
 
@@ -230,12 +237,15 @@ describe('MetadataHttp', () => {
                     order: Order.Desc,
                 })
                 .toPromise();
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetId).to.be.undefined;
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test account meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(23);
+
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetId).to.be.undefined;
+            expect(info.metadataEntry.value).to.be.equal('Test account meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(23);
+            await validateMerkle(info);
         });
     });
 
@@ -245,12 +255,14 @@ describe('MetadataHttp', () => {
                 .search({ targetId: mosaicId, metadataType: MetadataType.Mosaic, order: Order.Desc })
                 .toPromise();
             expect(metadata.data.length).to.be.greaterThan(0);
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect((metadata.data[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(22);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect((info.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+            expect(info.metadataEntry.value).to.be.equal('Test mosaic meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(22);
+            await validateMerkle(info);
         });
     });
 
@@ -265,12 +277,14 @@ describe('MetadataHttp', () => {
                 })
                 .toPromise();
             expect(metadata.data.length).to.be.greaterThan(0);
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect((metadata.data[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(22);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect((info.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+            expect(info.metadataEntry.value).to.be.equal('Test mosaic meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(22);
+            await validateMerkle(info);
         });
     });
 
@@ -285,12 +299,14 @@ describe('MetadataHttp', () => {
                     order: Order.Desc,
                 })
                 .toPromise();
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect((metadata.data[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test mosaic meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(22);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect((info.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+            expect(info.metadataEntry.value).to.be.equal('Test mosaic meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(22);
+            await validateMerkle(info);
         });
     });
 
@@ -301,12 +317,14 @@ describe('MetadataHttp', () => {
                 .search({ targetId: namespaceId, metadataType: MetadataType.Namespace, order: Order.Desc })
                 .toPromise();
             expect(metadata.data.length).to.be.greaterThan(0);
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect((metadata.data[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test namespace meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(25);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect((info.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
+            expect(info.metadataEntry.value).to.be.equal('Test namespace meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(25);
+            await validateMerkle(info);
         });
     });
 
@@ -321,12 +339,14 @@ describe('MetadataHttp', () => {
                 })
                 .toPromise();
             expect(metadata.data.length).to.be.greaterThan(0);
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect((metadata.data[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test namespace meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(25);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect((info.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
+            expect(info.metadataEntry.value).to.be.equal('Test namespace meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(25);
+            await validateMerkle(info);
         });
     });
 
@@ -341,12 +361,14 @@ describe('MetadataHttp', () => {
                     order: Order.Desc,
                 })
                 .toPromise();
-            expect(metadata.data[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
-            expect(metadata.data[0].metadataEntry.sourceAddress).to.be.deep.equal(account.address);
-            expect(metadata.data[0].metadataEntry.targetAddress).to.be.deep.equal(account.address);
-            expect((metadata.data[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-            expect(metadata.data[0].metadataEntry.value).to.be.equal('Test namespace meta value');
-            expect(metadata.data[0].metadataEntry.value.length).to.be.equal(25);
+            const info = metadata.data[0];
+            expect(info.metadataEntry.scopedMetadataKey.toString()).to.be.equal('6');
+            expect(info.metadataEntry.sourceAddress).to.be.deep.equal(account.address);
+            expect(info.metadataEntry.targetAddress).to.be.deep.equal(account.address);
+            expect((info.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
+            expect(info.metadataEntry.value).to.be.equal('Test namespace meta value');
+            expect(info.metadataEntry.value.length).to.be.equal(25);
+            await validateMerkle(info);
         });
     });
 

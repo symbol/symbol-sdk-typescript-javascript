@@ -21,20 +21,17 @@ import {
     EmbeddedTransactionBuilder,
     Hash256Dto,
     HashLockTransactionBuilder,
-    KeyDto,
-    SignatureDto,
     TimestampDto,
+    TransactionBuilder,
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
-    TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { DtoMapping } from '../../core/utils/DtoMapping';
-import { PublicAccount } from '../account/PublicAccount';
-import { Mosaic } from '../mosaic/Mosaic';
-import { MosaicId } from '../mosaic/MosaicId';
-import { NetworkType } from '../network/NetworkType';
-import { Statement } from '../receipt/Statement';
+import { DtoMapping } from '../../core/utils';
+import { Address, PublicAccount } from '../account';
+import { Mosaic, MosaicId } from '../mosaic';
+import { NetworkType } from '../network';
+import { Statement } from '../receipt';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -43,7 +40,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.
@@ -56,7 +52,6 @@ export class LockFundsTransaction extends Transaction {
      * Aggregate bonded hash.
      */
     public readonly hash: string;
-    signedTransaction: SignedTransaction;
 
     /**
      * Create a Lock funds transaction object
@@ -98,8 +93,8 @@ export class LockFundsTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param mosaic
-     * @param duration
+     * @param mosaic The locked mosaic.
+     * @param duration The funds lock duration.
      * @param signedTransaction
      * @param signature
      * @param signer
@@ -110,13 +105,7 @@ export class LockFundsTransaction extends Transaction {
         version: number,
         deadline: Deadline,
         maxFee: UInt64,
-        /**
-         * The locked mosaic.
-         */
         public readonly mosaic: Mosaic,
-        /**
-         * The funds lock duration.
-         */
         public readonly duration: UInt64,
         signedTransaction: SignedTransaction,
         signature?: string,
@@ -125,7 +114,6 @@ export class LockFundsTransaction extends Transaction {
     ) {
         super(TransactionType.HASH_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.hash = signedTransaction.hash;
-        this.signedTransaction = signedTransaction;
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
             throw new Error('Signed transaction must be Aggregate Bonded Transaction');
         }
@@ -143,7 +131,7 @@ export class LockFundsTransaction extends Transaction {
             : HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = LockFundsTransaction.create(
             isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as HashLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId), new UInt64(builder.getMosaic().amount.amount)),
@@ -151,7 +139,7 @@ export class LockFundsTransaction extends Transaction {
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
@@ -162,12 +150,9 @@ export class LockFundsTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
-        const transactionBuilder = new HashLockTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+        return new HashLockTransactionBuilder(
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.HASH_LOCK.valueOf(),
@@ -177,7 +162,6 @@ export class LockFundsTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             new Hash256Dto(Convert.hexToUint8(this.hash)),
         );
-        return transactionBuilder;
     }
 
     /**
@@ -186,7 +170,7 @@ export class LockFundsTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedHashLockTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.HASH_LOCK.valueOf(),

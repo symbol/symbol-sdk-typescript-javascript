@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { of, of as observableOf } from 'rxjs';
+import { of as observableOf, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, when } from 'ts-mockito';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
+import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
+import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
 import { Listener } from '../../src/infrastructure/Listener';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
@@ -34,14 +37,13 @@ import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
 import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
 import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
+import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
+import { NetworkCurrencies } from '../../src/model/mosaic/NetworkCurrencies';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { NodeInfo } from '../../src/model/node/NodeInfo';
-import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
-import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
-import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -65,6 +67,7 @@ describe('RepositoryFactory', () => {
         expect(repositoryFactory.createTransactionRepository()).to.be.not.null;
         expect(repositoryFactory.createHashLockRepository()).to.be.not.null;
         expect(repositoryFactory.createSecretLockRepository()).to.be.not.null;
+        expect(repositoryFactory.createFinalizationRepository()).to.be.not.null;
     });
 
     it('Should get GenerationHash from cache', (done) => {
@@ -94,6 +97,41 @@ describe('RepositoryFactory', () => {
                 expect(counter).to.be.equals(1);
                 expect(g).to.be.equals('aaaa');
                 repositoryFactory.getGenerationHash().subscribe((h) => {
+                    expect(counter).to.be.equals(1);
+                    expect(h).to.be.equals('aaaa');
+                    done();
+                });
+            });
+        });
+    });
+
+    it('Should get nodePubicKey from cache', (done) => {
+        let counter = 0;
+        const repositoryMock: NodeRepository = mock();
+        const observableOfNodeInfo = observableOf({ nodePublicKey: 'aaaa' } as NodeInfo).pipe(
+            map((v) => {
+                counter++;
+                return v;
+            }),
+        );
+        when(repositoryMock.getNodeInfo()).thenReturn(observableOfNodeInfo);
+        expect(observableOfNodeInfo).to.be.equals(observableOfNodeInfo);
+        const repositoryFactory = new (class RepositoryFactoryHttpForTest extends RepositoryFactoryHttp {
+            createNodeRepository(): NodeRepository {
+                return instance(repositoryMock);
+            }
+        })('http://localhost:3000', {
+            networkType: NetworkType.PRIVATE_TEST,
+        });
+
+        expect(counter).to.be.equals(0);
+        repositoryFactory.getNodePublicKey().subscribe((gh) => {
+            expect(counter).to.be.equals(1);
+            expect(gh).to.be.equals('aaaa');
+            repositoryFactory.getNodePublicKey().subscribe((g) => {
+                expect(counter).to.be.equals(1);
+                expect(g).to.be.equals('aaaa');
+                repositoryFactory.getNodePublicKey().subscribe((h) => {
                     expect(counter).to.be.equals(1);
                     expect(h).to.be.equals('aaaa');
                     done();
@@ -328,6 +366,7 @@ describe('RepositoryFactory', () => {
         expect(factory.createTransactionStatusRepository() instanceof TransactionStatusHttp).to.be.true;
         expect(factory.createHashLockRepository() instanceof HashLockHttp).to.be.true;
         expect(factory.createSecretLockRepository() instanceof SecretLockHttp).to.be.true;
+        expect(factory.createFinalizationRepository() instanceof FinalizationHttp).to.be.true;
     });
 
     it('Fail remote call ', async () => {
@@ -358,4 +397,28 @@ describe('RepositoryFactory', () => {
             }
         }
     });
+
+    it('Fail remote getCurrencies ', async () => {
+        const factory = new RepositoryFactoryHttp('http://localhost:2000');
+        try {
+            await factory.getCurrencies().toPromise();
+            expect(true).eq(false);
+        } catch (e) {
+            expect(e.message).contains('request to http://localhost:2000');
+        }
+    });
+
+    it('getCurrencies', async () => {
+        const factory = new RepositoryFactoryHttp('http://localhost:2000', { networkCurrencies: NetworkCurrencies.PUBLIC });
+        const networkCurrencies = await factory.getCurrencies().toPromise();
+        expect(networkCurrencies).eq(NetworkCurrencies.PUBLIC);
+    });
+
+    // it('howToUse', async () => {
+    //     const factory = new RepositoryFactoryHttp('http://localhost:3000');
+    //     const networkCurrencies = await factory.getCurrencies().toPromise();
+    //     const namespaceName: string = networkCurrencies.currency!.namespaceId!.fullName!;
+    //     const mosaic: Mosaic = networkCurrencies.currency.createRelative(1000);
+    //     // a mosaic ready to use for transactions
+    // });
 });

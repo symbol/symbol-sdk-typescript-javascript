@@ -16,11 +16,15 @@
 
 import { Observable } from 'rxjs';
 import { RestrictionAccountRoutesApi } from 'symbol-openapi-typescript-fetch-client';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { Address } from '../model/account/Address';
-import { AccountRestriction } from '../model/restriction/AccountRestriction';
+import { DtoMapping } from '../core/utils';
+import { Address } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { AccountRestrictions } from '../model/restriction';
 import { Http } from './Http';
+import { Page } from './Page';
+import { RestrictionAccountPaginationStreamer } from './paginationStreamer';
 import { RestrictionAccountRepository } from './RestrictionAccountRepository';
+import { RestrictionAccountSearchCriteria } from './searchCriteria/RestrictionAccountSearchCriteria';
 
 /**
  * RestrictionAccount http repository.
@@ -45,13 +49,45 @@ export class RestrictionAccountHttp extends Http implements RestrictionAccountRe
 
     /**
      * Get Account restrictions.
-     * @param publicAccount public account
+     * @param address the address
      * @returns Observable<AccountRestrictions[]>
      */
-    public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
+    public getAccountRestrictions(address: Address): Observable<AccountRestrictions> {
         return this.call(
             this.restrictionAccountRoutesApi.getAccountRestrictions(address.plain()),
-            (body) => DtoMapping.extractAccountRestrictionFromDto(body).accountRestrictions.restrictions,
+            DtoMapping.extractAccountRestrictionFromDto,
         );
+    }
+
+    /**
+     * Get Account restrictions merkle.
+     * @param address the address
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getAccountRestrictionsMerkle(address: Address): Observable<MerkleStateInfo> {
+        return this.call(this.restrictionAccountRoutesApi.getAccountRestrictionsMerkle(address.plain()), DtoMapping.toMerkleStateInfo);
+    }
+
+    /**
+     * Returns a mosaic restrictions page based on the criteria.
+     *
+     * @param criteria the criteria
+     * @return a page of {@link MosaicRestriction}
+     */
+    public search(criteria: RestrictionAccountSearchCriteria): Observable<Page<AccountRestrictions>> {
+        return this.call(
+            this.restrictionAccountRoutesApi.searchAccountRestrictions(
+                criteria.address?.plain(),
+                criteria.pageSize,
+                criteria.pageNumber,
+                criteria.offset,
+                DtoMapping.mapEnum(criteria.order),
+            ),
+            (body) => super.toPage(body.pagination, body.data, DtoMapping.extractAccountRestrictionFromDto),
+        );
+    }
+
+    public streamer(): RestrictionAccountPaginationStreamer {
+        return new RestrictionAccountPaginationStreamer(this);
     }
 }

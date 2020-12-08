@@ -15,13 +15,14 @@
  */
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import * as CryptoJS from 'crypto-js';
 import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
+import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
@@ -30,12 +31,11 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { Statement } from '../../../src/model/receipt/Statement';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import * as CryptoJS from 'crypto-js';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('SecretLockTransaction', () => {
     let account: Account;
@@ -109,7 +109,7 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.PRIVATE_TEST,
         );
-        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.namespaceId!.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashAlgorithm).to.be.equal(0);
@@ -163,7 +163,7 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.PRIVATE_TEST,
         );
-        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.namespaceId!.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashAlgorithm).to.be.equal(1);
@@ -197,7 +197,7 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.PRIVATE_TEST,
         );
-        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.namespaceId!.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashAlgorithm).to.be.equal(2);
@@ -267,7 +267,7 @@ describe('SecretLockTransaction', () => {
             recipientAddress,
             NetworkType.PRIVATE_TEST,
         );
-        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.NAMESPACE_ID.id);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyLocal.namespaceId!.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashAlgorithm).to.be.equal(0);

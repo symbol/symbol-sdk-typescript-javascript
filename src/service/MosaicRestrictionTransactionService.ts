@@ -17,10 +17,14 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
+import { Page } from '../infrastructure/Page';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
 import { Address } from '../model/account/Address';
+import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
 import { MosaicId } from '../model/mosaic/MosaicId';
+import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../model/network/NetworkType';
+import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
 import { MosaicRestrictionType } from '../model/restriction/MosaicRestrictionType';
@@ -29,10 +33,6 @@ import { MosaicAddressRestrictionTransaction } from '../model/transaction/Mosaic
 import { MosaicGlobalRestrictionTransaction } from '../model/transaction/MosaicGlobalRestrictionTransaction';
 import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
-import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
-import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
-import { Page } from '../infrastructure/Page';
 
 /**
  * MosaicRestrictionTransactionService service
@@ -78,7 +78,7 @@ export class MosaicRestrictionTransactionService {
                 this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
                     map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                         const currentValue = restrictionEntry
-                            ? UInt64.fromNumericString(restrictionEntry.restrictionValue)
+                            ? restrictionEntry.restrictionValue
                             : this.defaultMosaicGlobalRestrictionValue;
                         const currentType = restrictionEntry ? restrictionEntry.restrictionType : MosaicRestrictionType.NONE;
                         return MosaicGlobalRestrictionTransaction.create(
@@ -129,9 +129,7 @@ export class MosaicRestrictionTransactionService {
                         }
                         return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
                             map((optionalValue) => {
-                                const currentValue = optionalValue
-                                    ? UInt64.fromNumericString(optionalValue)
-                                    : this.defaultMosaicAddressRestrictionValue;
+                                const currentValue = optionalValue || this.defaultMosaicAddressRestrictionValue;
                                 return MosaicAddressRestrictionTransaction.create(
                                     deadline,
                                     mosaicId,
@@ -157,10 +155,10 @@ export class MosaicRestrictionTransactionService {
      * @param targetAddress - The target address
      * @return {Observable<string | undefined>}
      */
-    private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<string | undefined> {
-        return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId, targetAddress }).pipe(
+    private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<UInt64 | undefined> {
+        return this.restrictionMosaicRepository.search({ mosaicId, targetAddress }).pipe(
             map((mosaicRestriction) => {
-                return (mosaicRestriction.data[0] as MosaicAddressRestriction).restrictions.get(restrictionKey.toString());
+                return (mosaicRestriction.data[0] as MosaicAddressRestriction).getRestriction(restrictionKey)?.restrictionValue;
             }),
             catchError((err: Error) => {
                 const error = JSON.parse(err.message);
@@ -179,11 +177,11 @@ export class MosaicRestrictionTransactionService {
      * @return {Observable<MosaicGlobalRestrictionItem | undefined>}
      */
     private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
-        return this.restrictionMosaicRepository.searchMosaicRestrictions({ mosaicId }).pipe(
+        return this.restrictionMosaicRepository.search({ mosaicId }).pipe(
             map((mosaicRestrictionPage: Page<MosaicGlobalRestriction>) => {
                 const globalRestriction = mosaicRestrictionPage.data.find((r) => r instanceof MosaicGlobalRestriction);
                 if (globalRestriction !== undefined) {
-                    return globalRestriction.restrictions.get(restrictionKey.toString());
+                    return globalRestriction.getRestriction(restrictionKey);
                 }
                 throw new Error('No global restriction found for mosaic' + mosaicId.toHex());
             }),

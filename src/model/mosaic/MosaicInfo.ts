@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
+import {
+    AmountDto,
+    BlockDurationDto,
+    GeneratorUtils,
+    HeightDto,
+    MosaicDefinitionBuilder,
+    MosaicEntryBuilder,
+    MosaicFlagsDto,
+    MosaicIdDto,
+    MosaicPropertiesBuilder,
+} from 'catbuffer-typescript';
+import { Address } from '../account';
 import { UInt64 } from '../UInt64';
 import { MosaicFlags } from './MosaicFlags';
 import { MosaicId } from './MosaicId';
-import { Address } from '../account/Address';
 
 /**
  * The mosaic info structure describes a mosaic.
  */
 export class MosaicInfo {
     /**
+     * @param version
      * @param recordId
      * @param id
      * @param supply
@@ -35,6 +47,10 @@ export class MosaicInfo {
      * @param duration
      */
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The database record id.
          */
@@ -95,5 +111,22 @@ export class MosaicInfo {
      */
     public isRestrictable(): boolean {
         return this.flags.restrictable;
+    }
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const mosaicId: MosaicIdDto = this.id.toBuilder();
+        const supply: AmountDto = new AmountDto(this.supply.toDTO());
+        const startHeight = new HeightDto(this.startHeight.toDTO());
+        const ownerAddress = this.ownerAddress.toBuilder();
+        const revision = this.revision;
+        const duration = new BlockDurationDto(this.duration.toDTO());
+        const flags = GeneratorUtils.toFlags(MosaicFlagsDto, this.flags.getValue());
+        const properties = new MosaicPropertiesBuilder(flags, this.divisibility, duration);
+        const definition = new MosaicDefinitionBuilder(startHeight, ownerAddress, revision, properties);
+        return new MosaicEntryBuilder(this.version, mosaicId, supply, definition).serialize();
     }
 }

@@ -23,7 +23,6 @@ import {
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
-
 import { NIS2_URL } from '../conf/conf.spec';
 
 describe('TransactionStatusHttp', () => {

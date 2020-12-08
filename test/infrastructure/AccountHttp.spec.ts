@@ -19,19 +19,22 @@ import {
     AccountDTO,
     AccountIds,
     AccountInfoDTO,
+    AccountLinkPublicKeyDTO,
+    AccountLinkVotingKeyDTO,
+    AccountPage,
     AccountRoutesApi,
     AccountTypeEnum,
     ActivityBucketDTO,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
     Mosaic,
-    AccountLinkPublicKeyDTO,
-    AccountLinkVotingKeyDTO,
     Pagination,
-    AccountPage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
+import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
@@ -140,6 +143,11 @@ describe('AccountHttp', () => {
         assertAccountInfo(infos.data[0]);
     });
 
+    it('searchAccounts - streamer', async () => {
+        const accountHttp = new AccountHttp('url');
+        expect(accountHttp.streamer() instanceof AccountPaginationStreamer).to.be.true;
+    });
+
     it('getAccountInfo - Error', async () => {
         when(accountRoutesApi.getAccountInfo(address.plain())).thenReject(new Error('Mocked Error'));
         await accountRepository
@@ -156,5 +164,23 @@ describe('AccountHttp', () => {
             .getAccountsInfo([address])
             .toPromise()
             .catch((error) => expect(error).not.to.be.undefined);
+    });
+
+    it('getAccountInfoMerkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(accountRoutesApi.getAccountInfoMerkle(deepEqual(address.plain()))).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await accountRepository.getAccountInfoMerkle(address).toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

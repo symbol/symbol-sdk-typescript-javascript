@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { AddressDto } from 'catbuffer-typescript';
 import { Convert, RawAddress } from '../../core/format';
 import { NetworkType } from '../network/NetworkType';
 
@@ -160,6 +161,13 @@ export class Address {
             address: this.address,
             networkType: this.networkType,
         };
+    }
+
+    /**
+     * Create Builder object
+     */
+    public toBuilder(): AddressDto {
+        return new AddressDto(Convert.hexToUint8(this.encoded()));
     }
 
     /**

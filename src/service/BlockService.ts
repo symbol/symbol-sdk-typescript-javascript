@@ -15,18 +15,18 @@
  */
 
 import { sha3_256 } from 'js-sha3';
+import MerkleTree from 'merkletreejs';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, toArray } from 'rxjs/operators';
 import { BlockRepository } from '../infrastructure/BlockRepository';
+import { TransactionPaginationStreamer } from '../infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
+import { TransactionGroup } from '../infrastructure/TransactionGroup';
+import { TransactionRepository } from '../infrastructure/TransactionRepository';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
+import { MerklePosition } from '../model/blockchain/MerklePosition';
 import { UInt64 } from '../model/UInt64';
 import { IBlockService } from './interfaces/IBlockService';
-import { MerklePosition } from '../model/blockchain/MerklePosition';
-import { TransactionPaginationStreamer } from '../infrastructure/paginationStreamer/TransactionPaginationStreamer';
-import { TransactionGroup } from '../infrastructure/TransactionGroup';
-import MerkleTree from 'merkletreejs';
-import { TransactionRepository } from '../infrastructure/TransactionRepository';
 
 /**
  * Block Service

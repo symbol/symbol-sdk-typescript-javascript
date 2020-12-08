@@ -15,6 +15,7 @@
  */
 import { NetworkType } from '../network/NetworkType';
 import { RoleType } from './RoleType';
+
 /**
  * The node info structure describes basic information of a node.
  */
@@ -28,6 +29,7 @@ export class NodeInfo {
      * @param roles
      * @param host
      * @param friendlyName
+     * @param nodePublicKey
      */
     constructor(
         /**
@@ -62,5 +64,9 @@ export class NodeInfo {
          * The name of the node.
          */
         public readonly friendlyName: string,
+        /**
+         * The node public key used for NodeKeyLink transaction.
+         */
+        public readonly nodePublicKey?: string,
     ) {}
 }

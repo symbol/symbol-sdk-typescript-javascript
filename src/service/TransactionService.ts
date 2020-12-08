@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { merge, Observable, of } from 'rxjs';
+import { combineLatest, merge, Observable, of } from 'rxjs';
 import { first, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 import { IListener } from '../infrastructure/IListener';
+import { ReceiptPaginationStreamer } from '../infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { ReceiptRepository } from '../infrastructure/ReceiptRepository';
+import { TransactionGroup } from '../infrastructure/TransactionGroup';
 import { TransactionRepository } from '../infrastructure/TransactionRepository';
 import { Address } from '../model/account/Address';
 import { NamespaceId } from '../model/namespace/NamespaceId';
+import { Statement } from '../model/receipt/Statement';
 import { AccountAddressRestrictionTransaction } from '../model/transaction/AccountAddressRestrictionTransaction';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../model/transaction/LockFundsTransaction';
@@ -36,10 +39,6 @@ import { TransactionStatusError } from '../model/transaction/TransactionStatusEr
 import { TransactionType } from '../model/transaction/TransactionType';
 import { TransferTransaction } from '../model/transaction/TransferTransaction';
 import { ITransactionService } from './interfaces/ITransactionService';
-import { TransactionGroup } from '../infrastructure/TransactionGroup';
-import { ReceiptPaginationStreamer } from '../infrastructure/paginationStreamer/ReceiptPaginationStreamer';
-import { Statement } from '../model/receipt/Statement';
-import { combineLatest } from 'rxjs';
 
 /**
  * Transaction Service

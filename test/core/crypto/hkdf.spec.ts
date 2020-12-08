@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Convert } from '../../../src/core/format';
 import * as hkdf from 'futoin-hkdf';
+import { Convert } from '../../../src/core/format';
 
 describe('hkdf', () => {
     describe('Example tests', () => {

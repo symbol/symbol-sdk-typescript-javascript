@@ -15,11 +15,13 @@
  */
 
 import { Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { filter, flatMap, map, share, switchMap } from 'rxjs/operators';
+import { catchError, filter, flatMap, map, mergeMap, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
+import { UnresolvedAddress } from '../model';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
+import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 import { NewBlock } from '../model/blockchain/NewBlock';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
@@ -31,7 +33,6 @@ import { UInt64 } from '../model/UInt64';
 import { IListener } from './IListener';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
-import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 
 export enum ListenerChannelName {
     block = 'block',
@@ -268,12 +269,12 @@ export class Listener implements IListener {
      * Each time a transaction is in confirmed state an it involves the address,
      * it emits a new Transaction in the event stream.
      *
-     * @param address address we listen when a transaction is in confirmed state
+     * @param unresolvedAddress unresolved address we listen when a transaction is in confirmed state
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state confirmed
      */
-    public confirmed(address: Address, transactionHash?: string): Observable<Transaction> {
-        return this.transactionSubscription(ListenerChannelName.confirmedAdded, address, transactionHash);
+    public confirmed(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<Transaction> {
+        return this.transactionSubscription(ListenerChannelName.confirmedAdded, unresolvedAddress, transactionHash);
     }
 
     /**
@@ -281,12 +282,12 @@ export class Listener implements IListener {
      * Each time a transaction is in unconfirmed state an it involves the address,
      * it emits a new Transaction in the event stream.
      *
-     * @param address address we listen when a transaction is in unconfirmed state
+     * @param unresolvedAddress unresolved address we listen when a transaction is in unconfirmed state
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of Transaction with state unconfirmed
      */
-    public unconfirmedAdded(address: Address, transactionHash?: string): Observable<Transaction> {
-        return this.transactionSubscription(ListenerChannelName.unconfirmedAdded, address, transactionHash);
+    public unconfirmedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<Transaction> {
+        return this.transactionSubscription(ListenerChannelName.unconfirmedAdded, unresolvedAddress, transactionHash);
     }
 
     /**
@@ -294,39 +295,43 @@ export class Listener implements IListener {
      * Each time an aggregate bonded transaction is announced,
      * it emits a new {@link AggregateTransaction} in the event stream.
      *
-     * @param address address we listen when a transaction with missing signatures state
+     * @param unresolvedAddress unresolved address we listen when a transaction with missing signatures state
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
-    public aggregateBondedAdded(address: Address, transactionHash?: string): Observable<AggregateTransaction> {
-        return this.transactionSubscription(ListenerChannelName.partialAdded, address, transactionHash);
+    public aggregateBondedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<AggregateTransaction> {
+        return this.transactionSubscription(ListenerChannelName.partialAdded, unresolvedAddress, transactionHash);
     }
 
     /**
      * Basic subscription for all the transactions status.
      * @param channel the transaction based channel
-     * @param address the address
+     * @param unresolvedAddress the unresolved address
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Transactions
      */
     private transactionSubscription<T extends Transaction>(
         channel: ListenerChannelName,
-        address: Address,
+        unresolvedAddress: UnresolvedAddress,
         transactionHash?: string,
     ): Observable<T> {
-        this.subscribeTo(`${channel}/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((listenerMessage) => listenerMessage.channelName === channel),
-            filter((listenerMessage) => listenerMessage.message instanceof Transaction),
-            switchMap((_) => {
-                const transactionObservable = of(_.message as T).pipe(
-                    filter((transaction) => this.filterHash(transaction, transactionHash)),
+        return this.getResolvedAddress(unresolvedAddress).pipe(
+            mergeMap((address: Address) => {
+                this.subscribeTo(`${channel}/${address.plain()}`);
+                return this.messageSubject.asObservable().pipe(
+                    filter((listenerMessage) => listenerMessage.channelName === channel),
+                    filter((listenerMessage) => listenerMessage.message instanceof Transaction),
+                    switchMap((_) => {
+                        const transactionObservable = of(_.message as T).pipe(
+                            filter((transaction) => this.filterHash(transaction, transactionHash)),
+                        );
+                        if (_.channelParam.toUpperCase() === address.plain()) {
+                            return transactionObservable;
+                        } else {
+                            return transactionObservable.pipe(this.filterByNotifyAccount(address));
+                        }
+                    }),
                 );
-                if (_.channelParam.toUpperCase() === address.plain()) {
-                    return transactionObservable;
-                } else {
-                    return transactionObservable.pipe(this.filterByNotifyAccount(address));
-                }
             }),
         );
     }
@@ -336,12 +341,12 @@ export class Listener implements IListener {
      * Each time a transaction with state unconfirmed changes its state,
      * it emits a new message with the transaction hash in the event stream.
      *
-     * @param address address we listen when a transaction is removed from unconfirmed state
+     * @param unresolvedAddress unresolved address we listen when a transaction is removed from unconfirmed state
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    public unconfirmedRemoved(address: Address, transactionHash?: string): Observable<string> {
-        return this.transactionHashSubscription(ListenerChannelName.unconfirmedRemoved, address, transactionHash);
+    public unconfirmedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<string> {
+        return this.transactionHashSubscription(ListenerChannelName.unconfirmedRemoved, unresolvedAddress, transactionHash);
     }
 
     /**
@@ -349,33 +354,37 @@ export class Listener implements IListener {
      * Each time an aggregate bonded transaction is announced,
      * it emits a new message with the transaction hash in the event stream.
      *
-     * @param address address we listen when a transaction is confirmed or rejected
+     * @param unresolvedAddress unresolved address we listen when a transaction is confirmed or rejected
      * @param transactionHash the transaction hash filter.
      * @return an observable stream of Strings with the transaction hash
      */
-    public aggregateBondedRemoved(address: Address, transactionHash?: string): Observable<string> {
-        return this.transactionHashSubscription(ListenerChannelName.partialRemoved, address, transactionHash);
+    public aggregateBondedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<string> {
+        return this.transactionHashSubscription(ListenerChannelName.partialRemoved, unresolvedAddress, transactionHash);
     }
 
     /**
      * Generic subscription for all the transaction hash based channels.
      * @param channel the channel
-     * @param address the address
+     * @param unresolvedAddress the unresolved address
      * @param transactionHash the transaction hash (optional)
      * @return an observable stream of Strings with the transaction hash
      */
     private transactionHashSubscription(
         channel: ListenerChannelName,
-        address: Address,
+        unresolvedAddress: UnresolvedAddress,
         transactionHash: string | undefined,
     ): Observable<string> {
-        this.subscribeTo(`${channel}/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === channel),
-            filter((_) => typeof _.message === 'string'),
-            filter((_) => _.channelParam.toUpperCase() === address.plain()),
-            map((_) => _.message as string),
-            filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
+        return this.getResolvedAddress(unresolvedAddress).pipe(
+            mergeMap((address: Address) => {
+                this.subscribeTo(`${channel}/${address.plain()}`);
+                return this.messageSubject.asObservable().pipe(
+                    filter((_) => _.channelName === channel),
+                    filter((_) => typeof _.message === 'string'),
+                    filter((_) => _.channelParam.toUpperCase() === address.plain()),
+                    map((_) => _.message as string),
+                    filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
+                );
+            }),
         );
     }
 
@@ -384,18 +393,22 @@ export class Listener implements IListener {
      * Each time a transaction contains an error,
      * it emits a new message with the transaction status error in the event stream.
      *
-     * @param address address we listen to be notified when some error happened
+     * @param unresolvedAddress unresolved address we listen to be notified when some error happened
      * @param transactionHash transactionHash for filtering multiple transactions
      * @return an observable stream of {@link TransactionStatusError}
      */
-    public status(address: Address, transactionHash?: string): Observable<TransactionStatusError> {
-        this.subscribeTo(`status/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.status),
-            filter((_) => _.message instanceof TransactionStatusError),
-            filter((_) => _.channelParam.toUpperCase() === address.plain()),
-            map((_) => _.message as TransactionStatusError),
-            filter((_) => !transactionHash || _.hash.toUpperCase() == transactionHash.toUpperCase()),
+    public status(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<TransactionStatusError> {
+        return this.getResolvedAddress(unresolvedAddress).pipe(
+            mergeMap((address: Address) => {
+                this.subscribeTo(`status/${address.plain()}`);
+                return this.messageSubject.asObservable().pipe(
+                    filter((_) => _.channelName === ListenerChannelName.status),
+                    filter((_) => _.message instanceof TransactionStatusError),
+                    filter((_) => _.channelParam.toUpperCase() === address.plain()),
+                    map((_) => _.message as TransactionStatusError),
+                    filter((_) => !transactionHash || _.hash.toUpperCase() == transactionHash.toUpperCase()),
+                );
+            }),
         );
     }
 
@@ -450,17 +463,21 @@ export class Listener implements IListener {
      * Returns an observable stream of {@link CosignatureSignedTransaction} for specific address.
      * Each time a cosigner signs a transaction the address initialized,
      * it emits a new message with the cosignatory signed transaction in the even stream.
-     *
-     * @param address address we listen when a cosignatory is added to some transaction address sent
+     *this.subscribeTo(`cosignature/${address.plain()}`;
+     * @param unresolvedAddress unresolved address we listen when a cosignatory is added to some transaction address sent
      * @return an observable stream of {@link CosignatureSignedTransaction}
      */
-    public cosignatureAdded(address: Address): Observable<CosignatureSignedTransaction> {
-        this.subscribeTo(`cosignature/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
-            filter((_) => _.message instanceof CosignatureSignedTransaction),
-            filter((_) => _.channelParam.toUpperCase() === address.plain()),
-            map((_) => _.message as CosignatureSignedTransaction),
+    public cosignatureAdded(unresolvedAddress: UnresolvedAddress): Observable<CosignatureSignedTransaction> {
+        return this.getResolvedAddress(unresolvedAddress).pipe(
+            mergeMap((address: Address) => {
+                this.subscribeTo(`cosignature/${address.plain()}`);
+                return this.messageSubject.asObservable().pipe(
+                    filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
+                    filter((_) => _.message instanceof CosignatureSignedTransaction),
+                    filter((_) => _.channelParam.toUpperCase() === address.plain()),
+                    map((_) => _.message as CosignatureSignedTransaction),
+                );
+            }),
         );
     }
 
@@ -475,6 +492,30 @@ export class Listener implements IListener {
             subscribe: channel,
         };
         this.webSocket.send(JSON.stringify(subscriptionMessage));
+    }
+
+    /**
+     * @internal
+     * Get resolved address from namespace repository
+     * @param unresolvedAddress unresolved address
+     * @returns {Address}
+     */
+    private getResolvedAddress(unresolvedAddress: UnresolvedAddress): Observable<Address> {
+        if (unresolvedAddress instanceof Address) {
+            return of(unresolvedAddress);
+        }
+
+        return this.namespaceRepository.getLinkedAddress(unresolvedAddress).pipe(
+            map((address) => {
+                if (!address) {
+                    throw new Error(`Invalid unresolvedAddress: ${unresolvedAddress.toHex()}`);
+                }
+                return address;
+            }),
+            catchError((err) => {
+                throw new Error(err);
+            }),
+        );
     }
 
     /**

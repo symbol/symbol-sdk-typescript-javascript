@@ -17,14 +17,14 @@
 import {
     AmountDto,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    SignatureDto,
-    TimestampDto,
     EmbeddedVrfKeyLinkTransactionBuilder,
-    VrfKeyLinkTransactionBuilder,
+    KeyDto,
+    TimestampDto,
     TransactionBuilder,
+    VrfKeyLinkTransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -35,7 +35,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 export class VrfKeyLinkTransaction extends Transaction {
     /**
@@ -98,6 +97,8 @@ export class VrfKeyLinkTransaction extends Transaction {
         transactionInfo?: TransactionInfo,
     ) {
         super(TransactionType.VRF_KEY_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+
+        Convert.validateHexString(linkedPublicKey, 64, 'Invalid linkedPublicKey');
     }
 
     /**
@@ -112,14 +113,14 @@ export class VrfKeyLinkTransaction extends Transaction {
             : VrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = VrfKeyLinkTransaction.create(
             isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp),
             Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VrfKeyLinkTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
@@ -130,12 +131,9 @@ export class VrfKeyLinkTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new VrfKeyLinkTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.VRF_KEY_LINK.valueOf(),
@@ -153,7 +151,7 @@ export class VrfKeyLinkTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedVrfKeyLinkTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.VRF_KEY_LINK.valueOf(),

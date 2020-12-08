@@ -15,16 +15,18 @@
  */
 
 import { Observable } from 'rxjs';
-import { SecretLockRoutesApi, SecretLockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
-import { Address } from '../model/account/Address';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { UInt64 } from '../model/UInt64';
+import { SecretLockInfoDTO, SecretLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../core/utils';
+import { UInt64 } from '../model';
+import { Address } from '../model/account';
+import { MerkleStateInfo } from '../model/blockchain';
+import { SecretLockInfo } from '../model/lock';
+import { MosaicId } from '../model/mosaic';
 import { Http } from './Http';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { Page } from './Page';
+import { SecretLockPaginationStreamer } from './paginationStreamer';
+import { SecretLockSearchCriteria } from './searchCriteria';
 import { SecretLockRepository } from './SecretLockRepository';
-import { SecretLockInfo } from '../model/lock/SecretLockInfo';
-import { SecretLockSearchCriteria } from './searchCriteria/SecretLockSearchCriteria';
 
 /**
  * SecretLock http repository.
@@ -48,13 +50,12 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
         this.secretLockRoutesApi = new SecretLockRoutesApi(this.config());
     }
 
-    /**
-     * Get secret lock info for an account.
-     * @param secret SecretLock secret
-     * @returns Observable<SecretLockInfo>
-     */
-    public getSecretLock(secret: string): Observable<SecretLockInfo> {
-        return this.call(this.secretLockRoutesApi.getSecretLock(secret), (body) => this.toSecretLockInfo(body));
+    public getSecretLock(compositeHash: string): Observable<SecretLockInfo> {
+        return this.call(this.secretLockRoutesApi.getSecretLock(compositeHash), (body) => this.toSecretLockInfo(body));
+    }
+
+    public getSecretLockMerkle(compositeHash: string): Observable<MerkleStateInfo> {
+        return this.call(this.secretLockRoutesApi.getSecretLockMerkle(compositeHash), DtoMapping.toMerkleStateInfo);
     }
 
     /**
@@ -65,7 +66,8 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
     public search(criteria: SecretLockSearchCriteria): Observable<Page<SecretLockInfo>> {
         return this.call(
             this.secretLockRoutesApi.searchSecretLock(
-                criteria.address.plain(),
+                criteria.address?.plain(),
+                criteria.secret,
                 criteria.pageSize,
                 criteria.pageNumber,
                 criteria.offset,
@@ -73,6 +75,10 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, this.toSecretLockInfo),
         );
+    }
+
+    public streamer(): SecretLockPaginationStreamer {
+        return new SecretLockPaginationStreamer(this);
     }
 
     /**
@@ -84,12 +90,13 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
      */
     private toSecretLockInfo(dto: SecretLockInfoDTO): SecretLockInfo {
         return new SecretLockInfo(
+            dto.lock.version || 1,
             dto.id,
             Address.createFromEncoded(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),
             UInt64.fromNumericString(dto.lock.amount),
             UInt64.fromNumericString(dto.lock.endHeight),
-            dto.lock.status,
+            dto.lock.status.valueOf(),
             dto.lock.hashAlgorithm.valueOf(),
             dto.lock.secret,
             Address.createFromEncoded(dto.lock.recipientAddress),

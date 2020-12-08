@@ -13,25 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Address } from '../account/Address';
+import {
+    AccountRestrictionAddressValueBuilder,
+    AccountRestrictionFlagsDto,
+    AccountRestrictionMosaicValueBuilder,
+    AccountRestrictionsBuilder,
+    AccountRestrictionsInfoBuilder,
+    AccountRestrictionTransactionTypeValueBuilder,
+    GeneratorUtils,
+} from 'catbuffer-typescript';
+import { isNumeric } from 'rxjs/internal-compatibility';
+import { Address } from '../account';
+import { MosaicId } from '../mosaic';
 import { AccountRestriction } from './AccountRestriction';
+
 /**
  * Account restrictions structure describes restriction information for an account.
  */
 export class AccountRestrictions {
     /**
      * Constructor
-     * @param address
-     * @param restrictions
+     * @param version version
+     * @param recordId the data base id.
+     * @param address the target address
+     * @param restrictions the restrictions
      */
     constructor(
-        /**
-         * Account Address
-         */
+        public readonly version: number,
+        public readonly recordId: string,
         public readonly address: Address,
-        /**
-         * Restrictions.
-         */
         public readonly restrictions: AccountRestriction[],
     ) {}
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const address = this.address.toBuilder();
+        const restrictions: AccountRestrictionsInfoBuilder[] = this.restrictions.map((r) => {
+            const addressRestrictions = new AccountRestrictionAddressValueBuilder(
+                r.values.filter((v) => v instanceof Address).map((a) => (a as Address).toBuilder()),
+            );
+            const mosaicIdRestrictions = new AccountRestrictionMosaicValueBuilder(
+                r.values.filter((v) => v instanceof MosaicId).map((a) => (a as MosaicId).toBuilder()),
+            );
+            const transactionTypeRestrictions = new AccountRestrictionTransactionTypeValueBuilder(
+                r.values.filter((v) => isNumeric(v)).map((a) => a as number),
+            );
+            return new AccountRestrictionsInfoBuilder(
+                GeneratorUtils.toFlags(AccountRestrictionFlagsDto, r.restrictionFlags),
+                addressRestrictions,
+                mosaicIdRestrictions,
+                transactionTypeRestrictions,
+            );
+        });
+
+        return new AccountRestrictionsBuilder(this.version, address, restrictions).serialize();
+    }
 }

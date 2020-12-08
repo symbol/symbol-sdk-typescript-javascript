@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Order, PositionEnum, BlockOrderByEnum, AccountOrderByEnum } from 'symbol-openapi-typescript-fetch-client';
-import { Order as OrderModel } from '../../../src/infrastructure/searchCriteria/Order';
+import { AccountOrderByEnum, BlockOrderByEnum, Order, PositionEnum } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
-import { BlockOrderBy } from '../../../src/infrastructure/searchCriteria/BlockOrderBy';
-import { MerklePosition } from '../../../src/model/blockchain/MerklePosition';
 import { AccountOrderBy } from '../../../src/infrastructure/searchCriteria/AccountOrderBy';
+import { BlockOrderBy } from '../../../src/infrastructure/searchCriteria/BlockOrderBy';
+import { Order as OrderModel } from '../../../src/infrastructure/searchCriteria/Order';
+import { MerklePosition } from '../../../src/model/blockchain/MerklePosition';
 
 describe('Order', () => {
     it('should be able to map Order', () => {

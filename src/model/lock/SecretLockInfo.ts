@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
+import { AddressDto, AmountDto, Hash256Dto, HeightDto, MosaicBuilder, SecretLockInfoBuilder } from 'catbuffer-typescript';
+import { Convert } from '../../core/format';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { LockHashAlgorithm } from './LockHashAlgorithm';
+import { LockStatus } from './LockStatus';
 
 /**
  * Secret lock information
  */
 export class SecretLockInfo {
     constructor(
+        /**
+         * Version
+         */
+        public readonly version: number,
         /**
          * The stored database id.
          */
@@ -47,7 +54,7 @@ export class SecretLockInfo {
         /**
          * Current lock status.
          */
-        public readonly status: number,
+        public readonly status: LockStatus,
         /**
          * The lock hash algorithm.
          */
@@ -65,4 +72,26 @@ export class SecretLockInfo {
          */
         public readonly compositeHash: string,
     ) {}
+
+    /**
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const ownerAddress: AddressDto = this.ownerAddress.toBuilder();
+        const mosaic: MosaicBuilder = new MosaicBuilder(this.mosaicId.toBuilder(), new AmountDto(this.amount.toDTO()));
+        const endHeight: HeightDto = new HeightDto(this.endHeight.toDTO());
+        const recipient: AddressDto = this.recipientAddress.toBuilder();
+        const secret: Hash256Dto = new Hash256Dto(Convert.hexToUint8(this.secret));
+        return new SecretLockInfoBuilder(
+            this.version,
+            ownerAddress,
+            mosaic,
+            endHeight,
+            this.status.valueOf(),
+            this.hashAlgorithm.valueOf(),
+            secret,
+            recipient,
+        ).serialize();
+    }
 }

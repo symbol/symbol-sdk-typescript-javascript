@@ -15,17 +15,18 @@
  */
 
 import { deepEqual } from 'assert';
-import { UInt64 } from '../../../src/model/UInt64';
-import { SecretLockInfoDTO, LockHashAlgorithmEnum, SecretLockEntryDTO } from 'symbol-openapi-typescript-fetch-client';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { LockHashAlgorithmEnum, SecretLockEntryDTO, SecretLockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Address } from '../../../src/model/account/Address';
 import { SecretLockInfo } from '../../../src/model/lock/SecretLockInfo';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('SecretLockInfo', () => {
     it('should createComplete an SecretLockInfo object', () => {
         const dto = {} as SecretLockInfoDTO;
         const lockDto = {} as SecretLockEntryDTO;
         dto.id = '1';
+        lockDto.version = 1;
         lockDto.amount = '10';
         lockDto.endHeight = '122';
         lockDto.compositeHash = 'AAA';
@@ -37,12 +38,13 @@ describe('SecretLockInfo', () => {
         lockDto.hashAlgorithm = LockHashAlgorithmEnum.NUMBER_0;
         dto.lock = lockDto;
         const info = new SecretLockInfo(
+            dto.lock.version,
             dto.id,
             Address.createFromRawAddress(lockDto.ownerAddress),
             new MosaicId(lockDto.mosaicId),
             UInt64.fromNumericString(lockDto.amount),
             UInt64.fromNumericString(lockDto.endHeight),
-            lockDto.status,
+            lockDto.status.valueOf(),
             lockDto.hashAlgorithm.valueOf(),
             lockDto.secret,
             Address.createFromRawAddress(lockDto.recipientAddress),

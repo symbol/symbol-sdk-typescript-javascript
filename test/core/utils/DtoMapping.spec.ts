@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import {
-    AccountRestrictionsInfoDTO,
-    AccountRestrictionsDTO,
     AccountRestrictionDTO,
     AccountRestrictionFlagsEnum,
+    AccountRestrictionsDTO,
+    AccountRestrictionsInfoDTO,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('DtoMapping', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
@@ -45,7 +47,7 @@ describe('DtoMapping', () => {
         restrictionInfo.accountRestrictions = restrictionsDto;
         const result = DtoMapping.extractAccountRestrictionFromDto(restrictionInfo);
         expect(result).not.to.be.undefined;
-        expect(result.accountRestrictions.restrictions[0].values[0]).to.be.equal(16724);
+        expect(result.restrictions[0].values[0]).to.be.equal(16724);
     });
 
     it('extractRestrictionInfo - Mosaic', () => {
@@ -61,34 +63,108 @@ describe('DtoMapping', () => {
         restrictionInfo.accountRestrictions = restrictionsDto;
         const result = DtoMapping.extractAccountRestrictionFromDto(restrictionInfo);
         expect(result).not.to.be.undefined;
-        expect((result.accountRestrictions.restrictions[0].values[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
+        expect((result.restrictions[0].values[0] as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
     });
 
     it('parseServerDuration', () => {
-        const epochS = '12345s';
-        expect(DtoMapping.parseServerDuration(epochS).seconds()).to.be.equal(12345);
-        const epochM = '12345m';
-        expect(DtoMapping.parseServerDuration(epochM).toMinutes()).to.be.equal(12345);
-        const epochH = '12345h';
-        expect(DtoMapping.parseServerDuration(epochH).toHours()).to.be.equal(12345);
-        const epochMS = '12345ms';
-        expect(DtoMapping.parseServerDuration(epochMS).toMillis()).to.be.equal(12345);
-        const epochD = '12345d';
-        expect(DtoMapping.parseServerDuration(epochD).toDays()).to.be.equal(12345);
+        expect(DtoMapping.parseServerDuration('15s').toString()).to.be.equal('PT15S');
+        expect(DtoMapping.parseServerDuration('10m:15s').toString()).to.be.equal('PT10M15S');
+        expect(DtoMapping.parseServerDuration('10m').toString()).to.be.equal('PT10M');
+        expect(DtoMapping.parseServerDuration('5h3m1s').toString()).to.be.equal('PT5H3M1S');
+        expect(DtoMapping.parseServerDuration('10d:5m1s').toString()).to.be.equal('PT240H5M1S');
+        expect(DtoMapping.parseServerDuration('10d 5m1s').toString()).to.be.equal('PT240H5M1S');
+        expect(DtoMapping.parseServerDuration('10d:5m100ms').toString()).to.be.equal('PT240H5M0.1S');
+        expect(DtoMapping.parseServerDuration('10d:5m1ms').toString()).to.be.equal('PT240H5M0.001S');
+        expect(DtoMapping.parseServerDuration(`1'200ms`).toString()).to.be.equal('PT1.2S');
+        expect(DtoMapping.parseServerDuration(`1d 2h`).toString()).to.be.equal('PT26H');
     });
 
     it('parseServerDuration - exception', () => {
         expect(() => {
-            const epochS = '12345g';
-            DtoMapping.parseServerDuration(epochS).seconds();
+            DtoMapping.parseServerDuration('5sss');
         }).to.throw();
         expect(() => {
-            const epochS = 'adfs';
-            DtoMapping.parseServerDuration(epochS).seconds();
+            DtoMapping.parseServerDuration('10h:10h');
         }).to.throw();
         expect(() => {
-            const epochS = '123s45';
-            DtoMapping.parseServerDuration(epochS).seconds();
+            DtoMapping.parseServerDuration('abc');
         }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('abc 2s 1234');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('5s10x');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('10d 5m1s 1m');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('5m   10d');
+        }).to.throw();
+        expect(() => {
+            DtoMapping.parseServerDuration('abc 10d');
+        }).to.throw();
+    });
+
+    it('toSimpleHex', () => {
+        expect(DtoMapping.toSimpleHex("0x017D'1694'0477'B3F5")).to.be.equal('017D16940477B3F5');
+        expect(DtoMapping.toSimpleHex('017D16940477B3F5')).to.be.equal('017D16940477B3F5');
+        expect(DtoMapping.toSimpleHex("0x29C6'42F2'F432'8612")).to.be.equal('29C642F2F4328612');
+    });
+
+    it('parse merkle tree', () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+        const result = DtoMapping.toMerkleStateInfo(merkleStateInfoDTO);
+        expect(result.raw).to.be.equal('raw');
+        expect(result.tree.leaf).not.to.be.undefined;
+        expect(result.tree.branches.length).to.be.equal(0);
+        expect(result.tree.leaf?.encodedPath).to.be.equal('path');
+        expect(result.tree.leaf?.path).to.be.equal('path');
+        expect(result.tree.leaf?.value).to.be.equal('value');
+        expect(result.tree.leaf?.leafHash).to.be.equal('hash');
+        expect(result.tree.leaf?.type.valueOf()).to.be.equal(255);
+        expect(result.tree.leaf?.nibbleCount).to.be.equal(1);
+    });
+
+    it('parse merkle tree', () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+        const result = DtoMapping.toMerkleStateInfo(merkleStateInfoDTO);
+        expect(result.raw).to.be.equal('raw');
+        expect(result.tree.leaf).not.to.be.undefined;
+        expect(result.tree.branches.length).to.be.equal(0);
+        expect(result.tree.leaf?.encodedPath).to.be.equal('path');
+        expect(result.tree.leaf?.path).to.be.equal('path');
+        expect(result.tree.leaf?.value).to.be.equal('value');
+        expect(result.tree.leaf?.leafHash).to.be.equal('hash');
+        expect(result.tree.leaf?.type.valueOf()).to.be.equal(255);
+        expect(result.tree.leaf?.nibbleCount).to.be.equal(1);
+    });
+
+    it('parse merkle info no tree', () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        merkleStateInfoDTO.raw = '';
+        merkleStateInfoDTO.tree = [];
+        const result = DtoMapping.toMerkleStateInfo(merkleStateInfoDTO);
+        expect(result.raw).to.be.equal('');
+        expect(result.tree.branches.length).to.be.equal(0);
+        expect(result.tree.leaf).to.be.undefined;
     });
 });

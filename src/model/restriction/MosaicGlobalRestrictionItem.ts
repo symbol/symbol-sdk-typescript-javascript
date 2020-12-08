@@ -15,18 +15,22 @@
  */
 
 import { MosaicId } from '../mosaic/MosaicId';
+import { UInt64 } from '../UInt64';
 import { MosaicRestrictionType } from './MosaicRestrictionType';
+
 /**
  * Mosaic global restriction item structure .
  */
 export class MosaicGlobalRestrictionItem {
     /**
      * Constructor
+     * @param key string,
      * @param referenceMosaicId
      * @param restrictionValue
      * @param restrictionType
      */
     constructor(
+        public readonly key: UInt64,
         /**
          * Reference mosaic identifier
          */
@@ -34,7 +38,7 @@ export class MosaicGlobalRestrictionItem {
         /**
          * Mosaic restriction value.
          */
-        public readonly restrictionValue: string,
+        public readonly restrictionValue: UInt64,
         /**
          * Mosaic restriction type.
          */

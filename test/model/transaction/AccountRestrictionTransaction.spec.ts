@@ -19,18 +19,18 @@ import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
+import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
+import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
+import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { AddressRestrictionFlag } from '../../../src/model/restriction/AddressRestrictionFlag';
-import { OperationRestrictionFlag } from '../../../src/model/restriction/OperationRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../../src/model/restriction/MosaicRestrictionFlag';
 
 describe('AccountRestrictionTransaction', () => {
     let account: Account;

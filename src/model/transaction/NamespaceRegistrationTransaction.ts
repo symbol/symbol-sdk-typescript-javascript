@@ -19,19 +19,15 @@ import {
     BlockDurationDto,
     EmbeddedNamespaceRegistrationTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
-    NamespaceIdDto,
     NamespaceRegistrationTransactionBuilder,
-    SignatureDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import { PublicAccount } from '../account/PublicAccount';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { NamespaceRegistrationType } from '../namespace/NamespaceRegistrationType';
-import { NetworkType } from '../network/NetworkType';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction';
+import { Address, PublicAccount } from '../account';
+import { NamespaceId, NamespaceRegistrationType } from '../namespace';
+import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -39,7 +35,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -107,6 +102,10 @@ export class NamespaceRegistrationTransaction extends Transaction {
         } else {
             parentId = parentNamespace;
         }
+        const namespaceId =
+            typeof parentNamespace === 'string'
+                ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
+                : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName));
         return new NamespaceRegistrationTransaction(
             networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
@@ -114,9 +113,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             maxFee,
             NamespaceRegistrationType.SubNamespace,
             namespaceName,
-            typeof parentNamespace === 'string'
-                ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
-                : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
+            namespaceId,
             undefined,
             parentId,
             signature,
@@ -184,7 +181,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const registrationType = builder.getRegistrationType().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction =
             registrationType === NamespaceRegistrationType.RootNamespace
                 ? NamespaceRegistrationTransaction.createRootNamespace(
@@ -195,7 +192,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                       new UInt64(builder.getDuration()!.blockDuration),
                       networkType,
                       isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
-                      isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+                      signature,
                       signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
                   )
                 : NamespaceRegistrationTransaction.createSubNamespace(
@@ -206,7 +203,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                       new NamespaceId(builder.getParentId()!.namespaceId),
                       networkType,
                       isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
-                      isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+                      signature,
                       signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
                   );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
@@ -217,36 +214,32 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
         let transactionBuilder: NamespaceRegistrationTransactionBuilder;
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
-                new SignatureDto(signatureBuffer),
-                new KeyDto(signerBuffer),
+            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderRoot(
+                this.getSignatureAsBuilder(),
+                this.getSignerAsBuilder(),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
-                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
                 new BlockDurationDto(this.duration!.toDTO()),
-                undefined,
+                this.namespaceId.toBuilder(),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
             );
         } else {
-            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
-                new SignatureDto(signatureBuffer),
-                new KeyDto(signerBuffer),
+            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderChild(
+                this.getSignatureAsBuilder(),
+                this.getSignerAsBuilder(),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
                 new AmountDto(this.maxFee.toDTO()),
                 new TimestampDto(this.deadline.toDTO()),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                this.parentId!.toBuilder(),
+                this.namespaceId.toBuilder(),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-                undefined,
-                new NamespaceIdDto(this.parentId!.id.toDTO()),
             );
         }
         return transactionBuilder;
@@ -258,26 +251,24 @@ export class NamespaceRegistrationTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            return new EmbeddedNamespaceRegistrationTransactionBuilder(
-                new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderRoot(
+                this.getSignerAsBuilder(),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
                 TransactionType.NAMESPACE_REGISTRATION.valueOf(),
-                new NamespaceIdDto(this.namespaceId.id.toDTO()),
-                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
                 new BlockDurationDto(this.duration!.toDTO()),
-                undefined,
+                this.namespaceId.toBuilder(),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
             );
         }
-        return new EmbeddedNamespaceRegistrationTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+        return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderChild(
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NAMESPACE_REGISTRATION.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            this.parentId!.toBuilder(),
+            this.namespaceId.toBuilder(),
             Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
-            undefined,
-            new NamespaceIdDto(this.parentId!.id.toDTO()),
         );
     }
 

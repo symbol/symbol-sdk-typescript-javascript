@@ -15,19 +15,12 @@
  */
 
 import { assert, expect } from 'chai';
-import { Convert } from '../../src/core/format/Convert';
+import { Convert } from '../../src/core/format';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
+import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { NetworkCurrencyLocal } from '../../src/model/mosaic/NetworkCurrencyLocal';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { Mosaic, MosaicFlags, MosaicId, MosaicNonce, MosaicSupplyChangeAction } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -41,6 +34,7 @@ import { SignedTransaction } from '../../src/model/transaction/SignedTransaction
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionService } from '../../src/service/TransactionService';
+import { NetworkCurrencyLocal } from '../../test/model/mosaic/Currency.spec';
 import { IntegrationTestHelper } from '../infrastructure/IntegrationTestHelper';
 
 describe('TransactionService', () => {
@@ -86,7 +80,7 @@ describe('TransactionService', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(helper.epochAdjustment),
             addressAlias,
-            [NetworkCurrencyLocal.createAbsolute(1), new Mosaic(mosaicAlias, UInt64.fromUint(1))],
+            [helper.networkCurrency.createAbsolute(1), new Mosaic(mosaicAlias, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
             networkType,
             helper.maxFee,

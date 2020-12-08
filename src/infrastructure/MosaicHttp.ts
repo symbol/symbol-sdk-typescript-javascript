@@ -19,6 +19,7 @@ import { mergeMap } from 'rxjs/operators';
 import { MosaicInfoDTO, MosaicRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicInfo } from '../model/mosaic/MosaicInfo';
@@ -27,6 +28,7 @@ import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { MosaicRepository } from './MosaicRepository';
 import { Page } from './Page';
+import { MosaicPaginationStreamer } from './paginationStreamer';
 import { MosaicSearchCriteria } from './searchCriteria/MosaicSearchCriteria';
 
 /**
@@ -65,7 +67,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo>
      */
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
-        return this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => this.toMosaicInfo(body));
+        return this.call(this.mosaicRoutesApi.getMosaic(mosaicId.toHex()), (body) => MosaicHttp.toMosaicInfo(body));
     }
 
     /**
@@ -78,8 +80,17 @@ export class MosaicHttp extends Http implements MosaicRepository {
             this.mosaicRoutesApi.getMosaics({
                 mosaicIds: mosaicIds.map((id) => id.toHex()),
             }),
-            (body) => body.map((b) => this.toMosaicInfo(b)),
+            (body) => body.map((b) => MosaicHttp.toMosaicInfo(b)),
         );
+    }
+
+    /**
+     * Gets a MosaicInfo merkle for a given mosaicId
+     * @param mosaicId - Mosaic id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getMosaicMerkle(mosaicId: MosaicId): Observable<MerkleStateInfo> {
+        return this.call(this.mosaicRoutesApi.getMosaicMerkle(mosaicId.toHex()), DtoMapping.toMerkleStateInfo);
     }
 
     /**
@@ -99,10 +110,14 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         criteria.offset,
                         DtoMapping.mapEnum(criteria.order),
                     ),
-                    (body) => super.toPage(body.pagination, body.data, this.toMosaicInfo, networkType),
+                    (body) => super.toPage(body.pagination, body.data, MosaicHttp.toMosaicInfo, networkType),
                 ),
             ),
         );
+    }
+
+    public streamer(): MosaicPaginationStreamer {
+        return new MosaicPaginationStreamer(this);
     }
 
     /**
@@ -111,8 +126,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @param mosaicInfo the dto object.
      * @returns the model object
      */
-    private toMosaicInfo(mosaicInfo: MosaicInfoDTO): MosaicInfo {
+    public static toMosaicInfo(mosaicInfo: MosaicInfoDTO): MosaicInfo {
         return new MosaicInfo(
+            mosaicInfo.mosaic.version || 1,
             mosaicInfo.id,
             new MosaicId(mosaicInfo.mosaic.id),
             UInt64.fromNumericString(mosaicInfo.mosaic.supply),

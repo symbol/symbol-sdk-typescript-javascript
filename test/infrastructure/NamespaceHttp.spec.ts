@@ -20,20 +20,23 @@ import {
     AccountsNamesDTO,
     AliasDTO,
     AliasTypeEnum,
+    MerkleStateInfoDTO,
+    MerkleTreeLeafDTO,
     MosaicNamesDTO,
     MosaicsNamesDTO,
     NamespaceDTO,
     NamespaceInfoDTO,
     NamespaceMetaDTO,
     NamespaceNameDTO,
+    NamespacePage,
     NamespaceRoutesApi,
     Pagination,
-    NamespacePage,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
+import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -50,7 +53,6 @@ describe('NamespaceHttp', () => {
     const namespaceId = new NamespaceId('testnamespace');
     const namespaceMetaDto = {} as NamespaceMetaDTO;
     namespaceMetaDto.active = true;
-    namespaceMetaDto.id = '1';
     namespaceMetaDto.index = 0;
 
     const namespaceDto = {} as NamespaceDTO;
@@ -69,7 +71,9 @@ describe('NamespaceHttp', () => {
 
     const namespaceInfoDto = {} as NamespaceInfoDTO;
     namespaceInfoDto.meta = namespaceMetaDto;
+    namespaceInfoDto.id = '1';
     namespaceInfoDto.namespace = namespaceDto;
+    namespaceInfoDto.id = '1';
 
     const aliasDtoMosaic = {} as AliasDTO;
     aliasDtoMosaic.mosaicId = mosaicId.toHex();
@@ -103,7 +107,7 @@ describe('NamespaceHttp', () => {
         expect(namespace.depth).to.be.equal(1);
         expect(namespace.endHeight.toString()).to.be.equal('12');
         expect(namespace.startHeight.toString()).to.be.equal('10');
-        expect(namespace.metaId).to.be.equal('1');
+        expect(namespace.recordId).to.be.equal('1');
         expect(namespace.index).to.be.equal(0);
         expect(namespace.levels[0].toHex()).to.be.equal(namespaceId.toHex());
         expect(namespace.isRoot()).to.be.true;
@@ -226,5 +230,28 @@ describe('NamespaceHttp', () => {
         ).thenReturn(Promise.resolve(body));
         const infos = await namespaceRepository.search({ ownerAddress: address }).toPromise();
         assertNamespaceInfo(infos.data[0]);
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new NamespaceHttp('url');
+        expect(accountHttp.streamer() instanceof NamespacePaginationStreamer).to.be.true;
+    });
+
+    it('Merkle', async () => {
+        const merkleStateInfoDTO = {} as MerkleStateInfoDTO;
+        const merkleLeafDTO = {} as MerkleTreeLeafDTO;
+        merkleLeafDTO.encodedPath = 'path';
+        merkleLeafDTO.leafHash = 'hash';
+        merkleLeafDTO.nibbleCount = 1;
+        merkleLeafDTO.path = 'path';
+        merkleLeafDTO.type = 255;
+        merkleLeafDTO.value = 'value';
+        merkleStateInfoDTO.raw = 'raw';
+        merkleStateInfoDTO.tree = [merkleLeafDTO];
+
+        when(namespaceRoutesApi.getNamespaceMerkle(namespaceId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
+        const merkle = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
+        expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
+        expect(merkle.tree.leaf).not.to.be.undefined;
     });
 });

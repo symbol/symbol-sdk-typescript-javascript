@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Convert } from '../core/format/Convert';
 import { MetadataRepository } from '../infrastructure/MetadataRepository';
+import { Page } from '../infrastructure/Page';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataType } from '../model/metadata/MetadataType';
@@ -29,7 +30,6 @@ import { Deadline } from '../model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../model/transaction/MosaicMetadataTransaction';
 import { NamespaceMetadataTransaction } from '../model/transaction/NamespaceMetadataTransaction';
 import { UInt64 } from '../model/UInt64';
-import { Page } from '../infrastructure/Page';
 
 /**
  * MetadataTransaction service

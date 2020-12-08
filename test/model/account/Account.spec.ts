@@ -15,16 +15,16 @@
  */
 
 import { expect } from 'chai';
-import { Account } from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { NetworkCurrencyLocal } from '../../../src/model/mosaic/NetworkCurrencyLocal';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { PlainMessage } from '../../../src/model/message/PlainMessage';
-import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
-import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
-import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
+import { Account } from '../../../src/model/account/Account';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { NetworkType } from '../../../src/model/network/NetworkType';
+import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
+import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('Account', () => {
     const accountInformation = {

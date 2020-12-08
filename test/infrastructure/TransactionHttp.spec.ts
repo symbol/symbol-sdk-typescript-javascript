@@ -31,8 +31,8 @@ import {
     TransferTransactionDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
+import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -133,6 +133,9 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
                 undefined,
+                undefined,
+                undefined,
+                undefined,
             ),
         ).thenReturn(Promise.resolve(page));
 
@@ -150,12 +153,18 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
                 undefined,
+                undefined,
+                undefined,
+                undefined,
             ),
         ).thenReturn(Promise.resolve(page));
 
         when(
             transactionRoutesApi.searchUnconfirmedTransactions(
                 deepEqual(account.address.plain()),
+                undefined,
+                undefined,
+                undefined,
                 undefined,
                 undefined,
                 undefined,
@@ -543,5 +552,10 @@ describe('TransactionHttp', () => {
         const params: HTTPQuery = { type: [TransactionType.NAMESPACE_REGISTRATION.valueOf(), TransactionType.TRANSFER.valueOf()] };
         const query = transactionHttp.config().queryParamsStringify(params);
         expect(query).eq('type=16718&type=16724');
+    });
+
+    it('streamer', async () => {
+        const accountHttp = new TransactionHttp('url');
+        expect(accountHttp.streamer() instanceof TransactionPaginationStreamer).to.be.true;
     });
 });

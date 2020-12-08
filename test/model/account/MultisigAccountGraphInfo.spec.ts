@@ -16,10 +16,10 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Address } from '../../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../../src/model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { Address } from '../../../src/model/account/Address';
 
 describe('MultisigAccountGraphInfo', () => {
     it('should createComplete an MultisigAccountGraphInfo object', () => {
@@ -28,6 +28,7 @@ describe('MultisigAccountGraphInfo', () => {
             multisigEntries: [
                 {
                     multisig: {
+                        version: 1,
                         accountAddress: Address.createFromPublicKey(
                             'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
                             NetworkType.PRIVATE_TEST,
@@ -64,6 +65,7 @@ describe('MultisigAccountGraphInfo', () => {
             multisigAccountGraphInfoDTO.level,
             multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
                 return new MultisigAccountInfo(
+                    multisigAccountInfoDTO.multisig.version,
                     multisigAccountInfoDTO.multisig.accountAddress,
                     multisigAccountInfoDTO.multisig.minApproval,
                     multisigAccountInfoDTO.multisig.minRemoval,

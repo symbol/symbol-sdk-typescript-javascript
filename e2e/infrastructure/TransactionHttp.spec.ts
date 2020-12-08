@@ -13,73 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect } from 'chai';
 import { ChronoUnit } from '@js-joda/core';
+import { deepEqual } from 'assert';
+import { expect } from 'chai';
+import * as CryptoJS from 'crypto-js';
+import { sha256 } from 'js-sha256';
 import { sha3_256 } from 'js-sha3';
+import * as ripemd160 from 'ripemd160';
+import { take, toArray } from 'rxjs/operators';
+import * as secureRandom from 'secure-random';
 import { Crypto } from '../../src/core/crypto';
 import { Convert, Convert as convert } from '../../src/core/format';
-import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Account } from '../../src/model/account/Account';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { Mosaic } from '../../src/model/mosaic/Mosaic';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
-import { AliasAction } from '../../src/model/namespace/AliasAction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
-import { AccountAddressRestrictionTransaction } from '../../src/model/transaction/AccountAddressRestrictionTransaction';
-import { AccountKeyLinkTransaction } from '../../src/model/transaction/AccountKeyLinkTransaction';
-import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
-import { AccountMosaicRestrictionTransaction } from '../../src/model/transaction/AccountMosaicRestrictionTransaction';
-import { AccountOperationRestrictionTransaction } from '../../src/model/transaction/AccountOperationRestrictionTransaction';
-import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
-import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { CosignatureSignedTransaction } from '../../src/model/transaction/CosignatureSignedTransaction';
-import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
-import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
-import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
-import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
-import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
-import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
-import { TransactionType } from '../../src/model/transaction/TransactionType';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { LockHashUtils, TransactionMapping } from '../../src/core/utils';
+import {
+    NamespaceRepository,
+    TransactionGroup,
+    TransactionRepository,
+    TransactionSearchCriteria,
+    TransactionStatusRepository,
+} from '../../src/infrastructure';
+import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { TransactionVersion, UInt64, VotingKeyLinkV1Transaction } from '../../src/model';
+import { Account } from '../../src/model/account';
+import { LockHashAlgorithm } from '../../src/model/lock';
+import { PlainMessage } from '../../src/model/message';
+import { Mosaic, MosaicFlags, MosaicId, MosaicNonce, MosaicSupplyChangeAction } from '../../src/model/mosaic';
+import { AliasAction, NamespaceId } from '../../src/model/namespace';
+import { NetworkType } from '../../src/model/network';
+import {
+    AccountRestrictionModificationAction,
+    AddressRestrictionFlag,
+    MosaicRestrictionFlag,
+    MosaicRestrictionType,
+    OperationRestrictionFlag,
+} from '../../src/model/restriction';
+import {
+    AccountAddressRestrictionTransaction,
+    AccountKeyLinkTransaction,
+    AccountMetadataTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AccountRestrictionModification,
+    AccountRestrictionTransaction,
+    AddressAliasTransaction,
+    AggregateTransaction,
+    CosignatureSignedTransaction,
+    CosignatureTransaction,
+    Deadline,
+    HashLockTransaction,
+    LinkAction,
+    LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
+    MosaicAliasTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+    MosaicMetadataTransaction,
+    MosaicSupplyChangeTransaction,
+    NamespaceMetadataTransaction,
+    NamespaceRegistrationTransaction,
+    NodeKeyLinkTransaction,
+    SecretLockTransaction,
+    SecretProofTransaction,
+    TransactionType,
+    TransferTransaction,
+    VotingKeyLinkTransaction,
+    VrfKeyLinkTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { LockHashUtils } from '../../src/core/utils/LockHashUtils';
-import { TransactionSearchCriteria } from '../../src/infrastructure/infrastructure';
-import { VrfKeyLinkTransaction } from '../../src/model/transaction/VrfKeyLinkTransaction';
-import { VotingKeyLinkTransaction } from '../../src/model/transaction/VotingKeyLinkTransaction';
-import { NodeKeyLinkTransaction } from '../../src/model/transaction/NodeKeyLinkTransaction';
-import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
-import { toArray, take } from 'rxjs/operators';
-import { deepEqual } from 'assert';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicRestrictionFlag } from '../../src/model/restriction/MosaicRestrictionFlag';
-import { OperationRestrictionFlag } from '../../src/model/restriction/OperationRestrictionFlag';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { TransactionStatusRepository } from '../../src/infrastructure/TransactionStatusRepository';
-import * as ripemd160 from 'ripemd160';
-import { sha256 } from 'js-sha256';
-import * as secureRandom from 'secure-random';
-import * as CryptoJS from 'crypto-js';
 
 describe('TransactionHttp', () => {
     let transactionHash: string;
@@ -95,13 +95,14 @@ describe('TransactionHttp', () => {
     let generationHash: string;
     let networkType: NetworkType;
     let mosaicId: MosaicId;
-    let NetworkCurrencyLocalId: MosaicId;
+    let networkNetworkCurrencyLocalId: MosaicId;
     let addressAlias: NamespaceId;
     let mosaicAlias: NamespaceId;
     let harvestingAccount: Account;
     let transactionRepository: TransactionRepository;
     let transactionStatusRepository: TransactionStatusRepository;
     let votingKey: string;
+    let votingKeyV1: string;
 
     const remoteAccount = Account.generateNewAccount(helper.networkType);
 
@@ -115,7 +116,8 @@ describe('TransactionHttp', () => {
             harvestingAccount = helper.harvestingAccount;
             generationHash = helper.generationHash;
             networkType = helper.networkType;
-            votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
+            votingKey = Convert.uint8ToHex(Crypto.randomBytes(32));
+            votingKeyV1 = Convert.uint8ToHex(Crypto.randomBytes(48));
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
             transactionStatusRepository = helper.repositoryFactory.createTransactionStatusRepository();
@@ -128,7 +130,9 @@ describe('TransactionHttp', () => {
 
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', async () => {
-            NetworkCurrencyLocalId = (await namespaceRepository.getLinkedMosaicId(new NamespaceId('cat.currency')).toPromise()) as MosaicId;
+            networkNetworkCurrencyLocalId = (await namespaceRepository
+                .getLinkedMosaicId(helper.networkCurrency!.namespaceId!)
+                .toPromise()) as MosaicId;
         });
     });
 
@@ -418,7 +422,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(helper.epochAdjustment),
                 account2.address,
-                [helper.createNetworkCurrency(1, false)],
+                [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -432,7 +436,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(helper.epochAdjustment),
                 account2.address,
-                [helper.createNetworkCurrency(1, false)],
+                [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -733,11 +737,38 @@ describe('TransactionHttp', () => {
                 300,
                 LinkAction.Link,
                 networkType,
+                TransactionVersion.VOTING_KEY_LINK_V2,
                 helper.maxFee,
             );
             const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
 
+            console.log(signedTransaction.payload);
             return helper.announce(signedTransaction).then((transaction: VotingKeyLinkTransaction) => {
+                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
+                expect(transaction.startEpoch, 'startEpoch').not.to.be.undefined;
+                expect(transaction.endEpoch, 'endEpoch').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
+                return signedTransaction;
+            });
+        });
+    });
+
+    describe('VotingKeyLinkV1Transaction', () => {
+        it('standalone', () => {
+            const votingLinkTransaction = VotingKeyLinkV1Transaction.create(
+                Deadline.create(helper.epochAdjustment),
+                votingKeyV1,
+                100,
+                300,
+                LinkAction.Link,
+                networkType,
+                helper.maxFee,
+            );
+            const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
+
+            console.log(signedTransaction.payload);
+
+            return helper.announce(signedTransaction).then((transaction: VotingKeyLinkV1Transaction) => {
                 expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
                 expect(transaction.startEpoch, 'startEpoch').not.to.be.undefined;
                 expect(transaction.endEpoch, 'endEpoch').not.to.be.undefined;
@@ -755,6 +786,7 @@ describe('TransactionHttp', () => {
                 300,
                 LinkAction.Unlink,
                 networkType,
+                TransactionVersion.VOTING_KEY_LINK_V2,
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
@@ -794,7 +826,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(helper.epochAdjustment),
                 addressAlias,
-                [helper.createNetworkCurrency(1, false)],
+                [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -899,7 +931,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+                helper.networkCurrency.createRelative(10),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 networkType,
@@ -944,7 +976,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+                new Mosaic(networkNetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 networkType,
@@ -966,7 +998,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                new Mosaic(NetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrencyDivisibility))),
+                new Mosaic(networkNetworkCurrencyLocalId, UInt64.fromUint(10 * Math.pow(10, helper.networkCurrency.divisibility))),
                 UInt64.fromUint(10),
                 signedTransaction,
                 networkType,
@@ -1009,7 +1041,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -1031,7 +1063,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -1056,7 +1088,7 @@ describe('TransactionHttp', () => {
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_160,
                 secret,
@@ -1073,7 +1105,7 @@ describe('TransactionHttp', () => {
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_160,
                 secret,
@@ -1095,7 +1127,7 @@ describe('TransactionHttp', () => {
         it('standalone', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -1110,7 +1142,7 @@ describe('TransactionHttp', () => {
         it('aggregate', () => {
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
                 sha3_256.create().update(Crypto.randomBytes(20)).hex(),
@@ -1137,7 +1169,7 @@ describe('TransactionHttp', () => {
 
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment, 1, ChronoUnit.HOURS),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(11),
                 LockHashAlgorithm.Op_Sha3_256,
                 secret,
@@ -1175,7 +1207,7 @@ describe('TransactionHttp', () => {
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
                 secret,
@@ -1213,7 +1245,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_160,
                 secret,
@@ -1246,7 +1278,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_160,
                 secret,
@@ -1285,7 +1317,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(1, false),
+                helper.createCurrency(1, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
                 secret,
@@ -1318,7 +1350,7 @@ describe('TransactionHttp', () => {
             const proof = secretSeed;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),
-                helper.createNetworkCurrency(10, false),
+                helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
                 secret,
@@ -1356,8 +1388,8 @@ describe('TransactionHttp', () => {
             // AliceAccount: account
             // BobAccount: account
 
-            const sendAmount = helper.createNetworkCurrency(1000);
-            const backAmount = helper.createNetworkCurrency(1);
+            const sendAmount = helper.createCurrency(1000);
+            const backAmount = helper.createCurrency(1);
 
             const aliceTransferTransaction = TransferTransaction.create(
                 Deadline.create(helper.epochAdjustment),
@@ -1454,7 +1486,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(helper.epochAdjustment),
                 account2.address,
-                [helper.createNetworkCurrency(1, false)],
+                [helper.createCurrency(1, false)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -1470,7 +1502,7 @@ describe('TransactionHttp', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(helper.epochAdjustment),
                 account2.address,
-                [helper.createNetworkCurrency(1)],
+                [helper.createCurrency(1)],
                 PlainMessage.create('test-message'),
                 networkType,
                 helper.maxFee,
@@ -1545,7 +1577,7 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('searchTransactions using steamer', () => {
+    describe('searchTransactions using streamer', () => {
         it('should return transaction info given address', async () => {
             const streamer = new TransactionPaginationStreamer(transactionRepository);
             const transactionsNoStreamer = await transactionRepository

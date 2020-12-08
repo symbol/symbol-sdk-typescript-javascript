@@ -17,17 +17,17 @@
 import { Observable } from 'rxjs';
 import { ReceiptRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
-import { Http } from './Http';
-import { ReceiptRepository } from './ReceiptRepository';
-import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
-import { Page } from './Page';
-import { TransactionStatement } from '../model/receipt/TransactionStatement';
 import { AddressResolutionStatement, MosaicIdResolutionStatement } from '../model/receipt/ResolutionStatement';
+import { TransactionStatement } from '../model/receipt/TransactionStatement';
+import { Http } from './Http';
+import { Page } from './Page';
 import {
     createAddressResolutionStatement,
     createMosaicResolutionStatement,
     createTransactionStatement,
 } from './receipt/CreateReceiptFromDTO';
+import { ReceiptRepository } from './ReceiptRepository';
+import { ResolutionStatementSearchCriteria } from './searchCriteria/ResolutionStatementSearchCriteria';
 import { TransactionStatementSearchCriteria } from './searchCriteria/TransactionStatementSearchCriteria';
 
 /**

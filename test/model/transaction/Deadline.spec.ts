@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
 import { ChronoUnit, Instant, LocalDateTime, ZoneId } from '@js-joda/core';
+import { expect } from 'chai';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 
 describe('Deadline', () => {
@@ -66,12 +66,9 @@ describe('Deadline', () => {
     it('should create local date time - default time zone', () => {
         const deadline = Deadline.createFromDTO('1');
         const datetime = deadline.toLocalDateTime(epochAdjustment);
-        expect(datetime.year()).to.be.equal(2019);
+        const datetimeSystemZone = deadline.toLocalDateTimeGivenTimeZone(epochAdjustment, ZoneId.SYSTEM);
         expect(datetime.month().value()).to.be.equal(11);
-        expect(datetime.dayOfMonth()).to.be.equal(11);
-        expect(datetime.hour()).to.be.equal(0);
-        expect(datetime.second()).to.be.equal(0);
-        expect(datetime.minute()).to.be.equal(0);
+        expect(datetime).to.be.deep.eq(datetimeSystemZone);
     });
 
     it('should create local date time - customer time zone', () => {

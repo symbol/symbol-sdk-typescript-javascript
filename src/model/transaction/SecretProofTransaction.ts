@@ -19,30 +19,28 @@ import {
     EmbeddedSecretProofTransactionBuilder,
     EmbeddedTransactionBuilder,
     Hash256Dto,
-    KeyDto,
     SecretProofTransactionBuilder,
-    SignatureDto,
     TimestampDto,
-    UnresolvedAddressDto,
     TransactionBuilder,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../lock/LockHashAlgorithm';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { LockHashAlgorithmLengthValidator, LockHashAlgorithm } from '../lock/LockHashAlgorithm';
 import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
 
 export class SecretProofTransaction extends Transaction {
     /**
@@ -128,7 +126,7 @@ export class SecretProofTransaction extends Transaction {
             : SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = SecretProofTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
@@ -139,7 +137,7 @@ export class SecretProofTransaction extends Transaction {
             Convert.uint8ToHex(builder.getProof()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
@@ -168,12 +166,9 @@ export class SecretProofTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new SecretProofTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.SECRET_PROOF.valueOf(),
@@ -193,7 +188,7 @@ export class SecretProofTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedSecretProofTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.SECRET_PROOF.valueOf(),

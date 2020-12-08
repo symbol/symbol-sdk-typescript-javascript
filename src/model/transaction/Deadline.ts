@@ -35,13 +35,12 @@ export class Deadline {
      * @returns {Deadline}
      */
     public static create(epochAdjustment: number, deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
-        const now = Instant.now();
-        const deadlineDateTime = now.plus(deadline, chronoUnit);
+        const deadlineDateTime = Instant.now().plus(deadline, chronoUnit);
 
         if (deadline <= 0) {
             throw new Error('deadline should be greater than 0');
         }
-        return new Deadline(deadlineDateTime.minusMillis(Duration.ofSeconds(epochAdjustment).toMillis()).toEpochMilli());
+        return new Deadline(deadlineDateTime.minusSeconds(Duration.ofSeconds(epochAdjustment).seconds()).toEpochMilli());
     }
 
     /**
@@ -91,10 +90,7 @@ export class Deadline {
      * @returns {LocalDateTime}
      */
     public toLocalDateTime(epochAdjustment: number): LocalDateTime {
-        return LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(this.adjustedValue).plusMillis(Duration.ofSeconds(epochAdjustment).toMillis()),
-            ZoneId.SYSTEM,
-        );
+        return this.toLocalDateTimeGivenTimeZone(epochAdjustment, ZoneId.SYSTEM);
     }
 
     /**

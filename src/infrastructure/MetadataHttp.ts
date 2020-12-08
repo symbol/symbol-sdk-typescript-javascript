@@ -15,9 +15,11 @@
  */
 
 import { Observable } from 'rxjs';
-import { MetadataRoutesApi, MetadataInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { MetadataInfoDTO, MetadataRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Convert } from '../core/format/Convert';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataEntry } from '../model/metadata/MetadataEntry';
 import { MetadataType } from '../model/metadata/MetadataType';
@@ -25,10 +27,10 @@ import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
-import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
-import { Page } from './Page';
-import { DtoMapping } from '../core/utils/DtoMapping';
 import { MetadataRepository } from './MetadataRepository';
+import { Page } from './Page';
+import { MetadataPaginationStreamer } from './paginationStreamer';
+import { MetadataSearchCriteria } from './searchCriteria/MetadataSearchCriteria';
 
 /**
  * Metadata http repository.
@@ -75,6 +77,28 @@ export class MetadataHttp extends Http implements MetadataRepository {
     }
 
     /**
+     * Get metadata of the given id.
+     * @param compositeHash Metadata composite hash id
+     * @returns Observable<Metadata>
+     */
+    public getMetadata(compositeHash: string): Observable<Metadata> {
+        return this.call(this.metadataRoutesApi.getMetadata(compositeHash), (body) => this.toMetadata(body));
+    }
+
+    /**
+     * Get metadata merkle of the given id.
+     * @param compositeHash Metadata composite hash id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getMetadataMerkle(compositeHash: string): Observable<MerkleStateInfo> {
+        return this.call(this.metadataRoutesApi.getMetadataMerkle(compositeHash), DtoMapping.toMerkleStateInfo);
+    }
+
+    public streamer(): MetadataPaginationStreamer {
+        return new MetadataPaginationStreamer(this);
+    }
+
+    /**
      * It maps MetadataDTO into a Metadata
      * @param metadata - the dto
      * @returns the model Metadata.
@@ -96,6 +120,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
         return new Metadata(
             metadata.id,
             new MetadataEntry(
+                metadataEntry.version || 1,
                 metadataEntry.compositeHash,
                 Address.createFromEncoded(metadataEntry.sourceAddress),
                 Address.createFromEncoded(metadataEntry.targetAddress),

@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import {
     createAddressResolutionStatement,
     createMosaicResolutionStatement,
@@ -39,7 +40,6 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
-import { Convert } from '../../../src/core/format/Convert';
 
 describe('Receipt', () => {
     let account: Account;

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { Address } from '../../model/account';
 import { SearchCriteria } from './SearchCriteria';
-import { Address } from '../../model/account/Address';
 
 /**
  * Defines the params used to search secret lock. With this criteria, you can sort and filter
@@ -24,5 +24,10 @@ export interface SecretLockSearchCriteria extends SearchCriteria {
     /**
      * The owner address. (required)
      */
-    address: Address;
+    address?: Address;
+
+    /**
+     * Optional to search by secret.
+     */
+    secret?: string;
 }

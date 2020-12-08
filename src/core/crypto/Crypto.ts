@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import * as crypto from 'crypto';
+import * as CryptoJS from 'crypto-js';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
-import * as crypto from 'crypto';
-import * as CryptoJS from 'crypto-js';
 
 export class Crypto {
     private static AES_ALGO = 'aes-256-gcm';

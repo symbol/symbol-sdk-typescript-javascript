@@ -16,26 +16,26 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { RestrictionAccountRepository } from '../../src/infrastructure/RestrictionAccountRepository';
-import { RestrictionMosaicRepository } from '../../src/infrastructure/RestrictionMosaicRepository';
-import { Account } from '../../src/model/account/Account';
-import { Address } from '../../src/model/account/Address';
-import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
-import { MosaicId } from '../../src/model/mosaic/MosaicId';
-import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { MosaicRestrictionEntryType } from '../../src/model/restriction/MosaicRestrictionEntryType';
-import { MosaicRestrictionType } from '../../src/model/restriction/MosaicRestrictionType';
-import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
-import { Deadline } from '../../src/model/transaction/Deadline';
-import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
-import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { UInt64 } from '../../src/model/UInt64';
+import { RestrictionAccountRepository, RestrictionMosaicRepository } from '../../src/infrastructure';
+import { UInt64 } from '../../src/model';
+import { Account, Address } from '../../src/model/account';
+import { MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
+import { NetworkType } from '../../src/model/network';
+import {
+    AddressRestrictionFlag,
+    MosaicAddressRestriction,
+    MosaicRestrictionEntryType,
+    MosaicRestrictionType,
+} from '../../src/model/restriction';
+import {
+    AccountRestrictionTransaction,
+    AggregateTransaction,
+    Deadline,
+    MosaicAddressRestrictionTransaction,
+    MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
+} from '../../src/model/transaction';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
-import { AddressRestrictionFlag } from '../../src/model/restriction/AddressRestrictionFlag';
-import { MosaicAddressRestriction } from '../../src/model/restriction/MosaicAddressRestriction';
 
 describe('RestrictionHttp', () => {
     const helper = new IntegrationTestHelper();
@@ -48,7 +48,6 @@ describe('RestrictionHttp', () => {
     let mosaicId: MosaicId;
     let referenceMosaicId: MosaicId;
     let restrictionAccountRepository: RestrictionAccountRepository;
-    const epochAdjustment = 1573430400;
 
     before(() => {
         return helper.start({ openListener: true }).then(() => {
@@ -76,7 +75,7 @@ describe('RestrictionHttp', () => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 mosaicId,
                 MosaicFlags.create(true, true, true),
@@ -95,7 +94,7 @@ describe('RestrictionHttp', () => {
             const nonce = MosaicNonce.createRandom();
             referenceMosaicId = MosaicId.createFromNonce(nonce, account.address);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 nonce,
                 referenceMosaicId,
                 MosaicFlags.create(true, true, true),
@@ -112,7 +111,7 @@ describe('RestrictionHttp', () => {
     describe('Setup Test AccountAddressRestriction', () => {
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [account3.address],
                 [],
@@ -127,7 +126,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicGlobalRestrictionTransaction - Reference', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 referenceMosaicId,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -147,7 +146,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicGlobalRestrictionTransaction - with referenceMosaicId', () => {
         it('standalone', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 mosaicId,
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
@@ -168,7 +167,7 @@ describe('RestrictionHttp', () => {
     describe('MosaicAddressRestrictionTransaction', () => {
         it('aggregate', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 mosaicId,
                 UInt64.fromUint(60641),
                 account3.address,
@@ -178,7 +177,7 @@ describe('RestrictionHttp', () => {
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
                 networkType,
                 [],
@@ -198,19 +197,27 @@ describe('RestrictionHttp', () => {
     describe('getAccountRestrictions', () => {
         it('should call getAccountRestrictions successfully', async () => {
             const accountRestrictions = await restrictionAccountRepository.getAccountRestrictions(accountAddress).toPromise();
-            expect(accountRestrictions.length).to.be.greaterThan(0);
+            expect(accountRestrictions.restrictions.length).to.be.greaterThan(0);
         });
     });
 
     describe('search', () => {
         it('should call search successfully', async () => {
             const mosaicRestrictionPage = await restrictionMosaicRepository
-                .searchMosaicRestrictions({ mosaicId, targetAddress: account3.address })
+                .search({ mosaicId, targetAddress: account3.address })
                 .toPromise();
-            deepEqual(mosaicRestrictionPage.data[0].mosaicId.toHex(), mosaicId.toHex());
-            deepEqual(mosaicRestrictionPage.data[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-            deepEqual((mosaicRestrictionPage.data[0] as MosaicAddressRestriction).targetAddress.plain(), account3.address.plain());
-            deepEqual(mosaicRestrictionPage.data[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
+            const info = mosaicRestrictionPage.data[0];
+            deepEqual(info.mosaicId.toHex(), mosaicId.toHex());
+            deepEqual(info.entryType, MosaicRestrictionEntryType.ADDRESS);
+            const addressRestriction = info as MosaicAddressRestriction;
+            deepEqual(addressRestriction.targetAddress.plain(), account3.address.plain());
+            deepEqual(addressRestriction.getRestriction(UInt64.fromUint(60641))!.restrictionValue, UInt64.fromUint(2));
+
+            const infoFromId = await restrictionMosaicRepository.getMosaicRestrictions(info.compositeHash).toPromise();
+            expect(infoFromId).to.be.equal(info);
+
+            const merkleInfo = await restrictionMosaicRepository.getMosaicRestrictionsMerkle(info.compositeHash).toPromise();
+            expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 
@@ -222,7 +229,7 @@ describe('RestrictionHttp', () => {
     describe('Remove test AccountRestriction - Address', () => {
         it('Announce AccountRestrictionTransaction', () => {
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(epochAdjustment),
+                Deadline.create(helper.epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
                 [],
                 [account3.address],

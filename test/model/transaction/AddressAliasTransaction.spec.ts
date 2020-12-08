@@ -16,6 +16,7 @@
 
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
+import { AliasTransaction } from '../../../src/model';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { AliasAction } from '../../../src/model/namespace/AliasAction';
@@ -25,7 +26,6 @@ import { AddressAliasTransaction } from '../../../src/model/transaction/AddressA
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { AliasTransaction } from '../../../src/model/model';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;

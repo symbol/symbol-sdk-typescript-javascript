@@ -15,13 +15,15 @@
  */
 
 import { deepEqual } from 'assert';
+import { MetadataEntryBuilder } from 'catbuffer-typescript';
+import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
-import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { UInt64 } from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('MetadataEntry', () => {
     let account: Account;
@@ -32,6 +34,7 @@ describe('MetadataEntry', () => {
 
     it('should createComplete an Account Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -42,6 +45,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,
@@ -57,10 +61,19 @@ describe('MetadataEntry', () => {
         deepEqual(metadata.targetId, undefined);
         deepEqual(metadata.metadataType, MetadataType.Account);
         deepEqual(metadata.value, '12345');
+
+        const serialized = metadata.serialize();
+        deepEqual(
+            '010080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8500000000000000000005003132333435',
+            Convert.uint8ToHex(serialized),
+        );
+
+        deepEqual(serialized, MetadataEntryBuilder.loadFromBinary(serialized).serialize());
     });
 
     it('should createComplete an Mosaic Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -72,6 +85,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,
@@ -88,10 +102,18 @@ describe('MetadataEntry', () => {
         deepEqual((metadata.targetId as MosaicId).toHex(), '85BBEA6CC462B244');
         deepEqual(metadata.metadataType, MetadataType.Mosaic);
         deepEqual(metadata.value, '12345');
+
+        const serialized = metadata.serialize();
+        deepEqual(
+            '010080D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C44B262C46CEABB8544B262C46CEABB850105003132333435',
+            Convert.uint8ToHex(serialized),
+        );
+        deepEqual(serialized, MetadataEntryBuilder.loadFromBinary(serialized).serialize());
     });
 
     it('should createComplete an Namespace Metadata object', () => {
         const metadataEntryDTO = {
+            version: 1,
             compositeHash: hash,
             sourceAddress: account.address,
             targetAddress: account.address,
@@ -102,6 +124,7 @@ describe('MetadataEntry', () => {
         };
 
         const metadata = new MetadataEntry(
+            metadataEntryDTO.version,
             metadataEntryDTO.compositeHash,
             metadataEntryDTO.sourceAddress,
             metadataEntryDTO.targetAddress,

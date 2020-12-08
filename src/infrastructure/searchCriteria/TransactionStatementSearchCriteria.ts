@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { SearchCriteria } from './SearchCriteria';
-import { UInt64 } from '../../model/UInt64';
-import { ReceiptType } from '../../model/receipt/ReceiptType';
 import { Address } from '../../model/account/Address';
-import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { MosaicId } from '../../model/mosaic/MosaicId';
+import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { ReceiptType } from '../../model/receipt/ReceiptType';
+import { UInt64 } from '../../model/UInt64';
+import { SearchCriteria } from './SearchCriteria';
 
 /**
  * Defines the params used to search transaction statement receipts. With this criteria, you can sort and filter

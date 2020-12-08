@@ -16,14 +16,11 @@
 
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
-import { Account } from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/network/NetworkType';
-import { VotingKeyLinkTransaction } from '../../../src/model/transaction/VotingKeyLinkTransaction';
-import { Deadline } from '../../../src/model/transaction/Deadline';
-import { LinkAction } from '../../../src/model/transaction/LinkAction';
-import { UInt64 } from '../../../src/model/UInt64';
+import { TransactionVersion, UInt64 } from '../../../src/model';
+import { Account, Address } from '../../../src/model/account';
+import { NetworkType } from '../../../src/model/network';
+import { Deadline, LinkAction, VotingKeyLinkTransaction } from '../../../src/model/transaction';
 import { TestingAccount } from '../../conf/conf.spec';
-import { Address } from '../../../src/model/account/Address';
 
 describe('VotingKeyLinkTransaction', () => {
     let account: Account;
@@ -34,7 +31,7 @@ describe('VotingKeyLinkTransaction', () => {
     const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
-        votingKey = '344B9146A1F8DBBD8AFC830A2AAB7A83692E73AD775159B811355B1D2C0C27120243B10A16D4B5001B2AF0ED456C82D0';
+        votingKey = 'AAABBB205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -45,6 +42,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -61,9 +59,11 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            3,
             new UInt64([1, 0]),
         );
 
+        expect(votingKeyLinkTransaction.version).to.be.equal(3);
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
         expect(votingKeyLinkTransaction.maxFee.lower).to.be.equal(1);
         expect(votingKeyLinkTransaction.startEpoch.toString()).to.be.equal('1');
@@ -78,6 +78,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -88,7 +89,7 @@ describe('VotingKeyLinkTransaction', () => {
         const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '344B9146A1F8DBBD8AFC830A2AAB7A83692E73AD775159B811355B1D2C0C27120243B10A16D4B5001B2AF0ED456C82D0010000000A00000001',
+            'AAABBB205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6010000000A00000001',
         );
     });
 
@@ -100,6 +101,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -110,23 +112,22 @@ describe('VotingKeyLinkTransaction', () => {
         const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '344B9146A1F8DBBD8AFC830A2AAB7A83692E73AD775159B811355B1D2C0C27120243B10A16D4B5001B2AF0ED456C82D0010000000A00000000',
+            'AAABBB205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6010000000A00000000',
         );
     });
 
-    describe('size', () => {
-        it('should return 185 for VotingKeyLinkTransaction byte size', () => {
-            const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
-                Deadline.create(epochAdjustment),
-                votingKey,
-                startEpoch,
-                endEpoch,
-                LinkAction.Unlink,
-                NetworkType.PRIVATE_TEST,
-            );
-            expect(Convert.hexToUint8(votingKeyLinkTransaction.serialize()).length).to.be.equal(votingKeyLinkTransaction.size);
-            expect(votingKeyLinkTransaction.size).to.be.equal(185);
-        });
+    it('should return 185 for VotingKeyLinkTransaction byte size', () => {
+        const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
+            Deadline.create(epochAdjustment),
+            votingKey,
+            startEpoch,
+            endEpoch,
+            LinkAction.Unlink,
+            NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
+        );
+        expect(votingKeyLinkTransaction.size).to.be.equal(169);
+        expect(Convert.hexToUint8(votingKeyLinkTransaction.serialize()).length).to.be.equal(votingKeyLinkTransaction.size);
     });
 
     it('Test set maxFee using multiplier', () => {
@@ -137,8 +138,9 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         ).setMaxFee(2);
-        expect(votingKeyLinkTransaction.maxFee.compact()).to.be.equal(370);
+        expect(votingKeyLinkTransaction.maxFee.compact()).to.be.equal(338);
 
         const signedTransaction = votingKeyLinkTransaction.signWith(account, generationHash);
         expect(signedTransaction.hash).not.to.be.undefined;
@@ -152,6 +154,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
+            TransactionVersion.VOTING_KEY_LINK_V2,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;

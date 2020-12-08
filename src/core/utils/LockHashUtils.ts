@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
-import { LockHashAlgorithm } from '../../model/lock/LockHashAlgorithm';
-import * as ripemd160 from 'ripemd160';
 import { sha256 } from 'js-sha256';
+import { sha3_256 } from 'js-sha3';
+import * as ripemd160 from 'ripemd160';
+import { LockHashAlgorithm } from '../../model/lock/LockHashAlgorithm';
+
 /**
  * Hash utilities for SecretLock hashing
  */

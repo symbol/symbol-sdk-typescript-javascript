@@ -18,24 +18,25 @@ import { expect } from 'chai';
 import { of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
+import { Page } from '../../src/infrastructure/Page';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
+import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
+import { Deadline, TransactionInfo } from '../../src/model';
 import { Account } from '../../src/model/account/Account';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { MerklePathItem } from '../../src/model/blockchain/MerklePathItem';
+import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
 import { MerkleProofInfo } from '../../src/model/blockchain/MerkleProofInfo';
+import { NormalBlockInfo } from '../../src/model/blockchain/NomalBlockInfo';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
+import { Transaction } from '../../src/model/transaction/Transaction';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { BlockService } from '../../src/service/BlockService';
 import { TestingAccount } from '../conf/conf.spec';
-import { MerklePosition } from '../../src/model/blockchain/MerklePosition';
-import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
-import { Page } from '../../src/infrastructure/Page';
-import { Transaction } from '../../src/model/transaction/Transaction';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { Deadline, TransactionInfo } from '../../src/model/model';
-import { PlainMessage } from '../../src/model/message/PlainMessage';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 
 describe('BlockService', () => {
     const mockBlockHash = 'D4EC16FCFE696EFDBF1820F68245C88135ACF4C6F888599C8E18BC09B9F08C7B';
@@ -45,7 +46,7 @@ describe('BlockService', () => {
 
     function mockBlockInfo(isFake = false): BlockInfo {
         if (isFake) {
-            return new BlockInfo(
+            return new NormalBlockInfo(
                 'id',
                 1,
                 'hash',
@@ -74,7 +75,7 @@ describe('BlockService', () => {
                 0,
             );
         }
-        return new BlockInfo(
+        return new NormalBlockInfo(
             'id',
             1,
             'hash',

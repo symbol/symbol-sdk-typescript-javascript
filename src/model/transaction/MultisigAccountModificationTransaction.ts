@@ -18,15 +18,17 @@ import {
     AmountDto,
     EmbeddedMultisigAccountModificationTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     MultisigAccountModificationTransactionBuilder,
-    SignatureDto,
     TimestampDto,
-    UnresolvedAddressDto,
     TransactionBuilder,
+    UnresolvedAddressDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { UnresolvedAddress } from '../account/UnresolvedAddress';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -35,10 +37,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Address } from '../account/Address';
-import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { NamespaceId } from '../namespace/NamespaceId';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -140,7 +138,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
             : MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = builder.getNetwork().valueOf();
-        const signature = payload.substring(16, 144);
+        const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = MultisigAccountModificationTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
@@ -155,7 +153,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
             }),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
-            isEmbedded || signature.match(`^[0]+$`) ? undefined : signature,
+            signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
         return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
@@ -166,12 +164,9 @@ export class MultisigAccountModificationTransaction extends Transaction {
      * @returns {TransactionBuilder}
      */
     protected createBuilder(): TransactionBuilder {
-        const signerBuffer = this.signer !== undefined ? Convert.hexToUint8(this.signer.publicKey) : new Uint8Array(32);
-        const signatureBuffer = this.signature !== undefined ? Convert.hexToUint8(this.signature) : new Uint8Array(64);
-
         const transactionBuilder = new MultisigAccountModificationTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
+            this.getSignatureAsBuilder(),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf(),
@@ -195,7 +190,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         return new EmbeddedMultisigAccountModificationTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.MULTISIG_ACCOUNT_MODIFICATION.valueOf(),

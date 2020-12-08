@@ -17,8 +17,10 @@ import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { NamespaceDTO, NamespaceInfoDTO, NamespaceRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { Convert as convert, RawAddress as AddressLibrary } from '../core/format';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import { AccountNames } from '../model/account/AccountNames';
 import { Address } from '../model/account/Address';
+import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import { AddressAlias } from '../model/namespace/AddressAlias';
@@ -33,9 +35,9 @@ import { NetworkType } from '../model/network/NetworkType';
 import { UInt64 } from '../model/UInt64';
 import { Http } from './Http';
 import { NamespaceRepository } from './NamespaceRepository';
-import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 import { Page } from './Page';
-import { DtoMapping } from '../core/utils/DtoMapping';
+import { NamespacePaginationStreamer } from './paginationStreamer';
+import { NamespaceSearchCriteria } from './searchCriteria/NamespaceSearchCriteria';
 
 /**
  * Namespace http repository.
@@ -122,6 +124,15 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     }
 
     /**
+     * Gets a NamespaceInfo merkle for a given namespaceId
+     * @param namespaceId - Namespace id
+     * @returns Observable<MerkleStateInfo>
+     */
+    public getNamespaceMerkle(namespaceId: NamespaceId): Observable<MerkleStateInfo> {
+        return this.call(this.namespaceRoutesApi.getNamespaceMerkle(namespaceId.toHex()), DtoMapping.toMerkleStateInfo);
+    }
+
+    /**
      * Gets array of NamespaceName for different namespaceIds
      * @param namespaceIds - Array of namespace ids
      * @returns Observable<NamespaceName[]>
@@ -160,6 +171,10 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             ),
             (body) => super.toPage(body.pagination, body.data, this.toNamespaceInfo),
         );
+    }
+
+    public streamer(): NamespacePaginationStreamer {
+        return new NamespacePaginationStreamer(this);
     }
 
     /**
@@ -225,9 +240,10 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     private toNamespaceInfo(dto: NamespaceInfoDTO): NamespaceInfo {
         return new NamespaceInfo(
+            dto.namespace.version || 1,
             dto.meta.active,
             dto.meta.index,
-            dto.meta.id,
+            dto.id,
             dto.namespace.registrationType as number,
             dto.namespace.depth,
             NamespaceHttp.extractLevels(dto.namespace),

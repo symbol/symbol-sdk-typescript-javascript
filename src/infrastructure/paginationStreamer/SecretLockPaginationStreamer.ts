@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PaginationStreamer } from './PaginationStreamer';
-import { Searcher } from './Searcher';
 import { SecretLockInfo } from '../../model/lock/SecretLockInfo';
 import { SecretLockSearchCriteria } from '../searchCriteria/SecretLockSearchCriteria';
+import { PaginationStreamer } from './PaginationStreamer';
+import { Searcher } from './Searcher';
 
 /**
  * A helper object that streams {@link SecretLockInfo} using the search.
