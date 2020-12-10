@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.1] - 10-Dec-2020
+
+**Milestone**: Catapult-server finality(0.10.0.4)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.22.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.24 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.10.5-1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- Fixed finalization proof schema version compatibility issue.
+
 ## [0.22.0] - 8-Dec-2020
 
 **Milestone**: Catapult-server finality(0.10.0.4)
