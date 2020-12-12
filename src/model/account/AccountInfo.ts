@@ -32,6 +32,7 @@ import {
     PinnedVotingKeyBuilder,
     VotingKeyDto,
 } from 'catbuffer-typescript';
+import { VotingKeyPaddingDto } from 'catbuffer-typescript/dist/VotingKeyPaddingDto';
 import { Convert } from '../../core/format';
 import { Mosaic, MosaicId } from '../mosaic';
 import { UInt64 } from '../UInt64';
@@ -179,10 +180,10 @@ export class AccountInfo {
     }
 
     private static toPinnedVotingKeyBuilder(key: AccountLinkVotingKey): PinnedVotingKeyBuilder {
-        const votingKeyDto = new VotingKeyDto(Convert.hexToUint8(key.publicKey));
+        const votingKeyDto = new VotingKeyDto(Convert.hexToUint8(key.publicKey).slice(0, 32));
         const startEpoch: FinalizationEpochDto = new FinalizationEpochDto(key.startEpoch);
         const endEpoch: FinalizationEpochDto = new FinalizationEpochDto(key.endEpoch);
-        return new PinnedVotingKeyBuilder(votingKeyDto, startEpoch, endEpoch);
+        return new PinnedVotingKeyBuilder(votingKeyDto, new VotingKeyPaddingDto(new Uint8Array(16)), startEpoch, endEpoch);
     }
 
     private static toMosaicBuilder(m: Mosaic): MosaicBuilder {
