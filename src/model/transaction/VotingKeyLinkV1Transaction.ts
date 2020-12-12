@@ -102,7 +102,6 @@ export class VotingKeyLinkV1Transaction extends Transaction {
         transactionInfo?: TransactionInfo,
     ) {
         super(TransactionType.VOTING_KEY_LINK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
-        Convert.validateHexString(linkedPublicKey, 96, 'Invalid linkedPublicKey');
     }
 
     /**

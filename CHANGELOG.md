@@ -4,25 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.22.1] - 10-Dec-2020
+## [0.22.2] - 12-Dec-2020
 
 **Milestone**: Catapult-server finality(0.10.0.4)
  Package  | Version  | Link
 ---|---|---
-SDK Core| v0.22.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.24 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+SDK Core| v0.22.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.0.25 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v0.10.5-1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
-
-- Fixed finalization proof schema version compatibility issue.
-
-## [0.22.0] - 8-Dec-2020
-
-**Milestone**: Catapult-server finality(0.10.0.4)
- Package  | Version  | Link
----|---|---
-SDK Core| v0.22.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.24 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
-Client Library | v0.10.4  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
 - **[BREAKING CHANGE]** `Deadline.create` requires the configurable `epochAdjustment` from the network properties. The value can be retrieved using ``RepositoryFactory.getEpochAdjustment()`` or calling catapult-rest's `network/properties` endpoint.
 - **[BREAKING CHANGE]** `NetworkCurrency` subclasses replaced with `Currency` objects. You can retrieve the network currencies with ``RepositoryFactory.getCurrencies()``.
@@ -41,6 +30,7 @@ Client Library | v0.10.4  | [symbol-openapi-typescript-fetch-client](https://www
 - `Listener` now accepts address aliases as `UnresolvedAddress` objects.
 - Added V1 and V2 Voting Key transaction support.
 - Updated `FinalizationProof` object with the new ``SignatureSchema`` for catapult-server tree testnet/v3.
+- Fixed finalization proof schema version compatibility issue.
 
 ## [0.21.0] - 25-Sep-2020
 
