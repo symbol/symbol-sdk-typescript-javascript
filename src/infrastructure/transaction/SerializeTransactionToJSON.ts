@@ -41,7 +41,6 @@ import {
     TransactionVersion,
     TransferTransaction,
     VotingKeyLinkTransaction,
-    VotingKeyLinkV1Transaction,
     VrfKeyLinkTransaction,
 } from '../../model/transaction';
 
@@ -273,16 +272,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             linkedPublicKey: nodeKeyLinkTx.linkedPublicKey,
             linkAction: nodeKeyLinkTx.linkAction,
         };
-    } else if (transaction.type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {
+    } else if (transaction.type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
         const votingKeyLinkTx = transaction as VotingKeyLinkTransaction;
-        return {
-            linkedPublicKey: votingKeyLinkTx.linkedPublicKey,
-            startEpoch: votingKeyLinkTx.startEpoch,
-            endEpoch: votingKeyLinkTx.endEpoch,
-            linkAction: votingKeyLinkTx.linkAction,
-        };
-    } else if (transaction.type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
-        const votingKeyLinkTx = transaction as VotingKeyLinkV1Transaction;
         return {
             linkedPublicKey: votingKeyLinkTx.linkedPublicKey,
             startEpoch: votingKeyLinkTx.startEpoch,

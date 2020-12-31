@@ -45,5 +45,4 @@ export * from './TransactionType';
 export * from './TransactionVersion';
 export * from './TransferTransaction';
 export * from './VotingKeyLinkTransaction';
-export * from './VotingKeyLinkV1Transaction';
 export * from './VrfKeyLinkTransaction';

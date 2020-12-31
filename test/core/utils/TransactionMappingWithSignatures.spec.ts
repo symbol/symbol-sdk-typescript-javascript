@@ -20,7 +20,7 @@ import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils';
-import { TransactionVersion, UInt64, VotingKeyLinkTransaction, VotingKeyLinkV1Transaction } from '../../../src/model';
+import { TransactionVersion, UInt64, VotingKeyLinkTransaction } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
 import { LockHashAlgorithm } from '../../../src/model/lock';
 import { PlainMessage } from '../../../src/model/message';
@@ -494,14 +494,6 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
         );
-        const votingKeyLinkV1Transaction = VotingKeyLinkV1Transaction.create(
-            Deadline.create(epochAdjustment),
-            Convert.uint8ToHex(Crypto.randomBytes(48)),
-            1,
-            3,
-            LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
-        );
 
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
             Deadline.create(epochAdjustment),
@@ -510,7 +502,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
         const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(epochAdjustment),
@@ -588,7 +580,6 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
                 accountLinkTransaction.toAggregate(account.publicAccount),
                 vrfKeyLinkTransaction.toAggregate(account.publicAccount),
                 nodeKeyLinkTransaction.toAggregate(account.publicAccount),
-                votingKeyLinkV1Transaction.toAggregate(account.publicAccount),
                 votingKeyLinkTransaction.toAggregate(account.publicAccount),
                 registerNamespaceTransaction.toAggregate(account.publicAccount),
                 mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount),
@@ -773,38 +764,6 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         expect(transaction.signer).to.be.undefined;
     });
 
-    it('should create an VotingKeyLinkV1Transaction object with link action', () => {
-        const key = Convert.uint8ToHex(Crypto.randomBytes(48));
-        const votingKeyLinkV1Transaction = VotingKeyLinkV1Transaction.create(
-            Deadline.create(epochAdjustment),
-            key,
-            1,
-            3,
-            LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
-            undefined,
-            testSignature,
-            account.publicAccount,
-        );
-
-        let signedTransaction = votingKeyLinkV1Transaction.serialize();
-        let transaction = TransactionMapping.createFromPayload(signedTransaction) as VotingKeyLinkV1Transaction;
-
-        expect(transaction.linkAction).to.be.equal(1);
-        expect(transaction.linkedPublicKey).to.be.equal(key);
-        expect(transaction.startEpoch.toString()).to.be.equal('1');
-        expect(transaction.endEpoch.toString()).to.be.equal('3');
-        expect(transaction.signature).to.be.equal(testSignature);
-        expect(transaction.signer?.publicKey).to.be.equal(account.publicKey);
-
-        Object.assign(votingKeyLinkV1Transaction, { signature: emtptySignature, signer: undefined });
-        signedTransaction = votingKeyLinkV1Transaction.serialize();
-
-        transaction = TransactionMapping.createFromPayload(signedTransaction) as VotingKeyLinkV1Transaction;
-        expect(transaction.signature).to.be.undefined;
-        expect(transaction.signer).to.be.undefined;
-    });
-
     it('should create an VotingKeyLinkTransaction object with link action', () => {
         const key = Convert.uint8ToHex(Crypto.randomBytes(32));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
@@ -814,7 +773,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
             undefined,
             testSignature,
             account.publicAccount,

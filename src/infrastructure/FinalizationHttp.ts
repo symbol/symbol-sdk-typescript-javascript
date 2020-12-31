@@ -91,10 +91,8 @@ export class FinalizationHttp extends Http implements FinalizationRepository {
                                 new BmTreeSignature(
                                     new ParentPublicKeySignaturePair(s.root.parentPublicKey, s.root.signature),
                                     new ParentPublicKeySignaturePair(s.bottom.parentPublicKey, s.bottom.signature),
-                                    s.top ? new ParentPublicKeySignaturePair(s.top.parentPublicKey, s.top.signature) : undefined,
                                 ),
                         ),
-                        mg.signatureSchema,
                     ),
             ),
         );
