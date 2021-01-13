@@ -55,6 +55,7 @@ describe('NetworkHttp', () => {
             highestFeeMultiplier: 2,
             lowestFeeMultiplier: 3,
             medianFeeMultiplier: 4,
+            minFeeMultiplier: 100,
         };
 
         when(networkRoutesApi.getTransactionFees()).thenReturn(Promise.resolve(body));
@@ -65,6 +66,7 @@ describe('NetworkHttp', () => {
         expect(networkFees.highestFeeMultiplier).to.be.equals(2);
         expect(networkFees.lowestFeeMultiplier).to.be.equals(3);
         expect(networkFees.medianFeeMultiplier).to.be.equals(4);
+        expect(networkFees.minFeeMultiplier).to.be.equals(100);
     });
 
     it('getRentalFees', async () => {

@@ -1,6 +1,6 @@
 {
     "name": "symbol-sdk",
-    "version": "0.22.3",
+    "version": "0.23.0",
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
@@ -113,7 +113,7 @@
         "ripemd160": "^2.0.2",
         "rxjs": "^6.6.3",
         "rxjs-compat": "^6.6.3",
-        "symbol-openapi-typescript-fetch-client": "0.10.7",
+        "symbol-openapi-typescript-fetch-client": "0.10.7-SNAPSHOT.202101131900",
         "tweetnacl": "^1.0.3",
         "ws": "^7.3.1"
     },
