@@ -127,6 +127,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
                     body.medianFeeMultiplier,
                     body.highestFeeMultiplier,
                     body.lowestFeeMultiplier,
+                    body.minFeeMultiplier,
                 ),
         );
     }

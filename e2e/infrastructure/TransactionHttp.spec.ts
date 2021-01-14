@@ -33,7 +33,7 @@ import {
     TransactionStatusRepository,
 } from '../../src/infrastructure';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
-import { TransactionVersion, UInt64, VotingKeyLinkV1Transaction } from '../../src/model';
+import { TransactionVersion, UInt64 } from '../../src/model';
 import { Account } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -737,7 +737,7 @@ describe('TransactionHttp', () => {
                 300,
                 LinkAction.Link,
                 networkType,
-                TransactionVersion.VOTING_KEY_LINK_V2,
+                TransactionVersion.VOTING_KEY_LINK,
                 helper.maxFee,
             );
             const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
@@ -753,30 +753,6 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('VotingKeyLinkV1Transaction', () => {
-        it('standalone', () => {
-            const votingLinkTransaction = VotingKeyLinkV1Transaction.create(
-                Deadline.create(helper.epochAdjustment),
-                votingKeyV1,
-                100,
-                300,
-                LinkAction.Link,
-                networkType,
-                helper.maxFee,
-            );
-            const signedTransaction = votingLinkTransaction.signWith(account, generationHash);
-
-            console.log(signedTransaction.payload);
-
-            return helper.announce(signedTransaction).then((transaction: VotingKeyLinkV1Transaction) => {
-                expect(transaction.linkedPublicKey, 'LinkedPublicKey').not.to.be.undefined;
-                expect(transaction.startEpoch, 'startEpoch').not.to.be.undefined;
-                expect(transaction.endEpoch, 'endEpoch').not.to.be.undefined;
-                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
-                return signedTransaction;
-            });
-        });
-    });
     describe('VotingKeyLinkTransaction', () => {
         it('aggregate', () => {
             const votingLinkTransaction = VotingKeyLinkTransaction.create(
@@ -786,7 +762,7 @@ describe('TransactionHttp', () => {
                 300,
                 LinkAction.Unlink,
                 networkType,
-                TransactionVersion.VOTING_KEY_LINK_V2,
+                TransactionVersion.VOTING_KEY_LINK,
                 helper.maxFee,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(

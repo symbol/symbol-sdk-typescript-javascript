@@ -38,9 +38,5 @@ export class MessageGroup {
          * Signatures.
          */
         public readonly signatures: BmTreeSignature[],
-        /**
-         * Signature schema (optional)
-         */
-        public readonly signatureSchema?: number,
     ) {}
 }

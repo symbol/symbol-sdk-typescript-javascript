@@ -23,11 +23,13 @@ export class TransactionFees {
      * @param medianFeeMultiplier - Median fee multiplier over the last \"numBlocksTransactionFeeStats\".
      * @param highestFeeMultiplier - Highest fee multiplier over the last "numBlocksTransactionFeeStats".
      * @param lowestFeeMultiplier - Lowest fee multiplier over the last "numBlocksTransactionFeeStats".
+     * @param minFeeMultiplier - Node specific. Minimal fee multiplier on the current selected node.
      */
     constructor(
         public readonly averageFeeMultiplier: number,
         public readonly medianFeeMultiplier: number,
         public readonly highestFeeMultiplier: number,
         public readonly lowestFeeMultiplier: number,
+        public readonly minFeeMultiplier: number,
     ) {}
 }

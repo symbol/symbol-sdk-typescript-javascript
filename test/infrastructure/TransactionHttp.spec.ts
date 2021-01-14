@@ -71,7 +71,7 @@ describe('TransactionHttp', () => {
     it('should return an error when a non aggregate transaction bonded is announced via announceAggregateBonded method', () => {
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -399,7 +399,7 @@ describe('TransactionHttp', () => {
         const response = { message: 'done' };
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -418,7 +418,7 @@ describe('TransactionHttp', () => {
 
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -506,7 +506,7 @@ describe('TransactionHttp', () => {
     it('announce - Error', async () => {
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,
@@ -526,7 +526,7 @@ describe('TransactionHttp', () => {
 
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('Hi'),
             NetworkType.PRIVATE_TEST,

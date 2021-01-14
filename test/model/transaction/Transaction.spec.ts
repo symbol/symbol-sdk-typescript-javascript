@@ -228,7 +228,7 @@ describe('Transaction', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+                Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
                 [],
                 PlainMessage.create('test-message'),
                 NetworkType.PRIVATE_TEST,
@@ -236,7 +236,7 @@ describe('Transaction', () => {
             const serialized = transaction.serialize();
 
             expect(serialized.substring(256, serialized.length)).to.be.equal(
-                '8026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A0D0000000000000000746573742D6D657373616765',
+                'A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C5360D0000000000000000746573742D6D657373616765',
             );
         });
     });
@@ -253,7 +253,7 @@ describe('Transaction', () => {
                 undefined,
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
-            expect(transaction.versionToHex()).to.be.equal('0x8001');
+            expect(transaction.versionToHex()).to.be.equal('0xa801');
         });
     });
 
@@ -273,7 +273,7 @@ describe('Transaction', () => {
             'B041E2F9AB402EFE000000000180414200000000000000006BA50FB91A000000' +
             'EA8F8301E7EDFD701F62E1DC1601ABDE22E5FCD11C9C7E7A01B87F8DFB6B62B0' +
             '60000000000000005D00000000000000C2F93346E27CE6AD1A9F8F5E3066F832' +
-            '6593A406BDF357ACB041E2F9AB402EFE00000000018054419050B9837EFAB4BB' +
+            '6593A406BDF357ACB041E2F9AB402EFE0000000001A854419050B9837EFAB4BB' +
             'E8A4B9BB32D812F9885C00D8FC1650E142000D000000000000746573742D6D65' +
             '7373616765000000';
 
@@ -379,7 +379,7 @@ describe('Transaction', () => {
     it('is signed', () => {
         let tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -389,6 +389,6 @@ describe('Transaction', () => {
         const signed = tx.signWith(account, '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6');
         tx = TransactionMapping.createFromPayload(signed.payload) as Transaction;
         expect((tx as Transaction).isSigned(account.address)).to.be.true;
-        expect((tx as Transaction).isSigned(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'))).to.be.false;
+        expect((tx as Transaction).isSigned(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'))).to.be.false;
     });
 });

@@ -29,9 +29,5 @@ export class BmTreeSignature {
          * Bottom.
          */
         public readonly bottom: ParentPublicKeySignaturePair,
-        /**
-         * top (for testnet/3 V1 schema only).
-         */
-        public readonly top?: ParentPublicKeySignaturePair,
     ) {}
 }

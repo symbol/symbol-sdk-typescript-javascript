@@ -15,7 +15,7 @@
  */
 import { Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils';
-import { MessageFactory, TransactionVersion, UInt64, VotingKeyLinkV1Transaction } from '../../model';
+import { MessageFactory, TransactionVersion, UInt64 } from '../../model';
 import { Address, PublicAccount } from '../../model/account';
 import { Mosaic, MosaicFlags, MosaicId, MosaicNonce } from '../../model/mosaic';
 import { NamespaceId } from '../../model/namespace';
@@ -473,24 +473,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 : undefined,
             transactionInfo,
         ).setPayloadSize(transactionDTO.size);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
         return new VotingKeyLinkTransaction(
-            transactionDTO.network,
-            version,
-            deadline,
-            maxFee,
-            transactionDTO.linkedPublicKey,
-            transactionDTO.startEpoch,
-            transactionDTO.endEpoch,
-            transactionDTO.linkAction,
-            signature,
-            transactionDTO.signerPublicKey
-                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
-                : undefined,
-            transactionInfo,
-        ).setPayloadSize(transactionDTO.size);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
-        return new VotingKeyLinkV1Transaction(
             transactionDTO.network,
             version,
             deadline,

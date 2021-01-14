@@ -46,7 +46,6 @@ import {
     TransactionType,
     TransferTransaction,
     VotingKeyLinkTransaction,
-    VotingKeyLinkV1Transaction,
     VrfKeyLinkTransaction,
 } from '../../src/model/transaction';
 import { TestingAccount } from '../conf/conf.spec';
@@ -82,7 +81,7 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -134,7 +133,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
@@ -222,7 +221,7 @@ describe('SerializeTransactionToJSON', () => {
         const mosaic = NetworkCurrencyLocal.createRelative(100);
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [mosaic],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -238,7 +237,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const recipientAddress = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -294,7 +293,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AggregatedTransaction - Complete', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -316,7 +315,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AggregatedTransaction - Bonded', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.PRIVATE_TEST,
@@ -406,26 +405,6 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
-    it('should create VotingKeyLinkV1Transaction', () => {
-        const votingKey = Convert.uint8ToHex(Crypto.randomBytes(48));
-        const votingKeyLinkV1Transaction = VotingKeyLinkV1Transaction.create(
-            Deadline.create(epochAdjustment),
-            votingKey,
-            1,
-            3,
-            LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
-        );
-
-        const json = validateToFromJson(votingKeyLinkV1Transaction);
-
-        expect(json.transaction.version).to.be.equal(1);
-        expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
-        expect(json.transaction.startEpoch).to.be.equal(1);
-        expect(json.transaction.endEpoch).to.be.equal(3);
-        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
-    });
-
     it('should create VotingKeyLinkTransaction', () => {
         const votingKey = Convert.uint8ToHex(Crypto.randomBytes(32));
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
@@ -435,12 +414,12 @@ describe('SerializeTransactionToJSON', () => {
             3,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
 
         const json = validateToFromJson(votingKeyLinkTransaction);
 
-        expect(json.transaction.version).to.be.equal(2);
+        expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.linkedPublicKey).to.be.equal(votingKey);
         expect(json.transaction.startEpoch).to.be.equal(1);
         expect(json.transaction.endEpoch).to.be.equal(3);

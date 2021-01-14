@@ -43,7 +43,6 @@ import {
     TransactionVersion,
     TransferTransaction,
     VotingKeyLinkTransaction,
-    VotingKeyLinkV1Transaction,
     VrfKeyLinkTransaction,
 } from '../../model/transaction';
 
@@ -102,9 +101,7 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
         return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.NODE_KEY_LINK) {
         return NodeKeyLinkTransaction.createFromPayload(payload, isEmbedded);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V1) {
-        return VotingKeyLinkV1Transaction.createFromPayload(payload, isEmbedded);
-    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK_V2) {
+    } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {
         return VotingKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.AGGREGATE_COMPLETE || type === TransactionType.AGGREGATE_BONDED) {
         return AggregateTransaction.createFromPayload(payload);

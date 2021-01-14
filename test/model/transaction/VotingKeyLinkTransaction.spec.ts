@@ -42,7 +42,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
 
         expect(votingKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -78,7 +78,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -101,7 +101,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
 
         expect(votingKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -124,7 +124,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
         expect(votingKeyLinkTransaction.size).to.be.equal(169);
         expect(Convert.hexToUint8(votingKeyLinkTransaction.serialize()).length).to.be.equal(votingKeyLinkTransaction.size);
@@ -138,7 +138,7 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         ).setMaxFee(2);
         expect(votingKeyLinkTransaction.maxFee.compact()).to.be.equal(338);
 
@@ -154,12 +154,12 @@ describe('VotingKeyLinkTransaction', () => {
             endEpoch,
             LinkAction.Unlink,
             NetworkType.PRIVATE_TEST,
-            TransactionVersion.VOTING_KEY_LINK_V2,
+            TransactionVersion.VOTING_KEY_LINK,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

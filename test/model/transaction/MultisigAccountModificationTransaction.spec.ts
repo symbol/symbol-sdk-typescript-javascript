@@ -90,7 +90,7 @@ describe('MultisigAccountModificationTransaction', () => {
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '0102020000000000809FC4844A5206CFA44603EFA1FFC76FE9B0564D96735562806B4CB49ECF224FC4F0F4FCA2F6034305B3A47B0BB0D2C9',
+            '0102020000000000A89FC4844A5206CFA44603EFA1FFC76FE9B0564D9675208AA86B4CB49ECF224FC4F0F4FCA2F6034305B3A47B0B05BB2F',
         );
     });
 
@@ -154,7 +154,7 @@ describe('MultisigAccountModificationTransaction', () => {
         let canNotify = txAddition.shouldNotifyAccount(address1, []);
         expect(canNotify).to.be.true;
 
-        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), []);
+        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(txAddition, { signer: account.publicAccount });
@@ -172,7 +172,7 @@ describe('MultisigAccountModificationTransaction', () => {
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, []);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), []);
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
@@ -194,10 +194,10 @@ describe('MultisigAccountModificationTransaction', () => {
         let canNotify = txAddition.shouldNotifyAccount(address1, [alias]);
         expect(canNotify).to.be.true;
 
-        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [wrongAlias]);
+        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [wrongAlias]);
         expect(canNotify).to.be.false;
 
-        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [alias]);
+        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [alias]);
         expect(canNotify).to.be.true;
 
         Object.assign(txAddition, { signer: account.publicAccount });
@@ -215,12 +215,12 @@ describe('MultisigAccountModificationTransaction', () => {
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, [alias]);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [
             wrongAlias,
         ]);
         expect(canNotifyDeletion).to.be.false;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [
             alias,
         ]);
         expect(canNotifyDeletion).to.be.true;
