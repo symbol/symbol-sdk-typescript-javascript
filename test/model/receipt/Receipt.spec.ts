@@ -361,7 +361,7 @@ describe('Receipt', () => {
     it('should generate hash for TransactionStatement', () => {
         const receipt = createTransactionStatement(statementDTO.transactionStatements[0]);
         const hash = receipt.generateHash();
-        expect(hash).to.be.equal('872A93FFA08A23EA36F429B6AA5B98AA237F2CBF5FDC975ABA732313D493B74F');
+        expect(hash).to.be.equal('7C8F6AF6A0833FF7E14AF3E1A38483BA244823CF0254E13C792690F280F8B252');
     });
 
     it('artifactExpiryReceipt - serialize', () => {

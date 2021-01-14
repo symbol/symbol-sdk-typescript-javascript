@@ -43,7 +43,7 @@ describe('TransactionService', () => {
     const epochAdjustment = 1573430400;
     const transferTransaction = TransferTransaction.create(
         Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-        Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'),
+        Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
         [],
         PlainMessage.create('test-message'),
         NetworkType.PRIVATE_TEST,

@@ -72,7 +72,7 @@ describe('MosaicInfo', () => {
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '010029CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E811010000000703E803000000000000',
+            '010029CF5FD941AD25D580FBDBCA73F91F000100000000000000A822D04812D05000F96C283657B0C17990932BC8499C7D94010000000703E803000000000000',
         );
         deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
@@ -104,7 +104,7 @@ describe('MosaicInfo', () => {
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '010029CF5FD941AD25D580FBDBCA73F91F0001000000000000008022D04812D05000F96C283657B0C17990932BC849B1E8110100000007030000000000000000',
+            '010029CF5FD941AD25D580FBDBCA73F91F000100000000000000A822D04812D05000F96C283657B0C17990932BC8499C7D940100000007030000000000000000',
         );
         deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });

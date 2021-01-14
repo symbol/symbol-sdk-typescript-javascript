@@ -28,9 +28,9 @@ describe('NetworkType', () => {
         expect(NetworkType.TEST_NET).to.be.equal(152);
     });
 
-    it('PRIVATE_TEST is 0x80', () => {
-        expect(NetworkType.PRIVATE_TEST).to.be.equal(0x80);
-        expect(NetworkType.PRIVATE_TEST).to.be.equal(128);
+    it('PRIVATE_TEST is 0xa8', () => {
+        expect(NetworkType.PRIVATE_TEST).to.be.equal(0xa8);
+        expect(NetworkType.PRIVATE_TEST).to.be.equal(168);
     });
 
     it('PRIVATE is 0x78', () => {

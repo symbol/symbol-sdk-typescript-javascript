@@ -40,7 +40,7 @@ describe('AccountRestrictionTransaction', () => {
         account = TestingAccount;
     });
     it('should create address restriction filter', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(AccountRestrictionModificationAction.Add, address);
         expect(addressRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(addressRestrictionFilter.value).to.be.equal(address.plain());
@@ -66,7 +66,7 @@ describe('AccountRestrictionTransaction', () => {
 
     describe('size', () => {
         it('should return 160 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
-            const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+            const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(epochAdjustment),
                 AddressRestrictionFlag.AllowIncomingAddress,
@@ -116,7 +116,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -130,7 +130,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -145,7 +145,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should create allow incmoing address restriction transaction', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
@@ -157,7 +157,7 @@ describe('AccountRestrictionTransaction', () => {
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01000100000000008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A',
+            '0100010000000000A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536',
         );
     });
 
@@ -192,7 +192,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('should create outgoing address restriction transaction', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         let addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
@@ -204,7 +204,7 @@ describe('AccountRestrictionTransaction', () => {
         let signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01400100000000008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A',
+            '0140010000000000A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536',
         );
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -218,7 +218,7 @@ describe('AccountRestrictionTransaction', () => {
         signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '01C00100000000008026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A',
+            '01C0010000000000A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536',
         );
     });
 
@@ -250,7 +250,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         const tx = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowOutgoingAddress,
@@ -261,7 +261,7 @@ describe('AccountRestrictionTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -277,7 +277,7 @@ describe('AccountRestrictionTransaction', () => {
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(address, []);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'), []);
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
@@ -297,7 +297,7 @@ describe('AccountRestrictionTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), [wrongAlias]);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [wrongAlias]);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -313,7 +313,7 @@ describe('AccountRestrictionTransaction', () => {
         let canNotifyDeletion = txDeletion.shouldNotifyAccount(account.address, [alias]);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY'), [
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'), [
             wrongAlias,
         ]);
         expect(canNotifyDeletion).to.be.false;

@@ -108,7 +108,7 @@ describe('address', () => {
 
         it('can create address from public key for custom network', () => {
             // Arrange:
-            const expectedHex = '8026D27E1D0A26CA4E316F901E23E55C8711DB20DFBE8F3A';
+            const expectedHex = 'A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536';
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
@@ -337,11 +337,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ',
-                'QDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22JZIXY',
-                'QCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTREIM2RQ',
-                'QDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWESE7PY',
-                'QDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QDQKH7Y',
+                'VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ',
+                'VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI',
+                'VCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTREFOQLQ',
+                'VDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEZHV6Q',
+                'VDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QB5HN6Q',
             ];
 
             // Sanity:

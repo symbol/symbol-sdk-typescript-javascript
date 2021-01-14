@@ -4,19 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.23.0] - 13-Jan-2021
+## [0.23.0] - 14-Jan-2021
 
-**Milestone**: Catapult-server main(0.10.0.4)
+**Milestone**: Catapult-server main(0.10.0.5)
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.23.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
-Catbuffer | v0.0.26 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
-Client Library | v0.10.7  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+Catbuffer | v0.1.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.11.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
 - **Re track to catapult-server main branch**
 - **All entity versions reset to v1 for Symbol mainnet release**
 - **[BREAKING CHANGE]** Finalization proof modle removed `messageGroup.schemaVersion` and `BMTreeSignaure.top`
 - **[BREAKING CHANGE]** Removed `VotingKeyLinkV1Transaction`.
+- **[BREAKING CHANGE]** `PrivateTest` network type changed from `0x80` to `0xA8`.
 - Added **Node** specific property: `minFeeMultipler` in transactionFees.
 - Removed padding buffer in account state serialization.
 - Voting key length set to 32 bytes.

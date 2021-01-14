@@ -47,5 +47,5 @@ export enum NetworkType {
      * Private test net network
      * @type {number}
      */
-    PRIVATE_TEST = 0x80,
+    PRIVATE_TEST = 0xa8,
 }

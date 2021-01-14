@@ -55,7 +55,7 @@ export class Address {
             networkType = NetworkType.MAIN_NET;
         } else if (addressTrimAndUpperCase.charAt(0) === 'P') {
             networkType = NetworkType.PRIVATE;
-        } else if (addressTrimAndUpperCase.charAt(0) === 'Q') {
+        } else if (addressTrimAndUpperCase.charAt(0) === 'V') {
             networkType = NetworkType.PRIVATE_TEST;
         } else {
             throw new Error('Address Network unsupported');
@@ -74,7 +74,7 @@ export class Address {
 
     /**
      * Determines the validity of an raw address string.
-     * @param {string} rawAddress The raw address string. Expected format QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ
+     * @param {string} rawAddress The raw address string. Expected format VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
     public static isValidRawAddress = (rawAddress: string): boolean => {

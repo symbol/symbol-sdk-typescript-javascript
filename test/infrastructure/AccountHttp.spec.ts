@@ -41,7 +41,7 @@ import { Address } from '../../src/model/account/Address';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 
 describe('AccountHttp', () => {
-    const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+    const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
 
     const mosaic = {} as Mosaic;
     mosaic.amount = '777';

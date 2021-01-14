@@ -78,7 +78,7 @@ describe('PersistentDelegationRequestTransaction', () => {
         expect(persistentDelegationRequestTransaction.mosaics.length).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.recipientAddress).to.be.instanceof(Address);
         expect((persistentDelegationRequestTransaction.recipientAddress as Address).plain()).to.be.equal(
-            'QDBC4JE7GTJAKN2XJCQWWRJMYA35AFOYQBW3TJA',
+            'VDBC4JE7GTJAKN2XJCQWWRJMYA35AFOYQDCNFRY',
         );
 
         const signedTransaction = persistentDelegationRequestTransaction.signWith(account, generationHash);

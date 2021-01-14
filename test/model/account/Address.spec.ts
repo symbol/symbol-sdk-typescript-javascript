@@ -23,13 +23,13 @@ describe('Address', () => {
     const publicKey = '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F';
     it('createComplete an address given publicKey + NetworkType.PRIVATE_TEST', () => {
         const address = Address.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
-        expect(address.plain()).to.be.equal('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+        expect(address.plain()).to.be.equal('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         expect(address.networkType).to.be.equal(NetworkType.PRIVATE_TEST);
     });
 
     it('print the address in pretty format', () => {
         const address = Address.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
-        expect(address.pretty()).to.be.equal('QATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA367I-6OQ');
+        expect(address.pretty()).to.be.equal('VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ');
     });
 
     it('createComplete an address given publicKey + NetworkType.PRIVATE', () => {
@@ -50,8 +50,8 @@ describe('Address', () => {
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
-    it('createComplete an address given QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ', () => {
-        const address = Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ');
+    it('createComplete an address given VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ', () => {
+        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
         expect(address.networkType).to.be.equal(NetworkType.PRIVATE_TEST);
     });
 
@@ -70,10 +70,10 @@ describe('Address', () => {
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
-    it('createComplete an address given QATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA367I-6OQ', () => {
-        const address = Address.createFromRawAddress('QATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA367I-6OQ');
+    it('createComplete an address given VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ', () => {
+        const address = Address.createFromRawAddress('VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ');
         expect(address.networkType).to.be.equal(NetworkType.PRIVATE_TEST);
-        expect(address.pretty()).to.be.equal('QATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA367I-6OQ');
+        expect(address.pretty()).to.be.equal('VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ');
     });
 
     it('should throw Error when the address contain an invalid network identifier', () => {
@@ -122,7 +122,7 @@ describe('Address', () => {
 
         it('returns true for valid address', () => {
             // Arrange:
-            const rawAddress = 'QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ';
+            const rawAddress = 'VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ';
 
             // Assert:
             expect(Address.isValidRawAddress(rawAddress)).to.equal(true);

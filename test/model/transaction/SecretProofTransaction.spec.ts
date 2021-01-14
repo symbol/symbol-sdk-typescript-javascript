@@ -193,7 +193,7 @@ describe('SecretProofTransaction', () => {
 
         const signedTx = secretProofTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(256, signedTx.payload.length)).to.be.equal(
-            '80D66C33420E5411995BACFCA2B28CF1C9F5DD7AB1A9C05C9B3155B37159DA50AA52D5967C509B410F5A' +
+            'A8D66C33420E5411995BACFCA2B28CF1C9F5DD7AB181BFA89B3155B37159DA50AA52D5967C509B410F5A' +
                 '36A3B1E31ECB5AC76675D79B4A5E200000B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
         );
     });
@@ -304,7 +304,7 @@ describe('SecretProofTransaction', () => {
         let canNotify = tx.shouldNotifyAccount(account.address, []);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('QATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA367I6OQ'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), []);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
