@@ -15,8 +15,12 @@
  */
 
 import { Duration } from '@js-joda/core';
-import { AccountRestrictionsInfoDTO, MerkleTreeBranchDTO, MerkleTreeLeafDTO } from 'symbol-openapi-typescript-fetch-client';
-import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/models/index';
+import {
+    AccountRestrictionsInfoDTO,
+    MerkleStateInfoDTO,
+    MerkleTreeBranchDTO,
+    MerkleTreeLeafDTO,
+} from 'symbol-openapi-typescript-fetch-client';
 import { Address } from '../../model/account/Address';
 import { MerkleStateInfo } from '../../model/blockchain/MerkleStateInfo';
 import { MosaicId } from '../../model/mosaic/MosaicId';
