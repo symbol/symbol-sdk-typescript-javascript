@@ -171,6 +171,8 @@ describe('ReceiptHttp', () => {
                 undefined,
                 undefined,
                 undefined,
+                undefined,
+                undefined,
             ),
         ).thenReturn(Promise.resolve(resolutionPage));
 
@@ -188,6 +190,8 @@ describe('ReceiptHttp', () => {
         when(
             receiptRoutesApi.searchReceipts(
                 '1',
+                undefined,
+                undefined,
                 undefined,
                 undefined,
                 undefined,

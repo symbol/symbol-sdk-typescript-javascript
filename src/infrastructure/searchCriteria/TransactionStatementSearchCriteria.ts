@@ -32,6 +32,16 @@ export interface TransactionStatementSearchCriteria extends SearchCriteria {
     height?: UInt64;
 
     /**
+     * From block height. (optional)
+     */
+    fromHeight?: UInt64;
+
+    /**
+     * To block height. (optional)
+     */
+    toHeight?: UInt64;
+
+    /**
      * receipt types. (optional, TransactionStatement only)
      */
     receiptTypes?: ReceiptType[];
