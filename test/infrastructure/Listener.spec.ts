@@ -225,7 +225,7 @@ describe('Listener', () => {
         let multisigIndex = 0;
         class WebSocketMultisigMock {
             constructor(public readonly url: string) {}
-            send(payload: string): void {
+            send(): void {
                 multisigIndex += 1;
             }
         }
@@ -521,7 +521,7 @@ describe('Listener', () => {
         let multisigIndex = 0;
         class WebSocketMultisigMock {
             constructor(public readonly url: string) {}
-            send(payload: string): void {
+            send(): void {
                 multisigIndex += 1;
             }
         }

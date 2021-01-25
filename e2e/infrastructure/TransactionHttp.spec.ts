@@ -102,7 +102,6 @@ describe('TransactionHttp', () => {
     let transactionRepository: TransactionRepository;
     let transactionStatusRepository: TransactionStatusRepository;
     let votingKey: string;
-    let votingKeyV1: string;
 
     const remoteAccount = Account.generateNewAccount(helper.networkType);
 
@@ -117,7 +116,6 @@ describe('TransactionHttp', () => {
             generationHash = helper.generationHash;
             networkType = helper.networkType;
             votingKey = Convert.uint8ToHex(Crypto.randomBytes(32));
-            votingKeyV1 = Convert.uint8ToHex(Crypto.randomBytes(48));
             namespaceRepository = helper.repositoryFactory.createNamespaceRepository();
             transactionRepository = helper.repositoryFactory.createTransactionRepository();
             transactionStatusRepository = helper.repositoryFactory.createTransactionStatusRepository();
