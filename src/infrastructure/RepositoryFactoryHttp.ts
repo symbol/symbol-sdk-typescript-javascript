@@ -190,7 +190,7 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
     }
 
     createListener(): IListener {
-        return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected);
+        return new Listener(this.websocketUrl, this.createNamespaceRepository(), this.websocketInjected, this.createMultisigRepository());
     }
 
     getEpochAdjustment(): Observable<number> {
