@@ -128,7 +128,7 @@
 					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L33">infrastructure/IListener.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L33">infrastructure/IListener.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -144,13 +144,13 @@
 					<a name="aggregatebondedadded" class="tsd-anchor"></a>
 					<h3>aggregate<wbr>Bonded<wbr>Added</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">aggregate<wbr>Bonded<wbr>Added<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">aggregate<wbr>Bonded<wbr>Added<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, subscribeMultisig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L113">infrastructure/IListener.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L117">infrastructure/IListener.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -174,6 +174,12 @@
 										<p>transactionHash for filtering multiple transactions</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscribeMultisig: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>When <code>true</code> cosigner&#39;s multisig account will also be subscribed to the channel</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_aggregatetransaction_.aggregatetransaction.html" class="tsd-signature-type">AggregateTransaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>an observable stream of AggregateTransaction with missing signatures state</p>
@@ -184,13 +190,13 @@
 					<a name="aggregatebondedremoved" class="tsd-anchor"></a>
 					<h3>aggregate<wbr>Bonded<wbr>Removed</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">aggregate<wbr>Bonded<wbr>Removed<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">aggregate<wbr>Bonded<wbr>Removed<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, subscribeMultisig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L124">infrastructure/IListener.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L133">infrastructure/IListener.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -214,6 +220,12 @@
 										<p>the transaction hash filter.</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscribeMultisig: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>When <code>true</code> cosigner&#39;s multisig account will also be subscribed to the channel</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>an observable stream of Strings with the transaction hash</p>
@@ -230,7 +242,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L50">infrastructure/IListener.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L50">infrastructure/IListener.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,13 +259,13 @@
 					<a name="confirmed" class="tsd-anchor"></a>
 					<h3>confirmed</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">confirmed<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">confirmed<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, subscribeMultisig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L80">infrastructure/IListener.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L81">infrastructure/IListener.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -277,6 +289,12 @@
 										<p>transactionHash for filtering multiple transactions</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscribeMultisig: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>When <code>true</code> cosigner&#39;s multisig account will also be subscribed to the channel</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>an observable stream of Transaction with state confirmed</p>
@@ -287,13 +305,13 @@
 					<a name="cosignatureadded" class="tsd-anchor"></a>
 					<h3>cosignature<wbr>Added</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">cosignature<wbr>Added<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">cosignature<wbr>Added<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, subscribeMultisig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_cosignaturesignedtransaction_.cosignaturesignedtransaction.html" class="tsd-signature-type">CosignatureSignedTransaction</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L145">infrastructure/IListener.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L155">infrastructure/IListener.ts:155</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -309,6 +327,12 @@
 									<h5>unresolvedAddress: <a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>unresolved address we listen when a cosignatory is added to some transaction address sent</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscribeMultisig: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>When <code>true</code> cosigner&#39;s multisig account will also be subscribed to the channel</p>
 									</div>
 								</li>
 							</ul>
@@ -327,7 +351,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L68">infrastructure/IListener.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L68">infrastructure/IListener.ts:68</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -352,7 +376,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L44">infrastructure/IListener.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L44">infrastructure/IListener.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -375,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L59">infrastructure/IListener.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L59">infrastructure/IListener.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -400,7 +424,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L38">infrastructure/IListener.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L38">infrastructure/IListener.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -423,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L135">infrastructure/IListener.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L144">infrastructure/IListener.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -457,13 +481,13 @@
 					<a name="unconfirmedadded" class="tsd-anchor"></a>
 					<h3>unconfirmed<wbr>Added</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">unconfirmed<wbr>Added<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">unconfirmed<wbr>Added<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, subscribeMultisig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L91">infrastructure/IListener.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L93">infrastructure/IListener.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -487,6 +511,12 @@
 										<p>transactionHash for filtering multiple transactions</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscribeMultisig: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>When <code>true</code> cosigner&#39;s multisig account will also be subscribed to the channel</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_model_transaction_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>an observable stream of Transaction with state unconfirmed</p>
@@ -497,13 +527,13 @@
 					<a name="unconfirmedremoved" class="tsd-anchor"></a>
 					<h3>unconfirmed<wbr>Removed</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">unconfirmed<wbr>Removed<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">unconfirmed<wbr>Removed<span class="tsd-signature-symbol">(</span>unresolvedAddress<span class="tsd-signature-symbol">: </span><a href="../modules/_model_account_unresolvedaddress_.html#unresolvedaddress" class="tsd-signature-type">UnresolvedAddress</a>, transactionHash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, subscribeMultisig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/1be3ac2/src/infrastructure/IListener.ts#L102">infrastructure/IListener.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/nemtech/symbol-sdk-typescript-javascript/blob/f102085/src/infrastructure/IListener.ts#L105">infrastructure/IListener.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -525,6 +555,12 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transactionHash: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>the transaction hash filter.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> subscribeMultisig: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>When <code>true</code> cosigner&#39;s multisig account will also be subscribed to the channel</p>
 									</div>
 								</li>
 							</ul>
