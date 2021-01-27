@@ -74,10 +74,11 @@ export interface IListener {
      *
      * @param unresolvedAddress unresolved address we listen when a transaction is in confirmed state
      * @param transactionHash transactionHash for filtering multiple transactions
+     * @param subscribeMultisig When `true` cosigner's multisig account will also be subscribed to the channel
      * @return an observable stream of Transaction with state confirmed
      */
 
-    confirmed(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<Transaction>;
+    confirmed(unresolvedAddress: UnresolvedAddress, transactionHash?: string, subscribeMultisig?: boolean): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction for a specific address.
@@ -86,9 +87,10 @@ export interface IListener {
      *
      * @param unresolvedAddress unresolved address we listen when a transaction is in unconfirmed state
      * @param transactionHash transactionHash for filtering multiple transactions
+     * @param subscribeMultisig When `true` cosigner's multisig account will also be subscribed to the channel
      * @return an observable stream of Transaction with state unconfirmed
      */
-    unconfirmedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<Transaction>;
+    unconfirmedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string, subscribeMultisig?: boolean): Observable<Transaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -97,9 +99,10 @@ export interface IListener {
      *
      * @param unresolvedAddress unresolved address we listen when a transaction is removed from unconfirmed state
      * @param transactionHash the transaction hash filter.
+     * @param subscribeMultisig When `true` cosigner's multisig account will also be subscribed to the channel
      * @return an observable stream of Strings with the transaction hash
      */
-    unconfirmedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<string>;
+    unconfirmedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string, subscribeMultisig?: boolean): Observable<string>;
 
     /**
      * Return an observable of {@link AggregateTransaction} for specific address.
@@ -108,9 +111,14 @@ export interface IListener {
      *
      * @param unresolvedAddress unresolved address we listen when a transaction with missing signatures state
      * @param transactionHash transactionHash for filtering multiple transactions
+     * @param subscribeMultisig When `true` cosigner's multisig account will also be subscribed to the channel
      * @return an observable stream of AggregateTransaction with missing signatures state
      */
-    aggregateBondedAdded(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<AggregateTransaction>;
+    aggregateBondedAdded(
+        unresolvedAddress: UnresolvedAddress,
+        transactionHash?: string,
+        subscribeMultisig?: boolean,
+    ): Observable<AggregateTransaction>;
 
     /**
      * Returns an observable stream of Transaction Hashes for specific address.
@@ -119,9 +127,10 @@ export interface IListener {
      *
      * @param unresolvedAddress unresolved address we listen when a transaction is confirmed or rejected
      * @param transactionHash the transaction hash filter.
+     * @param subscribeMultisig When `true` cosigner's multisig account will also be subscribed to the channel
      * @return an observable stream of Strings with the transaction hash
      */
-    aggregateBondedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string): Observable<string>;
+    aggregateBondedRemoved(unresolvedAddress: UnresolvedAddress, transactionHash?: string, subscribeMultisig?: boolean): Observable<string>;
 
     /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.
@@ -140,7 +149,8 @@ export interface IListener {
      * it emits a new message with the cosignatory signed transaction in the even stream.
      *
      * @param unresolvedAddress unresolved address we listen when a cosignatory is added to some transaction address sent
+     * @param subscribeMultisig When `true` cosigner's multisig account will also be subscribed to the channel
      * @return an observable stream of {@link CosignatureSignedTransaction}
      */
-    cosignatureAdded(unresolvedAddress: UnresolvedAddress): Observable<CosignatureSignedTransaction>;
+    cosignatureAdded(unresolvedAddress: UnresolvedAddress, subscribeMultisig?: boolean): Observable<CosignatureSignedTransaction>;
 }
