@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.23.1] - 02-Feb-2021
+
+**Milestone**: Catapult-server main(0.10.0.6)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.23.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.1.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.11.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- Added `FromHeight` and `ToHeight` filters in `Receipt` search endpoint.
+- Added optional parameter in websocket listener channels to automatically subscribe multisig account for cosigners.
+
 ## [0.23.0] - 14-Jan-2021
 
 **Milestone**: Catapult-server main(0.10.0.5)
