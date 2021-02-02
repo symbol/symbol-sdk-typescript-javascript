@@ -6,7 +6,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.23.1] - 02-Feb-2021
 
-**Milestone**: Catapult-server main(0.10.0.5)
+**Milestone**: Catapult-server main(0.10.0.6)
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.23.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
