@@ -82,6 +82,8 @@ export class ReceiptHttp extends Http implements ReceiptRepository {
         return this.call(
             this.receiptRoutesApi.searchReceipts(
                 criteria.height?.toString(),
+                criteria.fromHeight?.toString(),
+                criteria.toHeight?.toString(),
                 criteria.receiptTypes?.map((t) => t.valueOf()),
                 criteria.recipientAddress?.plain(),
                 criteria.senderAddress?.plain(),

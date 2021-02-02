@@ -376,6 +376,24 @@ describe('Listener', () => {
         });
     });
 
+    describe('Aggregate Bonded Transactions - multisig other cosigner', () => {
+        it('aggregateBondedTransactionsAdded', (done) => {
+            const signedAggregatedTx = createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
+            createHashLockTransactionAndAnnounce(signedAggregatedTx, account, helper.networkCurrency);
+            helper.listener.aggregateBondedAdded(account2.address).subscribe(() => {
+                done();
+            });
+            helper.listener.confirmed(unresolvedAddress).subscribe(() => {
+                transactionRepository.announceAggregateBonded(signedAggregatedTx);
+            });
+            helper.listener.status(unresolvedAddress).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+        });
+    });
+
     describe('MultisigAccountModificationTransaction - Restore multisig Accounts', () => {
         it('Restore Multisig Account', () => {
             const removeCosigner1 = MultisigAccountModificationTransaction.create(

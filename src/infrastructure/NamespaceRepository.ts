@@ -78,4 +78,9 @@ export interface NamespaceRepository extends SearcherRepository<NamespaceInfo, N
      * @returnsObservable<Address | null>
      */
     getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null>;
+
+    /**
+     * Get rest url from parent class.
+     */
+    getUrl(): string;
 }

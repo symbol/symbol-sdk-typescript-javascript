@@ -19,10 +19,12 @@ import { expect } from 'chai';
 import { Observable, of as observableOf } from 'rxjs';
 import { deepEqual as deepEqualParam, instance, mock, verify, when } from 'ts-mockito';
 import { Listener, ListenerChannelName } from '../../src/infrastructure/Listener';
+import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { Account } from '../../src/model/account/Account';
 import { AccountNames } from '../../src/model/account/AccountNames';
 import { Address } from '../../src/model/account/Address';
+import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import { FinalizedBlock } from '../../src/model/blockchain/FinalizedBlock';
 import { NewBlock } from '../../src/model/blockchain/NewBlock';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -43,10 +45,15 @@ describe('Listener', () => {
 
     let namespaceRepoMock: NamespaceRepository;
     let namespaceRepo: NamespaceRepository;
+    let multisigRepoMock: MultisigRepository;
+    let multisigRepo: MultisigRepository;
     const epochAdjustment = 1573430400;
     beforeEach(() => {
         namespaceRepoMock = mock();
         namespaceRepo = instance(namespaceRepoMock);
+
+        multisigRepoMock = mock();
+        multisigRepo = instance(multisigRepoMock);
     });
 
     it('should createComplete a WebSocket instance given url parameter', () => {
@@ -207,6 +214,7 @@ describe('Listener', () => {
 
     [ListenerChannelName.confirmedAdded, ListenerChannelName.partialAdded, ListenerChannelName.unconfirmedAdded].forEach((name) => {
         const subscribedAddress = account.address;
+        const multisigAccount = Account.generateNewAccount(NetworkType.PRIVATE_TEST);
         class WebSocketMock {
             constructor(public readonly url: string) {}
             send(payload: string): void {
@@ -214,19 +222,62 @@ describe('Listener', () => {
             }
         }
 
-        const subscriptionMethod = (listener: Listener, address: Address, hash?: string): Observable<Transaction> => {
+        let multisigIndex = 0;
+        class WebSocketMultisigMock {
+            constructor(public readonly url: string) {}
+            send(): void {
+                multisigIndex += 1;
+            }
+        }
+
+        const subscriptionMethod = (listener: Listener, address: Address, hash?: string, multisig = false): Observable<Transaction> => {
             switch (name) {
                 case ListenerChannelName.confirmedAdded: {
-                    return listener.confirmed(address, hash);
+                    return listener.confirmed(address, hash, multisig);
                 }
                 case ListenerChannelName.unconfirmedAdded: {
-                    return listener.unconfirmedAdded(address, hash);
+                    return listener.unconfirmedAdded(address, hash, multisig);
                 }
                 default: {
-                    return listener.aggregateBondedAdded(address, hash);
+                    return listener.aggregateBondedAdded(address, hash, multisig);
                 }
             }
         };
+
+        describe(`${name} transaction subscription`, () => {
+            it('subscribe multsig', () => {
+                const multisigInfo = new MultisigAccountInfo(1, subscribedAddress, 1, 1, [], [multisigAccount.address]);
+                when(multisigRepoMock.getMultisigAccountInfo(deepEqualParam(subscribedAddress))).thenReturn(observableOf(multisigInfo));
+                const alias = new NamespaceId('test');
+                when(namespaceRepoMock.getAccountsNames(deepEqualParam([subscribedAddress]))).thenReturn(
+                    observableOf([new AccountNames(subscribedAddress, [new NamespaceName(alias, 'test')])]),
+                );
+                const transferTransaction = TransferTransaction.create(
+                    Deadline.create(epochAdjustment),
+                    multisigAccount.address,
+                    [],
+                    PlainMessage.create('test-message'),
+                    NetworkType.PRIVATE_TEST,
+                );
+                const transferTransactionDTO = transferTransaction.toJSON();
+                const hash = 'abc';
+                transferTransactionDTO.meta = { height: '1', hash: hash };
+
+                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMultisigMock, multisigRepo);
+                listener.open();
+                subscriptionMethod(listener, subscribedAddress, hash, true).subscribe();
+
+                listener.handleMessage(
+                    {
+                        topic: name.toString(),
+                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                    },
+                    null,
+                );
+
+                expect(multisigIndex).to.be.equal(2);
+            });
+        });
 
         describe(`${name} transaction subscription`, () => {
             it('Using alias', () => {
@@ -460,23 +511,51 @@ describe('Listener', () => {
 
     [ListenerChannelName.unconfirmedRemoved, ListenerChannelName.partialRemoved].forEach((name) => {
         const subscribedAddress = account.address;
+        const multisigAccount = Account.generateNewAccount(NetworkType.PRIVATE_TEST);
         class WebSocketMock {
             constructor(public readonly url: string) {}
             send(payload: string): void {
                 expect(payload).to.be.eq(`{"subscribe":"${name}/${subscribedAddress.plain()}"}`);
             }
         }
+        let multisigIndex = 0;
+        class WebSocketMultisigMock {
+            constructor(public readonly url: string) {}
+            send(): void {
+                multisigIndex += 1;
+            }
+        }
 
-        const subscriptionMethod = (listener: Listener, address: Address, hash?: string): Observable<string> => {
+        const subscriptionMethod = (listener: Listener, address: Address, hash?: string, multisig = false): Observable<string> => {
             switch (name) {
                 case ListenerChannelName.unconfirmedRemoved: {
-                    return listener.unconfirmedRemoved(address, hash);
+                    return listener.unconfirmedRemoved(address, hash, multisig);
                 }
                 default: {
-                    return listener.aggregateBondedRemoved(address, hash);
+                    return listener.aggregateBondedRemoved(address, hash, multisig);
                 }
             }
         };
+
+        describe(`${name} transaction subscription`, () => {
+            it('subscribe multsig', () => {
+                const multisigInfo = new MultisigAccountInfo(1, subscribedAddress, 1, 1, [], [multisigAccount.address]);
+                when(multisigRepoMock.getMultisigAccountInfo(deepEqualParam(subscribedAddress))).thenReturn(observableOf(multisigInfo));
+                const hash = 'abc';
+                const message = {
+                    topic: `${name.toString()}/${subscribedAddress.plain()}`,
+                    data: { meta: { height: '1', hash: hash } },
+                };
+
+                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMultisigMock, multisigRepo);
+                listener.open();
+                subscriptionMethod(listener, subscribedAddress, hash, true).subscribe();
+
+                listener.handleMessage(message, null);
+
+                expect(multisigIndex).to.be.equal(2);
+            });
+        });
 
         describe(`${name} transaction hash subscription`, () => {
             it('Using valid hash', () => {

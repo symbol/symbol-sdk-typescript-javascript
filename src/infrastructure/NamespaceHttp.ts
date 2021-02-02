@@ -235,6 +235,13 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     }
 
     /**
+     * Get rest url
+     */
+    public getUrl(): string {
+        return this.url;
+    }
+
+    /**
      * It maps from a NamespaceInfoDTO to NamespaceInfo
      * @param dto the dto
      */
