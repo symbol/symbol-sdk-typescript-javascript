@@ -127,7 +127,7 @@ export class MosaicRestrictionTransactionService {
                     mergeMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                         if (!restrictionEntry) {
                             throw new Error(
-                                `Global restriction for mosaic: ${mosaicId} is not valid for with RestrictionKey: ${restrictionKey}`,
+                                `Global restriction for mosaic: ${mosaicId.toHex()} is not valid for with RestrictionKey: ${restrictionKey}`,
                             );
                         }
                         return this.getAddressRestrictionEntry(resolvedMosaicId, restrictionKey, resolvedAddress).pipe(
@@ -161,12 +161,10 @@ export class MosaicRestrictionTransactionService {
     private getAddressRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64, targetAddress: Address): Observable<UInt64 | undefined> {
         return this.restrictionMosaicRepository.search({ mosaicId, targetAddress, entryType: MosaicRestrictionEntryType.ADDRESS }).pipe(
             map((mosaicRestriction) => {
-                return mosaicRestriction.data
-                    .find(
-                        (r) =>
-                            r instanceof MosaicAddressRestriction && r.mosaicId.equals(mosaicId) && r.targetAddress.equals(targetAddress),
-                    )!
-                    .getRestriction(restrictionKey)?.restrictionValue;
+                const addressRestriction = mosaicRestriction.data.find(
+                    (r) => r instanceof MosaicAddressRestriction && r.mosaicId.equals(mosaicId) && r.targetAddress.equals(targetAddress),
+                );
+                return addressRestriction ? addressRestriction.getRestriction(restrictionKey)?.restrictionValue : undefined;
             }),
         );
     }
@@ -180,9 +178,11 @@ export class MosaicRestrictionTransactionService {
     private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
         return this.restrictionMosaicRepository.search({ mosaicId, entryType: MosaicRestrictionEntryType.GLOBAL }).pipe(
             map((mosaicRestrictionPage: Page<MosaicGlobalRestriction>) => {
-                return mosaicRestrictionPage.data
-                    .find((r) => r instanceof MosaicGlobalRestriction && r.mosaicId.equals(mosaicId))!
-                    .getRestriction(restrictionKey);
+                const globalRestriction = mosaicRestrictionPage.data.find(
+                    (r) => r instanceof MosaicGlobalRestriction && r.mosaicId.equals(mosaicId),
+                );
+
+                return globalRestriction ? globalRestriction.getRestriction(restrictionKey) : undefined;
             }),
         );
     }
