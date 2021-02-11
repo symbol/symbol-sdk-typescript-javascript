@@ -60,7 +60,7 @@ export class ChainHttp extends Http implements ChainRepository {
                         UInt64.fromNumericString(body.latestFinalizedBlock.height),
                         body.latestFinalizedBlock.hash,
                         body.latestFinalizedBlock.finalizationPoint,
-                        body.latestFinalizedBlock.finalizationPoint,
+                        body.latestFinalizedBlock.finalizationEpoch,
                     ),
                 ),
         );
