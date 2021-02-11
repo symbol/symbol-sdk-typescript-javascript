@@ -26,8 +26,6 @@ import { ICurrencyService } from './interfaces';
  * A service used to load Currencies objects.
  */
 export class CurrencyService implements ICurrencyService {
-    x;
-
     constructor(private readonly repositoryFactory: RepositoryFactory) {}
 
     /**
