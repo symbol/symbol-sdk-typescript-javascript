@@ -101,7 +101,7 @@ describe('NamespaceRegistrationTransaction', () => {
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '4BFA5F372D55B384CFCBE72D994BE69B0113726F6F742D746573742D6E616D657370616365',
+            '4BFA5F372D55B384EE393014E8B74B9C0113726F6F742D746573742D6E616D657370616365',
         );
     });
 
