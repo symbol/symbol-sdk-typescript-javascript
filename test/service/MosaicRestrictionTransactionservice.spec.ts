@@ -84,10 +84,14 @@ describe('MosaicRestrictionTransactionService', () => {
         const mockRestrictionRepository = mock<RestrictionMosaicRepository>();
         const mockNamespaceRepository = mock<NamespaceRepository>();
 
-        when(mockRestrictionRepository.search(deepEqual({ mosaicId }))).thenReturn(observableOf(mockGlobalRestriction()));
-        when(mockRestrictionRepository.search(deepEqual({ mosaicId, targetAddress: account.address }))).thenReturn(
-            observableOf(mockAddressRestriction()),
+        when(mockRestrictionRepository.search(deepEqual({ mosaicId, entryType: MosaicRestrictionEntryType.GLOBAL }))).thenReturn(
+            observableOf(mockGlobalRestriction()),
         );
+        when(
+            mockRestrictionRepository.search(
+                deepEqual({ mosaicId, targetAddress: account.address, entryType: MosaicRestrictionEntryType.ADDRESS }),
+            ),
+        ).thenReturn(observableOf(mockAddressRestriction()));
         when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedMosaicId))).thenReturn(observableOf(mosaicId));
         when(mockNamespaceRepository.getLinkedMosaicId(deepEqual(unresolvedAddress))).thenThrow(new Error('invalid namespaceId'));
         when(mockNamespaceRepository.getLinkedAddress(deepEqual(unresolvedAddress))).thenReturn(observableOf(account.address));

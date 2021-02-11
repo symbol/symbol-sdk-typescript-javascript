@@ -16,7 +16,7 @@
 
 import { Address } from '../../model/account/Address';
 import { MosaicId } from '../../model/mosaic/MosaicId';
-import { MosaicRestrictionType } from '../../model/restriction/MosaicRestrictionType';
+import { MosaicRestrictionEntryType } from '../../model/restriction/MosaicRestrictionEntryType';
 import { SearchCriteria } from './SearchCriteria';
 
 /**
@@ -32,7 +32,7 @@ export interface RestrictionMosaicSearchCriteria extends SearchCriteria {
     /**
      * Mosaic restriction entity type. (optional)
      */
-    entryType?: MosaicRestrictionType;
+    entryType?: MosaicRestrictionEntryType;
 
     /**
      * Mosaic restriction target address. (optional)
