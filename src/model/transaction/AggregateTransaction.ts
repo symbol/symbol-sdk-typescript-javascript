@@ -31,8 +31,7 @@ import { KeyPair, MerkleHashBuilder, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils';
 import { CreateTransactionFromPayload } from '../../infrastructure/transaction';
-import { Account, Address, PublicAccount } from '../account';
-import { NamespaceId } from '../namespace';
+import { Account, PublicAccount, UnresolvedAddress } from '../account';
 import { NetworkType } from '../network';
 import { Statement } from '../receipt';
 import { UInt64 } from '../UInt64';
@@ -396,15 +395,13 @@ export class AggregateTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
-     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+    public shouldNotifyAccount(address: UnresolvedAddress): boolean {
         return (
             super.isSigned(address) ||
             this.cosignatures.find((_) => _.signer.address.equals(address)) !== undefined ||
-            this.innerTransactions.find((innerTransaction: InnerTransaction) => innerTransaction.shouldNotifyAccount(address, alias)) !==
-                undefined
+            this.innerTransactions.find((innerTransaction: InnerTransaction) => innerTransaction.shouldNotifyAccount(address)) !== undefined
         );
     }
 }

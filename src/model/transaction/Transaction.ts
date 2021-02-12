@@ -19,8 +19,7 @@ import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction';
-import { Account, Address, PublicAccount } from '../account';
-import { NamespaceId } from '../namespace';
+import { Account, PublicAccount, UnresolvedAddress } from '../account';
 import { NetworkType } from '../network';
 import { Statement } from '../receipt';
 import { UInt64 } from '../UInt64';
@@ -440,17 +439,16 @@ export abstract class Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
-     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public abstract shouldNotifyAccount(address: Address, alias?: NamespaceId[]): boolean;
+    public abstract shouldNotifyAccount(address: UnresolvedAddress): boolean;
 
     /**
      * @internal
      * Checks if the transaction is signer by an address.
      * @param address the address.
      */
-    public isSigned(address: Address): boolean {
+    public isSigned(address: UnresolvedAddress): boolean {
         return this.signer !== undefined && this.signer!.address.equals(address);
     }
 
