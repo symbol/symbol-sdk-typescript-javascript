@@ -27,8 +27,7 @@ import {
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { DtoMapping, UnresolvedMapping } from '../../core/utils';
-import { Address, PublicAccount, UnresolvedAddress } from '../account';
-import { NamespaceId } from '../namespace';
+import { PublicAccount, UnresolvedAddress } from '../account';
 import { NetworkType } from '../network';
 import { Statement } from '../receipt';
 import { AddressRestrictionFlag } from '../restriction';
@@ -201,14 +200,13 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
-     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+    public shouldNotifyAccount(address: UnresolvedAddress): boolean {
         return (
             super.isSigned(address) ||
-            this.restrictionAdditions.find((_) => _.equals(address) || alias.find((a) => _.equals(a)) !== undefined) !== undefined ||
-            this.restrictionDeletions.find((_) => _.equals(address) || alias.find((a) => _.equals(a)) !== undefined) !== undefined
+            this.restrictionAdditions.find((_) => _.equals(address)) !== undefined ||
+            this.restrictionDeletions.find((_) => _.equals(address)) !== undefined
         );
     }
 }

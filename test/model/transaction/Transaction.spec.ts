@@ -20,8 +20,8 @@ import { Convert } from '../../../src/core/format/Convert';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
+import { UnresolvedAddress } from '../../../src/model/account/UnresolvedAddress';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
@@ -54,7 +54,7 @@ describe('Transaction', () => {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
+        public shouldNotifyAccount(address: UnresolvedAddress): boolean {
             throw new Error('Not implemented');
         }
         resolveAliases(): TransferTransaction {

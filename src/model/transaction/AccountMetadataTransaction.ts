@@ -25,10 +25,8 @@ import {
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -203,14 +201,9 @@ export class AccountMetadataTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
-     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
-        return (
-            super.isSigned(address) ||
-            this.targetAddress.equals(address) ||
-            alias.find((name) => this.targetAddress.equals(name)) !== undefined
-        );
+    public shouldNotifyAccount(address: UnresolvedAddress): boolean {
+        return super.isSigned(address) || this.targetAddress.equals(address);
     }
 }

@@ -24,7 +24,7 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
-import { Address, PublicAccount } from '../account';
+import { Address, PublicAccount, UnresolvedAddress } from '../account';
 import { NetworkType } from '../network';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -178,7 +178,7 @@ export class AccountKeyLinkTransaction extends Transaction {
      * @param address address to be notified
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address): boolean {
+    public shouldNotifyAccount(address: UnresolvedAddress): boolean {
         return super.isSigned(address) || Address.createFromPublicKey(this.linkedPublicKey, this.networkType).equals(address);
     }
 }

@@ -221,14 +221,14 @@ describe('MosaicMetadataTransaction', () => {
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.PRIVATE_TEST,
         );
-        let canNotify = tx.shouldNotifyAccount(account.address, []);
+        let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
     });
 
     it('Notify Account with alias', () => {
@@ -243,13 +243,13 @@ describe('MosaicMetadataTransaction', () => {
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.PRIVATE_TEST,
         );
-        let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
+        let canNotify = tx.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [wrongAlias]);
+        canNotify = tx.shouldNotifyAccount(wrongAlias);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

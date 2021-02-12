@@ -258,14 +258,14 @@ describe('AccountRestrictionTransaction', () => {
             [],
             NetworkType.PRIVATE_TEST,
         );
-        let canNotify = tx.shouldNotifyAccount(address, []);
+        let canNotify = tx.shouldNotifyAccount(address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'), []);
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
@@ -274,14 +274,14 @@ describe('AccountRestrictionTransaction', () => {
             [address],
             NetworkType.PRIVATE_TEST,
         );
-        let canNotifyDeletion = txDeletion.shouldNotifyAccount(address, []);
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(address);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'));
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(txDeletion.shouldNotifyAccount(account.address)).to.be.true;
     });
 
     it('Notify Account with alias', () => {
@@ -294,14 +294,14 @@ describe('AccountRestrictionTransaction', () => {
             [],
             NetworkType.PRIVATE_TEST,
         );
-        let canNotify = tx.shouldNotifyAccount(account.address, [alias]);
+        let canNotify = tx.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [wrongAlias]);
+        canNotify = tx.shouldNotifyAccount(wrongAlias);
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
-        expect(tx.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(tx.shouldNotifyAccount(account.address)).to.be.true;
 
         const txDeletion = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
@@ -310,15 +310,13 @@ describe('AccountRestrictionTransaction', () => {
             [alias],
             NetworkType.PRIVATE_TEST,
         );
-        let canNotifyDeletion = txDeletion.shouldNotifyAccount(account.address, [alias]);
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(alias);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'), [
-            wrongAlias,
-        ]);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(wrongAlias);
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(txDeletion.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

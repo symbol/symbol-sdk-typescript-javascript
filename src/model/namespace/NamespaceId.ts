@@ -106,4 +106,12 @@ export class NamespaceId {
     public encodeUnresolvedAddress(networkType: NetworkType): Uint8Array {
         return RawAddress.aliasToRecipient(Convert.hexToUint8(this.toHex()), networkType);
     }
+
+    /**
+     * Get string value of id
+     * @returns {string}
+     */
+    public plain(): string {
+        return this.toHex();
+    }
 }

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { catchError, filter, flatMap, map, mergeMap, share, switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { UnresolvedAddress } from '../model';
@@ -23,7 +23,6 @@ import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
 import { NewBlock } from '../model/blockchain/NewBlock';
-import { NamespaceName } from '../model/namespace/NamespaceName';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
 import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
 import { Deadline } from '../model/transaction/Deadline';
@@ -335,24 +334,25 @@ export class Listener implements IListener {
         transactionHash?: string,
         subscribeMultisig = false,
     ): Observable<T> {
-        return this.getResolvedAddress(unresolvedAddress).pipe(
-            mergeMap((address: Address) => {
-                return this.subscribeWithMultig(address, channel, subscribeMultisig).pipe(
-                    switchMap((subscribers) => {
-                        return this.messageSubject.asObservable().pipe(
-                            filter((listenerMessage) => listenerMessage.channelName === channel),
-                            filter((listenerMessage) => listenerMessage.message instanceof Transaction),
-                            switchMap((_) => {
-                                const transactionObservable = of(_.message as T).pipe(
-                                    filter((transaction) => this.filterHash(transaction, transactionHash)),
-                                );
-                                if (subscribers.includes(_.channelParam.toUpperCase())) {
-                                    return transactionObservable;
-                                } else {
-                                    return transactionObservable.pipe(this.filterByNotifyAccount(address));
-                                }
-                            }),
+        return this.subscribeWithMultig(unresolvedAddress, channel, subscribeMultisig).pipe(
+            switchMap((subscribers) => {
+                return this.messageSubject.asObservable().pipe(
+                    filter((listenerMessage) => listenerMessage.channelName === channel),
+                    filter((listenerMessage) => listenerMessage.message instanceof Transaction),
+                    switchMap((_) => {
+                        const transactionObservable = of(_.message as T).pipe(
+                            filter((transaction) => this.filterHash(transaction, transactionHash)),
                         );
+                        if (subscribers.includes(_.channelParam.toUpperCase())) {
+                            return transactionObservable;
+                        } else {
+                            return transactionObservable.pipe(
+                                filter(
+                                    (transaction) =>
+                                        transaction.isSigned(unresolvedAddress) || transaction.shouldNotifyAccount(unresolvedAddress),
+                                ),
+                            );
+                        }
                     }),
                 );
             }),
@@ -414,18 +414,14 @@ export class Listener implements IListener {
         transactionHash: string | undefined,
         subscribeMultisig = false,
     ): Observable<string> {
-        return this.getResolvedAddress(unresolvedAddress).pipe(
-            mergeMap((address: Address) => {
-                return this.subscribeWithMultig(address, channel, subscribeMultisig).pipe(
-                    switchMap((subscribers) => {
-                        return this.messageSubject.asObservable().pipe(
-                            filter((_) => _.channelName === channel),
-                            filter((_) => typeof _.message === 'string'),
-                            filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
-                            map((_) => _.message as string),
-                            filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
-                        );
-                    }),
+        return this.subscribeWithMultig(unresolvedAddress, channel, subscribeMultisig).pipe(
+            switchMap((subscribers) => {
+                return this.messageSubject.asObservable().pipe(
+                    filter((_) => _.channelName === channel),
+                    filter((_) => typeof _.message === 'string'),
+                    filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
+                    map((_) => _.message as string),
+                    filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
                 );
             }),
         );
@@ -470,39 +466,6 @@ export class Listener implements IListener {
     }
 
     /**
-     * It filters a transaction by address using the aliases.
-     *
-     * This method delegates the rest loading as much as possible. It tries to filter by signer first.
-     *
-     * Note: this filter performs one extra rest call and it should be down in the pipeline.
-     *
-     * @param address the address.
-     * @return an observable filter.
-     */
-    private filterByNotifyAccount<T extends Transaction>(address: Address): OperatorFunction<T, T> {
-        return (transactionObservable): Observable<T> => {
-            return transactionObservable.pipe(
-                flatMap((transaction) => {
-                    if (transaction.isSigned(address)) {
-                        return of(transaction);
-                    }
-                    const namespaceIdsObservable = this.namespaceRepository.getAccountsNames([address]).pipe(
-                        map((names) => {
-                            return ([] as NamespaceName[])
-                                .concat(...Array.from(names.map((accountName) => accountName.names)))
-                                .map((name) => name.namespaceId);
-                        }),
-                    );
-                    return namespaceIdsObservable.pipe(
-                        filter((namespaceIds) => transaction.shouldNotifyAccount(address, namespaceIds)),
-                        map(() => transaction),
-                    );
-                }),
-            );
-        };
-    }
-
-    /**
      * Returns an observable stream of {@link CosignatureSignedTransaction} for specific address.
      * Each time a cosigner signs a transaction the address initialized,
      * it emits a new message with the cosignatory signed transaction in the even stream.
@@ -512,17 +475,13 @@ export class Listener implements IListener {
      * @return an observable stream of {@link CosignatureSignedTransaction}
      */
     public cosignatureAdded(unresolvedAddress: UnresolvedAddress, subscribeMultisig = false): Observable<CosignatureSignedTransaction> {
-        return this.getResolvedAddress(unresolvedAddress).pipe(
-            mergeMap((address: Address) => {
-                return this.subscribeWithMultig(address, ListenerChannelName.cosignature, subscribeMultisig).pipe(
-                    switchMap((subscribers) => {
-                        return this.messageSubject.asObservable().pipe(
-                            filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
-                            filter((_) => _.message instanceof CosignatureSignedTransaction),
-                            filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
-                            map((_) => _.message as CosignatureSignedTransaction),
-                        );
-                    }),
+        return this.subscribeWithMultig(unresolvedAddress, ListenerChannelName.cosignature, subscribeMultisig).pipe(
+            switchMap((subscribers) => {
+                return this.messageSubject.asObservable().pipe(
+                    filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
+                    filter((_) => _.message instanceof CosignatureSignedTransaction),
+                    filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
+                    map((_) => _.message as CosignatureSignedTransaction),
                 );
             }),
         );
@@ -604,22 +563,26 @@ export class Listener implements IListener {
      * @param multisig subscribe multisig account
      * @returns {string[]}
      */
-    private subscribeWithMultig(cosigner: Address, channel: ListenerChannelName, multisig = false): Observable<string[]> {
+    private subscribeWithMultig(cosigner: UnresolvedAddress, channel: ListenerChannelName, multisig = false): Observable<string[]> {
         if (!multisig) {
             this.subscribeTo(`${channel.toString()}/${cosigner.plain()}`);
             return of([cosigner.plain()]);
         }
-        return this.multisigRepository!.getMultisigAccountInfo(cosigner).pipe(
-            map((multisigInfo) => {
-                const subscribers = [cosigner].concat(multisigInfo.multisigAddresses);
-                subscribers.forEach((m) => {
-                    this.subscribeTo(`${channel.toString()}/${m.plain()}`);
-                });
-                return subscribers.map((m) => m.plain());
-            }),
-            catchError(() => {
-                this.subscribeTo(`${channel.toString()}/${cosigner.plain()}`);
-                return of([cosigner.plain()]);
+        return this.getResolvedAddress(cosigner).pipe(
+            mergeMap((address: Address) => {
+                return this.multisigRepository!.getMultisigAccountInfo(address).pipe(
+                    map((multisigInfo) => {
+                        const subscribers = [cosigner].concat(multisigInfo.multisigAddresses);
+                        subscribers.forEach((m) => {
+                            this.subscribeTo(`${channel.toString()}/${m.plain()}`);
+                        });
+                        return subscribers.map((m) => m.plain());
+                    }),
+                    catchError(() => {
+                        this.subscribeTo(`${channel.toString()}/${cosigner.plain()}`);
+                        return of([cosigner.plain()]);
+                    }),
+                );
             }),
         );
     }
