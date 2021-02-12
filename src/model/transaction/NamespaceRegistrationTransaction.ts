@@ -24,6 +24,7 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import * as Utilities from '../../core/format/Utilities';
 import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction';
 import { Address, PublicAccount } from '../account';
 import { NamespaceId, NamespaceRegistrationType } from '../namespace';
@@ -105,7 +106,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const namespaceId =
             typeof parentNamespace === 'string'
                 ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
-                : new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName));
+                : new NamespaceId(Utilities.generateNamespaceId(parentId.id.toDTO(), namespaceName));
         return new NamespaceRegistrationTransaction(
             networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,

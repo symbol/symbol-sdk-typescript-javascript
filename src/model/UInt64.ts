@@ -94,7 +94,6 @@ export class UInt64 {
     /**
      * Get DTO representation with format: `[lower, higher]`
      *
-     * @internal
      * @returns {[number,number]}
      */
     public toDTO(): number[] {
