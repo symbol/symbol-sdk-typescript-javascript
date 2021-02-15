@@ -101,7 +101,7 @@ describe('NamespaceRegistrationTransaction', () => {
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '4BFA5F372D55B384CFCBE72D994BE69B0113726F6F742D746573742D6E616D657370616365',
+            '4BFA5F372D55B384EE393014E8B74B9C0113726F6F742D746573742D6E616D657370616365',
         );
     });
 
@@ -152,5 +152,28 @@ describe('NamespaceRegistrationTransaction', () => {
 
         Object.assign(tx, { signer: account.publicAccount });
         expect(tx.shouldNotifyAccount(account.address)).to.be.true;
+    });
+
+    it('Sub namespacename craetd by different type of parent id', () => {
+        const parentNamespace = 'parent';
+        const childNamespace = 'child';
+        const parentId = new NamespaceId(parentNamespace);
+
+        const subNameSpaceTransactionStringParent = NamespaceRegistrationTransaction.createSubNamespace(
+            Deadline.create(1573430400),
+            childNamespace,
+            parentNamespace,
+            NetworkType.TEST_NET,
+            UInt64.fromUint(100000),
+        );
+        const subNameSpaceTransactionIdParent = NamespaceRegistrationTransaction.createSubNamespace(
+            Deadline.create(1573430400),
+            childNamespace,
+            parentId,
+            NetworkType.TEST_NET,
+            UInt64.fromUint(100000),
+        );
+
+        expect(subNameSpaceTransactionStringParent.namespaceId.equals(subNameSpaceTransactionIdParent.namespaceId)).to.be.true;
     });
 });

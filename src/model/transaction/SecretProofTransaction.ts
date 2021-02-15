@@ -27,11 +27,9 @@ import {
 import { Convert, Convert as convert } from '../../core/format';
 import { DtoMapping } from '../../core/utils/DtoMapping';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
 import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../lock/LockHashAlgorithm';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { NetworkType } from '../network/NetworkType';
 import { Statement } from '../receipt/Statement';
 import { UInt64 } from '../UInt64';
@@ -221,14 +219,9 @@ export class SecretProofTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
-     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
-        return (
-            super.isSigned(address) ||
-            this.recipientAddress.equals(address) ||
-            alias.find((name) => this.recipientAddress.equals(name)) !== undefined
-        );
+    public shouldNotifyAccount(address: UnresolvedAddress): boolean {
+        return super.isSigned(address) || this.recipientAddress.equals(address);
     }
 }

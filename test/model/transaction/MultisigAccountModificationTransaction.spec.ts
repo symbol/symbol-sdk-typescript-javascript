@@ -151,14 +151,14 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        let canNotify = txAddition.shouldNotifyAccount(address1, []);
+        let canNotify = txAddition.shouldNotifyAccount(address1);
         expect(canNotify).to.be.true;
 
-        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), []);
+        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
         expect(canNotify).to.be.false;
 
         Object.assign(txAddition, { signer: account.publicAccount });
-        expect(txAddition.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(txAddition.shouldNotifyAccount(account.address)).to.be.true;
 
         const txDeletion = MultisigAccountModificationTransaction.create(
             Deadline.create(epochAdjustment),
@@ -169,14 +169,14 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, []);
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), []);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
         expect(canNotifyDeletion).to.be.false;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(txDeletion.shouldNotifyAccount(account.address)).to.be.true;
     });
 
     it('Notify Account with alias', () => {
@@ -191,17 +191,17 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        let canNotify = txAddition.shouldNotifyAccount(address1, [alias]);
+        let canNotify = txAddition.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;
 
-        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [wrongAlias]);
+        canNotify = txAddition.shouldNotifyAccount(wrongAlias);
         expect(canNotify).to.be.false;
 
-        canNotify = txAddition.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [alias]);
+        canNotify = txAddition.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;
 
         Object.assign(txAddition, { signer: account.publicAccount });
-        expect(txAddition.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(txAddition.shouldNotifyAccount(account.address)).to.be.true;
 
         const txDeletion = MultisigAccountModificationTransaction.create(
             Deadline.create(epochAdjustment),
@@ -212,20 +212,16 @@ describe('MultisigAccountModificationTransaction', () => {
             NetworkType.PRIVATE_TEST,
         );
 
-        let canNotifyDeletion = txDeletion.shouldNotifyAccount(address1, [alias]);
+        let canNotifyDeletion = txDeletion.shouldNotifyAccount(alias);
         expect(canNotifyDeletion).to.be.true;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [
-            wrongAlias,
-        ]);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(wrongAlias);
         expect(canNotifyDeletion).to.be.false;
 
-        canNotifyDeletion = txDeletion.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'), [
-            alias,
-        ]);
+        canNotifyDeletion = txDeletion.shouldNotifyAccount(alias);
         expect(canNotifyDeletion).to.be.true;
 
         Object.assign(txDeletion, { signer: account.publicAccount });
-        expect(txDeletion.shouldNotifyAccount(account.address, [])).to.be.true;
+        expect(txDeletion.shouldNotifyAccount(account.address)).to.be.true;
     });
 });

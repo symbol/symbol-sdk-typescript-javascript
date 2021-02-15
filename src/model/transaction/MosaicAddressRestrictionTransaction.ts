@@ -253,14 +253,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @internal
      * Check a given address should be notified in websocket channels
      * @param address address to be notified
-     * @param alias address alias (names)
      * @returns {boolean}
      */
-    public shouldNotifyAccount(address: Address, alias: NamespaceId[]): boolean {
-        return (
-            super.isSigned(address) ||
-            this.targetAddress.equals(address) ||
-            alias.find((name) => this.targetAddress.equals(name)) !== undefined
-        );
+    public shouldNotifyAccount(address: UnresolvedAddress): boolean {
+        return super.isSigned(address) || this.targetAddress.equals(address);
     }
 }

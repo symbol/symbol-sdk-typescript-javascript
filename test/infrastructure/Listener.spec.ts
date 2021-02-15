@@ -18,6 +18,7 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { Observable, of as observableOf } from 'rxjs';
 import { deepEqual as deepEqualParam, instance, mock, verify, when } from 'ts-mockito';
+import { UnresolvedAddress } from '../../src';
 import { Listener, ListenerChannelName } from '../../src/infrastructure/Listener';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
@@ -221,6 +222,12 @@ describe('Listener', () => {
                 expect(payload).to.be.eq(`{"subscribe":"${name}/${subscribedAddress.plain()}"}`);
             }
         }
+        class WebSocketMockAlias {
+            constructor(public readonly url: string) {}
+            send(payload: string): void {
+                expect(payload).to.be.eq(`{"subscribe":"${name}/${new NamespaceId('test').plain()}"}`);
+            }
+        }
 
         let multisigIndex = 0;
         class WebSocketMultisigMock {
@@ -230,7 +237,12 @@ describe('Listener', () => {
             }
         }
 
-        const subscriptionMethod = (listener: Listener, address: Address, hash?: string, multisig = false): Observable<Transaction> => {
+        const subscriptionMethod = (
+            listener: Listener,
+            address: UnresolvedAddress,
+            hash?: string,
+            multisig = false,
+        ): Observable<Transaction> => {
             switch (name) {
                 case ListenerChannelName.confirmedAdded: {
                     return listener.confirmed(address, hash, multisig);
@@ -246,9 +258,9 @@ describe('Listener', () => {
 
         describe(`${name} transaction subscription`, () => {
             it('subscribe multsig', () => {
+                const alias = new NamespaceId('test');
                 const multisigInfo = new MultisigAccountInfo(1, subscribedAddress, 1, 1, [], [multisigAccount.address]);
                 when(multisigRepoMock.getMultisigAccountInfo(deepEqualParam(subscribedAddress))).thenReturn(observableOf(multisigInfo));
-                const alias = new NamespaceId('test');
                 when(namespaceRepoMock.getAccountsNames(deepEqualParam([subscribedAddress]))).thenReturn(
                     observableOf([new AccountNames(subscribedAddress, [new NamespaceName(alias, 'test')])]),
                 );
@@ -282,10 +294,6 @@ describe('Listener', () => {
         describe(`${name} transaction subscription`, () => {
             it('Using alias', () => {
                 const alias = new NamespaceId('test');
-                when(namespaceRepoMock.getAccountsNames(deepEqualParam([subscribedAddress]))).thenReturn(
-                    observableOf([new AccountNames(subscribedAddress, [new NamespaceName(alias, 'test')])]),
-                );
-
                 const transferTransaction = TransferTransaction.create(
                     Deadline.create(epochAdjustment),
                     alias,
@@ -298,9 +306,9 @@ describe('Listener', () => {
                 transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMockAlias);
                 listener.open();
-                subscriptionMethod(listener, subscribedAddress, hash).subscribe((confirmedTransaction) => {
+                subscriptionMethod(listener, alias, hash).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
@@ -319,7 +327,7 @@ describe('Listener', () => {
                     null,
                 );
 
-                verify(namespaceRepoMock.getAccountsNames(deepEqualParam([subscribedAddress]))).times(2);
+                verify(namespaceRepoMock.getAccountsNames(deepEqualParam([subscribedAddress]))).times(0);
                 expect(reportedTransactions.length).to.be.equal(2);
             });
 
@@ -372,9 +380,6 @@ describe('Listener', () => {
                 const subscribedAddress = account.address;
 
                 const alias = new NamespaceId('test');
-                when(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).thenReturn(
-                    observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
-                );
                 const transferTransaction = TransferTransaction.create(
                     Deadline.create(epochAdjustment),
                     alias,
@@ -387,9 +392,9 @@ describe('Listener', () => {
                 transferTransactionDTO.meta = { height: '1', hash: hash };
 
                 const reportedTransactions: Transaction[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMockAlias);
                 listener.open();
-                subscriptionMethod(listener, subscribedAddress).subscribe((confirmedTransaction) => {
+                subscriptionMethod(listener, alias).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
@@ -408,17 +413,12 @@ describe('Listener', () => {
                     null,
                 );
                 expect(reportedTransactions.length).to.be.equal(2);
-                verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(2);
+                verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(0);
             });
 
             it('Using alias invalid', () => {
-                const subscribedAddress = account.address;
-
                 const alias = new NamespaceId('test');
                 const alias2 = new NamespaceId('test2');
-                when(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).thenReturn(
-                    observableOf([new AccountNames(account.address, [new NamespaceName(alias, 'test')])]),
-                );
                 const transferTransaction = TransferTransaction.create(
                     Deadline.create(epochAdjustment),
                     alias2,
@@ -432,9 +432,9 @@ describe('Listener', () => {
 
                 const reportedTransactions: Transaction[] = [];
 
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMockAlias);
                 listener.open();
-                subscriptionMethod(listener, subscribedAddress, hash).subscribe((unconfirmedTransaction) => {
+                subscriptionMethod(listener, alias, hash).subscribe((unconfirmedTransaction) => {
                     reportedTransactions.push(unconfirmedTransaction);
                 });
 
@@ -454,7 +454,7 @@ describe('Listener', () => {
                 );
 
                 expect(reportedTransactions.length).to.be.equal(0);
-                verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(2);
+                verify(namespaceRepoMock.getAccountsNames(deepEqualParam([account.address]))).times(0);
             });
 
             it('Using signer', () => {
