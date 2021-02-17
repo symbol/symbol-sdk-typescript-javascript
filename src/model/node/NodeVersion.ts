@@ -23,7 +23,7 @@ export class NodeVersion {
      */
     public static createFromRawNodeVersion(rawNodeVersion: number): NodeVersion {
         if (!NodeVersion.isValidRawNodeVersion(rawNodeVersion)) {
-            throw new Error(`Ivalid node version number '${rawNodeVersion}'`);
+            throw new Error(`Invalid node version number '${rawNodeVersion}'`);
         }
         
         return new NodeVersion(rawNodeVersion);
@@ -40,13 +40,16 @@ export class NodeVersion {
             throw new Error(`Invalid node version string '${formattedNodeVersion}'`);
         }
 
+        const placeholderHex = '00';
         const hexVersionNumber = formattedNodeVersion
             .split('.')
-            .map((value) => parseInt(value).toString(16))
+            .map((value) => 
+                (placeholderHex + parseInt(value).toString(16))
+                .slice(-2)
+            )
             .join('');
 
-        const rawVersionNumber = parseInt(hexVersionNumber);
-        
+        const rawVersionNumber = parseInt(hexVersionNumber, 16);
         return new NodeVersion(rawVersionNumber);
     }
 
@@ -59,7 +62,9 @@ export class NodeVersion {
         const maxRawNodeVersion = 4294967295;
         const minRawNodeVersion = 0;
 
-        return rawNodeVersion >= minRawNodeVersion && rawNodeVersion <= maxRawNodeVersion;
+        return Number.isInteger(rawNodeVersion) &&
+            rawNodeVersion >= minRawNodeVersion && 
+            rawNodeVersion <= maxRawNodeVersion;
     };
 
     /**
@@ -78,8 +83,8 @@ export class NodeVersion {
         }
 
         const isVersionChuncksValid = !versionChuncks.find(value => 
-            isNaN(value) &&
-            value < minFormattedNodeVersionChunkValue &&
+            isNaN(value) ||
+            value < minFormattedNodeVersionChunkValue ||
             value > maxFormattedNodeVersionChunkValue
         );
 
