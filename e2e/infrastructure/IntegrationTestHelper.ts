@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { map } from 'rxjs/operators';
-import { Addresses, BootstrapService, BootstrapUtils, Preset, StartParams } from 'symbol-bootstrap';
+import { Addresses, BootstrapService, BootstrapUtils, ConfigLoader, StartParams } from 'symbol-bootstrap';
 import { IListener, RepositoryFactory, RepositoryFactoryHttp } from '../../src/infrastructure';
 import { UInt64 } from '../../src/model';
 import { Account } from '../../src/model/account';
@@ -48,26 +48,10 @@ export class IntegrationTestHelper {
     public epochAdjustment: number;
     public bootstrapAddresses: Addresses;
 
-    private async startBootstrapServer(): Promise<{ accounts: string[]; apiUrl: string; addresses: Addresses }> {
-        this.config = {
-            report: false,
-            preset: Preset.bootstrap,
-            reset: this.startEachTime,
-            customPreset: './e2e/e2e-preset.yml',
-            timeout: 60000 * 3,
-            target: 'target/bootstrap-test',
-            detached: false,
-            user: 'current',
-        };
-
-        console.log('Starting bootstrap server');
-        const configResult = await this.service.start({ ...this.config, detached: true });
-        return this.toAccounts(configResult.addresses);
-    }
     private async loadBootstrap(): Promise<{ accounts: string[]; apiUrl: string; addresses: Addresses }> {
-        const target = process.env.REST_DEV || true ? '../catapult-rest/rest/target' : 'target/bootstrap-test';
+        const target = process.env.REST_DEV ? '../catapult-rest/rest/target' : 'target/bootstrap-test';
         console.log('Loading bootstrap server');
-        const addresses = BootstrapUtils.loadExistingAddresses(target);
+        const addresses = new ConfigLoader().loadExistingAddresses(target, false);
         return this.toAccounts(addresses);
     }
 
