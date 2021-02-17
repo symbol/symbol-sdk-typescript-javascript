@@ -86,8 +86,7 @@ export class NodeVersion {
 
     /**
      * @internal
-     * @param rawNodeVersion
-     * @param formattedNodeVersion
+     * @param nodeVersion
      */
     private constructor(
         /**
