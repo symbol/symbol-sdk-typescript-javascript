@@ -25,7 +25,7 @@ export class NodeVersion {
         if (!NodeVersion.isValidRawNodeVersion(rawNodeVersion)) {
             throw new Error(`Invalid node version number '${rawNodeVersion}'`);
         }
-        
+
         return new NodeVersion(rawNodeVersion);
     }
 
@@ -43,10 +43,7 @@ export class NodeVersion {
         const placeholderHex = '00';
         const hexVersionNumber = formattedNodeVersion
             .split('.')
-            .map((value) => 
-                (placeholderHex + parseInt(value).toString(16))
-                .slice(-2)
-            )
+            .map((value) => (placeholderHex + parseInt(value).toString(16)).slice(-2))
             .join('');
 
         const rawVersionNumber = parseInt(hexVersionNumber, 16);
@@ -62,9 +59,7 @@ export class NodeVersion {
         const maxRawNodeVersion = 4294967295;
         const minRawNodeVersion = 0;
 
-        return Number.isInteger(rawNodeVersion) &&
-            rawNodeVersion >= minRawNodeVersion && 
-            rawNodeVersion <= maxRawNodeVersion;
+        return Number.isInteger(rawNodeVersion) && rawNodeVersion >= minRawNodeVersion && rawNodeVersion <= maxRawNodeVersion;
     };
 
     /**
@@ -76,16 +71,14 @@ export class NodeVersion {
         const maxFormattedNodeVersionChunkValue = 255;
         const minFormattedNodeVersionChunkValue = 0;
 
-        const versionChuncks = formattedNodeVersion.split('.').map(value => parseInt(value));
+        const versionChuncks = formattedNodeVersion.split('.').map((value) => parseInt(value));
 
         if (versionChuncks.length !== 4) {
             return false;
         }
 
-        const isVersionChuncksValid = !versionChuncks.find(value => 
-            isNaN(value) ||
-            value < minFormattedNodeVersionChunkValue ||
-            value > maxFormattedNodeVersionChunkValue
+        const isVersionChuncksValid = !versionChuncks.find(
+            (value) => isNaN(value) || value < minFormattedNodeVersionChunkValue || value > maxFormattedNodeVersionChunkValue,
         );
 
         return isVersionChuncksValid;
@@ -112,7 +105,7 @@ export class NodeVersion {
         const hexNodeVersion = (placeholderHex + this.nodeVersion.toString(16)).slice(-8);
         const formattedNodeVersion = hexNodeVersion
             .match(/.{1,2}/g)!
-            .map(hex => parseInt(hex, 16))
+            .map((hex) => parseInt(hex, 16))
             .join('.');
 
         return formattedNodeVersion;

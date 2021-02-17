@@ -81,9 +81,6 @@ describe('NodeVersion', () => {
         expect(nodeVersion.formatted()).to.be.equal(validFormattedVersion3);
     });
 
-
-
-
     it('should throw Error when negative raw version provided', () => {
         expect(() => {
             NodeVersion.createFromRawNodeVersion(invalidRawVersion1);
@@ -107,8 +104,6 @@ describe('NodeVersion', () => {
             NodeVersion.createFromRawNodeVersion(invalidRawVersion4);
         }).to.throw(`Invalid node version number '${invalidRawVersion4}'`);
     });
-
-
 
     it('should throw Error when invalid formatted version provided', () => {
         expect(() => {
@@ -139,9 +134,6 @@ describe('NodeVersion', () => {
             NodeVersion.createFromFormattedNodeVersion(invalidFormattedVersion5);
         }).to.throw(`Invalid node version string '${invalidFormattedVersion5}'`);
     });
-
-
-
 
     it('should equal addresses', () => {
         const version = NodeVersion.createFromRawNodeVersion(validRawVersion1);
