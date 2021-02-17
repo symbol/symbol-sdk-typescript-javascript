@@ -135,13 +135,13 @@ describe('NodeVersion', () => {
         }).to.throw(`Invalid node version string '${invalidFormattedVersion5}'`);
     });
 
-    it('should equal addresses', () => {
+    it('should equal versions', () => {
         const version = NodeVersion.createFromRawNodeVersion(validRawVersion1);
         const compareVersion = NodeVersion.createFromRawNodeVersion(validRawVersion1);
         expect(version.equals(compareVersion)).to.be.equal(true);
     });
 
-    it('should not equal addresses', () => {
+    it('should not equal versions', () => {
         const version = NodeVersion.createFromRawNodeVersion(validRawVersion1);
         const compareVersion = NodeVersion.createFromRawNodeVersion(validRawVersion2);
         expect(version.equals(compareVersion)).to.be.equal(false);
