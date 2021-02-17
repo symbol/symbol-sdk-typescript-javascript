@@ -16,7 +16,7 @@
 
 export class NodeVersion {
     /**
-     * Create an NodeVersion from a given raw version number.
+     * Create a NodeVersion from a given raw version number.
      * @param {number} rawNodeVersion - Node version in number format.
      *                  ex: 655367
      * @returns {NodeVersion}
@@ -30,7 +30,7 @@ export class NodeVersion {
     }
 
     /**
-     * Create an NodeVersion from a given formatted version string.
+     * Create a NodeVersion from a given formatted version string.
      * @param {string} formattedNodeVersion - Node version in string format.
      *                  ex: 0.10.0.7
      * @returns {NodeVersion}
