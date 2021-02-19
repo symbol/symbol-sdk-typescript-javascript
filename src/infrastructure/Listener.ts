@@ -15,7 +15,7 @@
  */
 
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { UnresolvedAddress } from '../model';
@@ -339,6 +339,11 @@ export class Listener implements IListener {
                 return this.messageSubject.asObservable().pipe(
                     filter((listenerMessage) => listenerMessage.channelName === channel),
                     filter((listenerMessage) => listenerMessage.message instanceof Transaction),
+                    distinctUntilChanged((prev, curr) => {
+                        const currentHash = (curr.message as Transaction).transactionInfo!.hash;
+                        const previousHash = (prev.message as Transaction).transactionInfo!.hash;
+                        return (currentHash && previousHash && previousHash === currentHash) || !currentHash || !previousHash;
+                    }),
                     switchMap((_) => {
                         const transactionObservable = of(_.message as T).pipe(
                             filter((transaction) => this.filterHash(transaction, transactionHash)),
@@ -421,7 +426,8 @@ export class Listener implements IListener {
                     filter((_) => typeof _.message === 'string'),
                     filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
                     map((_) => _.message as string),
-                    filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
+                    filter((_) => !transactionHash || _.toUpperCase() === transactionHash.toUpperCase()),
+                    distinctUntilChanged(),
                 );
             }),
         );
