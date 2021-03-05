@@ -74,6 +74,8 @@ export class Listener implements IListener {
      */
     private uid: string;
 
+    private SIGINT = false;
+
     /**
      * Constructor
      * @param url - Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws).
@@ -119,6 +121,18 @@ export class Listener implements IListener {
                 this.webSocket.onopen = (): void => {};
                 this.webSocket.onerror = (err: Error): void => {
                     reject(err);
+                };
+                this.webSocket.onclose = (closeEvent?: any): void => {
+                    if (this.SIGINT) {
+                        return;
+                    }
+                    if (closeEvent) {
+                        reject({
+                            client: this.uid,
+                            code: closeEvent.code,
+                            reason: closeEvent.reason,
+                        });
+                    }
                 };
                 this.webSocket.onmessage = (msg: any): void => {
                     const message = JSON.parse(msg.data as string);
@@ -232,6 +246,7 @@ export class Listener implements IListener {
             this.webSocket &&
             (this.webSocket.readyState === this.webSocket.OPEN || this.webSocket.readyState === this.webSocket.CONNECTING)
         ) {
+            this.SIGINT = true;
             this.webSocket.close();
         }
     }
