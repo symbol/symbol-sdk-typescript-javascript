@@ -23,18 +23,20 @@ import {
     TransactionPage,
     TransactionRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
-import { SignedTransaction } from '../model/transaction/SignedTransaction';
-import { Transaction } from '../model/transaction/Transaction';
-import { TransactionAnnounceResponse } from '../model/transaction/TransactionAnnounceResponse';
-import { TransactionInfo } from '../model/transaction/TransactionInfo';
-import { TransactionType } from '../model/transaction/TransactionType';
+import { DtoMapping } from '../core/utils';
+import {
+    CosignatureSignedTransaction,
+    SignedTransaction,
+    Transaction,
+    TransactionAnnounceResponse,
+    TransactionInfo,
+    TransactionType,
+} from '../model/transaction';
 import { Http } from './Http';
 import { Page } from './Page';
 import { TransactionPaginationStreamer } from './paginationStreamer';
-import { TransactionSearchCriteria } from './searchCriteria/TransactionSearchCriteria';
-import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
+import { TransactionSearchCriteria } from './searchCriteria';
+import { CreateTransactionFromDTO } from './transaction';
 import { TransactionGroup } from './TransactionGroup';
 import { TransactionRepository } from './TransactionRepository';
 
