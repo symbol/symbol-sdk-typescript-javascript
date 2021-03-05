@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.23.3] - 5-Mar-2021
+
+**Milestone**: Catapult-server main(0.10.0.8)
+ Package  | Version  | Link
+---|---|---
+SDK Core| v0.23.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.1.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.11.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- Fixed `NodeVersion` schema issue.
+- Added `onclose` event listener to capture unsolicited ws close event.
+
 ## [0.23.2] - 15-Feb-2021
 
-**Milestone**: Catapult-server main(0.10.0.6)
+**Milestone**: Catapult-server main(0.10.0.7)
  Package  | Version  | Link
 ---|---|---
 SDK Core| v0.23.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)

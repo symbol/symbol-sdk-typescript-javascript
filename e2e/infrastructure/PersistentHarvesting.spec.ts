@@ -42,7 +42,7 @@ describe('PersistentHarvesting', () => {
             vrfAccount = Account.createFromPrivateKey('AA798EA9A2D2D202AFCCC82C40A287780BCA3C7F7A2FD5B754832804C6BE1BAA', networkType);
             account = helper.account;
             generationHash = helper.generationHash;
-            nodePublicKey = helper.bootstrapAddresses.nodes![0].signing!.publicKey;
+            nodePublicKey = helper.bootstrapAddresses.nodes![0].transport!.publicKey;
             console.log('Remote: ', remoteAccount.publicAccount);
             console.log('VRF: ', vrfAccount.publicAccount);
             console.log('Node Public Key: ', nodePublicKey);
@@ -110,7 +110,7 @@ describe('PersistentHarvesting', () => {
 
     describe('NodeKeyLinkTransaction', () => {
         it('standalone', async () => {
-            const nodePublicKey = helper.bootstrapAddresses.nodes![0].signing!.publicKey;
+            const nodePublicKey = helper.bootstrapAddresses.nodes![0].transport!.publicKey;
 
             const accountInfo = await helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address).toPromise();
 
@@ -142,7 +142,7 @@ describe('PersistentHarvesting', () => {
 
     describe('transactions', () => {
         it('should create delegated harvesting transaction', async () => {
-            const nodePublicKey = helper.bootstrapAddresses.nodes![0].signing!.publicKey;
+            const nodePublicKey = helper.bootstrapAddresses.nodes![0].transport!.publicKey;
             const tx = PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(helper.epochAdjustment),
                 remoteAccount.privateKey,
