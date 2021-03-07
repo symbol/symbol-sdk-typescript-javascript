@@ -29,7 +29,7 @@ import { Deadline } from '../model/transaction/Deadline';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 import { UInt64 } from '../model/UInt64';
-import { IListener } from './IListener';
+import { IListener, OnWsCloseCallback } from './IListener';
 import { MultisigHttp } from './MultisigHttp';
 import { MultisigRepository } from './MultisigRepository';
 import { NamespaceRepository } from './NamespaceRepository';
@@ -109,7 +109,7 @@ export class Listener implements IListener {
      * Open web socket connection.
      * @returns Promise<Void>
      */
-    public open(): Promise<void> {
+    public open(onUnsolicitedCloseCallback?: OnWsCloseCallback): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.webSocket === undefined || this.webSocket.readyState === this.webSocket.CLOSED) {
                 if (this.websocketInjected) {
@@ -127,11 +127,16 @@ export class Listener implements IListener {
                         return;
                     }
                     if (closeEvent) {
-                        reject({
+                        const event = {
                             client: this.uid,
                             code: closeEvent.code,
                             reason: closeEvent.reason,
-                        });
+                        };
+                        if (onUnsolicitedCloseCallback) {
+                            onUnsolicitedCloseCallback(event);
+                        } else {
+                            reject(event);
+                        }
                     }
                 };
                 this.webSocket.onmessage = (msg: any): void => {
