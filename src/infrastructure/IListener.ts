@@ -23,6 +23,8 @@ import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSi
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 
+export type OnWsCloseCallback = (event: { client: string; code: any; reason: any }) => void;
+
 /**
  * Listener service
  */
@@ -35,7 +37,7 @@ export interface IListener {
      * Open web socket connection.
      * @returns Promise<Void>
      */
-    open(): Promise<void>;
+    open(onUnsolicitedCloseCallback?: OnWsCloseCallback): Promise<void>;
 
     /**
      * returns a boolean that repressents the open state
