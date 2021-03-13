@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 13-Mar-2021
+
+**Milestone**: Symbol Mainnet
+ Package  | Version  | Link
+---|---|---
+SDK Core| v1.0.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v0.1.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v0.11.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- Added callback function in websocket listener for client to handle unsolicited websocket close event.
+- Release for Symbol mainnet.
+
 ## [0.23.3] - 5-Mar-2021
 
 **Milestone**: Catapult-server main(0.10.0.8)
