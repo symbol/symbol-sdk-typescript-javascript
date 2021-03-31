@@ -1,6 +1,6 @@
 {
     "name": "symbol-sdk",
-    "version": "0.23.2",
+    "version": "1.0.0",
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
@@ -88,7 +88,7 @@
         "prettier-plugin-organize-imports": "^1.1.1",
         "secure-random": "^1.1.2",
         "shx": "^0.3.2",
-        "symbol-bootstrap": "^0.2.0",
+        "symbol-bootstrap": "^0.4.3",
         "ts-mockito": "^2.6.1",
         "ts-node": "^8.10.2",
         "typedoc": "^0.18.0",

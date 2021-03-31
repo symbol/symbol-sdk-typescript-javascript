@@ -15,7 +15,7 @@
  */
 
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { UnresolvedAddress } from '../model';
@@ -29,7 +29,7 @@ import { Deadline } from '../model/transaction/Deadline';
 import { Transaction } from '../model/transaction/Transaction';
 import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
 import { UInt64 } from '../model/UInt64';
-import { IListener } from './IListener';
+import { IListener, OnWsCloseCallback } from './IListener';
 import { MultisigHttp } from './MultisigHttp';
 import { MultisigRepository } from './MultisigRepository';
 import { NamespaceRepository } from './NamespaceRepository';
@@ -74,6 +74,8 @@ export class Listener implements IListener {
      */
     private uid: string;
 
+    private SIGINT = false;
+
     /**
      * Constructor
      * @param url - Listener websocket server url. default: rest-gateway's url with ''/ws'' suffix. (e.g. http://localhost:3000/ws).
@@ -107,7 +109,7 @@ export class Listener implements IListener {
      * Open web socket connection.
      * @returns Promise<Void>
      */
-    public open(): Promise<void> {
+    public open(onUnsolicitedCloseCallback?: OnWsCloseCallback): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.webSocket === undefined || this.webSocket.readyState === this.webSocket.CLOSED) {
                 if (this.websocketInjected) {
@@ -119,6 +121,23 @@ export class Listener implements IListener {
                 this.webSocket.onopen = (): void => {};
                 this.webSocket.onerror = (err: Error): void => {
                     reject(err);
+                };
+                this.webSocket.onclose = (closeEvent?: any): void => {
+                    if (this.SIGINT) {
+                        return;
+                    }
+                    if (closeEvent) {
+                        const event = {
+                            client: this.uid,
+                            code: closeEvent.code,
+                            reason: closeEvent.reason,
+                        };
+                        if (onUnsolicitedCloseCallback) {
+                            onUnsolicitedCloseCallback(event);
+                        } else {
+                            reject(event);
+                        }
+                    }
                 };
                 this.webSocket.onmessage = (msg: any): void => {
                     const message = JSON.parse(msg.data as string);
@@ -232,6 +251,7 @@ export class Listener implements IListener {
             this.webSocket &&
             (this.webSocket.readyState === this.webSocket.OPEN || this.webSocket.readyState === this.webSocket.CONNECTING)
         ) {
+            this.SIGINT = true;
             this.webSocket.close();
         }
     }
@@ -339,6 +359,11 @@ export class Listener implements IListener {
                 return this.messageSubject.asObservable().pipe(
                     filter((listenerMessage) => listenerMessage.channelName === channel),
                     filter((listenerMessage) => listenerMessage.message instanceof Transaction),
+                    distinctUntilChanged((prev, curr) => {
+                        const currentHash = (curr.message as Transaction).transactionInfo!.hash;
+                        const previousHash = (prev.message as Transaction).transactionInfo!.hash;
+                        return (currentHash && previousHash && previousHash === currentHash) || !currentHash || !previousHash;
+                    }),
                     switchMap((_) => {
                         const transactionObservable = of(_.message as T).pipe(
                             filter((transaction) => this.filterHash(transaction, transactionHash)),
@@ -421,7 +446,8 @@ export class Listener implements IListener {
                     filter((_) => typeof _.message === 'string'),
                     filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
                     map((_) => _.message as string),
-                    filter((_) => !transactionHash || _.toUpperCase() == transactionHash.toUpperCase()),
+                    filter((_) => !transactionHash || _.toUpperCase() === transactionHash.toUpperCase()),
+                    distinctUntilChanged(),
                 );
             }),
         );

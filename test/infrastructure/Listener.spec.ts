@@ -308,7 +308,7 @@ describe('Listener', () => {
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMockAlias);
                 listener.open();
-                subscriptionMethod(listener, alias, hash).subscribe((confirmedTransaction) => {
+                subscriptionMethod(listener, alias).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
@@ -322,7 +322,7 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                        data: { meta: { height: '2', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
                     },
                     null,
                 );
@@ -367,7 +367,7 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
                     },
                     null,
                 );
@@ -408,7 +408,7 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
                     },
                     null,
                 );
@@ -448,7 +448,7 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
                     },
                     null,
                 );
@@ -483,7 +483,7 @@ describe('Listener', () => {
 
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
                 listener.open();
-                subscriptionMethod(listener, subscribedAddress, hash).subscribe((confirmedTransaction) => {
+                subscriptionMethod(listener, subscribedAddress).subscribe((confirmedTransaction) => {
                     reportedTransactions.push(confirmedTransaction);
                 });
 
@@ -497,7 +497,7 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: transferTransactionDTO.meta, transaction: transferTransactionDTO.transaction },
+                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
                     },
                     null,
                 );
@@ -564,25 +564,9 @@ describe('Listener', () => {
                     topic: `${name.toString()}/${subscribedAddress.plain()}`,
                     data: { meta: { height: '1', hash: hash } },
                 };
-
-                const reportedTransactions: string[] = [];
-                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
-                listener.open();
-                subscriptionMethod(listener, subscribedAddress, hash).subscribe((confirmedHash) => {
-                    reportedTransactions.push(confirmedHash);
-                });
-
-                listener.handleMessage(message, null);
-                listener.handleMessage(message, null);
-
-                expect(reportedTransactions.length).to.be.equal(2);
-            });
-
-            it('Using valid no hash', () => {
-                const hash = 'abc';
-                const message = {
+                const message2 = {
                     topic: `${name.toString()}/${subscribedAddress.plain()}`,
-                    data: { meta: { height: '1', hash: hash } },
+                    data: { meta: { height: '1', hash: 'newHash' } },
                 };
 
                 const reportedTransactions: string[] = [];
@@ -593,7 +577,31 @@ describe('Listener', () => {
                 });
 
                 listener.handleMessage(message, null);
+                listener.handleMessage(message2, null);
+
+                expect(reportedTransactions.length).to.be.equal(2);
+            });
+
+            it('Using valid no hash', () => {
+                const hash = 'abc';
+                const message = {
+                    topic: `${name.toString()}/${subscribedAddress.plain()}`,
+                    data: { meta: { height: '1', hash: hash } },
+                };
+                const message2 = {
+                    topic: `${name.toString()}/${subscribedAddress.plain()}`,
+                    data: { meta: { height: '1', hash: 'newHash' } },
+                };
+
+                const reportedTransactions: string[] = [];
+                const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
+                listener.open();
+                subscriptionMethod(listener, subscribedAddress).subscribe((confirmedHash) => {
+                    reportedTransactions.push(confirmedHash);
+                });
+
                 listener.handleMessage(message, null);
+                listener.handleMessage(message2, null);
 
                 expect(reportedTransactions.length).to.be.equal(2);
             });
