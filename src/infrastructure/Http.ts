@@ -15,10 +15,9 @@
  */
 
 import fetch from 'node-fetch';
-import { from as observableFrom, Observable, of as observableOf, of, throwError } from 'rxjs';
-import { catchError, flatMap, map } from 'rxjs/operators';
+import { defer, from as observableFrom, Observable, of as observableOf } from 'rxjs';
 import { Configuration, NodeRoutesApi, Pagination, querystring } from 'symbol-openapi-typescript-fetch-client';
-import { NetworkType } from '../model/network/NetworkType';
+import { NetworkType } from '../model/network';
 import { Page } from './Page';
 import { RepositoryCallError } from './RepositoryCallError';
 
@@ -33,9 +32,9 @@ export abstract class Http {
      */
     protected constructor(protected readonly url: string, protected readonly fetchApi?: any) {}
 
-    public static errorHandling(error: any): Observable<never> {
+    public static async errorHandling(error: any): Promise<Error> {
         if (error instanceof Error) {
-            return throwError(error);
+            return error;
         }
         const statusCode: number = parseInt(error?.status || error?.statusCode || error?.response?.statusCode || 0);
         const statusMessage: string = (
@@ -55,29 +54,23 @@ export abstract class Http {
             return JSON.stringify(body);
         };
 
-        const getBody = (error: any): Observable<string> => {
+        const getBody = async (error: any): Promise<string> => {
             const body = error?.response?.body;
             if (body) {
-                return of(toString(body));
+                return toString(body);
             }
             if (error.text) {
-                return observableFrom(error.text()).pipe(
-                    map(toString),
-                    catchError(() => of('')),
-                );
+                return toString(await error.text());
             }
-            return of('');
+            return '';
         };
-        return getBody(error).pipe(
-            flatMap((body: string) => {
-                const formattedError: RepositoryCallError = {
-                    statusCode,
-                    statusMessage,
-                    body,
-                };
-                return throwError(new Error(JSON.stringify(formattedError)));
-            }),
-        );
+
+        const formattedError: RepositoryCallError = {
+            statusCode,
+            statusMessage,
+            body: await getBody(error),
+        };
+        return new Error(JSON.stringify(formattedError));
     }
 
     createNetworkTypeObservable(networkType?: NetworkType | Observable<NetworkType>): Observable<NetworkType> {
@@ -86,7 +79,7 @@ export abstract class Http {
         } else if (networkType) {
             return observableOf(networkType as NetworkType);
         } else {
-            return this.call(new NodeRoutesApi(this.config()).getNodeInfo(), (body) => body.networkIdentifier);
+            return defer(() => this.call(new NodeRoutesApi(this.config()).getNodeInfo(), (body) => body.networkIdentifier));
         }
     }
 
@@ -102,20 +95,18 @@ export abstract class Http {
      */
     protected call<D, M>(remoteCall: Promise<D>, mapper: (value: D) => M): Observable<M> {
         return observableFrom(
-            remoteCall.catch((e) => {
-                if (e instanceof Error) {
-                    return Promise.resolve(e);
-                }
-                return Promise.reject(e);
-            }),
-        ).pipe(
-            map((body) => {
-                if (body instanceof Error) {
-                    throw body;
-                }
-                return mapper(body);
-            }),
-            catchError(Http.errorHandling),
+            new Promise<M>((resolve, reject) =>
+                remoteCall.then(
+                    async (a) => {
+                        try {
+                            resolve(mapper(a));
+                        } catch (e) {
+                            reject(await Http.errorHandling(e));
+                        }
+                    },
+                    async (e) => reject(await Http.errorHandling(e)),
+                ),
+            ),
         );
     }
 
