@@ -48,7 +48,6 @@ import { NetworkType } from '../../src/model/network';
 import { NodeInfo } from '../../src/model/node';
 
 describe('RepositoryFactory', () => {
-
     it('Should create repositories', () => {
         const repositoryFactory = new RepositoryFactoryHttp('http://localhost:3000', {
             networkType: NetworkType.PRIVATE_TEST,
