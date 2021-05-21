@@ -16,7 +16,7 @@
 import { expect } from 'chai';
 import { of as observableOf, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
+import { NetworkConfigurationDTO, NodeRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, when } from 'ts-mockito';
 import {
     AccountHttp,
@@ -73,13 +73,23 @@ describe('RepositoryFactory', () => {
     });
 
     it('Raise error without unhandled-rejections', async () => {
-        const url = 'https://www.google.com';
+        const nodeRoutesApi: NodeRoutesApi = mock();
+
+        const fetchResponseMock: Partial<Response> = {
+            status: 666,
+            statusText: 'Some status text error',
+            text: () => Promise.resolve('This is the body'),
+        };
+        when(nodeRoutesApi.getNodeHealth()).thenReturn(Promise.reject(fetchResponseMock));
+        const url = 'https://invalid';
         const repositoryFactory = new RepositoryFactoryHttp(url);
         try {
-            await repositoryFactory.createNodeRepository().getNodeHealth().toPromise();
+            const nodeRepository = repositoryFactory.createNodeRepository();
+            (nodeRepository as any).nodeRoutesApi = instance(nodeRoutesApi);
+            await nodeRepository.getNodeHealth().toPromise();
             expect(true).to.be.false;
         } catch (e) {
-            expect(e.message).contains('{"statusCode":404,"statusMessage":"Not Found","body":"<!DOCTYPE html>');
+            expect(e.message).eq('{"statusCode":666,"statusMessage":"Some status text error","body":"This is the body"}');
         }
     });
 
