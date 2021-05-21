@@ -98,9 +98,9 @@ export class RepositoryFactoryHttp implements RepositoryFactory {
             this.generationHash = observableOf(configs.generationHash);
             this.nodePublicKey = observableOf(configs.nodePublicKey);
         } else {
-            const nodeInfoObservable = this.createNodeRepository().getNodeInfo();
-            this.generationHash = this.cache(() => nodeInfoObservable.pipe(map((b) => b.networkGenerationHashSeed)));
-            this.nodePublicKey = this.cache(() => nodeInfoObservable.pipe(map((b) => b.nodePublicKey)));
+            const nodeInfoObservable = this.cache(() => this.createNodeRepository().getNodeInfo());
+            this.generationHash = defer(() => nodeInfoObservable.pipe(map((b) => b.networkGenerationHashSeed)));
+            this.nodePublicKey = defer(() => nodeInfoObservable.pipe(map((b) => b.nodePublicKey)));
         }
         this.websocketUrl = configs?.websocketUrl ? configs?.websocketUrl : `${url.replace(/\/$/, '')}/ws`;
         this.websocketInjected = configs?.websocketInjected;
