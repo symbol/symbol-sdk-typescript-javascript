@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.1] - 24-May-2021
+
+**Milestone**: Symbol Mainnet
+ Package  | Version  | Link
+---|---|---
+SDK Core| v1.0.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v1.0.0 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v1.0.0  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- Fixed missing `utf-8` dependancy issue.
+- Fixed `UnhandledPromiseRejection` issue in http repository.
+
 ## [1.0.0] - 13-Mar-2021
 
 **Milestone**: Symbol Mainnet
