@@ -16,34 +16,36 @@
 import { expect } from 'chai';
 import { of as observableOf, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { NetworkConfigurationDTO } from 'symbol-openapi-typescript-fetch-client';
+import { NetworkConfigurationDTO, NodeRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, when } from 'ts-mockito';
-import { AccountHttp } from '../../src/infrastructure/AccountHttp';
-import { BlockHttp } from '../../src/infrastructure/BlockHttp';
-import { ChainHttp } from '../../src/infrastructure/ChainHttp';
-import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
-import { HashLockHttp } from '../../src/infrastructure/HashLockHttp';
-import { Listener } from '../../src/infrastructure/Listener';
-import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
-import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
-import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
-import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
-import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
-import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
-import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
-import { NodeHttp } from '../../src/infrastructure/NodeHttp';
-import { NodeRepository } from '../../src/infrastructure/NodeRepository';
-import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
-import { RepositoryFactoryHttp } from '../../src/infrastructure/RepositoryFactoryHttp';
-import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
-import { RestrictionMosaicHttp } from '../../src/infrastructure/RestrictionMosaicHttp';
-import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
-import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
-import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
-import { NetworkCurrencies } from '../../src/model/mosaic/NetworkCurrencies';
-import { NetworkType } from '../../src/model/network/NetworkType';
-import { NodeInfo } from '../../src/model/node/NodeInfo';
+import {
+    AccountHttp,
+    BlockHttp,
+    ChainHttp,
+    FinalizationHttp,
+    HashLockHttp,
+    Listener,
+    MetadataHttp,
+    MosaicHttp,
+    MultisigHttp,
+    NamespaceHttp,
+    NamespaceRepository,
+    NetworkHttp,
+    NetworkRepository,
+    NodeHttp,
+    NodeRepository,
+    ReceiptHttp,
+    RepositoryFactoryHttp,
+    RestrictionAccountHttp,
+    RestrictionMosaicHttp,
+    SecretLockHttp,
+    TransactionGroup,
+    TransactionHttp,
+    TransactionStatusHttp,
+} from '../../src/infrastructure';
+import { NetworkCurrencies } from '../../src/model/mosaic';
+import { NetworkType } from '../../src/model/network';
+import { NodeInfo } from '../../src/model/node';
 
 describe('RepositoryFactory', () => {
     it('Should create repositories', () => {
@@ -68,6 +70,27 @@ describe('RepositoryFactory', () => {
         expect(repositoryFactory.createHashLockRepository()).to.be.not.null;
         expect(repositoryFactory.createSecretLockRepository()).to.be.not.null;
         expect(repositoryFactory.createFinalizationRepository()).to.be.not.null;
+    });
+
+    it('Raise error without unhandled-rejections', async () => {
+        const nodeRoutesApi: NodeRoutesApi = mock();
+
+        const fetchResponseMock: Partial<Response> = {
+            status: 666,
+            statusText: 'Some status text error',
+            text: () => Promise.resolve('This is the body'),
+        };
+        when(nodeRoutesApi.getNodeHealth()).thenReturn(Promise.reject(fetchResponseMock));
+        const url = 'https://invalid';
+        const repositoryFactory = new RepositoryFactoryHttp(url);
+        try {
+            const nodeRepository = repositoryFactory.createNodeRepository();
+            (nodeRepository as any).nodeRoutesApi = instance(nodeRoutesApi);
+            await nodeRepository.getNodeHealth().toPromise();
+            expect(true).to.be.false;
+        } catch (e) {
+            expect(e.message).eq('{"statusCode":666,"statusMessage":"Some status text error","body":"This is the body"}');
+        }
     });
 
     it('Should get GenerationHash from cache', (done) => {

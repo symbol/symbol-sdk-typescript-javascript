@@ -5,11 +5,11 @@
     "scripts": {
         "pretest": "npm run build",
         "prepack": "npm run build",
-        "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
+        "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000 --unhandled-rejections=strict ",
         "e2econfigcopy": "gulp",
-        "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
+        "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000 --unhandled-rejections=strict",
         "e2e": "npm run bootstrap-stop && npm run bootstrap-start-detached && npm run test:e2e && npm run bootstrap-stop",
-        "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
+        "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000 --unhandled-rejections=strict",
         "build": "shx rm -rf dist/ && tsc && npm run e2econfigcopy",
         "test:cov": "nyc --reporter=lcov --reporter=text-summary npm t",
         "test:coveralls": "npm run test:cov | coveralls",
@@ -91,10 +91,9 @@
         "symbol-bootstrap": "^0.4.3",
         "ts-mockito": "^2.6.1",
         "ts-node": "^8.10.2",
-        "typedoc": "^0.18.0",
+        "typedoc": "^0.20.36",
         "typescript": "^3.9.7",
-        "typescript-require": "^0.2.10",
-        "utf8": "^2.1.2"
+        "typescript-require": "^0.2.10"
     },
     "dependencies": {
         "@js-joda/core": "^3.2.0",
@@ -115,6 +114,7 @@
         "rxjs-compat": "^6.6.3",
         "symbol-openapi-typescript-fetch-client": "0.11.2",
         "tweetnacl": "^1.0.3",
+        "utf8": "^2.1.2",
         "ws": "^7.3.1"
     },
     "nyc": {
