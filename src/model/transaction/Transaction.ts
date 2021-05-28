@@ -214,12 +214,12 @@ export abstract class Transaction {
     public signWith(account: Account, generationHash: string): SignedTransaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
         const byteBuffer = Array.from(this.generateBytes());
-        // 1. prepare the raw tx to be signed
+        // 1. prepare the raw transaction to be signed
         const signingBytes = this.getSigningBytes(byteBuffer, generationHashBytes);
-        // 2. sign the raw tx
-        const signature = Transaction.signRawTx(account.privateKey, signingBytes);
+        // 2. sign the raw transaction
+        const signature = Transaction.signRawTransaction(account.privateKey, Uint8Array.from(signingBytes));
         // 3. prepare the (signed) payload
-        const payload = Transaction.preparePayload(byteBuffer, signature, account.publicKey);
+        const payload = Transaction.preparePayload(Uint8Array.from(byteBuffer), signature, account.publicKey);
         return new SignedTransaction(
             payload,
             Transaction.createTransactionHash(payload, generationHashBytes),
@@ -232,25 +232,27 @@ export abstract class Transaction {
     /**
      * Signs raw transaction with the given private key
      * @param {string} privateKey - Private key of the signer account
-     * @param {number[]} rawTxSigningBytes - Raw transaction siging bytes
-     * @returns {number[]} Signature byte array
+     * @param {Uint8Array} rawTransactionSigningBytes - Raw transaction siging bytes
+     * @returns {Uint8Array} Signature byte array
      */
-    public static signRawTx(privateKey: string, rawTxSigningBytes: number[]): number[] {
+    public static signRawTransaction(privateKey: string, rawTransactionSigningBytes: Uint8Array): Uint8Array {
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
-        return Array.from(KeyPair.sign(keyPairEncoded, new Uint8Array(rawTxSigningBytes)));
+        return KeyPair.sign(keyPairEncoded, new Uint8Array(rawTransactionSigningBytes));
     }
 
     /**
      * Prepares and return signed payload
-     * @param transactionBytes Serialized transaction
-     * @param signature Signature of the transction
-     * @param publicKey Public key of the signing account
+     * @param {Uint8Array} serializedTransaction Serialized transaction
+     * @param {Uint8Array} signature Signature of the transaction
+     * @param {string} publicKey Public key of the signing account
      * @returns {string} Payload (ready to be announced)
      */
-    public static preparePayload(transactionBytes: number[], signature: number[], publicKey: string): string {
+    public static preparePayload(serializedTransaction: Uint8Array, signature: Uint8Array, publicKey: string): string {
+        const transactionBytes = Array.from(serializedTransaction);
+        const signatureBytes = Array.from(signature);
         const signedTransactionBuffer = transactionBytes
             .splice(0, 8)
-            .concat(signature)
+            .concat(signatureBytes)
             .concat(Array.from(Convert.hexToUint8(publicKey)))
             .concat(Array.from(new Uint8Array(4)))
             .concat(transactionBytes.splice(64 + 32 + 4, transactionBytes.length));
