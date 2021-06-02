@@ -27,10 +27,10 @@ export class NodeTime {
         /**
          * The request send timestamp
          */
-        public readonly sendTimeStamp?: UInt64,
+        public readonly sendTimeStamp: UInt64,
         /**
          * The request received timestamp
          */
-        public readonly receiveTimeStamp?: UInt64,
+        public readonly receiveTimeStamp: UInt64,
     ) {}
 }

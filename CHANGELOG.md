@@ -13,7 +13,7 @@ SDK Core| v1.0.1 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
 Catbuffer | v1.0.0 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
 Client Library | v1.0.0  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
-- Fixed missing `utf-8` dependancy issue.
+- Fixed missing `utf-8` dependency issue.
 - Fixed `UnhandledPromiseRejection` issue in http repository.
 
 ## [1.0.0] - 13-Mar-2021
