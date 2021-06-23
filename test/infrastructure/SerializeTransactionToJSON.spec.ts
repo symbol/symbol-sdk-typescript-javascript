@@ -324,7 +324,7 @@ describe('SerializeTransactionToJSON', () => {
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(epochAdjustment),
+            deadline,
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.PRIVATE_TEST,
             [],
