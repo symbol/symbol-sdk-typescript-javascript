@@ -33,7 +33,7 @@ export class Deployment {
          */
         public readonly deploymentToolVersion: string,
         /**
-         * lastUpdatedDate When was the node upgraded.
+         * lastUpdatedDate When was the node last upgraded.
          */
         public readonly lastUpdatedDate: string,
     ) {}
