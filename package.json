@@ -1,6 +1,6 @@
 {
     "name": "symbol-sdk",
-    "version": "0.23.4",
+    "version": "1.0.0",
     "description": "Reactive symbol sdk for typescript and javascript",
     "scripts": {
         "pretest": "npm run build",
@@ -111,7 +111,7 @@
         "minimist": "^1.2.5",
         "node-fetch": "^2.6.0",
         "ripemd160": "^2.0.2",
-        "rxjs": "^6.6.3",
+        "rxjs": "^6.6.7",
         "rxjs-compat": "^6.6.3",
         "symbol-openapi-typescript-fetch-client": "0.11.2",
         "tweetnacl": "^1.0.3",
@@ -123,5 +123,26 @@
             "**/*.spec.js",
             "gulpfile.js"
         ]
-    }
+    },
+    "bundledDependencies": [
+        "@js-joda/core",
+        "bluebird",
+        "catbuffer-typescript",
+        "crypto-js",
+        "diff",
+        "futoin-hkdf",
+        "js-sha256",
+        "js-sha3",
+        "js-sha512",
+        "long",
+        "merkletreejs",
+        "minimist",
+        "node-fetch",
+        "ripemd160",
+        "rxjs",
+        "rxjs-compat",
+        "symbol-openapi-typescript-fetch-client",
+        "tweetnacl",
+        "ws"
+    ]
 }
