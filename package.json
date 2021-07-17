@@ -123,26 +123,5 @@
             "**/*.spec.js",
             "gulpfile.js"
         ]
-    },
-    "bundledDependencies": [
-        "@js-joda/core",
-        "bluebird",
-        "catbuffer-typescript",
-        "crypto-js",
-        "diff",
-        "futoin-hkdf",
-        "js-sha256",
-        "js-sha3",
-        "js-sha512",
-        "long",
-        "merkletreejs",
-        "minimist",
-        "node-fetch",
-        "ripemd160",
-        "rxjs",
-        "rxjs-compat",
-        "symbol-openapi-typescript-fetch-client",
-        "tweetnacl",
-        "ws"
-    ]
+    }
 }
