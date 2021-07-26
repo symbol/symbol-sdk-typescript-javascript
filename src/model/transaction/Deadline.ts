@@ -16,7 +16,8 @@
 
 import { ChronoUnit, Duration, Instant, LocalDateTime, ZoneId } from '@js-joda/core';
 import { UInt64 } from '../UInt64';
-
+export const defaultChronoUnit = ChronoUnit.HOURS;
+export const defaultDeadline = 2;
 /**
  * The deadline of the transaction. The deadline is given as the number of seconds elapsed since the creation of the nemesis block.
  * If a transaction does not get included in a block before the deadline is reached, it is deleted.
@@ -34,23 +35,34 @@ export class Deadline {
      * @param {ChronoUnit} chronoUnit the crhono unit. e.g ChronoUnit.HOURS
      * @returns {Deadline}
      */
-    public static create(epochAdjustment: number, deadline = 2, chronoUnit: ChronoUnit = ChronoUnit.HOURS): Deadline {
+    public static create(epochAdjustment: number, deadline = defaultDeadline, chronoUnit: ChronoUnit = defaultChronoUnit): Deadline {
         const deadlineDateTime = Instant.now().plus(deadline, chronoUnit);
 
         if (deadline <= 0) {
             throw new Error('deadline should be greater than 0');
         }
-        return new Deadline(deadlineDateTime.minusSeconds(Duration.ofSeconds(epochAdjustment).seconds()).toEpochMilli());
+        return Deadline.createFromAdjustedValue(deadlineDateTime.minusSeconds(epochAdjustment).toEpochMilli());
     }
 
     /**
-     * @internal
+     *
      * Create an empty Deadline object using min local datetime.
-     * This is method is an internal method to cope with undefined deadline for embedded transactions
+     * It can be used used for embedded or nemesis transactions
+     *
      * @returns {Deadline}
      */
     public static createEmtpy(): Deadline {
-        return new Deadline(0);
+        return Deadline.createFromAdjustedValue(0);
+    }
+
+    /**
+     *
+     * Create a Deadline where the adjusted values was externally calculated.
+     *
+     * @returns {Deadline}
+     */
+    public static createFromAdjustedValue(adjustedValue: number): Deadline {
+        return new Deadline(adjustedValue);
     }
 
     /**
