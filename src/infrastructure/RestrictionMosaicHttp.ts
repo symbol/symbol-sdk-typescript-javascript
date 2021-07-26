@@ -24,7 +24,6 @@ import {
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils';
 import { MerkleStateInfo, UInt64 } from '../model';
-import { Address } from '../model/account';
 import { MosaicId } from '../model/mosaic';
 import {
     MosaicAddressRestriction,
@@ -100,7 +99,7 @@ export class RestrictionMosaicHttp extends Http implements RestrictionMosaicRepo
                 dto.mosaicRestrictionEntry.compositeHash,
                 dto.mosaicRestrictionEntry.entryType.valueOf(),
                 new MosaicId(dto.mosaicRestrictionEntry.mosaicId),
-                Address.createFromEncoded(addressRestrictionDto.mosaicRestrictionEntry.targetAddress),
+                DtoMapping.toAddress(addressRestrictionDto.mosaicRestrictionEntry.targetAddress),
                 addressRestrictionDto.mosaicRestrictionEntry.restrictions.map(RestrictionMosaicHttp.toMosaicAddressRestrictionItem),
             );
         }

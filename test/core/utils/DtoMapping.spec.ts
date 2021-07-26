@@ -23,6 +23,7 @@ import {
     MerkleTreeLeafDTO,
 } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../../../src/core/utils/DtoMapping';
+import { Address } from '../../../src/model/account';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -110,6 +111,35 @@ describe('DtoMapping', () => {
         expect(DtoMapping.toSimpleHex("0x017D'1694'0477'B3F5")).to.be.equal('017D16940477B3F5');
         expect(DtoMapping.toSimpleHex('017D16940477B3F5')).to.be.equal('017D16940477B3F5');
         expect(DtoMapping.toSimpleHex("0x29C6'42F2'F432'8612")).to.be.equal('29C642F2F4328612');
+    });
+
+    it('toAddress', () => {
+        expect(DtoMapping.toAddress('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain()).to.be.equal(
+            'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
+        );
+
+        expect(DtoMapping.toAddress('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').encoded()).to.be.equal(
+            '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
+        );
+        expect(DtoMapping.toAddress('TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA').plain()).to.be.equal(
+            'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA',
+        );
+
+        expect(DtoMapping.toAddress('TDR6-EW2-WBHJQDYMNGFX-2UBZHMMZC5PG-L2YBO3KA').plain()).to.be.equal(
+            'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA',
+        );
+        // This method should raise! It does not validate the chechsum!
+        expect(Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000').plain()).to.be.equal(
+            'SF7H4KNACAKMF4YAAAAAAAAAAAAAAAAAAAAAAAA',
+        );
+        // This method should raise! It does not validate the chechsum!
+        expect(Address.createFromRawAddress('SF7H4KNACAKMF4YAAAAAAAAAAAAAAAAAAAAAAAA').plain()).to.be.equal(
+            'SF7H4KNACAKMF4YAAAAAAAAAAAAAAAAAAAAAAAA',
+        );
+        expect(Address.isValidEncodedAddress('917E7E29A01014C2F3000000000000000000000000000000')).to.be.equal(false);
+        expect(() => DtoMapping.toAddress('917E7E29A01014C2F3000000000000000000000000000000')).to.throw;
+        expect(() => DtoMapping.toAddress('XDR6-EW2-WBHJQDYMNGFX-2UBZHMMZC5PG-L2YBO3KA')).to.throw;
+        expect(() => DtoMapping.toAddress('917E7E29A01014C2F3000000000000000000000000000')).to.throw;
     });
 
     it('parse merkle tree', () => {

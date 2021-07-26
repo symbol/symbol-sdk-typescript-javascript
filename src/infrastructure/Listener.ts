@@ -19,7 +19,7 @@ import { catchError, distinctUntilChanged, filter, map, mergeMap, share, switchM
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { parseObjectProperties } from '../core/format/Utilities';
-import { MultisigChildrenTreeObject, MultisigGraphUtils } from '../core/utils';
+import { DtoMapping, MultisigChildrenTreeObject, MultisigGraphUtils } from '../core/utils';
 import { MultisigAccountInfo, UnresolvedAddress } from '../model';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
@@ -36,6 +36,7 @@ import { MultisigHttp } from './MultisigHttp';
 import { MultisigRepository } from './MultisigRepository';
 import { NamespaceRepository } from './NamespaceRepository';
 import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
+
 export enum ListenerChannelName {
     block = 'block',
     confirmedAdded = 'confirmedAdded',
@@ -579,7 +580,7 @@ export class Listener implements IListener {
             dto.block.proofGamma,
             dto.block.proofScalar,
             dto.block.proofVerificationHash,
-            dto.block.beneficiaryAddress ? Address.createFromEncoded(dto.block.beneficiaryAddress) : undefined,
+            dto.block.beneficiaryAddress ? DtoMapping.toAddress(dto.block.beneficiaryAddress) : undefined,
         );
     }
 

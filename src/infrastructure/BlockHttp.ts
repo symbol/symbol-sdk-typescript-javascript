@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs';
 import { BlockInfoDTO, BlockRoutesApi, ImportanceBlockDTO } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
-import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { BlockType } from '../model/blockchain/BlockType';
@@ -121,7 +120,7 @@ export class BlockHttp extends Http implements BlockRepository {
             dto.block.proofGamma,
             dto.block.proofScalar,
             dto.block.proofVerificationHash,
-            Address.createFromEncoded(dto.block.beneficiaryAddress),
+            DtoMapping.toAddress(dto.block.beneficiaryAddress),
             dto.meta.transactionsCount,
             dto.meta.statementsCount,
         );

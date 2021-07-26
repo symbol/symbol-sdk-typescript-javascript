@@ -15,6 +15,7 @@
  */
 
 import { ResolutionStatementInfoDTO, TransactionStatementInfoDTO } from 'symbol-openapi-typescript-fetch-client';
+import { DtoMapping } from '../../core/utils';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../../model/account/Address';
 import { UnresolvedAddress } from '../../model/account/UnresolvedAddress';
@@ -85,7 +86,7 @@ export const createAddressResolutionStatement = (statementInfoDTO: ResolutionSta
         extractUnresolvedAddress(statementDTO.unresolved),
         statementDTO.resolutionEntries.map((entry) => {
             return new ResolutionEntry(
-                Address.createFromEncoded(entry.resolved),
+                DtoMapping.toAddress(entry.resolved),
                 new ReceiptSource(entry.source.primaryId, entry.source.secondaryId),
             );
         }),
@@ -100,7 +101,7 @@ export const createAddressResolutionStatement = (statementInfoDTO: ResolutionSta
  */
 const createBalanceChangeReceipt = (receiptDTO): Receipt => {
     return new BalanceChangeReceipt(
-        Address.createFromEncoded(receiptDTO.targetAddress),
+        DtoMapping.toAddress(receiptDTO.targetAddress),
         new MosaicId(receiptDTO.mosaicId),
         UInt64.fromNumericString(receiptDTO.amount),
         receiptDTO.version,
@@ -116,8 +117,8 @@ const createBalanceChangeReceipt = (receiptDTO): Receipt => {
  */
 const createBalanceTransferReceipt = (receiptDTO): Receipt => {
     return new BalanceTransferReceipt(
-        Address.createFromEncoded(receiptDTO.senderAddress),
-        Address.createFromEncoded(receiptDTO.recipientAddress),
+        DtoMapping.toAddress(receiptDTO.senderAddress),
+        DtoMapping.toAddress(receiptDTO.recipientAddress),
         new MosaicId(receiptDTO.mosaicId),
         UInt64.fromNumericString(receiptDTO.amount),
         receiptDTO.version,

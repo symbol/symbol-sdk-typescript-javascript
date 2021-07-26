@@ -21,6 +21,7 @@ import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NetworkType } from '../../model/network/NetworkType';
 import { Convert } from '../format/Convert';
 import { RawAddress } from '../format/RawAddress';
+import { DtoMapping } from './DtoMapping';
 
 /**
  * @internal
@@ -48,26 +49,40 @@ export class UnresolvedMapping {
     }
 
     /**
-     * Map unresolved address string to Address or NamespaceId
-     * @param {string} address The unresolved address in hex
+     * Map unresolved address string to Address or NamespaceId.
+     *
+     * Input examples:
+     *  - 6826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536 Hex address (old rest)
+     *  - NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ Base32 address (new reset)
+     *  - 99C2860B73398FD8D3000000000000000000000000000000 Hex namespace id (old rest)
+     *  - THBIMC3THGH5RUYAAAAAAAAAAAAAAAAAAAAAAAA Base32 namespace id (new rest)
+     *
+     * @param {string} unresolvedAddressString The unresolved address in hex (old rest) or base32 address (new rest)
      * @returns {UnresolvedAddress}
      */
-    public static toUnresolvedAddress(address: string): UnresolvedAddress {
-        if (!Convert.isHexString(address)) {
-            throw new Error('Input string is not in valid hexadecimal notation.');
-        }
-        // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
-        // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
-        const bit0 = Convert.hexToUint8(address.substr(1, 2))[0];
-        if ((bit0 & 16) === 16) {
-            // namespaceId encoded hexadecimal notation provided
-            // only 8 bytes are relevant to resolve the NamespaceId
-            const relevantPart = address.substr(2, 16);
-            return NamespaceId.createFromEncoded(Convert.uint8ToHex(Convert.hexToUint8Reverse(relevantPart)));
-        }
+    public static toUnresolvedAddress(unresolvedAddressString: string): UnresolvedAddress {
+        const fromHexToUnresolvedAddress = (unresolvedAddressStringHex: string) => {
+            // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
+            // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+            const bit0 = Convert.hexToUint8(unresolvedAddressStringHex.substr(1, 2))[0];
+            if ((bit0 & 16) === 16) {
+                // namespaceId encoded hexadecimal notation provided
+                // only 8 bytes are relevant to resolve the NamespaceId
+                const relevantPart = unresolvedAddressStringHex.substr(2, 16);
+                return NamespaceId.createFromEncoded(Convert.uint8ToHex(Convert.hexToUint8Reverse(relevantPart)));
+            }
 
-        // read address from encoded hexadecimal notation
-        return Address.createFromEncoded(address);
+            // read address from encoded hexadecimal notation
+            return Address.createFromEncoded(unresolvedAddressStringHex);
+        };
+
+        if (Convert.isHexString(unresolvedAddressString, 48)) {
+            // Old Rest
+            return fromHexToUnresolvedAddress(unresolvedAddressString);
+        } else {
+            // New rest
+            return fromHexToUnresolvedAddress(DtoMapping.toAddress(unresolvedAddressString).encoded());
+        }
     }
 
     /**

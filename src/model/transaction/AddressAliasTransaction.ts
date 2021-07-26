@@ -23,6 +23,7 @@ import {
     TransactionBuilder,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
+import { DtoMapping } from '../../core/utils';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { AliasAction } from '../namespace/AliasAction';
@@ -131,7 +132,7 @@ export class AddressAliasTransaction extends Transaction {
                 : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
             builder.getAliasAction().valueOf(),
             new NamespaceId(builder.getNamespaceId().namespaceId),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getAddress().address)),
+            DtoMapping.toAddress(Convert.uint8ToHex(builder.getAddress().address)),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
             signature,

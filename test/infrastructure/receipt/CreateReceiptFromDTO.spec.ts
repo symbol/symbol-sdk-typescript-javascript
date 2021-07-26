@@ -163,7 +163,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                                     primaryId: 4,
                                     secondaryId: 0,
                                 },
-                                resolved: '917E7E29A01014C2F3000000000000000000000000000000',
+                                resolved: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                             },
                         ],
                     },
@@ -179,7 +179,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                                     primaryId: 2,
                                     secondaryId: 0,
                                 },
-                                resolved: '9103B60AAF27626883000000000000000000000000000000',
+                                resolved: 'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
                             },
                         ],
                     },
@@ -275,7 +275,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         deepEqual(unresolvedAddress.toHex(), '83686227AF0AB603');
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain()).to.be.equal(
-            Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000').plain(),
+            'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
         );
 
         deepEqual(statement.mosaicResolutionStatements[0].height, UInt64.fromNumericString('1506'));
@@ -299,7 +299,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                                     primaryId: 4,
                                     secondaryId: 0,
                                 },
-                                resolved: '917E7E29A01014C2F3000000000000000000000000000000',
+                                resolved: account.address.encoded(),
                             },
                         ],
                     },
@@ -321,7 +321,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                             primaryId: 4,
                             secondaryId: 0,
                         },
-                        resolved: '917E7E29A01014C2F3000000000000000000000000000000',
+                        resolved: account.address.encoded(),
                     },
                 ],
             },
