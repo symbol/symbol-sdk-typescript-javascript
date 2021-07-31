@@ -84,7 +84,7 @@ export class MosaicGlobalRestriction {
                 .sort((a, b) => a.key.compare(b.key))
                 .map((item) => {
                     const key: MosaicRestrictionKeyDto = new MosaicRestrictionKeyDto(item.key.toDTO());
-                    const value: number[] = item.restrictionValue.toDTO();
+                    const value = item.restrictionValue.toDTO();
                     const restrictionRule = new RestrictionRuleBuilder(
                         item.referenceMosaicId.toBuilder(),
                         value,

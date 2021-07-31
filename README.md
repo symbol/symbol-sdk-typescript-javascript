@@ -61,3 +61,6 @@ Licensed under the [Apache License 2.0](LICENSE)
 [sdk-ref]: https://nemtech.github.io/references/typescript-sdk.html
 [guidelines]: https://nemtech.github.io/contribute/contributing.html#sdk
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
+
+
+//        "catbuffer-typescript": "file://~/develop/workspace-nem/catbuffer-generators/build/typescript/catbuffer-typescript",

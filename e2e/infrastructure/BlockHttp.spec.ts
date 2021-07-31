@@ -85,10 +85,8 @@ describe('BlockHttp', () => {
     describe('getBlockByHeight', () => {
         it('should return block info given height', async () => {
             const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
-            expect(blockInfo.height.lower).to.be.equal(1);
-            expect(blockInfo.height.higher).to.be.equal(0);
-            expect(blockInfo.timestamp.lower).to.be.equal(0);
-            expect(blockInfo.timestamp.higher).to.be.equal(0);
+            expect(blockInfo.height.value).to.be.equal(BigInt(1));
+            expect(blockInfo.timestamp.value).to.be.equal(BigInt(0));
             expect(blockInfo.beneficiaryAddress).not.to.be.undefined;
             expect(blockInfo.statementsCount).not.to.be.undefined;
         });

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { NamespaceIdDto } from 'catbuffer-typescript';
-import { Convert as convert, Convert, RawAddress } from '../../core/format';
-import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import { Id } from '../Id';
-import { NetworkType } from '../network/NetworkType';
+import { Convert, RawAddress } from '../../core/format';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction';
+import { NetworkType } from '../network';
+import { UInt64 } from '../UInt64';
 
 /**
  * The namespace id structure describes namespace id
@@ -28,7 +28,7 @@ export class NamespaceId {
     /**
      * Namespace id
      */
-    public readonly id: Id;
+    public readonly id: UInt64;
 
     /**
      * Namespace full name
@@ -41,12 +41,12 @@ export class NamespaceId {
      *
      * @param id
      */
-    constructor(id: string | number[]) {
-        if (id instanceof Array) {
-            this.id = new Id(id);
+    constructor(id: string | bigint | number | number[]) {
+        if (typeof id === 'bigint' || typeof id === 'number' || id instanceof Array) {
+            this.id = new UInt64(id);
         } else if (typeof id === 'string') {
             this.fullName = id;
-            this.id = new Id(NamespaceMosaicIdGenerator.namespaceId(id));
+            this.id = new UInt64(NamespaceMosaicIdGenerator.namespaceId(id));
         }
     }
 
@@ -55,11 +55,10 @@ export class NamespaceId {
      * @param encoded
      * @returns {NamespaceId}
      */
-    public static createFromEncoded(encoded: string): NamespaceId {
-        const uint = convert.hexToUint8(encoded);
-        const hex = convert.uint8ToHex(uint);
-        const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
-        return namespace;
+    public static createFromEncoded(hex: string): NamespaceId {
+        const higher = parseInt(hex.substr(0, 8), 16);
+        const lower = parseInt(hex.substr(8, 8), 16);
+        return new NamespaceId(UInt64.toBigInt([lower, higher]));
     }
 
     /**
@@ -77,7 +76,7 @@ export class NamespaceId {
      */
     public equals(id: any): boolean {
         if (id instanceof NamespaceId) {
-            return this.id.equals(id.id);
+            return this.id.value == id.id.value;
         }
         return false;
     }

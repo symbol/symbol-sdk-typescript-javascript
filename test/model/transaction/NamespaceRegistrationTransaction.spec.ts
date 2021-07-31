@@ -50,7 +50,7 @@ describe('NamespaceRegistrationTransaction', () => {
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);

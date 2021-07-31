@@ -30,7 +30,7 @@ export class NamespaceMosaicIdGenerator {
     /**
      * @returns random mosaic nonce
      */
-    public static generateRandomMosaicNonce = (): any => {
+    public static generateRandomMosaicNonce = (): Buffer => {
         return Crypto.randomBytes(4);
     };
 
@@ -38,16 +38,16 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static namespaceId = (namespaceName: string): any => {
+    public static namespaceId = (namespaceName: string): number[] => {
         const path = IdGenerator.generateNamespacePath(namespaceName);
-        return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
+        return path[path.length - 1];
     };
     /**
      * @param {string} parentNamespaceName - The parent namespace name
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace parent id
      */
-    public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string): any => {
+    public static subnamespaceParentId = (parentNamespaceName: string, namespaceName: string): number[] => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
     };
@@ -57,7 +57,7 @@ export class NamespaceMosaicIdGenerator {
      * @param {string} namespaceName - The namespace name
      * @returns sub namespace id
      */
-    public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string): any => {
+    public static subnamespaceNamespaceId = (parentNamespaceName: string, namespaceName: string): number[] => {
         const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
         return path[path.length - 1];
     };

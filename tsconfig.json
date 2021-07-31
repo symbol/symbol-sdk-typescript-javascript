@@ -14,7 +14,7 @@
     "allowJs": false,
     "skipLibCheck": true,
     "lib": [
-      "es2017",
+      "es2020",
       "dom"
     ],
     "typeRoots": [

@@ -68,7 +68,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         divisibility: number,
         duration: UInt64,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): MosaicDefinitionTransaction {
@@ -160,7 +160,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             builder.getDivisibility(),
             new UInt64(builder.getDuration().blockDuration),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

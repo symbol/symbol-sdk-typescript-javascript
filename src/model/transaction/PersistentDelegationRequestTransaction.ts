@@ -42,7 +42,7 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
         vrfPrivateKey: string,
         nodePublicKey: string,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): PersistentDelegationRequestTransaction {

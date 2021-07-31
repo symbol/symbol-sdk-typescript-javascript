@@ -203,7 +203,7 @@ export class AccountInfo {
         /** Number of times account has been used as a beneficiary. */
         const beneficiaryCount: number = b.beneficiaryCount;
         /** Raw importance score. */
-        const rawScore: number[] = b.rawScore.toDTO();
+        const rawScore = b.rawScore.toDTO();
         return new HeightActivityBucketBuilder(startHeight, totalFeesPaid, beneficiaryCount, rawScore);
     }
 }

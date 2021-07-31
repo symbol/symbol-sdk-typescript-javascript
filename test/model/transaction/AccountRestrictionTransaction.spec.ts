@@ -50,8 +50,7 @@ describe('AccountRestrictionTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(AccountRestrictionModificationAction.Add, mosaicId);
         expect(mosaicRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
-        expect(mosaicRestrictionFilter.value[0]).to.be.equal(mosaicId.id.lower);
-        expect(mosaicRestrictionFilter.value[1]).to.be.equal(mosaicId.id.higher);
+        expect(mosaicRestrictionFilter.value).to.be.equal(mosaicId.id.value);
     });
 
     it('should create operation restriction filter', () => {
@@ -137,7 +136,7 @@ describe('AccountRestrictionTransaction', () => {
             [address],
             [],
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(addressRestrictionTransaction.maxFee.higher).to.be.equal(0);

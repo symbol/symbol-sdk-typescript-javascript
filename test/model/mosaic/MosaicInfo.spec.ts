@@ -33,8 +33,8 @@ describe('MosaicInfo', () => {
         mosaic: {
             version: 1,
             id: new MosaicId([3646934825, 3576016193]),
-            supply: new UInt64([3403414400, 2095475]),
-            startHeight: new UInt64([1, 0]),
+            supply: UInt64.fromNumberArray([3403414400, 2095475]),
+            startHeight: new UInt64(1),
             ownerAddress: Address.createFromPublicKey(
                 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.PRIVATE_TEST,
@@ -100,7 +100,7 @@ describe('MosaicInfo', () => {
         deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
-        deepEqual(mosaicInfo.duration.toDTO(), [0, 0]);
+        expect(mosaicInfo.duration.toDTO()).eq(BigInt(0));
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(

@@ -61,7 +61,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         restrictionAdditions: UnresolvedMosaicId[],
         restrictionDeletions: UnresolvedMosaicId[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountMosaicRestrictionTransaction {
@@ -130,7 +130,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedMosaic(new UInt64(deletion.unresolvedMosaicId).toHex());
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountMosaicRestrictionTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as AccountMosaicRestrictionTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

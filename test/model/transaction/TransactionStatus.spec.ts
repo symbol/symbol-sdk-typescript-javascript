@@ -27,7 +27,7 @@ describe('TransactionStatus', () => {
             deadline: Deadline.createFromDTO('1'),
             group: TransactionGroupEnum.Confirmed,
             hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
-            height: new UInt64([1, 0]),
+            height: new UInt64(1),
             code: TransactionStatusEnum.Success,
         };
 

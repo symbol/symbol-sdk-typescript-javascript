@@ -22,7 +22,7 @@ import { UInt64 } from '../../../src/model/UInt64';
 describe('Mosaic', () => {
     it('should createComplete an Mosaic object', () => {
         const mosaicDTO = {
-            amount: new UInt64([1, 0]),
+            amount: new UInt64(1),
             mosaicId: new MosaicId([3646934825, 3576016193]),
         };
 

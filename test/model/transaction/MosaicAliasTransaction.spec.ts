@@ -58,7 +58,7 @@ describe('MosaicAliasTransaction', () => {
             namespaceId,
             mosaicId,
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);

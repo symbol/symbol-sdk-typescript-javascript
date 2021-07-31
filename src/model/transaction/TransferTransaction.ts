@@ -26,7 +26,6 @@ import {
     UnresolvedMosaicBuilder,
     UnresolvedMosaicIdDto,
 } from 'catbuffer-typescript';
-import * as Long from 'long';
 import { Convert } from '../../core/format';
 import { DtoMapping, UnresolvedMapping } from '../../core/utils';
 import { Address, PublicAccount, UnresolvedAddress } from '../account';
@@ -68,7 +67,7 @@ export class TransferTransaction extends Transaction {
         mosaics: Mosaic[],
         message: Message,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): TransferTransaction {
@@ -144,7 +143,7 @@ export class TransferTransaction extends Transaction {
             }),
             MessageFactory.createMessageFromBuffer(builder.getMessage()),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
@@ -187,9 +186,7 @@ export class TransferTransaction extends Transaction {
      */
     public sortMosaics(): Mosaic[] {
         return this.mosaics.sort((a, b) => {
-            const long_a = Long.fromBits(a.id.id.lower, a.id.id.higher, true);
-            const long_b = Long.fromBits(b.id.id.lower, b.id.id.higher, true);
-            return long_a.compare(long_b);
+            return a.id.id.compare(b.id.id);
         });
     }
 

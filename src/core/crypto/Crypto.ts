@@ -15,6 +15,7 @@
  */
 
 import * as crypto from 'crypto';
+import { CipherCCM, DecipherCCM } from 'crypto';
 import * as CryptoJS from 'crypto-js';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
@@ -96,7 +97,7 @@ export class Crypto {
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv);
         const encKey = Buffer.from(utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, convert.hexToUint8(recipientPub)), 32);
         const encIv = Buffer.from(iv);
-        const cipher = crypto.createCipheriv(Crypto.AES_ALGO, encKey, encIv);
+        const cipher = crypto.createCipheriv(Crypto.AES_ALGO, encKey, encIv) as CipherCCM;
         const encrypted = Buffer.concat([cipher.update(Buffer.from(convert.hexToUint8(msg))), cipher.final()]);
         const tag = cipher.getAuthTag();
         // Result
@@ -144,7 +145,7 @@ export class Crypto {
         const encKey = Buffer.from(utility.catapult_crypto.deriveSharedKey(keyPair.privateKey, convert.hexToUint8(senderPublic)), 32);
         const encIv = Buffer.from(new Uint8Array(tagAndIv.buffer, 16, 12));
         const encTag = Buffer.from(new Uint8Array(tagAndIv.buffer, 0, 16));
-        const cipher = crypto.createDecipheriv(Crypto.AES_ALGO, encKey, encIv);
+        const cipher = crypto.createDecipheriv(Crypto.AES_ALGO, encKey, encIv) as DecipherCCM;
         cipher.setAuthTag(encTag);
         const decrypted = Buffer.concat([cipher.update(Buffer.from(payload)), cipher.final()]);
         // Result
@@ -183,7 +184,7 @@ export class Crypto {
      *
      * @return {Uint8Array}
      */
-    public static randomBytes = (length: number): any => {
+    public static randomBytes = (length: number): Buffer => {
         return crypto.randomBytes(length);
     };
 }

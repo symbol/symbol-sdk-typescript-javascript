@@ -255,7 +255,7 @@ describe('Receipt', () => {
 
         const receipt = new ArtifactExpiryReceipt(new NamespaceId([3646934825, 3576016193]), receiptDTO.version, receiptDTO.type);
 
-        deepEqual(receipt.artifactId.id.toHex().toUpperCase(), receiptDTO.artifactId);
+        deepEqual(receipt.artifactId.toHex().toUpperCase(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Namespace_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });

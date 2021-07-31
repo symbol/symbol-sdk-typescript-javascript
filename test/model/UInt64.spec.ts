@@ -18,25 +18,25 @@ import { expect } from 'chai';
 import { UInt64 } from '../../src/model/UInt64';
 
 const hexTestCases = [
-    { str: '0000000000000000', value: [0, 0], description: '0' },
-    { str: '000000000000A1B2', value: [0xa1b2, 0], description: '(0, 8)' },
-    { str: '0000000012345678', value: [0x12345678, 0], description: '8' },
-    { str: '0000ABCD12345678', value: [0x12345678, 0xabcd], description: '(8, 16)' },
-    { str: '1234567890ABCDEF', value: [0x90abcdef, 0x12345678], description: '16' },
-    { str: 'FFFFFFFFFFFFFFFF', value: [0xffffffff, 0xffffffff], description: '16 (max value)' },
+    { str: '0000000000000000', value: [0, 0], description: '0', decimal: '0' },
+    { str: '000000000000A1B2', value: [0xa1b2, 0], description: '(0, 8)', decimal: '41394' },
+    { str: '0000000012345678', value: [0x12345678, 0], description: '8', decimal: '305419896' },
+    { str: '0000ABCD12345678', value: [0x12345678, 0xabcd], description: '(8, 16)', decimal: '188897262065272' },
+    { str: '1234567890ABCDEF', value: [0x90abcdef, 0x12345678], description: '16', decimal: '1311768467294899695' },
+    { str: 'FFFFFFFFFFFFFFFF', value: [0xffffffff, 0xffffffff], description: '16 (max value)', decimal: '18446744073709551615' },
 ];
 
 describe('Uint64', () => {
     it('should createComplete Uint64 object [0,0]', () => {
         const uintArray = [0, 0];
-        const uint64 = new UInt64(uintArray);
+        const uint64 = UInt64.fromNumberArray(uintArray);
         expect(uint64.lower).to.be.equal(uintArray[0]);
         expect(uint64.higher).to.be.equal(uintArray[1]);
     });
 
     it('should createComplete Uint64 object [20,30]', () => {
         const uintArray = [20, 30];
-        const uint64 = new UInt64(uintArray);
+        const uint64 = UInt64.fromNumberArray(uintArray);
         expect(uint64.lower).to.be.equal(uintArray[0]);
         expect(uint64.higher).to.be.equal(uintArray[1]);
     });
@@ -44,31 +44,31 @@ describe('Uint64', () => {
     it('should createComplete throw when trying to createComplete Uint64 object with empty array', () => {
         const uintArray = [];
         expect(() => {
-            new UInt64(uintArray);
+            UInt64.fromNumberArray(uintArray);
         }).to.throw(Error, 'uintArray must be be an array of two uint numbers');
     });
 
     it('should createComplete throw when trying to createComplete Uint64 object with negative numbers', () => {
         const uintArray = [-1, -1];
         expect(() => {
-            new UInt64(uintArray);
+            UInt64.fromNumberArray(uintArray);
         }).to.throw(Error, 'uintArray must be be an array of two uint numbers');
     });
 
     it('should createComplete Uint64 object from 51110867862', () => {
-        const uint64 = UInt64.fromUint(51110867862);
+        const uint64 = new UInt64(51110867862);
         expect(uint64.lower).to.be.equal(3866227606);
         expect(uint64.higher).to.be.equal(11);
     });
 
     it('should compact UInt64 number', () => {
-        const uint64Compact = new UInt64([3866227606, 11]).compact();
+        const uint64Compact = UInt64.fromNumberArray([3866227606, 11]).compact();
         expect(uint64Compact).to.be.equal(51110867862);
     });
 
     it('should compact UInt64 number', () => {
         expect(() => {
-            new UInt64([3866227606, 0x00200000 + 1]).compact();
+            UInt64.fromNumberArray([3866227606, 0x00200000 + 1]).compact();
         }).to.throw(Error, 'Compacted value is greater than Number.Max_Value.');
     });
 
@@ -80,14 +80,14 @@ describe('Uint64', () => {
 
     describe('equal', () => {
         it('should return true if the inside values are the same', () => {
-            const value = new UInt64([12, 12]);
-            const other = new UInt64([12, 12]);
+            const value = UInt64.fromNumberArray([12, 12]);
+            const other = UInt64.fromNumberArray([12, 12]);
             expect(value.equals(other)).to.be.equal(true);
         });
 
         it('should return true if the inside values are the same but different order', () => {
-            const value = new UInt64([12, 23]);
-            const other = new UInt64([23, 12]);
+            const value = UInt64.fromNumberArray([12, 23]);
+            const other = UInt64.fromNumberArray([23, 12]);
             expect(value.equals(other)).to.be.equal(false);
         });
     });
@@ -114,14 +114,14 @@ describe('Uint64', () => {
 
     describe('fromHex', () => {
         it('should create from hexadecimal notation', () => {
+            expect(hexTestCases.length).eq(6);
             hexTestCases.forEach((testCase) => {
-                it(`can parse hex string with ${testCase.description} significant digits`, () => {
-                    // Act:
-                    const value = UInt64.fromHex(testCase.str);
+                // Act:
+                const value = UInt64.fromHex(testCase.str);
 
-                    // Assert:
-                    expect(value).to.deep.equal(testCase.value);
-                });
+                // Assert:
+                expect(value.toArray()).to.deep.equal(testCase.value);
+                expect(value.toString()).eq(testCase.decimal);
             });
 
             it('cannot parse hex string with invalid characters into uint64', () => {
@@ -227,12 +227,12 @@ describe('Uint64', () => {
             expect(result.compact()).to.be.equal(0);
         });
 
-        it('should return substract value', () => {
+        it('should return substract value and raise error', () => {
             const value = UInt64.fromUint(100);
             const other = UInt64.fromUint(1);
             expect(() => {
                 other.subtract(value);
-            }).to.throw(Error, 'Unsigned substraction result cannot be negative.');
+            }).to.throw(Error, 'Unsigned integer cannot be negative');
         });
     });
 });

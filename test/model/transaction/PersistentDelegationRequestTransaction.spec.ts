@@ -57,7 +57,7 @@ describe('PersistentDelegationRequestTransaction', () => {
             vrfPrivateKey,
             recipientPublicKey,
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(persistentDelegationRequestTransaction.maxFee.higher).to.be.equal(0);
@@ -98,7 +98,7 @@ describe('PersistentDelegationRequestTransaction', () => {
                 vrfPrivateKey,
                 recipientPublicKey,
                 NetworkType.PRIVATE_TEST,
-                new UInt64([1, 0]),
+                new UInt64(1),
             );
         }).to.throw();
     });

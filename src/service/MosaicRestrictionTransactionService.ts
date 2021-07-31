@@ -71,7 +71,7 @@ export class MosaicRestrictionTransactionService {
         restrictionValue: string,
         restrictionType: MosaicRestrictionType,
         referenceMosaicId: UnresolvedMosaicId = new MosaicId(UInt64.fromUint(0).toDTO()),
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
     ): Observable<Transaction> {
         this.validateInput(restrictionValue);
         return this.getResolvedMosaicId(mosaicId).pipe(
@@ -117,7 +117,7 @@ export class MosaicRestrictionTransactionService {
         restrictionKey: UInt64,
         targetAddress: UnresolvedAddress,
         restrictionValue: string,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
     ): Observable<Transaction> {
         this.validateInput(restrictionValue);
         const combinedUnresolved = combineLatest(this.getResolvedMosaicId(mosaicId), this.getResolvedAddress(targetAddress));

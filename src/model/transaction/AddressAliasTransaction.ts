@@ -59,7 +59,7 @@ export class AddressAliasTransaction extends Transaction {
         namespaceId: NamespaceId,
         address: Address,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AddressAliasTransaction {
@@ -133,7 +133,7 @@ export class AddressAliasTransaction extends Transaction {
             new NamespaceId(builder.getNamespaceId().namespaceId),
             Address.createFromEncoded(Convert.uint8ToHex(builder.getAddress().address)),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

@@ -71,7 +71,7 @@ export class LockFundsTransaction extends Transaction {
         duration: UInt64,
         signedTransaction: SignedTransaction,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): LockFundsTransaction {
@@ -138,7 +138,7 @@ export class LockFundsTransaction extends Transaction {
             new UInt64(builder.getDuration().blockDuration),
             new SignedTransaction('', Convert.uint8ToHex(builder.getHash().hash256), '', TransactionType.AGGREGATE_BONDED, networkType),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

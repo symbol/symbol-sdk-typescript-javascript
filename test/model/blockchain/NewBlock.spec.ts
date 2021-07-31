@@ -29,12 +29,12 @@ describe('NewBlock', () => {
                 blockTransactionsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 blockReceiptsHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
                 stateHash: '702090BA31CEF9E90C62BBDECC0CCCC0F88192B6625839382850357F70DD68A0',
-                difficulty: new UInt64([276447232, 23283]),
+                difficulty: UInt64.fromNumberArray([276447232, 23283]),
                 proofGamma: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
                 proofScalar: 'AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26',
                 proofVerificationHash: 'AC1A6E1D8DE5B17D2C6B1293F1CAD382',
                 feeMultiplier: 1,
-                height: new UInt64([1, 0]),
+                height: new UInt64(1),
                 previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
                 signature:
                     '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
@@ -44,7 +44,7 @@ describe('NewBlock', () => {
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     NetworkType.PRIVATE_TEST,
                 ).encoded(),
-                timestamp: new UInt64([0, 0]),
+                timestamp: new UInt64(0),
                 type: 32768,
                 version: 1,
                 network: 144,

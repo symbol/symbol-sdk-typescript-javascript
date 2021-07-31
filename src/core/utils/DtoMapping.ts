@@ -91,7 +91,7 @@ export class DtoMapping {
      * @param value enum value to be mapped
      */
     public static mapEnum<E1, E2>(value: E1 | undefined): E2 {
-        return (value as unknown) as E2;
+        return value as unknown as E2;
     }
 
     /**

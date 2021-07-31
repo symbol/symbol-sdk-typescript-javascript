@@ -58,7 +58,7 @@ export class VotingKeyLinkTransaction extends Transaction {
         linkAction: LinkAction,
         networkType: NetworkType,
         version: number,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): VotingKeyLinkTransaction {
@@ -129,7 +129,7 @@ export class VotingKeyLinkTransaction extends Transaction {
             builder.getLinkAction().valueOf(),
             networkType,
             builder.getVersion(),
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VotingKeyLinkTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as VotingKeyLinkTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

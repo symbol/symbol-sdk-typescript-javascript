@@ -15,8 +15,8 @@
  */
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { UInt64 } from '../../../src/model';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { Id } from '../../../src/model/Id';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { NetworkType } from '../../../src/model/network/NetworkType';
@@ -24,20 +24,24 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 describe('MosaicId', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
 
-    it('should be created from id', () => {
+    it('should be created from id number', () => {
         const id = new MosaicId([3294802500, 2243684972]);
-        deepEqual(id.id, new Id([3294802500, 2243684972]));
+        expect(id.id).deep.equal(new UInt64([3294802500, 2243684972]));
     });
 
-    it('should be created from id', () => {
-        const id = new MosaicId('85BBEA6CC462B244');
-        deepEqual(id.id, new Id([3294802500, 2243684972]));
+    it('should be created from id hex', () => {
+        const hex = '85BBEA6CC462B244';
+        const id = new MosaicId(hex);
+        const plainId = new UInt64([3294802500, 2243684972]);
+        expect(id.id).deep.equal(plainId);
+        expect(hex).deep.equal(id.toHex());
+        expect(plainId.toHex()).deep.equal(id.toHex());
     });
 
     it('should create id given nonce and owner', () => {
         const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
         const id = MosaicId.createFromNonce(MosaicNonce.createFromNumber(0), owner.address);
-        deepEqual(id.id, new Id([3012716716, 1712914778]));
+        deepEqual(id.id, new UInt64([3012716716, 1712914778]));
     });
 
     it('should create id twice the same given nonce and owner', () => {

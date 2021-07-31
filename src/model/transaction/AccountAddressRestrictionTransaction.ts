@@ -58,7 +58,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         restrictionAdditions: UnresolvedAddress[],
         restrictionDeletions: UnresolvedAddress[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountAddressRestrictionTransaction {
@@ -127,7 +127,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

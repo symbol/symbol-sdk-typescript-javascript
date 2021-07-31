@@ -65,7 +65,7 @@ export class NamespaceMetadataTransaction extends Transaction {
         valueSizeDelta: number,
         value: string,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): NamespaceMetadataTransaction {
@@ -154,7 +154,7 @@ export class NamespaceMetadataTransaction extends Transaction {
             builder.getValueSizeDelta(),
             Convert.uint8ToUtf8(builder.getValue()),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
