@@ -18,10 +18,11 @@ import { MultisigAccountGraphInfo } from '../../model/account/MultisigAccountGra
 import { MultisigAccountInfo } from '../../model/account/MultisigAccountInfo';
 
 /**
- * Hash utilities for SecretLock hashing
+ * MultisigGraph utilities
  */
 export class MultisigGraphUtils {
-    public static parseObjectProperties(obj, parse): any {
+    // Traverses the tree object to pick addresses strings
+    public static parseObjectProperties(obj, parse): void {
         for (const k in obj) {
             if (typeof obj[k] === 'object' && obj[k] !== null) {
                 this.parseObjectProperties(obj[k], parse);
@@ -30,6 +31,7 @@ export class MultisigGraphUtils {
             }
         }
     }
+    // creates a structred Tree object containing Current multisig account with children
     public static getMultisigChildren(
         multisigAccountGraphInfoMapped: MultisigAccountInfo[][],
     ): Array<{ address: string; children: string[] }> {
@@ -65,6 +67,7 @@ export class MultisigGraphUtils {
         }
         return [];
     }
+    // sort entries based on tree hierarchy
     public static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
         return [...multisigEntries.keys()]
             .sort((a, b) => b - a) // Get addresses from top to bottom
