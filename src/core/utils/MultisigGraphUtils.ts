@@ -37,8 +37,8 @@ export class MultisigGraphUtils {
     ): Array<{ address: string; children: string[] }> {
         if (multisigAccountGraphInfoMapped && !!multisigAccountGraphInfoMapped.length) {
             const mappedTree: Array<{ address: string; children: string[] }> = [];
-            multisigAccountGraphInfoMapped.map((level: MultisigAccountInfo[]) => {
-                level.map((entry: MultisigAccountInfo) => {
+            multisigAccountGraphInfoMapped.forEach((level: MultisigAccountInfo[]) => {
+                level.forEach((entry: MultisigAccountInfo) => {
                     mappedTree.push({
                         address: entry.accountAddress.plain(),
                         children: [],
