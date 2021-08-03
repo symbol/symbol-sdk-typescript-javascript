@@ -20,9 +20,16 @@ import { MultisigAccountInfo } from '../../model/account/MultisigAccountInfo';
 /**
  * MultisigGraph utilities
  */
+
+// Type for Multisig Tree children Object
+export type MultisigChildrenTreeObject = {
+    [address: string]: any; // parent address
+    children?: MultisigChildrenTreeObject[]; // children object.
+};
+
 export class MultisigGraphUtils {
     // Traverses the tree object to pick addresses strings
-    public static parseObjectProperties(obj, parse): void {
+    public static parseObjectProperties(obj: MultisigChildrenTreeObject, parse): void {
         for (const k in obj) {
             if (typeof obj[k] === 'object' && obj[k] !== null) {
                 this.parseObjectProperties(obj[k], parse);
@@ -31,12 +38,20 @@ export class MultisigGraphUtils {
             }
         }
     }
+
+    // find the entry matching with address matching cosignatory address and update his children
+    private static updateRecursively = (address: string, object: MultisigChildrenTreeObject) => (obj): any => {
+        if (obj.address === address) {
+            obj.children.push(object);
+        } else if (obj.children) {
+            obj.children.forEach(MultisigGraphUtils.updateRecursively(address, object));
+        }
+    };
+
     // creates a structred Tree object containing Current multisig account with children
-    public static getMultisigChildren(
-        multisigAccountGraphInfoMapped: MultisigAccountInfo[][],
-    ): Array<{ address: string; children: string[] }> {
-        if (multisigAccountGraphInfoMapped && !!multisigAccountGraphInfoMapped.length) {
-            const mappedTree: Array<{ address: string; children: string[] }> = [];
+    public static getMultisigChildren(multisigAccountGraphInfoMapped: MultisigAccountInfo[][]): MultisigChildrenTreeObject {
+        if (multisigAccountGraphInfoMapped) {
+            const mappedTree: MultisigChildrenTreeObject[] = [];
             multisigAccountGraphInfoMapped.forEach((level: MultisigAccountInfo[]) => {
                 level.forEach((entry: MultisigAccountInfo) => {
                     mappedTree.push({
@@ -44,18 +59,9 @@ export class MultisigGraphUtils {
                         children: [],
                     });
 
-                    // find the entry matching with address matching cosignatory address and update his children
-                    const updateRecursively = (address, object) => (obj): any => {
-                        if (obj.address === address) {
-                            obj.children.push(object);
-                        } else if (obj.children) {
-                            obj.children.forEach(updateRecursively(address, object));
-                        }
-                    };
-
                     entry.cosignatoryAddresses.forEach((addressVal) => {
                         mappedTree.forEach(
-                            updateRecursively(addressVal['address'], {
+                            this.updateRecursively(addressVal['address'], {
                                 address: entry.accountAddress.plain(),
                                 children: [],
                             }),
@@ -67,6 +73,7 @@ export class MultisigGraphUtils {
         }
         return [];
     }
+
     // sort entries based on tree hierarchy
     public static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
         return [...multisigEntries.keys()]
@@ -74,6 +81,7 @@ export class MultisigGraphUtils {
             .map((key) => multisigEntries.get(key) || [])
             .filter((x) => x.length > 0);
     }
+
     public static getMultisigInfoFromMultisigGraphInfo(graphInfo: MultisigAccountGraphInfo): MultisigAccountInfo[][] {
         const { multisigEntries } = graphInfo;
         return [...this.getMultisigGraphArraySorted(multisigEntries)].map((item) => item);
