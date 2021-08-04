@@ -18,7 +18,8 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
-import { MultisigChildrenTreeObject, MultisigGraphUtils } from '../../src/core/utils';
+import { parseObjectProperties } from '../core/format/Utilities';
+import { MultisigChildrenTreeObject, MultisigGraphUtils } from '../core/utils';
 import { MultisigAccountInfo, UnresolvedAddress } from '../model';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
@@ -601,10 +602,10 @@ export class Listener implements IListener {
                         const multisigGraphInfo: MultisigAccountInfo[][] = MultisigGraphUtils.getMultisigInfoFromMultisigGraphInfo(
                             multisigInfo,
                         );
-                        const multisigChildren: MultisigChildrenTreeObject = MultisigGraphUtils.getMultisigChildren(multisigGraphInfo);
+                        const multisigChildren: MultisigChildrenTreeObject[] = MultisigGraphUtils.getMultisigChildren(multisigGraphInfo);
                         const subscribers: Address[] = [address];
                         if (!!multisigChildren.length && multisigChildren[0].children) {
-                            MultisigGraphUtils.parseObjectProperties(multisigChildren[0].children, (k, prop: string) => {
+                            parseObjectProperties(multisigChildren[0].children, (k, prop: string) => {
                                 subscribers.push(Address.createFromRawAddress(prop));
                             });
                         }

@@ -23,33 +23,17 @@ import { MultisigAccountInfo } from '../../model/account/MultisigAccountInfo';
 
 // Type for Multisig Tree children Object
 export type MultisigChildrenTreeObject = {
-    [address: string]: any; // parent address
-    children?: MultisigChildrenTreeObject[]; // children object.
+    address: string;
+    children: []; // children array.
 };
 
 export class MultisigGraphUtils {
-    // Traverses the tree object to pick addresses strings
-    public static parseObjectProperties(obj: MultisigChildrenTreeObject, parse): void {
-        for (const k in obj) {
-            if (typeof obj[k] === 'object' && obj[k] !== null) {
-                this.parseObjectProperties(obj[k], parse);
-            } else if (Object.prototype.hasOwnProperty.call(obj, k)) {
-                parse(k, obj[k]);
-            }
-        }
-    }
-
-    // find the entry matching with address matching cosignatory address and update his children
-    private static updateRecursively = (address: string, object: MultisigChildrenTreeObject) => (obj): any => {
-        if (obj.address === address) {
-            obj.children.push(object);
-        } else if (obj.children) {
-            obj.children.forEach(MultisigGraphUtils.updateRecursively(address, object));
-        }
-    };
-
-    // creates a structred Tree object containing Current multisig account with children
-    public static getMultisigChildren(multisigAccountGraphInfoMapped: MultisigAccountInfo[][]): MultisigChildrenTreeObject {
+    /**
+     * creates a structred Tree object containing Current multisig account with children
+     *@param {MultisigAccountInfo[][]} multisigEnteries
+     *@returns {MultisigChildrenTreeObject[]} Array of multisigChildrentTree objects
+     */
+    public static getMultisigChildren(multisigAccountGraphInfoMapped: MultisigAccountInfo[][]): MultisigChildrenTreeObject[] {
         if (multisigAccountGraphInfoMapped) {
             const mappedTree: MultisigChildrenTreeObject[] = [];
             multisigAccountGraphInfoMapped.forEach((level: MultisigAccountInfo[]) => {
@@ -58,10 +42,17 @@ export class MultisigGraphUtils {
                         address: entry.accountAddress.plain(),
                         children: [],
                     });
-
+                    // find the entry matching with address matching cosignatory address and update his children
+                    const updateRecursively = (address: string, object: MultisigChildrenTreeObject) => (obj): any => {
+                        if (obj.address === address) {
+                            obj.children.push(object);
+                        } else if (obj.children) {
+                            obj.children.forEach(updateRecursively(address, object));
+                        }
+                    };
                     entry.cosignatoryAddresses.forEach((addressVal) => {
                         mappedTree.forEach(
-                            this.updateRecursively(addressVal['address'], {
+                            updateRecursively(addressVal['address'], {
                                 address: entry.accountAddress.plain(),
                                 children: [],
                             }),
@@ -73,15 +64,22 @@ export class MultisigGraphUtils {
         }
         return [];
     }
-
-    // sort entries based on tree hierarchy
-    public static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
+    /**
+     * sort entries based on tree hierarchy from top to bottom
+     *@param {Map<number, MultisigAccountInfo[]>} multisigEnteries
+     *@returns {MultisigAccountInfo[]}  sorted multisig graph
+     */
+    private static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
         return [...multisigEntries.keys()]
             .sort((a, b) => b - a) // Get addresses from top to bottom
             .map((key) => multisigEntries.get(key) || [])
             .filter((x) => x.length > 0);
     }
-
+    /**
+     * returns sorted tree entries
+     *@param {MultisigAccountGraphInfo} graphInfo
+     *@returns {MultisigAccountInfo[][]}  array of sorted multisigInfo
+     */
     public static getMultisigInfoFromMultisigGraphInfo(graphInfo: MultisigAccountGraphInfo): MultisigAccountInfo[][] {
         const { multisigEntries } = graphInfo;
         return [...this.getMultisigGraphArraySorted(multisigEntries)].map((item) => item);
