@@ -90,7 +90,7 @@ describe('SecretLockTransaction', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(secretLockTransaction.maxFee.higher).to.be.equal(0);

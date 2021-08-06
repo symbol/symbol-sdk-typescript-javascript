@@ -3,7 +3,6 @@
 export * from './account';
 export * from './blockchain';
 export * from './finalization';
-export * from './Id';
 export * from './lock';
 export * from './message';
 export * from './metadata';

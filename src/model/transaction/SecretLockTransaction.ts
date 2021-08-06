@@ -67,7 +67,7 @@ export class SecretLockTransaction extends Transaction {
         secret: string,
         recipientAddress: UnresolvedAddress,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): SecretLockTransaction {
@@ -159,7 +159,7 @@ export class SecretLockTransaction extends Transaction {
             Convert.uint8ToHex(builder.getSecret().hash256),
             UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

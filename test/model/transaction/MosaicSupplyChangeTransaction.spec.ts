@@ -74,7 +74,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);

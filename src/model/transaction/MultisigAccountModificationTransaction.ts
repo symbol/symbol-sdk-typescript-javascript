@@ -63,7 +63,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
         addressAdditions: UnresolvedAddress[],
         addressDeletions: UnresolvedAddress[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): MultisigAccountModificationTransaction {
@@ -150,7 +150,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                 return UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(deletion.unresolvedAddress));
             }),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

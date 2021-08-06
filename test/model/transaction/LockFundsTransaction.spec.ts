@@ -79,7 +79,7 @@ describe('LockFundsTransaction', () => {
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);

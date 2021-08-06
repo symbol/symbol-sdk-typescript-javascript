@@ -28,12 +28,12 @@ import { NetworkType } from '../../../src/model/network';
 describe('AccountInfo', () => {
     it('should createComplete an AccountInfo object', () => {
         const mosaicId = new MosaicId([3646934825, 3576016193]);
-        const mosaicAmount = new UInt64([1830592442, 94387]);
-        const addressHeight = new UInt64([1, 0]);
-        const importance = new UInt64([405653170, 0]);
-        const importanceHeight = new UInt64([6462, 0]);
+        const mosaicAmount = UInt64.fromNumberArray([1830592442, 94387]);
+        const addressHeight = new UInt64(1);
+        const importance = UInt64.fromNumberArray([405653170, 0]);
+        const importanceHeight = UInt64.fromNumberArray([6462, 0]);
         const address = Address.createFromEncoded('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5');
-        const publicKeyHeight = new UInt64([13, 0]);
+        const publicKeyHeight = UInt64.fromNumberArray([13, 0]);
         const accountInfoDTO: AccountInfoDTO = {
             id: 'someId',
             account: {

@@ -63,7 +63,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         action: MosaicSupplyChangeAction,
         delta: UInt64,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): MosaicSupplyChangeTransaction {
@@ -137,7 +137,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             builder.getAction().valueOf(),
             new UInt64(builder.getDelta().amount),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicSupplyChangeTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as MosaicSupplyChangeTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

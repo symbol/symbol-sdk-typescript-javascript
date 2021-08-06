@@ -23,7 +23,7 @@ export class NetworkCurrencies {
     /**
      * The pre-configured public currencies for easier offline access.
      */
-    public static readonly PUBLIC = new NetworkCurrencies(Currency.PUBLIC, Currency.PUBLIC);
+    public static readonly PUBLIC = () => new NetworkCurrencies(Currency.PUBLIC(), Currency.PUBLIC());
 
     /**
      * Constructor

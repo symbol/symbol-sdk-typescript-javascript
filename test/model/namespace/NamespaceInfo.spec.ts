@@ -71,14 +71,14 @@ describe('NamespaceInfo', () => {
             namespace: {
                 version: 1,
                 depth: 1,
-                endHeight: new UInt64([4294967295, 4294967295]),
+                endHeight: UInt64.fromNumberArray([4294967295, 4294967295]),
                 level0: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
                 ownerAddress: Address.createFromPublicKey(
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     NetworkType.PRIVATE_TEST,
                 ).encoded(),
                 parentId: new NamespaceId([0, 0]),
-                startHeight: new UInt64([1, 0]),
+                startHeight: new UInt64(1),
                 type: 0,
                 alias: { type: 1, mosaicId: new MosaicId([481110499, 231112638]) },
             },
@@ -101,7 +101,7 @@ describe('NamespaceInfo', () => {
                     NetworkType.PRIVATE_TEST,
                 ).encoded(),
                 startHeight: [795, 0],
-                endHeight: new UInt64([4294967295, 4294967295]),
+                endHeight: UInt64.fromNumberArray([4294967295, 4294967295]),
                 alias: { type: 0 },
             },
         };

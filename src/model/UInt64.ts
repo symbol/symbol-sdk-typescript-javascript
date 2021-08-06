@@ -15,7 +15,6 @@
  */
 
 import * as Long from 'long';
-import { RawUInt64 as uint64 } from '../core/format';
 
 /**
  * UInt64 data model
@@ -24,12 +23,22 @@ export class UInt64 {
     /**
      * uint64 lower part
      */
-    public readonly lower: number;
+    public readonly value: bigint;
 
     /**
-     * uint64 higher part
+     * Constructor
+     * @param value the value
      */
-    public readonly higher: number;
+    constructor(value: bigint | number | number[]) {
+        if (value instanceof Array) {
+            this.value = BigInt(UInt64.toBigInt(value));
+        } else {
+            if (value < 0) {
+                throw new Error('Unsigned integer cannot be negative');
+            }
+            this.value = BigInt(value);
+        }
+    }
 
     /**
      * Create from uint value
@@ -37,97 +46,113 @@ export class UInt64 {
      * @returns {UInt64}
      */
     public static fromUint(value: number): UInt64 {
-        if (value < 0) {
-            throw new Error('Unsigned integer cannot be negative');
-        }
-        return new UInt64(uint64.fromUint(value));
+        return new UInt64(BigInt(value));
     }
 
     /**
-     * Parses a hex string into a UInt64.
-     * @param {string} input A hex encoded string.
-     * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
+     * Create from uint value
+     * @deprecated
+     * @param uintArray
+     * @returns {UInt64}
+     *
      */
-    public static fromHex(input: string): UInt64 {
-        const dto = uint64.fromHex(input);
-        return new UInt64(dto);
+    public static fromNumberArray(uintArray: number[]): UInt64 {
+        return new UInt64(this.toBigInt(uintArray));
+    }
+
+    /**
+     * Create from uint value
+     * @deprecated
+     * @param uintArray
+     * @returns {UInt64}
+     *
+     */
+    public static toBigInt(uintArray: number[]): bigint {
+        if (uintArray.length !== 2 || uintArray[0] < 0 || uintArray[1] < 0) {
+            throw new Error('uintArray must be be an array of two uint numbers');
+        }
+        const long = Long.fromBits(uintArray[0], uintArray[1], true);
+        return BigInt(long.toString());
+    }
+
+    public static fromHex(hexId: string): UInt64 {
+        const higher = parseInt(hexId.substr(0, 8), 16);
+        const lower = parseInt(hexId.substr(8, 8), 16);
+        return UInt64.fromNumberArray([lower, higher]);
+    }
+
+    /**
+     * Get hexadecimal representation
+     *
+     * @return hex string representation
+     */
+    public toHex(): string {
+        const part1 = this.higher.toString(16);
+        const part2 = this.lower.toString(16);
+        return (UInt64.pad(part1, 8) + UInt64.pad(part2, 8)).toUpperCase();
+    }
+
+    /**
+     * @param str
+     * @param maxVal
+     * @returns {string}
+     */
+    private static pad(str: string, maxVal: number): string {
+        return str.padStart(maxVal, '0');
     }
 
     /**
      * Parses a numeric string into a UInt64.
-     * @param {string} input A numeric string.
-     * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
+     * @param  input A numeric string.
+     * @returns The uint64 representation of the input.
      */
     public static fromNumericString(input: string): UInt64 {
         if (!UInt64.isLongNumericString(input)) {
             throw new Error('Input string is not a valid numeric string');
         }
-        const input_long = Long.fromString(input, true);
-        return new UInt64([input_long.getLowBitsUnsigned(), input_long.getHighBitsUnsigned()]);
+        return new UInt64(BigInt(input));
     }
 
     /**
      * Check if input string is a numeric string or not
-     * @param {string} input A string.
+     * @param  input A string.
      * @returns {boolean}
      */
     public static isLongNumericString(input: string): boolean {
-        const input_long = Long.fromString(input, true);
-        if (!/^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1) || !Long.isLong(input_long)) {
+        if (!/^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1)) {
             return false;
         }
         return true;
     }
 
     /**
-     * Constructor
-     * @param uintArray
-     */
-    constructor(uintArray: number[]) {
-        if (uintArray.length !== 2 || uintArray[0] < 0 || uintArray[1] < 0) {
-            throw new Error('uintArray must be be an array of two uint numbers');
-        }
-        this.lower = uintArray[0];
-        this.higher = uintArray[1];
-    }
-
-    /**
-     * Get DTO representation with format: `[lower, higher]`
+     * Get the catbuffer represention
      *
-     * @returns {[number,number]}
+     * @returns bigint.
      */
-    public toDTO(): number[] {
-        return [this.lower, this.higher];
-    }
-
-    /**
-     * Get hexadecimal representation
-     *
-     * @return {string}
-     */
-    public toHex(): string {
-        return uint64.toHex(this.toDTO());
+    public toDTO(): bigint {
+        return this.value;
     }
 
     /**
      * Get numeric string representation
      *
-     * @return {string}
+     * @return string representation
      */
     public toString(): string {
-        return Long.fromBits(this.lower, this.higher, true).toString();
+        return this.value.toString();
     }
 
     /**
      * Compact higher and lower uint parts into a uint
+     * @deprecated use bigint operations
      * @returns {number}
      */
     public compact(): number {
-        const result = uint64.compact(this.toDTO());
-        if (Array.isArray(result)) {
+        if (this.value > Number.MAX_SAFE_INTEGER) {
             throw new Error('Compacted value is greater than Number.Max_Value.');
         }
-        return result;
+        return Number(this.value);
     }
 
     /**
@@ -136,7 +161,7 @@ export class UInt64 {
      * @returns {boolean}
      */
     public equals(other: UInt64): boolean {
-        return this.lower === other.lower && this.higher === other.higher;
+        return this.value === other.value;
     }
 
     /**
@@ -145,9 +170,10 @@ export class UInt64 {
      * @returns {number} - -1, 0, 1
      */
     public compare(other: UInt64): number {
-        const long_a = Long.fromBits(this.lower, this.higher, true);
-        const long_b = Long.fromBits(other.lower, other.higher, true);
-        return long_a.compare(long_b);
+        if (this.value == other.value) {
+            return 0;
+        }
+        return this.value > other.value ? 1 : -1;
     }
 
     /**
@@ -156,9 +182,7 @@ export class UInt64 {
      * @returns {UInt64}
      */
     public add(other: UInt64): UInt64 {
-        const long_value = Long.fromBits(this.lower, this.higher, true);
-        const long_b = Long.fromBits(other.lower, other.higher, true);
-        return this.longToUint64(long_value.add(long_b));
+        return new UInt64(this.value + other.value);
     }
 
     /**
@@ -167,19 +191,28 @@ export class UInt64 {
      * @returns {UInt64}
      */
     public subtract(other: UInt64): UInt64 {
-        const long_value = Long.fromBits(this.lower, this.higher, true);
-        const long_b = Long.fromBits(other.lower, other.higher, true);
-        if (long_value.compare(long_b) < 0) {
-            throw new Error('Unsigned substraction result cannot be negative.');
-        }
-        return this.longToUint64(long_value.subtract(long_b));
+        return new UInt64(this.value - other.value);
     }
 
     /**
-     * Convert long value to UInt64
-     * @param longValue long value
+     * @deprecated migrate out of number[]
      */
-    private longToUint64(longValue: Long): UInt64 {
-        return new UInt64([longValue.getLowBitsUnsigned(), longValue.getHighBitsUnsigned()]);
+    public get lower(): number {
+        return this.toArray()[0];
+    }
+    /**
+     * @deprecated migrate out of number[]
+     */
+    public get higher(): number {
+        return this.toArray()[1];
+    }
+
+    /**
+     * @deprecated migrate out of number[]
+     */
+    public toArray(): number[] {
+        //only ref to log, remove!
+        const long = Long.fromString(this.value.toString());
+        return [long.getLowBitsUnsigned(), long.getHighBitsUnsigned()];
     }
 }

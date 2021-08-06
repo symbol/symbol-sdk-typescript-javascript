@@ -57,7 +57,7 @@ describe('NamespaceMetadataTransaction', () => {
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(namespaceMetadataTransaction.maxFee.higher).to.be.equal(0);

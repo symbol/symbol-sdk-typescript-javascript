@@ -57,8 +57,8 @@ export class AccountRestrictionModification<T> {
     public static createForMosaic(
         modificationAction: AccountRestrictionModificationAction,
         value: MosaicId,
-    ): AccountRestrictionModification<number[]> {
-        return new AccountRestrictionModification<number[]>(modificationAction, value.id.toDTO());
+    ): AccountRestrictionModification<bigint> {
+        return new AccountRestrictionModification<bigint>(modificationAction, value.id.toDTO());
     }
 
     /**

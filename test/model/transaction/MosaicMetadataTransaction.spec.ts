@@ -78,7 +78,7 @@ describe('MosaicMetadataTransaction', () => {
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(mosaicMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -105,10 +105,14 @@ describe('MosaicMetadataTransaction', () => {
 
     it('should create and sign an MosaicMetadataTransaction object using alias', () => {
         const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
+        const scopedMetadataKey = UInt64.fromUint(1000);
+        expect(scopedMetadataKey.toHex()).eq('00000000000003E8');
+        expect(scopedMetadataKey.toString()).eq('1000');
+
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.create(epochAdjustment),
             account.address,
-            UInt64.fromUint(1000),
+            scopedMetadataKey,
             namespacId,
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),

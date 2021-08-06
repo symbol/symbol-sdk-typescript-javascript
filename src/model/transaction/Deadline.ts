@@ -69,7 +69,7 @@ export class Deadline {
      * @param value
      * @returns {Deadline}
      */
-    public static createFromDTO(value: string | number[]): Deadline {
+    public static createFromDTO(value: string | bigint): Deadline {
         const uint64Value = 'string' === typeof value ? UInt64.fromNumericString(value) : new UInt64(value);
         return new Deadline(uint64Value.compact());
     }
@@ -85,7 +85,7 @@ export class Deadline {
     /**
      * @internal
      */
-    public toDTO(): number[] {
+    public toDTO(): bigint {
         return UInt64.fromUint(this.adjustedValue).toDTO();
     }
 

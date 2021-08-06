@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { MosaicIdDto } from 'catbuffer-typescript';
-import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
-import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
-import { Address } from '../account/Address';
-import { Id } from '../Id';
-import { MosaicNonce } from '../mosaic/MosaicNonce';
+import { Convert as convert } from '../../core/format';
+import { NamespaceMosaicIdGenerator } from '../../infrastructure/transaction';
+import { Address } from '../account';
+import { MosaicNonce } from '../mosaic';
+import { UInt64 } from '../UInt64';
 
 /**
  * The mosaic id structure describes mosaic id
@@ -29,7 +29,7 @@ export class MosaicId {
     /**
      * Mosaic id
      */
-    public readonly id: Id;
+    public readonly id: UInt64;
 
     /**
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
@@ -40,7 +40,7 @@ export class MosaicId {
      */
     public static createFromNonce(nonce: MosaicNonce, ownerAddress: Address): MosaicId {
         const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.toUint8Array(), convert.hexToUint8(ownerAddress.encoded()));
-        return new MosaicId(mosaicId);
+        return new MosaicId(UInt64.toBigInt(mosaicId));
     }
 
     /**
@@ -49,19 +49,21 @@ export class MosaicId {
      *
      * @param id
      */
-    constructor(id: string | number[]) {
+    constructor(id: string | bigint | UInt64 | number | number[]) {
         if (id === undefined) {
             throw new Error('MosaicId undefined');
         }
-        if (id instanceof Array) {
-            this.id = new Id(id);
-        } else if (typeof id === 'string') {
-            if (!/^[0-9A-Fa-f]{16}$/i.test(id)) {
-                throw new Error('Invalid size for MosaicId hexadecimal notation');
+        if (id instanceof UInt64) {
+            this.id = id;
+        } else if (typeof id === 'bigint' || typeof id === 'number' || id instanceof Array) {
+            this.id = new UInt64(id);
+        } else {
+            {
+                if (!/^[0-9A-Fa-f]{16}$/i.test(id)) {
+                    throw new Error('Invalid size for MosaicId hexadecimal notation');
+                }
+                this.id = UInt64.fromHex(id);
             }
-
-            // hexadecimal formatted MosaicId
-            this.id = new Id(uint64_t.fromHex(id));
         }
     }
 
@@ -80,7 +82,7 @@ export class MosaicId {
      */
     public equals(other: any): boolean {
         if (other instanceof MosaicId) {
-            return this.id.equals(other.id);
+            return this.id.value == other.id.value;
         }
         return false;
     }

@@ -56,7 +56,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountOperationRestrictionTransaction {
@@ -121,7 +121,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             builder.getRestrictionAdditions() as number[],
             builder.getRestrictionDeletions() as number[],
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
             signature,
             signer.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signer, networkType),
         );

@@ -432,9 +432,9 @@ describe('RepositoryFactory', () => {
     });
 
     it('getCurrencies', async () => {
-        const factory = new RepositoryFactoryHttp('http://localhost:2000', { networkCurrencies: NetworkCurrencies.PUBLIC });
+        const factory = new RepositoryFactoryHttp('http://localhost:2000', { networkCurrencies: NetworkCurrencies.PUBLIC() });
         const networkCurrencies = await factory.getCurrencies().toPromise();
-        expect(networkCurrencies).eq(NetworkCurrencies.PUBLIC);
+        expect(networkCurrencies).deep.eq(NetworkCurrencies.PUBLIC());
     });
 
     // it('howToUse', async () => {

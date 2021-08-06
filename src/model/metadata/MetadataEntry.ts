@@ -84,7 +84,7 @@ export class MetadataEntry {
         /** Metadata key scoped to source, target and type. */
         const scopedMetadataKey = new ScopedMetadataKeyDto(this.scopedMetadataKey.toDTO());
         /** Target id. */
-        const targetId: number[] = this.targetId?.id.toDTO() || [0, 0];
+        const targetId = BigInt(this.targetId?.id.toDTO() || 0);
         /** Metadata type. */
         const metadataType = this.metadataType.valueOf();
         /** Value. */

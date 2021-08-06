@@ -18,7 +18,6 @@ import { GeneratorUtils } from 'catbuffer-typescript';
 import { RawAddress } from '../../core/format/RawAddress';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
-import { UInt64 } from '../UInt64';
 import { ReceiptSource } from './ReceiptSource';
 
 /**
@@ -51,7 +50,7 @@ export class ResolutionEntry<R extends Address | MosaicId> {
         if (this.resolved instanceof Address) {
             resolvedBytes = RawAddress.stringToAddress(this.resolved.plain());
         } else {
-            resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
+            resolvedBytes = GeneratorUtils.bigIntToBuffer((this.resolved as MosaicId).id.value);
         }
         const sourceBytes = this.source.serialize();
         return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);

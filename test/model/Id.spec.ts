@@ -15,30 +15,30 @@
  */
 
 import { expect } from 'chai';
-import { Id } from '../../src/model/Id';
+import { UInt64 } from '../../src/model';
 
 describe('Id', () => {
     describe('toHex()', () => {
         it('should generate mosaic xem id', () => {
-            const idName = new Id([3646934825, 3576016193]).toHex();
+            const idName = new UInt64([3646934825, 3576016193]).toHex();
             expect(idName).to.be.equal('D525AD41D95FCF29');
         });
 
         it('should generate namespace nem id', () => {
-            const idName = new Id([929036875, 2226345261]).toHex();
+            const idName = new UInt64([929036875, 2226345261]).toHex();
             expect(idName).to.be.equal('84B3552D375FFA4B');
         });
     });
 
     describe('fromHex()', () => {
         it('should createComplete from xem hex string', () => {
-            const id = Id.fromHex('d525ad41d95fcf29');
+            const id = UInt64.fromHex('d525ad41d95fcf29');
             expect(id.lower).to.be.equal(3646934825);
             expect(id.higher).to.be.equal(3576016193);
         });
 
         it('should createComplete from nem hex string', () => {
-            const id = Id.fromHex('84b3552d375ffa4b');
+            const id = UInt64.fromHex('84b3552d375ffa4b');
             expect(id.lower).to.be.equal(929036875);
             expect(id.higher).to.be.equal(2226345261);
         });

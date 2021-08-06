@@ -33,14 +33,16 @@ export class Currency {
      *
      * If you are creating a private network and you need offline access, you can create a Currency in memory.
      *
+     * TODO FIX circular dependency and remove the () => function style.
      */
-    public static readonly PUBLIC = new Currency({
-        namespaceId: new NamespaceId('symbol.xym'),
-        divisibility: 6,
-        transferable: true,
-        supplyMutable: false,
-        restrictable: false,
-    });
+    public static readonly PUBLIC = () =>
+        new Currency({
+            namespaceId: new NamespaceId('symbol.xym'),
+            divisibility: 6,
+            transferable: true,
+            supplyMutable: false,
+            restrictable: false,
+        });
 
     /**
      * The selected unresolved mosaic id used when creating {@link Mosaic}. This could either be the
@@ -109,9 +111,9 @@ export class Currency {
      */
     public createRelative(amount: UInt64 | number): Mosaic {
         if (typeof amount === 'number') {
-            return new Mosaic(this.unresolvedMosaicId, UInt64.fromUint(amount * Math.pow(10, this.divisibility)));
+            return new Mosaic(this.unresolvedMosaicId, new UInt64(amount * Math.pow(10, this.divisibility)));
         }
-        return new Mosaic(this.unresolvedMosaicId, UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, this.divisibility)));
+        return new Mosaic(this.unresolvedMosaicId, new UInt64(amount.value * BigInt(Math.pow(10, this.divisibility))));
     }
 
     /**
@@ -122,7 +124,7 @@ export class Currency {
      */
     public createAbsolute(amount: UInt64 | number): Mosaic {
         if (typeof amount === 'number') {
-            return new Mosaic(this.unresolvedMosaicId, UInt64.fromUint(amount));
+            return new Mosaic(this.unresolvedMosaicId, new UInt64(amount));
         }
         return new Mosaic(this.unresolvedMosaicId, amount);
     }

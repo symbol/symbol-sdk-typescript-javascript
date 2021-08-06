@@ -20,7 +20,7 @@ import { Currency } from '../../../src/model/mosaic';
 import { NamespaceId } from '../../../src/model/namespace';
 import { UInt64 } from '../../../src/model/UInt64';
 
-export const NetworkCurrencyPublic = Currency.PUBLIC;
+export const NetworkCurrencyPublic = Currency.PUBLIC();
 
 export const NetworkCurrencyLocal = new Currency({
     namespaceId: new NamespaceId('cat.currency'),
@@ -42,20 +42,20 @@ describe('NetworkCurrencyLocal', () => {
     it('should createComplete an NetworkCurrencyLocal object', () => {
         const currency = NetworkCurrencyLocal.createRelative(1000);
 
-        deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
+        deepEqual(currency.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should createComplete an NetworkCurrencyLocal object', () => {
         const currency = NetworkCurrencyLocal.createRelative(UInt64.fromUint(1000));
 
-        deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
+        deepEqual(currency.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
         const currency = NetworkCurrencyLocal.createRelative(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
+        expect(currency.toDTO().amount).to.be.equal(BigInt(1000 * 1000000).toString());
     });
 
     it('should have valid statics', () => {
@@ -67,31 +67,31 @@ describe('NetworkCurrencyLocal', () => {
 
     it('should create network currency with absolute amount', () => {
         const currency = NetworkCurrencyLocal.createAbsolute(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+        expect(currency.toDTO().amount).to.be.equal(BigInt(1000).toString());
     });
 
     it('should create network currency with absolute amount in Uint64', () => {
         const currency = NetworkCurrencyLocal.createAbsolute(UInt64.fromUint(1000));
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+        expect(currency.toDTO().amount).to.be.equal(BigInt(1000).toString());
     });
 });
 
 describe('NetworkCurrencyPublic', () => {
     it('should createComplete an NetworkCurrencyPublic object', () => {
         const currency = NetworkCurrencyPublic.createRelative(1000);
-        expect(currency.id.id.toHex()).to.be.equal(NetworkCurrencyPublic.namespaceId?.id.toHex()); // Holds Namespace ID
+        expect(currency.id.toHex()).to.be.equal(NetworkCurrencyPublic.namespaceId?.toHex()); // Holds Namespace ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should createComplete an NetworkCurrencyPublic object', () => {
         const currency = NetworkCurrencyPublic.createRelative(UInt64.fromUint(1000));
-        expect(currency.id.id.toHex()).to.be.equal(NetworkCurrencyPublic.namespaceId?.id.toHex()); // Holds Namespace ID
+        expect(currency.id.toHex()).to.be.equal(NetworkCurrencyPublic.namespaceId?.toHex()); // Holds Namespace ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
         const currency = NetworkCurrencyPublic.createRelative(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
+        expect(currency.toDTO().amount).to.be.equal(BigInt(1000 * 1000000).toString());
     });
 
     it('should have valid statics', () => {
@@ -103,11 +103,11 @@ describe('NetworkCurrencyPublic', () => {
 
     it('should create network currency with absolute amount', () => {
         const currency = NetworkCurrencyPublic.createAbsolute(1000);
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()).to.be.equal(BigInt(1000));
     });
 
     it('should create network currency with absolute amount in Uint64', () => {
         const currency = NetworkCurrencyPublic.createAbsolute(UInt64.fromUint(1000));
-        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()).to.be.equal(BigInt(1000));
     });
 });

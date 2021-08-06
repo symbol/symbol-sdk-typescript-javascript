@@ -36,7 +36,7 @@ export class IdGenerator {
      * @param {string} name The unified namespace name.
      * @returns {array<module:coders/uint64~uint64>} The namespace path.
      */
-    public static generateNamespacePath = (name: string): number[] => {
+    public static generateNamespacePath = (name: string): number[][] => {
         if (0 >= name.length) {
             utilities.throwInvalidFqn('having zero length', name);
         }

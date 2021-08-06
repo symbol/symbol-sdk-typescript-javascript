@@ -51,7 +51,7 @@ describe('VrfKeyLinkTransaction', () => {
             account.publicKey,
             LinkAction.Link,
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(vrfKeyLinkTransaction.maxFee.higher).to.be.equal(0);

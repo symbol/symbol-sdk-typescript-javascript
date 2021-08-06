@@ -45,7 +45,7 @@ export abstract class AliasTransaction extends Transaction {
         namespaceId: NamespaceId,
         address: Address,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AliasTransaction {
@@ -70,7 +70,7 @@ export abstract class AliasTransaction extends Transaction {
         namespaceId: NamespaceId,
         mosaicId: MosaicId,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AliasTransaction {

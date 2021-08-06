@@ -29,6 +29,6 @@ export class KeyGenerator {
         }
         const buf = sha3_256.arrayBuffer(input);
         const result = new Uint32Array(buf);
-        return new UInt64([result[0], (result[1] | 0x80000000) >>> 0]);
+        return UInt64.fromNumberArray([result[0], (result[1] | 0x80000000) >>> 0]);
     }
 }

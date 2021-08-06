@@ -41,7 +41,7 @@ describe('Hashes', () => {
 
     it('Op_Hash_160', () => {
         const secretSeed = Crypto.randomBytes(20);
-        const hash256 = sha256(Buffer.from(secretSeed, 'hex'));
+        const hash256 = sha256(secretSeed);
         const expected = new ripemd160().update(Buffer.from(hash256, 'hex')).digest('hex');
 
         const hash = LockHashUtils.Op_Hash_160(secretSeed);
@@ -55,7 +55,7 @@ describe('Hashes', () => {
         const hashSHA3 = LockHashUtils.Hash(LockHashAlgorithm.Op_Sha3_256, secretSeed);
         expect(expectedSHA3.toUpperCase()).to.be.equal(hashSHA3);
 
-        const h256 = sha256(Buffer.from(secretSeed, 'hex'));
+        const h256 = sha256(secretSeed);
         const expected256 = sha256(Buffer.from(h256, 'hex'));
         const hash256 = LockHashUtils.Hash(LockHashAlgorithm.Op_Hash_256, secretSeed);
         expect(expected256.toUpperCase()).to.be.equal(hash256);

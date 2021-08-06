@@ -58,7 +58,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         namespaceName: string,
         duration: UInt64,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): NamespaceRegistrationTransaction {
@@ -93,7 +93,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         namespaceName: string,
         parentNamespace: string | NamespaceId,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): NamespaceRegistrationTransaction {
@@ -106,7 +106,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const namespaceId =
             typeof parentNamespace === 'string'
                 ? new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName))
-                : new NamespaceId(Utilities.generateNamespaceId(parentId.id.toDTO(), namespaceName));
+                : new NamespaceId(Utilities.generateNamespaceId(parentId.id.toArray(), namespaceName));
         return new NamespaceRegistrationTransaction(
             networkType,
             TransactionVersion.NAMESPACE_REGISTRATION,
@@ -192,7 +192,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new UInt64(builder.getDuration()!.blockDuration),
                       networkType,
-                      isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+                      isEmbedded ? new UInt64(0) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
                       signature,
                       signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
                   )
@@ -203,7 +203,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                       Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
                       new NamespaceId(builder.getParentId()!.namespaceId),
                       networkType,
-                      isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+                      isEmbedded ? new UInt64(0) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
                       signature,
                       signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
                   );

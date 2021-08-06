@@ -63,7 +63,7 @@ describe('MultisigAccountModificationTransaction', () => {
             [address1, address2],
             [],
             NetworkType.PRIVATE_TEST,
-            new UInt64([1, 0]),
+            new UInt64(1),
         );
 
         expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);

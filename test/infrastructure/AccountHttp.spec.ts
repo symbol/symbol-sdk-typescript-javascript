@@ -104,7 +104,7 @@ describe('AccountHttp', () => {
         expect(accountInfo.supplementalPublicKeys.voting![0].endEpoch.toString()).to.be.equals('3');
         expect(accountInfo.supplementalPublicKeys.voting![0].startEpoch.toString()).to.be.equals('1');
         expect(accountInfo.mosaics.length).to.be.equals(1);
-        expect(accountInfo.mosaics[0].id.id.toHex()).to.be.equals(mosaic.id);
+        expect(accountInfo.mosaics[0].id.toHex()).to.be.equals(mosaic.id);
         expect(accountInfo.mosaics[0].amount.toString()).to.be.equals(mosaic.amount);
 
         expect(accountInfo.activityBucket.length).to.be.equals(1);

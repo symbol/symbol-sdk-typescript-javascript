@@ -23,9 +23,7 @@ export class KeyPair {
      * @param {string} privateKeyString A hex encoded private key string.
      * @returns {module:crypto/keyPair~KeyPair} The key pair.
      */
-    public static createKeyPairFromPrivateKeyString(
-        privateKeyString: string,
-    ): {
+    public static createKeyPairFromPrivateKeyString(privateKeyString: string): {
         privateKey: Uint8Array;
         publicKey: Uint8Array;
     } {

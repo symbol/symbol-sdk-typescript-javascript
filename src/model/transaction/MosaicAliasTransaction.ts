@@ -56,7 +56,7 @@ export class MosaicAliasTransaction extends Transaction {
         namespaceId: NamespaceId,
         mosaicId: MosaicId,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): MosaicAliasTransaction {
@@ -130,7 +130,7 @@ export class MosaicAliasTransaction extends Transaction {
             new NamespaceId(builder.getNamespaceId().namespaceId),
             new MosaicId(builder.getMosaicId().mosaicId),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

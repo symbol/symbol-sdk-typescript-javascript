@@ -47,7 +47,7 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: UnresolvedAddress[],
         restrictionDeletions: UnresolvedAddress[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountAddressRestrictionTransaction {
@@ -81,7 +81,7 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: UnresolvedMosaicId[],
         restrictionDeletions: UnresolvedMosaicId[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountMosaicRestrictionTransaction {
@@ -115,7 +115,7 @@ export class AccountRestrictionTransaction {
         restrictionAdditions: TransactionType[],
         restrictionDeletions: TransactionType[],
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountOperationRestrictionTransaction {

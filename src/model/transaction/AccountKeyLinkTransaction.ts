@@ -56,7 +56,7 @@ export class AccountKeyLinkTransaction extends Transaction {
         linkedPublicKey: string,
         linkAction: LinkAction,
         networkType: NetworkType,
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): AccountKeyLinkTransaction {
@@ -124,7 +124,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             Convert.uint8ToHex(builder.getLinkedPublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );

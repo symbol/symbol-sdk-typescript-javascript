@@ -74,7 +74,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         newRestrictionValue: UInt64,
         networkType: NetworkType,
         previousRestrictionValue: UInt64 = UInt64.fromHex('FFFFFFFFFFFFFFFF'),
-        maxFee: UInt64 = new UInt64([0, 0]),
+        maxFee: UInt64 = new UInt64(0),
         signature?: string,
         signer?: PublicAccount,
     ): MosaicAddressRestrictionTransaction {
@@ -163,7 +163,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             new UInt64(builder.getNewRestrictionValue()),
             networkType,
             new UInt64(builder.getPreviousRestrictionValue()),
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
+            isEmbedded ? new UInt64(0) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
             signature,
             signerPublicKey.match(`^[0]+$`) ? undefined : PublicAccount.createFromPublicKey(signerPublicKey, networkType),
         );
