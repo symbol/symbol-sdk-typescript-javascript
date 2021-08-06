@@ -30,8 +30,8 @@ export type MultisigChildrenTreeObject = {
 export class MultisigGraphUtils {
     /**
      * creates a structred Tree object containing Current multisig account with children
-     *@param {MultisigAccountInfo[][]} multisigEnteries
-     *@returns {MultisigChildrenTreeObject[]} Array of multisigChildrentTree objects
+     * @param {MultisigAccountInfo[][]} multisigEnteries
+     * @returns {MultisigChildrenTreeObject[]} Array of multisigChildrentTree objects
      */
     public static getMultisigChildren(multisigAccountGraphInfoMapped: MultisigAccountInfo[][]): MultisigChildrenTreeObject[] {
         if (multisigAccountGraphInfoMapped) {
@@ -66,8 +66,8 @@ export class MultisigGraphUtils {
     }
     /**
      * sort entries based on tree hierarchy from top to bottom
-     *@param {Map<number, MultisigAccountInfo[]>} multisigEnteries
-     *@returns {MultisigAccountInfo[]}  sorted multisig graph
+     * @param {Map<number, MultisigAccountInfo[]>} multisigEnteries
+     * @returns {MultisigAccountInfo[]}  sorted multisig graph
      */
     private static getMultisigGraphArraySorted(multisigEntries: Map<number, MultisigAccountInfo[]>): MultisigAccountInfo[][] {
         return [...multisigEntries.keys()]
@@ -77,8 +77,8 @@ export class MultisigGraphUtils {
     }
     /**
      * returns sorted tree entries
-     *@param {MultisigAccountGraphInfo} graphInfo
-     *@returns {MultisigAccountInfo[][]}  array of sorted multisigInfo
+     * @param {MultisigAccountGraphInfo} graphInfo
+     * @returns {MultisigAccountInfo[][]}  array of sorted multisigInfo
      */
     public static getMultisigInfoFromMultisigGraphInfo(graphInfo: MultisigAccountGraphInfo): MultisigAccountInfo[][] {
         const { multisigEntries } = graphInfo;
