@@ -60,4 +60,4 @@ Licensed under the [Apache License 2.0](LICENSE)
 [issues]: https://github.com/symbol/symbol-sdk-typescript-javascript/issues
 [sdk-ref]: https://docs.symbolplatform.com/references/typescript-sdk.html
 [guidelines]: https://docs.symbolplatform.com/contribute/contributing.html#sdk
-[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
+[discord]: https://discord.com/invite/xymcity
