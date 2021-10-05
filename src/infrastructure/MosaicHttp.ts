@@ -18,7 +18,6 @@ import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { MosaicInfoDTO, MosaicRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
-import { Address } from '../model/account/Address';
 import { MerkleStateInfo } from '../model/blockchain';
 import { MosaicFlags } from '../model/mosaic/MosaicFlags';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -133,7 +132,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
             new MosaicId(mosaicInfo.mosaic.id),
             UInt64.fromNumericString(mosaicInfo.mosaic.supply),
             UInt64.fromNumericString(mosaicInfo.mosaic.startHeight),
-            Address.createFromEncoded(mosaicInfo.mosaic.ownerAddress),
+            DtoMapping.toAddress(mosaicInfo.mosaic.ownerAddress),
             mosaicInfo.mosaic.revision,
             new MosaicFlags(mosaicInfo.mosaic.flags),
             mosaicInfo.mosaic.divisibility,

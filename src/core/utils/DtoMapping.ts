@@ -34,6 +34,7 @@ import { MerkleTreeBranch } from '../../model/state/MerkleTreeBranch';
 import { MerkleTreeBranchLink } from '../../model/state/MerkleTreeBranchLink';
 import { MerkleTreeLeaf } from '../../model/state/MerkleTreeLeaf';
 import { MerkleTreeNodeType } from '../../model/state/MerkleTreeNodeType';
+import { Convert } from '../format';
 
 export class DtoMapping {
     /**
@@ -45,7 +46,7 @@ export class DtoMapping {
         return new AccountRestrictions(
             accountRestrictions.accountRestrictions.version || 1,
             accountRestrictions['id'],
-            Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
+            DtoMapping.toAddress(accountRestrictions.accountRestrictions.address),
             accountRestrictions.accountRestrictions.restrictions.map((prop) => {
                 const restrictionFlags = prop.restrictionFlags as number;
                 switch (restrictionFlags) {
@@ -55,7 +56,7 @@ export class DtoMapping {
                     case AddressRestrictionFlag.BlockOutgoingAddress:
                         return new AccountRestriction(
                             restrictionFlags,
-                            prop.values.map((value) => Address.createFromEncoded(value as string)),
+                            prop.values.map((value) => DtoMapping.toAddress(value as string)),
                         );
                     case MosaicRestrictionFlag.AllowMosaic:
                     case MosaicRestrictionFlag.BlockMosaic:
@@ -74,6 +75,22 @@ export class DtoMapping {
                 }
             }),
         );
+    }
+
+    /**
+     * This method knows how to convert an address payload sent by Rest to Address.
+     *
+     * Currently rest sends hex encoded addresses, it is desired to use base32 encoded addresses.
+     *
+     * This method handles both format, encoded (deprecated) and base32 encoded addresses.
+     *
+     * Clients using this SDK will be able to process both payloads.
+     *
+     * @param value the address in encoded (6823BB7C3C089D996585466380EDBDC19D4959184893E38C) format or decoded/plain format (SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3)
+     * @return the Address object.
+     */
+    public static toAddress(value: string): Address {
+        return Convert.isHexString(value, 48) ? Address.createFromEncoded(value) : Address.createFromRawAddress(value);
     }
 
     /**

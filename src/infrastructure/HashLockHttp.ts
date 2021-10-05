@@ -17,7 +17,6 @@
 import { Observable } from 'rxjs';
 import { HashLockInfoDTO, HashLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils/DtoMapping';
-import { Address } from '../model/account/Address';
 import { MerkleStateInfo } from '../model/blockchain/MerkleStateInfo';
 import { HashLockInfo } from '../model/lock/HashLockInfo';
 import { MosaicId } from '../model/mosaic/MosaicId';
@@ -100,7 +99,7 @@ export class HashLockHttp extends Http implements HashLockRepository {
         return new HashLockInfo(
             dto.lock.version || 1,
             dto.id,
-            Address.createFromEncoded(dto.lock.ownerAddress),
+            DtoMapping.toAddress(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),
             UInt64.fromNumericString(dto.lock.amount),
             UInt64.fromNumericString(dto.lock.endHeight),

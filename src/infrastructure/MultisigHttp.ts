@@ -92,11 +92,11 @@ export class MultisigHttp extends Http implements MultisigRepository {
     private toMultisigAccountInfo(dto: MultisigAccountInfoDTO): MultisigAccountInfo {
         return new MultisigAccountInfo(
             dto.multisig.version || 1,
-            Address.createFromEncoded(dto.multisig.accountAddress),
+            DtoMapping.toAddress(dto.multisig.accountAddress),
             dto.multisig.minApproval,
             dto.multisig.minRemoval,
-            dto.multisig.cosignatoryAddresses.map((cosigner) => Address.createFromEncoded(cosigner)),
-            dto.multisig.multisigAddresses.map((multisig) => Address.createFromEncoded(multisig)),
+            dto.multisig.cosignatoryAddresses.map((cosigner) => DtoMapping.toAddress(cosigner)),
+            dto.multisig.multisigAddresses.map((multisig) => DtoMapping.toAddress(multisig)),
         );
     }
 }

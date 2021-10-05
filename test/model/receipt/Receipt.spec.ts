@@ -84,7 +84,7 @@ describe('Receipt', () => {
                                 primaryId: 4,
                                 secondaryId: 0,
                             },
-                            resolved: '917E7E29A01014C2F3000000000000000000000000000000',
+                            resolved: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
                         },
                     ],
                 },
@@ -319,10 +319,7 @@ describe('Receipt', () => {
             (statement.unresolved as Address).plain(),
             Address.createFromEncoded('9103B60AAF27626883000000000000000000000000000000').plain(),
         );
-        deepEqual(
-            (statement.resolutionEntries[0].resolved as Address).plain(),
-            Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000').plain(),
-        );
+        deepEqual((statement.resolutionEntries[0].resolved as Address).plain(), 'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI');
     });
 
     it('should createComplete a inflation receipt', () => {
@@ -355,7 +352,7 @@ describe('Receipt', () => {
     it('should generate hash for AddressResolutionStatement', () => {
         const receipt = createAddressResolutionStatement(statementDTO.addressResolutionStatements[0]);
         const hash = receipt.generateHash(NetworkType.MAIN_NET);
-        expect(hash).to.be.equal('AA9B667C37C8A19902F3E1098FCEE681318455551CC2FBE9B81E8FA47007CA79');
+        expect(hash).to.be.equal('EBCD71F16C70F7E34E8B9A98A174B759DB8457093CCF3ECAA3D05721E36AAA33');
     });
 
     it('should generate hash for TransactionStatement', () => {

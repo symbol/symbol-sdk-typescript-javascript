@@ -82,7 +82,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             body.accountNames.map(
                 (accountName) =>
                     new AccountNames(
-                        Address.createFromEncoded(accountName.address),
+                        DtoMapping.toAddress(accountName.address),
                         accountName.names.map((name) => {
                             return new NamespaceName(new NamespaceId(name), name);
                         }),
@@ -255,7 +255,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             dto.namespace.depth,
             NamespaceHttp.extractLevels(dto.namespace),
             NamespaceId.createFromEncoded(dto.namespace.parentId),
-            Address.createFromEncoded(dto.namespace.ownerAddress),
+            DtoMapping.toAddress(dto.namespace.ownerAddress),
             UInt64.fromNumericString(dto.namespace.startHeight),
             UInt64.fromNumericString(dto.namespace.endHeight),
             NamespaceHttp.extractAlias(dto.namespace),
@@ -292,7 +292,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         if (namespace.alias && namespace.alias.type.valueOf() === AliasType.Mosaic) {
             return new MosaicAlias(new MosaicId(namespace.alias.mosaicId!));
         } else if (namespace.alias && namespace.alias.type.valueOf() === AliasType.Address) {
-            return new AddressAlias(Address.createFromEncoded(namespace.alias.address!));
+            return new AddressAlias(DtoMapping.toAddress(namespace.alias.address!));
         }
         return new EmptyAlias();
     }

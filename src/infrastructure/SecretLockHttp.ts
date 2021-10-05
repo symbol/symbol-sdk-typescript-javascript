@@ -18,7 +18,6 @@ import { Observable } from 'rxjs';
 import { SecretLockInfoDTO, SecretLockRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { DtoMapping } from '../core/utils';
 import { UInt64 } from '../model';
-import { Address } from '../model/account';
 import { MerkleStateInfo } from '../model/blockchain';
 import { SecretLockInfo } from '../model/lock';
 import { MosaicId } from '../model/mosaic';
@@ -92,14 +91,14 @@ export class SecretLockHttp extends Http implements SecretLockRepository {
         return new SecretLockInfo(
             dto.lock.version || 1,
             dto.id,
-            Address.createFromEncoded(dto.lock.ownerAddress),
+            DtoMapping.toAddress(dto.lock.ownerAddress),
             new MosaicId(dto.lock.mosaicId),
             UInt64.fromNumericString(dto.lock.amount),
             UInt64.fromNumericString(dto.lock.endHeight),
             dto.lock.status.valueOf(),
             dto.lock.hashAlgorithm.valueOf(),
             dto.lock.secret,
-            Address.createFromEncoded(dto.lock.recipientAddress),
+            DtoMapping.toAddress(dto.lock.recipientAddress),
             dto.lock.compositeHash,
         );
     }
