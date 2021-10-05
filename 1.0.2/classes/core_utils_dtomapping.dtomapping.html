@@ -93,6 +93,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="core_utils_dtomapping.dtomapping.html#extractaccountrestrictionfromdto" class="tsd-kind-icon">extract<wbr>Account<wbr>Restriction<wbr>From<wbr>Dto</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="core_utils_dtomapping.dtomapping.html#mapenum" class="tsd-kind-icon">map<wbr>Enum</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="core_utils_dtomapping.dtomapping.html#parseserverduration" class="tsd-kind-icon">parse<wbr>Server<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="core_utils_dtomapping.dtomapping.html#toaddress" class="tsd-kind-icon">to<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="core_utils_dtomapping.dtomapping.html#tomerklestateinfo" class="tsd-kind-icon">to<wbr>Merkle<wbr>State<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="core_utils_dtomapping.dtomapping.html#tosimplehex" class="tsd-kind-icon">to<wbr>Simple<wbr>Hex</a></li>
 							</ul>
@@ -129,7 +130,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2630c1f/src/core/utils/DtoMapping.ts#L85">core/utils/DtoMapping.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L102">core/utils/DtoMapping.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -173,7 +174,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2630c1f/src/core/utils/DtoMapping.ts#L44">core/utils/DtoMapping.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L45">core/utils/DtoMapping.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,7 +203,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2630c1f/src/core/utils/DtoMapping.ts#L93">core/utils/DtoMapping.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L110">core/utils/DtoMapping.ts:110</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,7 +243,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2630c1f/src/core/utils/DtoMapping.ts#L106">core/utils/DtoMapping.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L123">core/utils/DtoMapping.ts:123</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -269,6 +270,41 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="toaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Address<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_account_address.address.html" class="tsd-signature-type" data-tsd-kind="Class">Address</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L92">core/utils/DtoMapping.ts:92</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This method knows how to convert an address payload sent by Rest to Address.</p>
+								</div>
+								<p>Currently rest sends hex encoded addresses, it is desired to use base32 encoded addresses.</p>
+								<p>This method handles both format, encoded (deprecated) and base32 encoded addresses.</p>
+								<p>Clients using this SDK will be able to process both payloads.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the address in encoded (6823BB7C3C089D996585466380EDBDC19D4959184893E38C) format or decoded/plain format (SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="model_account_address.address.html" class="tsd-signature-type" data-tsd-kind="Class">Address</a></h4>
+							<p>the Address object.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="tomerklestateinfo" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>Merkle<wbr>State<wbr>Info</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
@@ -278,7 +314,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2630c1f/src/core/utils/DtoMapping.ts#L174">core/utils/DtoMapping.ts:174</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L191">core/utils/DtoMapping.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -309,7 +345,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2630c1f/src/core/utils/DtoMapping.ts#L166">core/utils/DtoMapping.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/82bd669/src/core/utils/DtoMapping.ts#L183">core/utils/DtoMapping.ts:183</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -363,6 +399,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="core_utils_dtomapping.dtomapping.html#parseserverduration" class="tsd-kind-icon">parse<wbr>Server<wbr>Duration</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="core_utils_dtomapping.dtomapping.html#toaddress" class="tsd-kind-icon">to<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="core_utils_dtomapping.dtomapping.html#tomerklestateinfo" class="tsd-kind-icon">to<wbr>Merkle<wbr>State<wbr>Info</a>
