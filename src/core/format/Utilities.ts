@@ -173,3 +173,18 @@ export const decodeBlock = (input: any, inputOffset: number, output: any, output
     output[outputOffset + 3] = ((bytes[4] & 0x01) << 7) | (bytes[5] << 2) | (bytes[6] >> 3);
     output[outputOffset + 4] = ((bytes[6] & 0x07) << 5) | bytes[7];
 };
+
+/**
+ * Traverses the tree object to pick addresses strings.
+ * @param {array} array of multisig children
+ * @param {parse} function to parse tree and pick children addresses
+ */
+export const parseObjectProperties = (obj: [], parse): any => {
+    for (const k in obj) {
+        if (typeof obj[k] === 'object' && obj[k] !== null) {
+            parseObjectProperties(obj[k], parse);
+        } else if (Object.prototype.hasOwnProperty.call(obj, k)) {
+            parse(k, obj[k]);
+        }
+    }
+};

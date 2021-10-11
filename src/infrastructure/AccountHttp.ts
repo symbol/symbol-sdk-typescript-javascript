@@ -113,7 +113,7 @@ export class AccountHttp extends Http implements AccountRepository {
         return new AccountInfo(
             dto.account.version || 1,
             dto.id,
-            Address.createFromEncoded(dto.account.address),
+            DtoMapping.toAddress(dto.account.address),
             UInt64.fromNumericString(dto.account.addressHeight),
             dto.account.publicKey,
             UInt64.fromNumericString(dto.account.publicKeyHeight),
