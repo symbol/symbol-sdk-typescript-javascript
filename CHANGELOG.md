@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.2] - 19-Oct-2021
+
+**Milestone**: Symbol Mainnet
+Package  | Version  | Link
+---|---|---
+SDK Core| v1.0.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v1.0.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v1.0.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- feat: Multisig multilevel subscription in web listener.
+- feat: Added Deployment data to `ServerInfo`.
+- fix: Announce method missing observable map.
+- fix: Allowing plain base32 addresses in rest payloads. Both address formats are supported. 
+- fix: Cosigning from transaction hash only.
+- fix: Transaction signWith method broken into smaller methods.
+
 ## [1.0.1] - 24-May-2021
 
 **Milestone**: Symbol Mainnet
