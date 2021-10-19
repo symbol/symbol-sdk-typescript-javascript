@@ -290,6 +290,9 @@ describe('Receipt - CreateStatementFromDTO', () => {
             addressResolutionStatements: [
                 {
                     id: '1',
+                    meta: {
+                        timestamp: '537673514',
+                    },
                     statement: {
                         height: '1488',
                         unresolved: account.address.encoded(),
@@ -312,6 +315,9 @@ describe('Receipt - CreateStatementFromDTO', () => {
 
         const dtoJson: ResolutionStatementInfoDTO = {
             id: '1',
+            meta: {
+                timestamp: '537673514',
+            },
             statement: {
                 height: '1488',
                 unresolved: account.address.encoded(),
@@ -332,6 +338,9 @@ describe('Receipt - CreateStatementFromDTO', () => {
 
         const dtoId = {
             id: '1',
+            meta: {
+                timestamp: '537673514',
+            },
             statement: {
                 height: '1488',
                 unresolved: '9103B60AAF27626883000000000000000000000000000000',
@@ -353,6 +362,9 @@ describe('Receipt - CreateStatementFromDTO', () => {
 
         const dtoError: ResolutionStatementInfoDTO = {
             id: 'abc',
+            meta: {
+                timestamp: '537673514',
+            },
             statement: {
                 height: '1488',
                 unresolved: '',
@@ -376,6 +388,9 @@ describe('Receipt - CreateStatementFromDTO', () => {
     it('Statement - Error', () => {
         const dtoError: TransactionStatementInfoDTO = {
             id: 'ABC',
+            meta: {
+                timestamp: '537673514',
+            },
             statement: {
                 height: '52',
                 source: {
