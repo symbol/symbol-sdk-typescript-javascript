@@ -59,16 +59,34 @@ describe('UnresolvedMapping', () => {
             expect(unresolved instanceof NamespaceId).to.be.false;
         });
 
+        it('can map alias address', () => {
+            const unresolved = UnresolvedMapping.toUnresolvedAddress('THBIMC3THGH5RUYAAAAAAAAAAAAAAAAAAAAAAAA');
+            expect(unresolved instanceof Address).to.be.false;
+            expect(unresolved instanceof NamespaceId).to.be.true;
+            expect(Convert.uint8ToHex(unresolved.encodeUnresolvedAddress(NetworkType.TEST_NET))).eq(
+                '99C2860B73398FD8D3000000000000000000000000000000',
+            );
+        });
+
+        it('can map real address', () => {
+            const unresolved = UnresolvedMapping.toUnresolvedAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+            expect(unresolved instanceof Address).to.be.true;
+            expect(unresolved instanceof NamespaceId).to.be.false;
+            expect(Convert.uint8ToHex(unresolved.encodeUnresolvedAddress(NetworkType.MAIN_NET))).eq(
+                '6826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536',
+            );
+        });
+
         it('can map hex string to NamespaceId', () => {
             const unresolved = UnresolvedMapping.toUnresolvedMosaic(namespacId.toHex());
-            expect(unresolved instanceof Address).to.be.false;
+            expect(unresolved instanceof MosaicId).to.be.false;
             expect(unresolved instanceof NamespaceId).to.be.true;
         });
 
         it('should throw error if id not in hex', () => {
             expect(() => {
                 UnresolvedMapping.toUnresolvedAddress('test');
-            }).to.throw(Error, 'Input string is not in valid hexadecimal notation.');
+            }).to.throw(Error, 'Address TEST has to be 39 characters long');
         });
     });
 

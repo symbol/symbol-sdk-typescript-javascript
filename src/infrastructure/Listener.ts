@@ -18,7 +18,9 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, mergeMap, share, switchMap } from 'rxjs/operators';
 import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
-import { UnresolvedAddress } from '../model';
+import { parseObjectProperties } from '../core/format/Utilities';
+import { DtoMapping, MultisigChildrenTreeObject, MultisigGraphUtils } from '../core/utils';
+import { MultisigAccountInfo, UnresolvedAddress } from '../model';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
@@ -578,7 +580,7 @@ export class Listener implements IListener {
             dto.block.proofGamma,
             dto.block.proofScalar,
             dto.block.proofVerificationHash,
-            dto.block.beneficiaryAddress ? Address.createFromEncoded(dto.block.beneficiaryAddress) : undefined,
+            dto.block.beneficiaryAddress ? DtoMapping.toAddress(dto.block.beneficiaryAddress) : undefined,
         );
     }
 
@@ -596,9 +598,18 @@ export class Listener implements IListener {
         }
         return this.getResolvedAddress(cosigner).pipe(
             mergeMap((address: Address) => {
-                return this.multisigRepository!.getMultisigAccountInfo(address).pipe(
+                return this.multisigRepository!.getMultisigAccountGraphInfo(address).pipe(
                     map((multisigInfo) => {
-                        const subscribers = [cosigner].concat(multisigInfo.multisigAddresses);
+                        const multisigGraphInfo: MultisigAccountInfo[][] = MultisigGraphUtils.getMultisigInfoFromMultisigGraphInfo(
+                            multisigInfo,
+                        );
+                        const multisigChildren: MultisigChildrenTreeObject[] = MultisigGraphUtils.getMultisigChildren(multisigGraphInfo);
+                        const subscribers: Address[] = [address];
+                        if (!!multisigChildren.length && multisigChildren[0].children) {
+                            parseObjectProperties(multisigChildren[0].children, (k, prop: string) => {
+                                subscribers.push(Address.createFromRawAddress(prop));
+                            });
+                        }
                         subscribers.forEach((m) => {
                             this.subscribeTo(`${channel.toString()}/${m.plain()}`);
                         });

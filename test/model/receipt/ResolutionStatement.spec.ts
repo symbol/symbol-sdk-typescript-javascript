@@ -33,6 +33,9 @@ describe('ResolutionStatement', () => {
         addressResolutionStatements = [
             {
                 id: '1',
+                meta: {
+                    timestamp: '537673514',
+                },
                 statement: {
                     height: '1473',
                     unresolved: '9156258DE356F030A5000000000000000000000000000000',
@@ -51,6 +54,9 @@ describe('ResolutionStatement', () => {
         mosaicResolutionStatements = [
             {
                 id: '2',
+                meta: {
+                    timestamp: '537673514',
+                },
                 statement: {
                     height: '1473',
                     unresolved: '85BBEA6CC462B244',
@@ -74,6 +80,9 @@ describe('ResolutionStatement', () => {
             },
             {
                 id: '3',
+                meta: {
+                    timestamp: '537673514',
+                },
                 statement: {
                     height: '1473',
                     unresolved: 'E81F622A5B11A340',
@@ -90,6 +99,9 @@ describe('ResolutionStatement', () => {
             },
             {
                 id: '4',
+                meta: {
+                    timestamp: '537673514',
+                },
                 statement: {
                     height: '1500',
                     unresolved: '85BBEA6CC462B244',
