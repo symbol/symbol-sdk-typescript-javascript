@@ -11,7 +11,7 @@ The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, an
 
 ### _Catapult-Server_ Network Compatibility (catapult-server@0.10.0.8)
 
-Symbol network launched [catapult-server](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0), **it is recommended to use this package's 1.0.0 version and upwards for the Symbol public network**.
+Symbol network launched [catapult-client](https://github.com/symbol/catapult-client/releases/tag/v1.0.0.0), **it is recommended to use this package's 1.0.0 version and upwards for the Symbol public network**.
 
 Find the complete release notes [here](CHANGELOG.md).
 
@@ -40,7 +40,7 @@ Use the following available resources to get help:
 
 - [Symbol Documentation][docs]
 - [Symbol SDK Typescript/Javascript Reference][sdk-ref]
-- Join the community [slack group (#sig-api)][slack]
+- Join the community [Discord server][discord]
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
@@ -55,9 +55,9 @@ You can also find useful notes for developers under our documentation [guideline
 Copyright (c) 2018-present NEM
 Licensed under the [Apache License 2.0](LICENSE)
 
-[self]: https://github.com/nemtech/symbol-sdk-typescript-javascript
-[docs]: http://nemtech.github.io/getting-started/setup-workstation.html
-[issues]: https://github.com/nemtech/symbol-sdk-typescript-javascript/issues
-[sdk-ref]: https://nemtech.github.io/references/typescript-sdk.html
-[guidelines]: https://nemtech.github.io/contribute/contributing.html#sdk
-[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
+[self]: https://github.com/symbol/symbol-sdk-typescript-javascript
+[docs]: http://docs.symbolplatform.com/getting-started/setup-workstation.html
+[issues]: https://github.com/symbol/symbol-sdk-typescript-javascript/issues
+[sdk-ref]: https://docs.symbolplatform.com/references/typescript-sdk.html
+[guidelines]: https://docs.symbolplatform.com/contribute/contributing.html#sdk
+[discord]: https://discord.com/invite/xymcity
