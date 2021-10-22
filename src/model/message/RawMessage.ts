@@ -14,26 +14,35 @@
  * limitations under the License.
  */
 
-import { Convert } from '../../core/format';
+import { Convert } from '../../core';
 import { Message } from './Message';
 import { MessageType } from './MessageType';
 
 /**
  * The a raw message that doesn't assume any prefix.
  */
-export class RawMessage extends Message {
+export class RawMessage implements Message {
+    public readonly type = MessageType.RawMessage;
+    public readonly payload: string;
+    /**
+     * @internal
+     * @param buffer
+     */
+    private constructor(private readonly buffer: Uint8Array) {
+        this.payload = Convert.uint8ToHex(buffer);
+    }
     /**
      * Create plain message object.
      * @returns PlainMessage
      */
-    public static create(payload: Uint8Array): RawMessage {
-        return new RawMessage(Convert.uint8ToHex(payload));
+    public static create(buffer: Uint8Array): RawMessage {
+        return new RawMessage(buffer);
     }
-    /**
-     * @internal
-     * @param payload
-     */
-    constructor(payload: string) {
-        super(MessageType.RawMessage, payload);
+    toBuffer(): Uint8Array {
+        return this.buffer;
+    }
+
+    toDTO(): string {
+        return this.payload;
     }
 }

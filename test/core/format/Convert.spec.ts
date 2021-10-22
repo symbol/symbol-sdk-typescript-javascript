@@ -428,6 +428,19 @@ describe('convert', () => {
             expect(uint.length).to.be.equal(actual.length);
             expect(convert.uint8ToHex(uint)).to.be.equal('74657374');
         });
+        it('should convert hex string to utf 8', () => {
+            const hex = '746573742D6D657373616765';
+            const plainText = 'test-message';
+            expect(convert.hexToUtf8(hex)).to.be.equal(plainText);
+            expect(convert.utf8ToHex(plainText)).eq(hex);
+        });
+
+        it('should convert hex string to utf 8 (emoji)', () => {
+            const hex = 'F09F9880E38193E38293E381ABE381A1E381AFF09F9880';
+            const plainText = '😀こんにちは😀';
+            expect(convert.hexToUtf8(hex)).to.be.equal(plainText);
+            expect(convert.utf8ToHex(plainText)).eq(hex);
+        });
     });
 
     describe('uint8ToUtf8', () => {

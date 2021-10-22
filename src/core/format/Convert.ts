@@ -181,8 +181,25 @@ export class Convert {
      * @return {string}
      */
     public static utf8ToHex = (input: string): string => {
-        return Buffer.from(input, 'utf-8').toString('hex').toUpperCase();
+        return Convert.utf8ToBuffer(input).toString('hex').toUpperCase();
     };
+
+    /**
+     * Convert hex to UTF-8
+     * @param {string} hex - an hex string
+     * @return {string} An UTF-8 string
+     */
+    public static hexToUtf8 = (hex: string): string => {
+        return Buffer.from(hex, 'hex').toString();
+    };
+    /**
+     * Convert UTF-8 to buffer
+     * @param input - An UTF-8 string
+     * @return the buffer
+     */
+    public static utf8ToBuffer(input: string): Buffer {
+        return Buffer.from(input, 'utf-8');
+    }
 
     /**
      * Convert UTF-8 string to Uint8Array
@@ -265,5 +282,20 @@ export class Convert {
             value += array[index] << (index * 8);
         }
         return value >>> 0;
+    }
+    /**
+     * It concats a list of Uint8Array into a new one.
+     *
+     * @param arrays - the Uint8Array to concat.
+     */
+    public static concat(...arrays: Uint8Array[]): Uint8Array {
+        const totalLength = arrays.reduce((acc, value) => acc + value.length, 0);
+        const result = new Uint8Array(totalLength);
+        let length = 0;
+        for (const array of arrays) {
+            result.set(array, length);
+            length += array.length;
+        }
+        return result;
     }
 }

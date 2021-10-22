@@ -14,38 +14,47 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core';
 import { Message } from './Message';
 import { MessageType } from './MessageType';
 
 /**
  * The plain message model defines a plain string. When sending it to the network we transform the payload to hex-string.
  */
-export class PlainMessage extends Message {
+export class PlainMessage implements Message {
+    public static readonly TYPE = MessageType.PlainMessage;
+    public readonly type = PlainMessage.TYPE;
+    public readonly payload: string;
+
+    /**
+     * @internal
+     * @param builder
+     */
+    constructor(private readonly builder: Uint8Array) {
+        this.payload = Convert.uint8ToUtf8(builder.slice(1));
+    }
     /**
      * Create plain message object.
      * @returns PlainMessage
      */
     public static create(message: string): PlainMessage {
-        return new PlainMessage(message);
+        return new PlainMessage(Convert.concat(Uint8Array.of(this.TYPE), Convert.utf8ToBuffer(message)));
     }
 
     /**
      *
-     * It creates the Plain message from a payload hex without the 00 prefix.
-     *
-     * The 00 prefix will be attached to the final payload.
+     * It creates the Plain message from a payload hex with the 00 prefix.
      *
      * @internal
      */
-    public static createFromPayload(payload: string): PlainMessage {
-        return new PlainMessage(this.decodeHex(payload));
+    public static createFromBuilder(builder: Uint8Array): PlainMessage {
+        return new PlainMessage(builder);
     }
 
-    /**
-     * @internal
-     * @param payload
-     */
-    constructor(payload: string) {
-        super(MessageType.PlainMessage, payload);
+    toBuffer(): Uint8Array {
+        return this.builder;
+    }
+    toDTO(): string {
+        return Convert.uint8ToHex(this.builder);
     }
 }

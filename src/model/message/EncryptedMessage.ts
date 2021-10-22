@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { GeneratorUtils } from 'catbuffer-typescript';
+import { Convert } from '../../core';
 import { Crypto } from '../../core/crypto';
 import { PublicAccount } from '../account';
 import { Message } from './Message';
@@ -23,12 +25,16 @@ import { PlainMessage } from './PlainMessage';
 /**
  * Encrypted Message model
  */
-export class EncryptedMessage extends Message {
-    public readonly recipientPublicAccount?: PublicAccount;
+export class EncryptedMessage implements Message {
+    public readonly type = MessageType.EncryptedMessage;
+    public readonly payload: string;
 
-    constructor(payload: string, recipientPublicAccount?: PublicAccount) {
-        super(MessageType.EncryptedMessage, payload);
-        this.recipientPublicAccount = recipientPublicAccount;
+    /**
+     * @internal
+     * @param buffer the buffer.
+     */
+    constructor(private readonly buffer: Uint8Array) {
+        this.payload = EncryptedMessage.getPayload(buffer);
     }
 
     /**
@@ -36,13 +42,23 @@ export class EncryptedMessage extends Message {
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
      * @param privateKey - Sender private key
-     * @return {EncryptedMessage}
+     * @param iv - iv for encoding, for unit tests.
+     * @return The encrypted message.
      */
-    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey: string): EncryptedMessage {
-        return new EncryptedMessage(
-            Crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
-            recipientPublicAccount,
-        );
+    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey: string, iv?: Buffer): EncryptedMessage {
+        const encryptedHex = Crypto.encode(privateKey, recipientPublicAccount.publicKey, message, false, iv).toUpperCase();
+        return new EncryptedMessage(EncryptedMessage.createBuffer(encryptedHex));
+    }
+
+    /**
+     *
+     * @param encryptMessage - Encrypted message to be decrypted
+     * @param privateKey - Recipient private key
+     * @param recipientPublicAccount - Sender public account
+     * @return {PlainMessage}
+     */
+    public static decrypt(encryptMessage: EncryptedMessage, privateKey: string, recipientPublicAccount: PublicAccount): PlainMessage {
+        return PlainMessage.create(Convert.hexToUtf8(Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
     }
 
     /**
@@ -54,17 +70,44 @@ export class EncryptedMessage extends Message {
      * @param payload
      */
     public static createFromPayload(payload: string): EncryptedMessage {
-        return new EncryptedMessage(this.decodeHex(payload));
+        return new EncryptedMessage(EncryptedMessage.createBuffer(payload));
     }
 
     /**
      *
-     * @param encryptMessage - Encrypted message to be decrypted
-     * @param privateKey - Recipient private key
-     * @param recipientPublicAccount - Sender public account
-     * @return {PlainMessage}
+     * It creates the Plain message from a payload hex with the 00 prefix.
+     *
+     * @internal
      */
-    public static decrypt(encryptMessage: EncryptedMessage, privateKey, recipientPublicAccount: PublicAccount): PlainMessage {
-        return new PlainMessage(this.decodeHex(Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
+    public static createFromBuilder(builder: Uint8Array): EncryptedMessage {
+        return new EncryptedMessage(builder);
+    }
+
+    /**
+     * Create DTO object
+     */
+    toDTO(): string {
+        return Convert.uint8ToHex(this.toBuffer());
+    }
+
+    toBuffer(): Uint8Array {
+        return this.buffer;
+    }
+
+    public static createBuffer(payload: string): Uint8Array {
+        if (!payload) {
+            return Uint8Array.of();
+        }
+        const message = Convert.utf8ToHex(payload);
+        const payloadBuffer = Convert.hexToUint8(message);
+        const typeBuffer = GeneratorUtils.uintToBuffer(MessageType.EncryptedMessage, 1);
+        return GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
+    }
+
+    public static getPayload(buffer: Uint8Array): string {
+        if (!buffer.length) {
+            return '';
+        }
+        return Convert.uint8ToUtf8(buffer.slice(1));
     }
 }

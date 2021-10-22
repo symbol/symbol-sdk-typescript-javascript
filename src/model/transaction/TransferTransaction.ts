@@ -18,7 +18,6 @@ import {
     AmountDto,
     EmbeddedTransactionBuilder,
     EmbeddedTransferTransactionBuilder,
-    GeneratorUtils,
     TimestampDto,
     TransactionBuilder,
     TransferTransactionBuilder,
@@ -159,7 +158,7 @@ export class TransferTransaction extends Transaction {
         if (this.message?.type === MessageType.PersistentHarvestingDelegationMessage) {
             if (this.mosaics.length > 0) {
                 throw new Error('PersistentDelegationRequestTransaction should be created without Mosaic');
-            } else if (!/^[0-9a-fA-F]{264}$/.test(this.message.payload)) {
+            } else if (!/^[0-9a-fA-F]{264}$/.test(this.message.toDTO())) {
                 throw new Error('PersistentDelegationRequestTransaction message is invalid');
             }
         }
@@ -199,18 +198,10 @@ export class TransferTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     public getMessageBuffer(): Uint8Array {
-        if (!this.message || !this.message.payload) {
+        if (!this.message) {
             return Uint8Array.of();
         }
-        const messgeHex =
-            this.message.type === MessageType.PersistentHarvestingDelegationMessage
-                ? this.message.payload
-                : Convert.utf8ToHex(this.message.payload);
-        const payloadBuffer = Convert.hexToUint8(messgeHex);
-        const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
-        return this.message.type === MessageType.PersistentHarvestingDelegationMessage || !this.message.payload
-            ? payloadBuffer
-            : GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
+        return this.message.toBuffer();
     }
 
     /**

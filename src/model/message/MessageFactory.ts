@@ -34,31 +34,32 @@ export class MessageFactory {
      * @param payload the payload as byte array
      */
     public static createMessageFromBuffer(payload?: Uint8Array): Message {
-        return this.createMessageFromHex(payload ? Convert.uint8ToHex(payload) : undefined);
-    }
-    /**
-     * It creates a message from the hex payload
-     * @param payload the payload as hex
-     */
-    public static createMessageFromHex(payload?: string): Message {
         if (!payload || !payload.length) {
-            return new RawMessage('');
+            return RawMessage.create(Uint8Array.of());
         }
-        const upperCasePayload = payload.toUpperCase();
+        const messageType = payload[0];
+        const upperCasePayload = Convert.uint8ToHex(payload).toUpperCase();
         if (
             upperCasePayload.length == PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE &&
             upperCasePayload.startsWith(MessageMarker.PersistentDelegationUnlock)
         ) {
             return PersistentHarvestingDelegationMessage.createFromPayload(upperCasePayload);
         }
-        const messageType = Convert.hexToUint8(upperCasePayload)[0];
+
         switch (messageType) {
             case MessageType.PlainMessage:
-                return PlainMessage.createFromPayload(upperCasePayload.substring(2));
+                return PlainMessage.createFromBuilder(payload);
             case MessageType.EncryptedMessage:
-                return EncryptedMessage.createFromPayload(upperCasePayload.substring(2));
+                return EncryptedMessage.createFromBuilder(payload);
         }
-        return new RawMessage(upperCasePayload);
+        return RawMessage.create(payload);
+    }
+    /**
+     * It creates a message from the hex payload
+     * @param payload the payload as hex
+     */
+    public static createMessageFromHex(payload?: string): Message {
+        return MessageFactory.createMessageFromBuffer(payload ? Convert.hexToUint8(payload) : undefined);
     }
 }
 
