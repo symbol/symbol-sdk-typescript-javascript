@@ -56,7 +56,7 @@ export class IntegrationTestHelper {
     }
 
     private toAccounts(addresses: Addresses): { accounts: string[]; apiUrl: string; addresses: Addresses } {
-        const accounts = addresses?.mosaics?.[0].accounts.map((n) => n.privateKey);
+        const accounts = addresses?.mosaics?.[0].accounts.map((n) => n.privateKey).filter((privateKey) => privateKey) as string[];
         if (!accounts) {
             throw new Error('Nemesis accounts could not be loaded!');
         }
