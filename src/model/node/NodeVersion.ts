@@ -102,12 +102,10 @@ export class NodeVersion {
     public formatted(): string {
         const placeholderHex = '00000000';
         const hexNodeVersion = (placeholderHex + this.nodeVersion.toString(16)).slice(-8);
-        const formattedNodeVersion = hexNodeVersion
+        return hexNodeVersion
             .match(/.{1,2}/g)!
             .map((hex) => parseInt(hex, 16))
             .join('.');
-
-        return formattedNodeVersion;
     }
 
     /**
@@ -124,10 +122,6 @@ export class NodeVersion {
      * @returns {boolean}
      */
     public equals(nodeVersion: any): boolean {
-        if (nodeVersion instanceof NodeVersion) {
-            return this.nodeVersion === nodeVersion.raw();
-        }
-
-        return false;
+        return nodeVersion && this.nodeVersion === nodeVersion.nodeVersion;
     }
 }

@@ -93,7 +93,7 @@ export class UnresolvedMapping {
      * @return {Uint8Array}
      */
     public static toUnresolvedAddressBytes(unresolvedAddress: UnresolvedAddress, networkType: NetworkType): Uint8Array {
-        if (unresolvedAddress instanceof NamespaceId) {
+        if (unresolvedAddress.isNamespaceId()) {
             // received hexadecimal notation of namespaceId (alias)
             return RawAddress.aliasToRecipient(Convert.hexToUint8((unresolvedAddress as NamespaceId).toHex()), networkType);
         } else {

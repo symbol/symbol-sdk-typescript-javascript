@@ -48,8 +48,8 @@ export class ResolutionEntry<R extends Address | MosaicId> {
      */
     public serialize(): Uint8Array {
         let resolvedBytes: Uint8Array;
-        if (this.resolved instanceof Address) {
-            resolvedBytes = RawAddress.stringToAddress(this.resolved.plain());
+        if (this.resolved.isAddress()) {
+            resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
         } else {
             resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
         }

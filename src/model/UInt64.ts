@@ -136,7 +136,7 @@ export class UInt64 {
      * @returns {boolean}
      */
     public equals(other: UInt64): boolean {
-        return this.lower === other.lower && this.higher === other.higher;
+        return other && this.lower === other.lower && this.higher === other.higher;
     }
 
     /**

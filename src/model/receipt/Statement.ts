@@ -60,7 +60,7 @@ export class Statement {
         transactionIndex: number,
         aggregateTransactionIndex = 0,
     ): Address {
-        return unresolvedAddress instanceof NamespaceId
+        return unresolvedAddress.isNamespaceId()
             ? (this.getResolvedFromReceipt(
                   ResolutionType.Address,
                   unresolvedAddress as NamespaceId,
@@ -68,7 +68,7 @@ export class Statement {
                   height,
                   aggregateTransactionIndex,
               ) as Address)
-            : unresolvedAddress;
+            : (unresolvedAddress as Address);
     }
 
     /**
@@ -85,7 +85,7 @@ export class Statement {
         transactionIndex: number,
         aggregateTransactionIndex = 0,
     ): MosaicId {
-        return unresolvedMosaicId instanceof NamespaceId
+        return unresolvedMosaicId.isNamespaceId()
             ? (this.getResolvedFromReceipt(
                   ResolutionType.Mosaic,
                   unresolvedMosaicId as NamespaceId,
@@ -93,7 +93,7 @@ export class Statement {
                   height,
                   aggregateTransactionIndex,
               ) as MosaicId)
-            : unresolvedMosaicId;
+            : (unresolvedMosaicId as MosaicId);
     }
 
     /**
@@ -105,7 +105,7 @@ export class Statement {
      * @returns {Mosaic}
      */
     public resolveMosaic(unresolvedMosaic: Mosaic, height: string, transactionIndex: number, aggregateTransactionIndex = 0): Mosaic {
-        return unresolvedMosaic.id instanceof NamespaceId
+        return unresolvedMosaic.id.isNamespaceId()
             ? new Mosaic(
                   this.getResolvedFromReceipt(
                       ResolutionType.Mosaic,

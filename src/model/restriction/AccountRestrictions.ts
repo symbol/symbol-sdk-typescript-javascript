@@ -22,7 +22,6 @@ import {
     AccountRestrictionTransactionTypeValueBuilder,
     GeneratorUtils,
 } from 'catbuffer-typescript';
-import { isNumeric } from 'rxjs/internal-compatibility';
 import { Address } from '../account';
 import { MosaicId } from '../mosaic';
 import { AccountRestriction } from './AccountRestriction';
@@ -53,13 +52,13 @@ export class AccountRestrictions {
         const address = this.address.toBuilder();
         const restrictions: AccountRestrictionsInfoBuilder[] = this.restrictions.map((r) => {
             const addressRestrictions = new AccountRestrictionAddressValueBuilder(
-                r.values.filter((v) => v instanceof Address).map((a) => (a as Address).toBuilder()),
+                r.values.filter((v) => typeof v !== 'number' && v.isAddress()).map((a) => (a as Address).toBuilder()),
             );
             const mosaicIdRestrictions = new AccountRestrictionMosaicValueBuilder(
-                r.values.filter((v) => v instanceof MosaicId).map((a) => (a as MosaicId).toBuilder()),
+                r.values.filter((v) => typeof v !== 'number' && v.isMosaicId()).map((a) => (a as MosaicId).toBuilder()),
             );
             const transactionTypeRestrictions = new AccountRestrictionTransactionTypeValueBuilder(
-                r.values.filter((v) => isNumeric(v)).map((a) => a as number),
+                r.values.filter((v) => typeof v === 'number').map((a) => a as number),
             );
             return new AccountRestrictionsInfoBuilder(
                 GeneratorUtils.toFlags(AccountRestrictionFlagsDto, r.restrictionFlags),

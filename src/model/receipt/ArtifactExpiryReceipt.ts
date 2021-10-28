@@ -15,8 +15,8 @@
  */
 
 import { MosaicExpiryReceiptBuilder, NamespaceExpiryReceiptBuilder } from 'catbuffer-typescript';
-import { MosaicId } from '../mosaic/MosaicId';
-import { UnresolvedMosaicId } from '../mosaic/UnresolvedMosaicId';
+import { MosaicId, UnresolvedMosaicId } from '../mosaic';
+import { NamespaceId } from '../namespace';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
@@ -42,17 +42,17 @@ export class ArtifactExpiryReceipt extends Receipt {
      * @return {Uint8Array}
      */
     public serialize(): Uint8Array {
-        if (this.artifactId instanceof MosaicId) {
+        if (!this.artifactId.isNamespaceId()) {
             return new MosaicExpiryReceiptBuilder(
                 ReceiptVersion.ARTIFACT_EXPIRY,
                 this.type.valueOf(),
-                this.artifactId.toBuilder(),
+                (this.artifactId as MosaicId).toBuilder(),
             ).serialize();
         }
         return new NamespaceExpiryReceiptBuilder(
             ReceiptVersion.ARTIFACT_EXPIRY,
             this.type.valueOf(),
-            this.artifactId.toBuilder(),
+            (this.artifactId as NamespaceId).toBuilder(),
         ).serialize();
     }
 }

@@ -20,7 +20,7 @@ import { BlockInfoDTO } from 'symbol-openapi-typescript-fetch-client';
 import * as WebSocket from 'ws';
 import { parseObjectProperties } from '../core/format/Utilities';
 import { DtoMapping, MultisigChildrenTreeObject, MultisigGraphUtils } from '../core/utils';
-import { MultisigAccountInfo, UnresolvedAddress } from '../model';
+import { MultisigAccountInfo, NamespaceId, UnresolvedAddress } from '../model';
 import { Address } from '../model/account/Address';
 import { PublicAccount } from '../model/account/PublicAccount';
 import { FinalizedBlock } from '../model/blockchain/FinalizedBlock';
@@ -270,7 +270,6 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             share(),
             filter((_) => _.channelName === ListenerChannelName.block),
-            filter((_) => _.message instanceof NewBlock),
             map((_) => _.message as NewBlock),
         );
     }
@@ -287,7 +286,6 @@ export class Listener implements IListener {
         return this.messageSubject.asObservable().pipe(
             share(),
             filter((_) => _.channelName === ListenerChannelName.finalizedBlock),
-            filter((_) => _.message instanceof FinalizedBlock),
             map((_) => _.message as FinalizedBlock),
         );
     }
@@ -360,7 +358,6 @@ export class Listener implements IListener {
             switchMap((subscribers) => {
                 return this.messageSubject.asObservable().pipe(
                     filter((listenerMessage) => listenerMessage.channelName === channel),
-                    filter((listenerMessage) => listenerMessage.message instanceof Transaction),
                     distinctUntilChanged((prev, curr) => {
                         const currentHash = (curr.message as Transaction).transactionInfo!.hash;
                         const previousHash = (prev.message as Transaction).transactionInfo!.hash;
@@ -470,7 +467,6 @@ export class Listener implements IListener {
                 this.subscribeTo(`status/${address.plain()}`);
                 return this.messageSubject.asObservable().pipe(
                     filter((_) => _.channelName === ListenerChannelName.status),
-                    filter((_) => _.message instanceof TransactionStatusError),
                     filter((_) => _.channelParam.toUpperCase() === address.plain()),
                     map((_) => _.message as TransactionStatusError),
                     filter((_) => !transactionHash || _.hash.toUpperCase() == transactionHash.toUpperCase()),
@@ -507,7 +503,6 @@ export class Listener implements IListener {
             switchMap((subscribers) => {
                 return this.messageSubject.asObservable().pipe(
                     filter((_) => _.channelName.toUpperCase() === ListenerChannelName.cosignature.toUpperCase()),
-                    filter((_) => _.message instanceof CosignatureSignedTransaction),
                     filter((_) => subscribers.includes(_.channelParam.toUpperCase())),
                     map((_) => _.message as CosignatureSignedTransaction),
                 );
@@ -535,19 +530,17 @@ export class Listener implements IListener {
      * @returns {Address}
      */
     private getResolvedAddress(unresolvedAddress: UnresolvedAddress): Observable<Address> {
-        if (unresolvedAddress instanceof Address) {
-            return of(unresolvedAddress);
+        if (unresolvedAddress.isAddress()) {
+            return of(unresolvedAddress as Address);
         }
 
-        return this.namespaceRepository.getLinkedAddress(unresolvedAddress).pipe(
+        const namespaceId = unresolvedAddress as NamespaceId;
+        return this.namespaceRepository.getLinkedAddress(namespaceId).pipe(
             map((address) => {
                 if (!address) {
-                    throw new Error(`Invalid unresolvedAddress: ${unresolvedAddress.toHex()}`);
+                    throw new Error(`Invalid unresolvedAddress: ${namespaceId.toHex()}`);
                 }
                 return address;
-            }),
-            catchError((err) => {
-                throw new Error(err);
             }),
         );
     }

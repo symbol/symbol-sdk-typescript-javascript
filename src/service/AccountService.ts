@@ -25,7 +25,6 @@ import { AccountInfo } from '../model/account/AccountInfo';
 import { AccountInfoResolvedMosaic } from '../model/account/AccountInfoResolvedMosaic';
 import { Address } from '../model/account/Address';
 import { Mosaic } from '../model/mosaic/Mosaic';
-import { MosaicId } from '../model/mosaic/MosaicId';
 import { ResolvedMosaic } from '../model/mosaic/ResolvedMosaic';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceInfoWithName } from '../model/namespace/NamespaceInfoWithName';
@@ -101,11 +100,12 @@ export class AccountService implements IAccountService {
     /**
      * Resolve mosaics provided namespace names
      * @param mosaics unresolved mosaics
+     * @param names the known namespace alises.
      * @return {ResolvedMosaic[]}
      */
     private resolveMosaics(mosaics: Mosaic[], names: NamespaceName[]): ResolvedMosaic[] {
         return mosaics.map((mosaic) => {
-            if (mosaic.id instanceof MosaicId) {
+            if (!mosaic.id.isNamespaceId()) {
                 return mosaic as ResolvedMosaic;
             } else {
                 const name = names.find((f) => f.namespaceId.equals(mosaic.id));
@@ -127,9 +127,9 @@ export class AccountService implements IAccountService {
         const namespaceIds: NamespaceId[] = [];
         accountInfos.forEach((info) => {
             info.mosaics.forEach((mosaic) => {
-                if (mosaic.id instanceof NamespaceId) {
+                if (mosaic.id.isNamespaceId()) {
                     if (!namespaceIds.find((n) => n.equals(mosaic.id))) {
-                        namespaceIds.push(mosaic.id);
+                        namespaceIds.push(mosaic.id as NamespaceId);
                     }
                 }
             });

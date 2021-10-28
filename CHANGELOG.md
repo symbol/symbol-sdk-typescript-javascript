@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.3] - NEXT
+
+**Milestone**: Symbol Mainnet
+Package  | Version  | Link
+---|---|---
+SDK Core| v1.0.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v1.0.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v1.0.2  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- fix: replaced `instanceof` statements. These statements are problematic when npm installs the dependency in multiples modules. 
+
 ## [1.0.2] - 25-Oct-2021
 
 **Milestone**: Symbol Mainnet
@@ -11,7 +22,7 @@ Package  | Version  | Link
 ---|---|---
 SDK Core| v1.0.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
 Catbuffer | v1.0.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
-Client Library | v1.0.1  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+Client Library | v1.0.2 | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
 - feat: Multisig multilevel subscription in web listener.
 - feat: Added Deployment data to `ServerInfo`.

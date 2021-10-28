@@ -76,10 +76,7 @@ export class NamespaceId {
      * @return boolean
      */
     public equals(id: any): boolean {
-        if (id instanceof NamespaceId) {
-            return this.id.equals(id.id);
-        }
-        return false;
+        return id && this.id.equals(id.id);
     }
 
     /**
@@ -113,5 +110,26 @@ export class NamespaceId {
      */
     public plain(): string {
         return this.toHex();
+    }
+
+    /**
+     * returns that this instance is an alias.
+     */
+    public isNamespaceId(): boolean {
+        return true;
+    }
+
+    /**
+     * returns that the instance is not address
+     */
+    public isAddress(): boolean {
+        return false;
+    }
+
+    /**
+     * returns that the instance is not a mosaic id
+     */
+    public isMosaicId(): boolean {
+        return false;
     }
 }

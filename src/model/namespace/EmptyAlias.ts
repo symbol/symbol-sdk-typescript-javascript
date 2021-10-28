@@ -43,7 +43,7 @@ export class EmptyAlias extends Alias {
      * @return boolean
      */
     public equals(alias: any): boolean {
-        return alias instanceof EmptyAlias || alias.type === 0;
+        return alias && alias.type === this.type;
     }
 
     /**

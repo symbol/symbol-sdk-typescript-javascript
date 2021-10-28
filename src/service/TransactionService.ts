@@ -19,7 +19,6 @@ import { first, map, mergeMap, toArray } from 'rxjs/operators';
 import { IListener, ReceiptRepository, TransactionGroup, TransactionRepository } from '../infrastructure';
 import { ReceiptPaginationStreamer } from '../infrastructure/paginationStreamer';
 import { Address } from '../model/account';
-import { NamespaceId } from '../model/namespace';
 import { Statement } from '../model/receipt';
 import {
     AccountAddressRestrictionTransaction,
@@ -142,10 +141,10 @@ export class TransactionService implements ITransactionService {
         return merge(transactionObservable, errorObservable).pipe(
             first(),
             map((errorOrTransaction) => {
-                if (errorOrTransaction instanceof TransactionStatusError) {
-                    throw new Error(errorOrTransaction.code);
+                if (errorOrTransaction.constructor.name === TransactionStatusError.name) {
+                    throw new Error((errorOrTransaction as TransactionStatusError).code);
                 } else {
-                    return errorOrTransaction;
+                    return errorOrTransaction as T;
                 }
             }),
         );
@@ -187,43 +186,36 @@ export class TransactionService implements ITransactionService {
             case TransactionType.ACCOUNT_ADDRESS_RESTRICTION:
                 const accountAddressRestriction = transaction as AccountAddressRestrictionTransaction;
                 return (
-                    accountAddressRestriction.restrictionAdditions.find((address) => address instanceof NamespaceId) !== undefined ||
-                    accountAddressRestriction.restrictionDeletions.find((address) => address instanceof NamespaceId) !== undefined
+                    accountAddressRestriction.restrictionAdditions.find((address) => address.isNamespaceId()) !== undefined ||
+                    accountAddressRestriction.restrictionDeletions.find((address) => address.isNamespaceId()) !== undefined
                 );
             case TransactionType.ACCOUNT_MOSAIC_RESTRICTION:
                 const accountMosaicRestriction = transaction as AccountAddressRestrictionTransaction;
                 return (
-                    accountMosaicRestriction.restrictionAdditions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined ||
-                    accountMosaicRestriction.restrictionDeletions.find((mosaicId) => mosaicId instanceof NamespaceId) !== undefined
+                    accountMosaicRestriction.restrictionAdditions.find((mosaicId) => mosaicId.isNamespaceId()) !== undefined ||
+                    accountMosaicRestriction.restrictionDeletions.find((mosaicId) => mosaicId.isNamespaceId()) !== undefined
                 );
             case TransactionType.HASH_LOCK:
-                return (transaction as LockFundsTransaction).mosaic.id instanceof NamespaceId;
+                return (transaction as LockFundsTransaction).mosaic.id.isNamespaceId();
             case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
                 const mosaicAddressRestriction = transaction as MosaicAddressRestrictionTransaction;
-                return (
-                    mosaicAddressRestriction.targetAddress instanceof NamespaceId ||
-                    mosaicAddressRestriction.mosaicId instanceof NamespaceId
-                );
+                return mosaicAddressRestriction.targetAddress.isNamespaceId() || mosaicAddressRestriction.mosaicId.isNamespaceId();
             case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
                 const mosaicGlobalRestriction = transaction as MosaicGlobalRestrictionTransaction;
-                return (
-                    mosaicGlobalRestriction.referenceMosaicId instanceof NamespaceId ||
-                    mosaicGlobalRestriction.mosaicId instanceof NamespaceId
-                );
+                return mosaicGlobalRestriction.referenceMosaicId.isNamespaceId() || mosaicGlobalRestriction.mosaicId.isNamespaceId();
             case TransactionType.MOSAIC_METADATA:
-                return (transaction as MosaicMetadataTransaction).targetMosaicId instanceof NamespaceId;
+                return (transaction as MosaicMetadataTransaction).targetMosaicId.isNamespaceId();
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
-                return (transaction as MosaicSupplyChangeTransaction).mosaicId instanceof NamespaceId;
+                return (transaction as MosaicSupplyChangeTransaction).mosaicId.isNamespaceId();
             case TransactionType.SECRET_PROOF:
-                return (transaction as SecretProofTransaction).recipientAddress instanceof NamespaceId;
+                return (transaction as SecretProofTransaction).recipientAddress.isNamespaceId();
             case TransactionType.SECRET_LOCK:
                 const secretLock = transaction as SecretLockTransaction;
-                return secretLock.recipientAddress instanceof NamespaceId || secretLock.mosaic.id instanceof NamespaceId;
+                return secretLock.recipientAddress.isNamespaceId() || secretLock.mosaic.id.isNamespaceId();
             case TransactionType.TRANSFER:
                 const transfer = transaction as TransferTransaction;
                 return (
-                    transfer.recipientAddress instanceof NamespaceId ||
-                    transfer.mosaics.find((mosaic) => mosaic.id instanceof NamespaceId) !== undefined
+                    transfer.recipientAddress.isNamespaceId() || transfer.mosaics.find((mosaic) => mosaic.id.isNamespaceId()) !== undefined
                 );
             default:
                 throw new Error('Transaction type not not recogonised.');
