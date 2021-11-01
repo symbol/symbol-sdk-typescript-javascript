@@ -37,7 +37,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
@@ -49,7 +49,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             new UInt64([1, 0]),
         );
 
@@ -62,7 +62,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(registerNamespaceTransaction.duration!.lower).to.be.equal(1000);
@@ -80,7 +80,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             'parent-test-namespace',
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -95,7 +95,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             new NamespaceId([929036875, 2226345261]),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -111,7 +111,7 @@ describe('NamespaceRegistrationTransaction', () => {
                 Deadline.create(epochAdjustment),
                 'root-test-namespace',
                 UInt64.fromUint(1000),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
             expect(registerNamespaceTransaction.size).to.be.equal(165);
             expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
@@ -121,7 +121,7 @@ describe('NamespaceRegistrationTransaction', () => {
                 Deadline.create(epochAdjustment),
                 'root-test-namespace',
                 UInt64.fromUint(1000),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
             expect(registerNamespaceTransaction.size).to.be.equal(165);
             expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
@@ -134,7 +134,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ).setMaxFee(2);
         expect(registerNamespaceTransaction.maxFee.compact()).to.be.equal(330);
 
@@ -147,7 +147,7 @@ describe('NamespaceRegistrationTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

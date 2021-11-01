@@ -37,7 +37,7 @@ describe('MosaicInfo', () => {
             startHeight: new UInt64([1, 0]),
             ownerAddress: Address.createFromPublicKey(
                 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             ),
             revision: 1,
             flags: 7,
@@ -72,7 +72,7 @@ describe('MosaicInfo', () => {
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '010029CF5FD941AD25D580FBDBCA73F91F000100000000000000A822D04812D05000F96C283657B0C17990932BC8499C7D94010000000703E803000000000000',
+            '010029CF5FD941AD25D580FBDBCA73F91F0001000000000000009822D04812D05000F96C283657B0C17990932BC84939F2E2010000000703E803000000000000',
         );
         deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });
@@ -104,7 +104,7 @@ describe('MosaicInfo', () => {
 
         const serialized = mosaicInfo.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '010029CF5FD941AD25D580FBDBCA73F91F000100000000000000A822D04812D05000F96C283657B0C17990932BC8499C7D940100000007030000000000000000',
+            '010029CF5FD941AD25D580FBDBCA73F91F0001000000000000009822D04812D05000F96C283657B0C17990932BC84939F2E20100000007030000000000000000',
         );
         deepEqual(MosaicEntryBuilder.loadFromBinary(serialized).serialize(), serialized);
     });

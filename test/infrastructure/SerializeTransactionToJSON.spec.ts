@@ -71,7 +71,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(accountLinkTransaction);
@@ -81,13 +81,13 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
-        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(epochAdjustment),
             AddressRestrictionFlag.AllowIncomingAddress,
             [address],
             [],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(addressRestrictionTransaction);
@@ -104,7 +104,7 @@ describe('SerializeTransactionToJSON', () => {
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(mosaicRestrictionTransaction);
@@ -121,7 +121,7 @@ describe('SerializeTransactionToJSON', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(operationRestrictionTransaction);
@@ -133,13 +133,13 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AddressAliasTransaction', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
             address,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(addressAliasTransaction);
@@ -156,7 +156,7 @@ describe('SerializeTransactionToJSON', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         const json = validateToFromJson(mosaicAliasTransaction);
         expect(json.transaction.version).to.be.equal(1);
@@ -172,7 +172,7 @@ describe('SerializeTransactionToJSON', () => {
             MosaicFlags.create(true, true, true),
             5,
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(mosaicDefinitionTransaction);
@@ -191,7 +191,7 @@ describe('SerializeTransactionToJSON', () => {
             MosaicFlags.create(true, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(mosaicDefinitionTransaction);
@@ -208,7 +208,7 @@ describe('SerializeTransactionToJSON', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(mosaicSupplyChangeTransaction);
@@ -221,10 +221,10 @@ describe('SerializeTransactionToJSON', () => {
         const mosaic = NetworkCurrencyLocal.createRelative(100);
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [mosaic],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         // So deep equals works!
         delete transferTransaction.mosaics[0].id['fullName'];
@@ -237,7 +237,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipientAddress = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+        const recipientAddress = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createAbsolute(10),
@@ -245,7 +245,7 @@ describe('SerializeTransactionToJSON', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(secretLockTransaction);
@@ -262,7 +262,7 @@ describe('SerializeTransactionToJSON', () => {
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(secretProofTransaction);
@@ -278,9 +278,9 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(epochAdjustment),
             2,
             1,
-            [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.PRIVATE_TEST)],
+            [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.TEST_NET)],
             [],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(modifyMultisigAccountTransaction);
@@ -294,16 +294,16 @@ describe('SerializeTransactionToJSON', () => {
         const deadline = Deadline.create(epochAdjustment);
         const transferTransaction = TransferTransaction.create(
             deadline,
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             deadline,
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -317,16 +317,16 @@ describe('SerializeTransactionToJSON', () => {
         const deadline = Deadline.create(epochAdjustment);
         const transferTransaction = TransferTransaction.create(
             deadline,
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             deadline,
             [transferTransaction.toAggregate(account.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -338,14 +338,14 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create LockFundTransaction', () => {
         const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.PRIVATE_TEST, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(epochAdjustment), [], NetworkType.TEST_NET, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
             Deadline.create(epochAdjustment),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(lockTransaction);
@@ -359,7 +359,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         // So deep equals works!
         delete (registerNamespaceTransaction.namespaceId as any).fullName;
@@ -373,7 +373,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             'parent-test-namespace',
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const json = validateToFromJson(registerNamespaceTransaction);
@@ -386,7 +386,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         const json = validateToFromJson(vrfKeyLinkTransaction);
         expect(json.transaction.version).to.be.equal(1);
@@ -399,7 +399,7 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         const json = validateToFromJson(nodeKeyLinkTransaction);
         expect(json.transaction.version).to.be.equal(1);
@@ -415,7 +415,7 @@ describe('SerializeTransactionToJSON', () => {
             1,
             3,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             TransactionVersion.VOTING_KEY_LINK,
         );
 

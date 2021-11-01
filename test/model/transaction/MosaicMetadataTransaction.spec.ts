@@ -21,7 +21,6 @@ import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
@@ -32,7 +31,7 @@ import { MosaicMetadataTransaction } from '../../../src/model/transaction/Mosaic
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;
@@ -62,7 +61,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         expect(mosaicMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -77,7 +76,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -93,13 +92,13 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            'A8D66C33420E5411995BACFCA2B28CF1C9F5DD7AB181BFA8E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
+            '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
         );
     });
 
@@ -112,13 +111,13 @@ describe('MosaicMetadataTransaction', () => {
             namespacId,
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            'A8D66C33420E5411995BACFCA2B28CF1C9F5DD7AB181BFA8E803000000000000C51FB4C93FCA509501000A0000000000000000000000',
+            '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776E803000000000000C51FB4C93FCA509501000A0000000000000000000000',
         );
     });
 
@@ -131,7 +130,7 @@ describe('MosaicMetadataTransaction', () => {
                 new MosaicId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.PRIVATE_TEST,
+                TestNetworkType,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
@@ -145,7 +144,7 @@ describe('MosaicMetadataTransaction', () => {
                 new MosaicId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.PRIVATE_TEST,
+                TestNetworkType,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
@@ -161,7 +160,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(364);
 
@@ -171,7 +170,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicMetadataTransaction = new MosaicMetadataTransaction(
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -199,7 +198,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         Object.assign(mosaicMetadataTransaction, { signer: account.publicAccount });
@@ -219,12 +218,12 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -241,7 +240,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;

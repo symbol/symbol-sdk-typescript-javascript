@@ -26,17 +26,17 @@ describe('MultisigAccountInfo', () => {
             version: 1,
             accountAddress: Address.createFromPublicKey(
                 'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             ),
             cosignatoryAddresses: [
-                Address.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB', NetworkType.PRIVATE_TEST),
-                Address.createFromPublicKey('68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763', NetworkType.PRIVATE_TEST),
-                Address.createFromPublicKey('DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14', NetworkType.PRIVATE_TEST),
+                Address.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB', NetworkType.TEST_NET),
+                Address.createFromPublicKey('68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763', NetworkType.TEST_NET),
+                Address.createFromPublicKey('DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14', NetworkType.TEST_NET),
             ],
             minApproval: 3,
             minRemoval: 3,
             multisigAddresses: [
-                Address.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B', NetworkType.PRIVATE_TEST),
+                Address.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B', NetworkType.TEST_NET),
             ],
         },
     };
@@ -109,10 +109,7 @@ describe('MultisigAccountInfo', () => {
 
             expect(
                 multisigAccountInfo.hasCosigner(
-                    Address.createFromPublicKey(
-                        'CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
-                        NetworkType.PRIVATE_TEST,
-                    ),
+                    Address.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB', NetworkType.TEST_NET),
                 ),
             ).to.be.equal(true);
         });
@@ -129,10 +126,7 @@ describe('MultisigAccountInfo', () => {
 
             expect(
                 multisigAccountInfo.hasCosigner(
-                    Address.createFromPublicKey(
-                        'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-                        NetworkType.PRIVATE_TEST,
-                    ),
+                    Address.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D', NetworkType.TEST_NET),
                 ),
             ).to.be.equal(false);
         });
@@ -151,10 +145,7 @@ describe('MultisigAccountInfo', () => {
 
             expect(
                 multisigAccountInfo.isCosignerOfMultisigAccount(
-                    Address.createFromPublicKey(
-                        '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
-                        NetworkType.PRIVATE_TEST,
-                    ),
+                    Address.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B', NetworkType.TEST_NET),
                 ),
             ).to.be.equal(true);
         });
@@ -171,10 +162,7 @@ describe('MultisigAccountInfo', () => {
 
             expect(
                 multisigAccountInfo.isCosignerOfMultisigAccount(
-                    Address.createFromPublicKey(
-                        'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-                        NetworkType.PRIVATE_TEST,
-                    ),
+                    Address.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D', NetworkType.TEST_NET),
                 ),
             ).to.be.equal(false);
         });
@@ -190,7 +178,7 @@ describe('MultisigAccountInfo', () => {
             );
 
             expect(Convert.uint8ToHex(multisigAccountInfo.serialize())).to.be.equal(
-                '01000300000003000000A844F36772D4842DE0E10CF0315335E672479D9A5144F7080300000000000000A8CF2886A23771534F2CEF86094B4C4FBC1E19C2860AAC25A849E14BEBCA93758EB36805BAE760A57239976F005ABFAFA8EB8764327FD32393DB1B0C018C04E4EA69F597D1E701EA0100000000000000A8DDD180440B03B7ABA2F6A858D59E0ED4034FCC82B3C3F8',
+                '010003000000030000009844F36772D4842DE0E10CF0315335E672479D9A510599FD030000000000000098CF2886A23771534F2CEF86094B4C4FBC1E19C286B105F89849E14BEBCA93758EB36805BAE760A57239976F00726BA698EB8764327FD32393DB1B0C018C04E4EA69F597D153A92B010000000000000098DDD180440B03B7ABA2F6A858D59E0ED4034FCC820931E2',
             );
         });
     });

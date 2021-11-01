@@ -18,12 +18,11 @@ import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AccountKeyLinkTransaction } from '../../../src/model/transaction/AccountKeyLinkTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('AccountKeyLinkTransaction', () => {
     let account: Account;
@@ -38,7 +37,7 @@ describe('AccountKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         expect(accountKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -50,7 +49,7 @@ describe('AccountKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -63,7 +62,7 @@ describe('AccountKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         expect(accountKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -72,7 +71,7 @@ describe('AccountKeyLinkTransaction', () => {
         const signedTransaction = accountKeyLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601',
+            '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F01',
         );
     });
 
@@ -81,7 +80,7 @@ describe('AccountKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         expect(accountKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -90,7 +89,7 @@ describe('AccountKeyLinkTransaction', () => {
         const signedTransaction = accountKeyLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B600',
+            '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F00',
         );
     });
 
@@ -100,7 +99,7 @@ describe('AccountKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.PRIVATE_TEST,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(accountKeyLinkTransaction.serialize()).length).to.be.equal(accountKeyLinkTransaction.size);
             expect(accountKeyLinkTransaction.size).to.be.equal(161);
@@ -111,7 +110,7 @@ describe('AccountKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.PRIVATE_TEST,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(accountKeyLinkTransaction.serialize()).length).to.be.equal(accountKeyLinkTransaction.size);
             expect(accountKeyLinkTransaction.size).to.be.equal(161);
@@ -124,7 +123,7 @@ describe('AccountKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(accountKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -137,12 +136,12 @@ describe('AccountKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

@@ -92,30 +92,16 @@ describe('address', () => {
     });
 
     describe('publicKeyToAddress', () => {
-        it('can create address from public key for well known network', () => {
-            // Arrange:
-            const expectedHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
-            const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
-
-            // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE);
-
-            // Assert:
-            expect(decoded[0]).to.equal(NetworkType.PRIVATE);
-            expect(address.isValidAddress(decoded)).to.equal(true);
-            expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
-        });
-
+        const expectedHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
         it('can create address from public key for custom network', () => {
             // Arrange:
-            const expectedHex = 'A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C536';
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(decoded[0]).to.equal(NetworkType.PRIVATE_TEST);
+            expect(decoded[0]).to.equal(NetworkType.TEST_NET);
             expect(address.isValidAddress(decoded)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
@@ -125,12 +111,11 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
-            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(address.isValidAddress(decoded1)).to.equal(true);
-            expect(decoded1).to.deep.equal(decoded2);
+            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(decoded).to.deep.equal(decoded);
         });
 
         it('different public keys result in different addresses', () => {
@@ -139,8 +124,8 @@ describe('address', () => {
             const publicKey2 = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.PRIVATE_TEST);
-            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.PRIVATE_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.TEST_NET);
+            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.TEST_NET);
 
             // Assert:
             expect(address.isValidAddress(decoded1)).to.equal(true);
@@ -153,7 +138,7 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.PRIVATE_TEST);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MAIN_NET);
             const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
@@ -164,9 +149,10 @@ describe('address', () => {
     });
 
     describe('isValidAddress', () => {
+        const validHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
+
         it('returns true for valid address', () => {
             // Arrange:
-            const validHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
@@ -175,7 +161,6 @@ describe('address', () => {
 
         it('returns false for address with invalid checksum', () => {
             // Arrange:
-            const validHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const decoded = convert.hexToUint8(validHex);
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
@@ -185,7 +170,6 @@ describe('address', () => {
 
         it('returns false for address with invalid hash', () => {
             // Arrange:
-            const validHex = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
             const decoded = convert.hexToUint8(validHex);
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
@@ -205,7 +189,7 @@ describe('address', () => {
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('Catapult test vector [PublicNet] - PublicKey to Address', () => {
+    describe('Catapult test vector [Mainnet] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
@@ -245,7 +229,7 @@ describe('address', () => {
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
      */
-    describe('Catapult test vector [PublicTest] - PublicKey to Address', () => {
+    describe('Catapult test vector [Testnet] - PublicKey to Address', () => {
         it('can create Address from Catapult public Key', () => {
             // Arrange:
             const Public_Keys = [
@@ -274,88 +258,6 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
-
-                // Assert:
-                const message = ` from ${publicKeyHex}`;
-                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
-            }
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
-     */
-    describe('Catapult test vector [PRIVATE] - PublicKey to Address', () => {
-        it('can create Address from Catapult public Key', () => {
-            // Arrange:
-            const Public_Keys = [
-                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
-                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
-                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
-                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
-                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
-            ];
-
-            const Addresses = [
-                'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
-                'PDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2ZMEBFQ',
-                'PCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTREWK33Q',
-                'PDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWELJG3Y',
-                'PDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QAAJTUI',
-            ];
-
-            // Sanity:
-            expect(Public_Keys.length).equal(Addresses.length);
-
-            for (let i = 0; i < Public_Keys.length; ++i) {
-                // Arrange:
-                const publicKeyHex = Public_Keys[i];
-                const expectedAddress = Addresses[i];
-
-                // Act:
-                const result = address.addressToString(address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.PRIVATE));
-
-                // Assert:
-                const message = ` from ${publicKeyHex}`;
-                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
-            }
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address.json
-     */
-    describe('Catapult test vector [PRIVATE_TEST] - PublicKey to Address', () => {
-        it('can create Address from Catapult public Key', () => {
-            // Arrange:
-            const Public_Keys = [
-                '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F',
-                '4875FD2E32875D1BC6567745F1509F0F890A1BF8EE59FA74452FA4183A270E03',
-                '9F780097FB6A1F287ED2736A597B8EA7F08D20F1ECDB9935DE6694ECF1C58900',
-                '0815926E003CDD5AF0113C0E067262307A42CD1E697F53B683F7E5F9F57D72C9',
-                '3683B3E45E76870CFE076E47C2B34CE8E3EAEC26C8AA7C1ED752E3E840AF8A27',
-            ];
-
-            const Addresses = [
-                'VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ',
-                'VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI',
-                'VCOXVZMAZJTT4I3F7EAZYGNGR77D6WPTREFOQLQ',
-                'VDZ4373ASEGJ7S7GQTKF26TIIMC7HK5EWEZHV6Q',
-                'VDI5I7Z3BRBAAHTZHGONGOXX742CW4W5QB5HN6Q',
-            ];
-
-            // Sanity:
-            expect(Public_Keys.length).equal(Addresses.length);
-
-            for (let i = 0; i < Public_Keys.length; ++i) {
-                // Arrange:
-                const publicKeyHex = Public_Keys[i];
-                const expectedAddress = Addresses[i];
-
-                // Act:
-                const result = address.addressToString(
-                    address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.PRIVATE_TEST),
-                );
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;

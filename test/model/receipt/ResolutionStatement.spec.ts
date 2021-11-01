@@ -27,9 +27,10 @@ describe('ResolutionStatement', () => {
     let address: Address;
     let addressResolutionStatements: ResolutionStatementInfoDTO[];
     let mosaicResolutionStatements: ResolutionStatementInfoDTO[];
+    const testAddress = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
 
     before(() => {
-        address = Address.createFromEncoded('903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3');
+        address = testAddress;
         addressResolutionStatements = [
             {
                 id: '1',
@@ -45,7 +46,7 @@ describe('ResolutionStatement', () => {
                                 primaryId: 1,
                                 secondaryId: 0,
                             },
-                            resolved: '903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3',
+                            resolved: testAddress.encoded(),
                         },
                     ],
                 },
