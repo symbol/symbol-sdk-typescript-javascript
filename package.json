@@ -10,6 +10,7 @@
         "e2e": "npm run bootstrap-stop && npm run bootstrap-start-detached && npm run test:e2e && npm run bootstrap-stop",
         "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000 --unhandled-rejections=strict",
         "build": "shx rm -rf dist/ && tsc",
+        "watch": "tsc --watch",
         "test:cov": "nyc --reporter=lcov --reporter=text-summary npm t",
         "test:coveralls": "npm run test:cov | coveralls",
         "coveralls-report": "cat ./coverage/lcov.info | coveralls",

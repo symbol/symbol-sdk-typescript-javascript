@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-import { NamespaceId } from '../namespace/NamespaceId';
+import { NamespaceId } from '../namespace';
 import { MosaicId } from './MosaicId';
 
 /**
  * Custom type for unresolved mosaicId
  */
-export type UnresolvedMosaicId = MosaicId | NamespaceId;
+export type UnresolvedMosaicId = (MosaicId | NamespaceId) & {
+    /**
+     * returns if the object is instance of NamespaceId.
+     * It avoid the `instanceof` issue when the sdk lib is referenced from multiple modules
+     */
+    isNamespaceId(): boolean;
+    /**
+     * returns if the object is instance of MosaicId.
+     * It avoid the `instanceof` issue when the sdk lib is referenced from multiple modules
+     */
+    isMosaicId(): boolean;
+};

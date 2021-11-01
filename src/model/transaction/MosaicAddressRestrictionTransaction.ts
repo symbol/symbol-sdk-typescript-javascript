@@ -176,7 +176,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @returns {string}
      */
     public targetAddressToString(): string {
-        if (this.targetAddress instanceof NamespaceId) {
+        if (this.targetAddress.isNamespaceId()) {
             // namespaceId recipient, return hexadecimal notation
             return (this.targetAddress as NamespaceId).toHex();
         }

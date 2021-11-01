@@ -66,7 +66,7 @@ describe('MosaicRestrictionTransactionService', () => {
         const restriction = new MosaicAddressRestriction(
             1,
             '59DFBA84B2E9E7000135E80C',
-            MosaicRestrictionEntryType.GLOBAL,
+            MosaicRestrictionEntryType.ADDRESS,
             mosaicId,
             account.address,
             [new MosaicAddressRestrictionItem(key, addressRestrictionValue)],

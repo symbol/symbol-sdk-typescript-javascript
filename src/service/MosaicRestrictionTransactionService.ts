@@ -19,15 +19,14 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { NamespaceRepository } from '../infrastructure/NamespaceRepository';
 import { Page } from '../infrastructure/Page';
 import { RestrictionMosaicRepository } from '../infrastructure/RestrictionMosaicRepository';
+import { MosaicAddressRestriction, MosaicRestrictionEntryType, NamespaceId } from '../model';
 import { Address } from '../model/account/Address';
 import { UnresolvedAddress } from '../model/account/UnresolvedAddress';
 import { MosaicId } from '../model/mosaic/MosaicId';
 import { UnresolvedMosaicId } from '../model/mosaic/UnresolvedMosaicId';
 import { NetworkType } from '../model/network/NetworkType';
-import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRestrictionItem';
-import { MosaicRestrictionEntryType } from '../model/restriction/MosaicRestrictionEntryType';
 import { MosaicRestrictionType } from '../model/restriction/MosaicRestrictionType';
 import { Deadline } from '../model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../model/transaction/MosaicAddressRestrictionTransaction';
@@ -120,7 +119,7 @@ export class MosaicRestrictionTransactionService {
         maxFee: UInt64 = new UInt64([0, 0]),
     ): Observable<Transaction> {
         this.validateInput(restrictionValue);
-        const combinedUnresolved = combineLatest(this.getResolvedMosaicId(mosaicId), this.getResolvedAddress(targetAddress));
+        const combinedUnresolved = combineLatest([this.getResolvedMosaicId(mosaicId), this.getResolvedAddress(targetAddress)]);
         return combinedUnresolved.pipe(
             mergeMap(([resolvedMosaicId, resolvedAddress]) =>
                 this.getGlobalRestrictionEntry(resolvedMosaicId, restrictionKey).pipe(
@@ -162,7 +161,10 @@ export class MosaicRestrictionTransactionService {
         return this.restrictionMosaicRepository.search({ mosaicId, targetAddress, entryType: MosaicRestrictionEntryType.ADDRESS }).pipe(
             map((mosaicRestriction) => {
                 const addressRestriction = mosaicRestriction.data.find(
-                    (r) => r instanceof MosaicAddressRestriction && r.mosaicId.equals(mosaicId) && r.targetAddress.equals(targetAddress),
+                    (r) =>
+                        r.entryType == MosaicRestrictionEntryType.ADDRESS &&
+                        r.mosaicId.equals(mosaicId) &&
+                        (r as MosaicAddressRestriction).targetAddress.equals(targetAddress),
                 );
                 return addressRestriction ? addressRestriction.getRestriction(restrictionKey)?.restrictionValue : undefined;
             }),
@@ -179,9 +181,8 @@ export class MosaicRestrictionTransactionService {
         return this.restrictionMosaicRepository.search({ mosaicId, entryType: MosaicRestrictionEntryType.GLOBAL }).pipe(
             map((mosaicRestrictionPage: Page<MosaicGlobalRestriction>) => {
                 const globalRestriction = mosaicRestrictionPage.data.find(
-                    (r) => r instanceof MosaicGlobalRestriction && r.mosaicId.equals(mosaicId),
+                    (r) => r.entryType == MosaicRestrictionEntryType.GLOBAL && r.mosaicId.equals(mosaicId),
                 );
-
                 return globalRestriction ? globalRestriction.getRestriction(restrictionKey) : undefined;
             }),
         );
@@ -204,11 +205,11 @@ export class MosaicRestrictionTransactionService {
      * @returns {MosaicId}
      */
     private getResolvedMosaicId(unresolvedMosaicId: UnresolvedMosaicId): Observable<MosaicId> {
-        if (unresolvedMosaicId instanceof MosaicId) {
-            return of(unresolvedMosaicId);
+        if (!unresolvedMosaicId.isNamespaceId()) {
+            return of(unresolvedMosaicId as MosaicId);
         }
-
-        return this.namespaceRepository.getLinkedMosaicId(unresolvedMosaicId).pipe(
+        const namespaceId = unresolvedMosaicId as NamespaceId;
+        return this.namespaceRepository.getLinkedMosaicId(namespaceId).pipe(
             map((mosaicId) => {
                 if (!mosaicId) {
                     throw new Error(`Invalid unresolvedMosaicId: ${unresolvedMosaicId.toHex()}`);
@@ -228,14 +229,15 @@ export class MosaicRestrictionTransactionService {
      * @returns {Address}
      */
     private getResolvedAddress(unresolvedAddress: UnresolvedAddress): Observable<Address> {
-        if (unresolvedAddress instanceof Address) {
-            return of(unresolvedAddress);
+        if (!unresolvedAddress.isNamespaceId()) {
+            return of(unresolvedAddress as Address);
         }
 
-        return this.namespaceRepository.getLinkedAddress(unresolvedAddress).pipe(
+        const namespaceId = unresolvedAddress as NamespaceId;
+        return this.namespaceRepository.getLinkedAddress(namespaceId).pipe(
             map((address) => {
                 if (!address) {
-                    throw new Error(`Invalid unresolvedAddress: ${unresolvedAddress.toHex()}`);
+                    throw new Error(`Invalid unresolvedAddress: ${namespaceId.toHex()}`);
                 }
                 return address;
             }),

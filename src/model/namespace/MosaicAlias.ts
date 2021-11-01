@@ -42,10 +42,7 @@ export class MosaicAlias extends Alias {
      * @return boolean
      */
     public equals(alias: any): boolean {
-        if (alias instanceof MosaicAlias) {
-            return this.mosaicId.equals(alias.mosaicId);
-        }
-        return false;
+        return alias && alias.type === this.type && this.mosaicId.equals(alias.mosaicId);
     }
 
     /**

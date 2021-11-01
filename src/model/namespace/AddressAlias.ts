@@ -43,10 +43,7 @@ export class AddressAlias extends Alias {
      * @return boolean
      */
     public equals(alias: any): boolean {
-        if (alias instanceof AddressAlias) {
-            return this.address.equals(alias.address);
-        }
-        return false;
+        return alias && alias.type === this.type && this.address.equals(alias.address);
     }
 
     /**

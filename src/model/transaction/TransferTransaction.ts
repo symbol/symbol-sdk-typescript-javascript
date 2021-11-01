@@ -171,7 +171,7 @@ export class TransferTransaction extends Transaction {
      * @returns {string}
      */
     public recipientToString(): string {
-        if (this.recipientAddress instanceof NamespaceId) {
+        if (this.recipientAddress.isNamespaceId()) {
             // namespaceId recipient, return hexadecimal notation
             return (this.recipientAddress as NamespaceId).toHex();
         }

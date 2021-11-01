@@ -139,10 +139,7 @@ export class Address {
      * @returns {boolean}
      */
     public equals(address: any): boolean {
-        if (address instanceof Address) {
-            return this.plain() === address.plain() && this.networkType === address.networkType;
-        }
-        return false;
+        return address && this.address == address.address && this.networkType === address.networkType;
     }
 
     /**
@@ -167,8 +164,27 @@ export class Address {
      * zero padded.
      * @returns {Uint8Array}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public encodeUnresolvedAddress(networkType: NetworkType): Uint8Array {
+    public encodeUnresolvedAddress(): Uint8Array {
         return Convert.hexToUint8(this.encoded());
+    }
+
+    /**
+     * returns that this instance is a resolved, not an alias, address.
+     */
+    public isNamespaceId(): boolean {
+        return false;
+    }
+    /**
+     * returns that the instance is an address
+     */
+    public isAddress(): boolean {
+        return true;
+    }
+
+    /**
+     * returns that the instance is not a mosaic id
+     */
+    public isMosaicId(): boolean {
+        return false;
     }
 }

@@ -79,10 +79,7 @@ export class MosaicId {
      * @return boolean
      */
     public equals(other: any): boolean {
-        if (other instanceof MosaicId) {
-            return this.id.equals(other.id);
-        }
-        return false;
+        return other && this.id.equals(other.id);
     }
 
     /**
@@ -90,5 +87,25 @@ export class MosaicId {
      */
     toBuilder(): MosaicIdDto {
         return new MosaicIdDto(this.id.toDTO());
+    }
+
+    /**
+     * returns that this instance is an alias.
+     */
+    public isNamespaceId(): boolean {
+        return false;
+    }
+    /**
+     * returns that the instance is not address
+     */
+    public isAddress(): boolean {
+        return false;
+    }
+
+    /**
+     * returns that the instance is a mosaic id
+     */
+    public isMosaicId(): boolean {
+        return true;
     }
 }

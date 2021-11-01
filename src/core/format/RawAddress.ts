@@ -83,7 +83,7 @@ export class RawAddress {
         const publicKeyHash = sha3_256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
-        const ripemdHash = new ripemd160().update(new Buffer(publicKeyHash)).digest();
+        const ripemdHash = new ripemd160().update(Buffer.from(publicKeyHash)).digest();
 
         // step 3: add network identifier byte in front of (2)
         const decodedAddress = new Uint8Array(RawAddress.constants.sizes.addressDecoded);
