@@ -87,7 +87,7 @@ describe('NetworkHttp', () => {
 
     it('getNetworkType', async () => {
         const body: NodeInfoDTO = {
-            networkIdentifier: NetworkType.PRIVATE_TEST,
+            networkIdentifier: NetworkType.TEST_NET,
             friendlyName: '',
             host: '',
             networkGenerationHashSeed: '',
@@ -100,7 +100,7 @@ describe('NetworkHttp', () => {
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
 
         const networkType = await networkRepository.getNetworkType().toPromise();
-        expect(networkType).to.be.equals(NetworkType.PRIVATE_TEST);
+        expect(networkType).to.be.equals(NetworkType.TEST_NET);
     });
 
     it('getNetworkName', async () => {

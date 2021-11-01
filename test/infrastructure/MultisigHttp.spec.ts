@@ -31,7 +31,7 @@ import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo
 import { NetworkType } from '../../src/model/network/NetworkType';
 
 describe('MultisigHttp', () => {
-    const networkType = NetworkType.PRIVATE_TEST;
+    const networkType = NetworkType.TEST_NET;
     const account = Account.generateNewAccount(networkType);
     const address = account.address;
     const accountInfoDto = {} as MultisigAccountInfoDTO;

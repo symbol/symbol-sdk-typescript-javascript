@@ -34,7 +34,7 @@ describe('HashLockInfo', () => {
         lockDto.endHeight = '122';
         lockDto.hash = 'BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E';
         lockDto.mosaicId = new MosaicId([3294802500, 2243684972]).toHex();
-        lockDto.ownerAddress = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ').plain();
+        lockDto.ownerAddress = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q').plain();
         lockDto.status = 1;
         dto.lock = lockDto;
         const info = new HashLockInfo(
@@ -58,7 +58,7 @@ describe('HashLockInfo', () => {
 
         const serialized = info.serialize();
         expect(Convert.uint8ToHex(serialized)).eq(
-            '0100A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C53644B262C46CEABB850A000000000000007A0000000000000001BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E',
+            '01009826D27E1D0A26CA4E316F901E23E55C8711DB20DFD2677644B262C46CEABB850A000000000000007A0000000000000001BEDA6EEE7B0F4B103AECDE8866A1AEB9724C8DABF798C9FC237A73569CADC71E',
         );
         deepEqual(HashLockInfoBuilder.loadFromBinary(serialized).serialize(), serialized);
     });

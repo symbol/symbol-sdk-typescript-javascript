@@ -39,27 +39,27 @@ import { NetworkCurrencyLocal } from '../model/mosaic/Currency.spec';
  */
 describe('TransactionService', () => {
     const generationHash = '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950';
-    const account = Account.generateNewAccount(NetworkType.PRIVATE_TEST);
+    const account = Account.generateNewAccount(NetworkType.TEST_NET);
     const epochAdjustment = 1573430400;
     const transferTransaction = TransferTransaction.create(
         Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-        Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+        Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
         [],
         PlainMessage.create('test-message'),
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
 
     const aggregateCompleteTransaction = AggregateTransaction.createComplete(
         Deadline.create(epochAdjustment),
         [transferTransaction.toAggregate(account.publicAccount)],
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
         [],
     );
 
     const aggregateBondedTransaction = AggregateTransaction.createBonded(
         Deadline.create(epochAdjustment),
         [transferTransaction.toAggregate(account.publicAccount)],
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
         [],
     );
 
@@ -68,7 +68,7 @@ describe('TransactionService', () => {
         NetworkCurrencyLocal.createRelative(10),
         UInt64.fromUint(10000),
         account.sign(aggregateBondedTransaction, generationHash),
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
 
     let transactionRepositoryMock: TransactionRepository;

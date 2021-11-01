@@ -34,7 +34,7 @@ describe('ResolutionEntry', () => {
     it('Should serialize', () => {
         const entry = new ResolutionEntry(address, new ReceiptSource(0, 1));
         const result = entry.serialize();
-        expect(Convert.uint8ToHex(result)).to.be.equal('A8D66C33420E5411995BACFCA2B28CF1C9F5DD7AB181BFA80000000001000000');
+        expect(Convert.uint8ToHex(result)).to.be.equal('9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD267760000000001000000');
     });
 
     it('Should serialize -  Mosaic', () => {

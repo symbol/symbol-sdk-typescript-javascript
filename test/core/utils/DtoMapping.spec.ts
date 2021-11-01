@@ -31,7 +31,7 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 describe('DtoMapping', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
         '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
     const address = publicAccount.address;
     const mosaicId = new MosaicId('11F4B1B3AC033DB5');
@@ -114,12 +114,8 @@ describe('DtoMapping', () => {
     });
 
     it('toAddress', () => {
-        expect(DtoMapping.toAddress('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').plain()).to.be.equal(
-            'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
-        );
-
-        expect(DtoMapping.toAddress('7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5').encoded()).to.be.equal(
-            '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
+        expect(DtoMapping.toAddress('9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776').encoded()).to.be.equal(
+            '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776',
         );
         expect(DtoMapping.toAddress('TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA').plain()).to.be.equal(
             'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA',
@@ -128,14 +124,7 @@ describe('DtoMapping', () => {
         expect(DtoMapping.toAddress('TDR6-EW2-WBHJQDYMNGFX-2UBZHMMZC5PG-L2YBO3KA').plain()).to.be.equal(
             'TDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL2YBO3KA',
         );
-        // This method should raise! It does not validate the chechsum!
-        expect(Address.createFromEncoded('917E7E29A01014C2F3000000000000000000000000000000').plain()).to.be.equal(
-            'SF7H4KNACAKMF4YAAAAAAAAAAAAAAAAAAAAAAAA',
-        );
-        // This method should raise! It does not validate the chechsum!
-        expect(Address.createFromRawAddress('SF7H4KNACAKMF4YAAAAAAAAAAAAAAAAAAAAAAAA').plain()).to.be.equal(
-            'SF7H4KNACAKMF4YAAAAAAAAAAAAAAAAAAAAAAAA',
-        );
+
         expect(Address.isValidEncodedAddress('917E7E29A01014C2F3000000000000000000000000000000')).to.be.equal(false);
         expect(() => DtoMapping.toAddress('917E7E29A01014C2F3000000000000000000000000000000')).to.throw;
         expect(() => DtoMapping.toAddress('XDR6-EW2-WBHJQDYMNGFX-2UBZHMMZC5PG-L2YBO3KA')).to.throw;

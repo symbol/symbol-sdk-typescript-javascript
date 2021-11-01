@@ -45,18 +45,10 @@ export class Address {
         if (addressTrimAndUpperCase.length !== 39) {
             throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 39 characters long');
         }
-        if (addressTrimAndUpperCase.charAt(0) === 'S') {
-            networkType = NetworkType.MIJIN_TEST;
-        } else if (addressTrimAndUpperCase.charAt(0) === 'M') {
-            networkType = NetworkType.MIJIN;
-        } else if (addressTrimAndUpperCase.charAt(0) === 'T') {
+        if (addressTrimAndUpperCase.charAt(0) === 'T') {
             networkType = NetworkType.TEST_NET;
         } else if (addressTrimAndUpperCase.charAt(0) === 'N') {
             networkType = NetworkType.MAIN_NET;
-        } else if (addressTrimAndUpperCase.charAt(0) === 'P') {
-            networkType = NetworkType.PRIVATE;
-        } else if (addressTrimAndUpperCase.charAt(0) === 'V') {
-            networkType = NetworkType.PRIVATE_TEST;
         } else {
             throw new Error('Address Network unsupported');
         }
@@ -74,7 +66,7 @@ export class Address {
 
     /**
      * Determines the validity of an raw address string.
-     * @param {string} rawAddress The raw address string. Expected format VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ
+     * @param {string} rawAddress The raw address string. Expected format TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
     public static isValidRawAddress = (rawAddress: string): boolean => {

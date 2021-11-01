@@ -46,7 +46,7 @@ import { NetworkType } from '../../src/model/network/NetworkType';
 describe('NamespaceHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
         '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
     const address = publicAccount.address;
     const mosaicId = new MosaicId('941299B2B7E1291C');
@@ -95,7 +95,7 @@ describe('NamespaceHttp', () => {
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const namespaceRoutesApi: NamespaceRoutesApi = mock();
-    const namespaceRepository: NamespaceRepository = DtoMapping.assign(new NamespaceHttp(url, NetworkType.PRIVATE_TEST), {
+    const namespaceRepository: NamespaceRepository = DtoMapping.assign(new NamespaceHttp(url, NetworkType.TEST_NET), {
         namespaceRoutesApi: instance(namespaceRoutesApi),
     });
 

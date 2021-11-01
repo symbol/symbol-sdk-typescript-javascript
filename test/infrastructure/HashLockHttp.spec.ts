@@ -33,7 +33,7 @@ import { Address } from '../../src/model/account/Address';
 import { HashLockInfo } from '../../src/model/lock/HashLockInfo';
 
 describe('HashLockHttp', () => {
-    const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+    const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
 
     const dto = {} as HashLockInfoDTO;
     dto.id = '1';

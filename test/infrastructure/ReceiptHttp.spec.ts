@@ -42,13 +42,13 @@ import { BalanceChangeReceipt } from '../../src/model/receipt/BalanceChangeRecei
 describe('ReceiptHttp', () => {
     const publicAccount = PublicAccount.createFromPublicKey(
         '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
     const address = publicAccount.address;
     const url = 'http://someHost';
     const response: http.IncomingMessage = mock();
     const receiptRoutesApi: ReceiptRoutesApi = mock();
-    const receiptRepository = DtoMapping.assign(new ReceiptHttp(url, NetworkType.PRIVATE_TEST), {
+    const receiptRepository = DtoMapping.assign(new ReceiptHttp(url, NetworkType.TEST_NET), {
         receiptRoutesApi: instance(receiptRoutesApi),
     });
 
@@ -100,7 +100,7 @@ describe('ReceiptHttp', () => {
         const resolutionStatementDto = {} as ResolutionStatementDTO;
         resolutionStatementDto.height = '1';
         resolutionStatementDto.unresolved = Convert.uint8ToHex(
-            RawAddress.aliasToRecipient(Convert.hexToUint8(new NamespaceId('test').toHex()), NetworkType.PRIVATE_TEST),
+            RawAddress.aliasToRecipient(Convert.hexToUint8(new NamespaceId('test').toHex()), NetworkType.TEST_NET),
         );
         const resolutionEntry = {} as ResolutionEntryDTO;
         resolutionEntry.resolved = address.encoded();

@@ -35,13 +35,13 @@ describe('MosaicId', () => {
     });
 
     it('should create id given nonce and owner', () => {
-        const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
+        const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.TEST_NET);
         const id = MosaicId.createFromNonce(MosaicNonce.createFromNumber(0), owner.address);
-        deepEqual(id.id, new Id([3012716716, 1712914778]));
+        deepEqual(id.id, new Id([912906548, 893763466]));
     });
 
     it('should create id twice the same given nonce and owner', () => {
-        const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
+        const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.TEST_NET);
         const id1 = MosaicId.createFromNonce(MosaicNonce.createFromNumber(12), owner.address);
         const id2 = MosaicId.createFromNonce(MosaicNonce.createFromNumber(12), owner.address);
 

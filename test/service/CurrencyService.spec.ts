@@ -32,7 +32,7 @@ import { CurrencyService } from '../../src/service/CurrencyService';
 
 describe('CurrencyService', () => {
     it('getNetworkProperties', async () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const currencyServerHex = "0x017D'1694'0477'B3F5";
         const currencyMosaicId = new MosaicId(DtoMapping.toSimpleHex(currencyServerHex));
         const harvestServerHex = "0x29C6'42F2'F432'8612";
@@ -130,7 +130,7 @@ describe('CurrencyService', () => {
     });
 
     it('loadCurrencies', async () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const currencyServerHex = "0x017D'1694'0477'B3F5";
         const currencyMosaicId = new MosaicId(DtoMapping.toSimpleHex(currencyServerHex));
         const harvestServerHex = "0x29C6'42F2'F432'8612";

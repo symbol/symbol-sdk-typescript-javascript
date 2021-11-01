@@ -21,9 +21,8 @@ import { Convert } from '../../../src/core/format';
 import { UInt64 } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
 import { NamespaceId } from '../../../src/model/namespace';
-import { NetworkType } from '../../../src/model/network';
 import { Deadline, NamespaceMetadataTransaction, TransactionType } from '../../../src/model/transaction';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('NamespaceMetadataTransaction', () => {
     let account: Account;
@@ -41,7 +40,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         expect(namespaceMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -56,7 +55,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -72,13 +71,13 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         const signedTransaction = namespaceMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            'A8D66C33420E5411995BACFCA2B28CF1C9F5DD7AB181BFA8E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
+            '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776E8030000000000004CCCD78612DDF5CA01000A0000000000000000000000',
         );
     });
 
@@ -91,7 +90,7 @@ describe('NamespaceMetadataTransaction', () => {
                 new NamespaceId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.PRIVATE_TEST,
+                TestNetworkType,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
@@ -105,7 +104,7 @@ describe('NamespaceMetadataTransaction', () => {
                 new NamespaceId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.PRIVATE_TEST,
+                TestNetworkType,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
@@ -121,7 +120,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(364);
 
@@ -137,7 +136,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
 
         Object.assign(namespaceMetadataTransaction, { signer: account.publicAccount });
@@ -157,7 +156,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
         const resolved = namespaceMetadataTransaction.resolveAliases();
 
@@ -173,12 +172,12 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -195,7 +194,7 @@ describe('NamespaceMetadataTransaction', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;

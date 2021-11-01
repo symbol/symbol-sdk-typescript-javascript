@@ -42,7 +42,7 @@ describe('NewBlock', () => {
                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 beneficiaryAddress: Address.createFromPublicKey(
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 ).encoded(),
                 timestamp: new UInt64([0, 0]),
                 type: 32768,

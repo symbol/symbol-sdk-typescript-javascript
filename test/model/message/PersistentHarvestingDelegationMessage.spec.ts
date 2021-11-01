@@ -28,11 +28,8 @@ describe('PersistentHarvestingDelegationMessage', () => {
     const vrfPrivateKey = '800F35F1CC66C2B62CE9DD9F31003B9B3E5C7A2F381FB8952A294277A1015D83';
     const epochAdjustment = 1573430400;
     before(() => {
-        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.PRIVATE_TEST);
-        recipient = Account.createFromPrivateKey(
-            'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-            NetworkType.PRIVATE_TEST,
-        );
+        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108', NetworkType.TEST_NET);
+        recipient = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08', NetworkType.TEST_NET);
         recipient_nis = Account.createFromPrivateKey(
             'B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
             NetworkType.TEST_NET,
@@ -44,7 +41,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             signingPrivateKey,
             vrfPrivateKey,
             recipient.publicKey,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         expect(encryptedMessage.payload.length).to.be.equal(PersistentHarvestingDelegationMessage.HEX_PAYLOAD_SIZE);
         expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
@@ -83,7 +80,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             signingPrivateKey,
             vrfPrivateKey,
             recipient.publicKey,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         expect(encryptedMessage.payload.indexOf(MessageMarker.PersistentDelegationUnlock)).eq(0);
         expect(encryptedMessage.payload.length).eq(264);
@@ -104,7 +101,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
             signingPrivateKey,
             vrfPrivateKey,
             recipient.publicKey,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         const signedTransaction = tx.signWith(sender, generationHash);
         const encryptMessage = MessageFactory.createMessageFromHex(

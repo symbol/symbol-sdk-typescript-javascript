@@ -21,7 +21,7 @@ import { Address } from '../../../src/model/account/Address';
 import { PaginationStreamerTestHelper } from './PaginationStreamerTestHelper';
 
 describe('SecretLockPaginationStreamer', () => {
-    const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+    const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
 
     it('basicMultiPageTest', () => {
         const SecretLockRepositoryMock: SecretLockRepository = mock();
