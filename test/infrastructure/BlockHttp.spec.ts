@@ -54,7 +54,7 @@ describe('BlockHttp', () => {
     blockDTO.timestamp = '7';
     blockDTO.beneficiaryAddress = Address.createFromPublicKey(
         '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     ).encoded();
 
     const importanceBlockDTO = {} as ImportanceBlockDTO;
@@ -69,7 +69,7 @@ describe('BlockHttp', () => {
     importanceBlockDTO.timestamp = '7';
     importanceBlockDTO.beneficiaryAddress = Address.createFromPublicKey(
         '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     ).encoded();
     importanceBlockDTO.harvestingEligibleAccountsCount = '1';
     importanceBlockDTO.previousImportanceBlockHash = 'hash';

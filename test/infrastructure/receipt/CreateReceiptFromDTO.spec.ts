@@ -36,10 +36,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
     let statementDto;
 
     before(() => {
-        account = Account.createFromPrivateKey(
-            'D242FB34C2C4DD36E995B9C865F93940065E326661BA5A4A247331D211FE3A3D',
-            NetworkType.PRIVATE_TEST,
-        );
+        account = Account.createFromPrivateKey('575DBB3062267EFF57C970A336EBBC8FBCFE12C5BD3ED7BC11EB0481D7704CED', NetworkType.TEST_NET);
         statementDto = {
             transactionStatements: [
                 {
@@ -163,7 +160,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                                     primaryId: 4,
                                     secondaryId: 0,
                                 },
-                                resolved: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
+                                resolved: '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776',
                             },
                         ],
                     },
@@ -179,7 +176,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                                     primaryId: 2,
                                     secondaryId: 0,
                                 },
-                                resolved: 'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
+                                resolved: 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q',
                             },
                         ],
                     },
@@ -275,7 +272,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
         deepEqual(unresolvedAddress.toHex(), '83686227AF0AB603');
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain()).to.be.equal(
-            'PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI',
+            'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q',
         );
 
         deepEqual(statement.mosaicResolutionStatements[0].height, UInt64.fromNumericString('1506'));
@@ -343,22 +340,22 @@ describe('Receipt - CreateStatementFromDTO', () => {
             },
             statement: {
                 height: '1488',
-                unresolved: '9103B60AAF27626883000000000000000000000000000000',
+                unresolved: '99C51FB4C93FCA5095000000000000000000000000000000',
                 resolutionEntries: [
                     {
                         source: {
                             primaryId: 4,
                             secondaryId: 0,
                         },
-                        resolved: '903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3',
+                        resolved: '983CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3',
                     },
                 ],
             },
         };
 
         const statementId = createAddressResolutionStatement(dtoId);
-        expect((statementId.unresolved as NamespaceId).toHex()).to.be.equal('83686227AF0AB603');
-        expect(statementId.resolutionEntries[0].resolved.encoded()).to.be.equal('903CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3');
+        expect((statementId.unresolved as NamespaceId).toHex()).to.be.equal('9550CA3FC9B41FC5');
+        expect(statementId.resolutionEntries[0].resolved.encoded()).to.be.equal('983CC58E8C242DCFC33DE4E2F8B434C77F93A48BA13BC3E3');
 
         const dtoError: ResolutionStatementInfoDTO = {
             id: 'abc',

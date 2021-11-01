@@ -59,36 +59,24 @@ describe('AggregateTransactionService', () => {
      * Stranger Account: Account4
      */
 
-    const account1 = Account.createFromPrivateKey(
-        '82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950',
-        NetworkType.PRIVATE_TEST,
-    );
+    const account1 = Account.createFromPrivateKey('82DB2528834C9926F0FCCE042466B24A266F5B685CB66D2869AF6648C043E950', NetworkType.TEST_NET);
     const multisig1 = Account.createFromPrivateKey(
         '8B0622C2CCFC5CCC5A74B500163E3C68F3AD3643DB12932FC931143EAC67280D',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
     const multisig2 = Account.createFromPrivateKey(
         '22A1D67F8519D1A45BD7116600BB6E857786E816FE0B45E4C5B9FFF3D64BC177',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
 
     const multisig3 = Account.createFromPrivateKey(
         '5E7812AB0E709ABC45466034E1A209099F6A12C4698748A63CDCAA9B0DDE1DBD',
-        NetworkType.PRIVATE_TEST,
+        NetworkType.TEST_NET,
     );
-    const account2 = Account.createFromPrivateKey(
-        'A4D410270E01CECDCDEADCDE32EC79C8D9CDEA4DCD426CB1EB666EFEF148FBCE',
-        NetworkType.PRIVATE_TEST,
-    );
-    const account3 = Account.createFromPrivateKey(
-        '336AB45EE65A6AFFC0E7ADC5342F91E34BACA0B901A1D9C876FA25A1E590077E',
-        NetworkType.PRIVATE_TEST,
-    );
+    const account2 = Account.createFromPrivateKey('A4D410270E01CECDCDEADCDE32EC79C8D9CDEA4DCD426CB1EB666EFEF148FBCE', NetworkType.TEST_NET);
+    const account3 = Account.createFromPrivateKey('336AB45EE65A6AFFC0E7ADC5342F91E34BACA0B901A1D9C876FA25A1E590077E', NetworkType.TEST_NET);
 
-    const account4 = Account.createFromPrivateKey(
-        '4D8B3756592532753344E11E2B7541317BCCFBBCF4444274CDBF359D2C4AE0F1',
-        NetworkType.PRIVATE_TEST,
-    );
+    const account4 = Account.createFromPrivateKey('4D8B3756592532753344E11E2B7541317BCCFBBCF4444274CDBF359D2C4AE0F1', NetworkType.TEST_NET);
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const epochAdjustment = 1573430400;
 
@@ -196,16 +184,16 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -229,16 +217,16 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -262,16 +250,16 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig2.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -299,7 +287,7 @@ describe('AggregateTransactionService', () => {
             account2.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const transferTransaction2 = TransferTransaction.create(
@@ -307,13 +295,13 @@ describe('AggregateTransactionService', () => {
             account2.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig2.publicAccount), transferTransaction2.toAggregate(account4.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
@@ -340,7 +328,7 @@ describe('AggregateTransactionService', () => {
             account2.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const transferTransaction2 = TransferTransaction.create(
@@ -348,13 +336,13 @@ describe('AggregateTransactionService', () => {
             account2.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig2.publicAccount), transferTransaction2.toAggregate(account4.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2], generationHash);
@@ -379,13 +367,13 @@ describe('AggregateTransactionService', () => {
             1,
             [],
             [account1.address],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [modifyMultisigTransaction.toAggregate(multisig2.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
         const signedTransaction = aggregateTransaction.signWith(account2, generationHash);
@@ -406,16 +394,16 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account4.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -438,16 +426,16 @@ describe('AggregateTransactionService', () => {
          */
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment, 1, ChronoUnit.HOURS),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account4.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -479,7 +467,7 @@ describe('AggregateTransactionService', () => {
             account1.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const transferTransaction2 = TransferTransaction.create(
@@ -487,13 +475,13 @@ describe('AggregateTransactionService', () => {
             account4.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account4.publicAccount), transferTransaction2.toAggregate(account1.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -524,7 +512,7 @@ describe('AggregateTransactionService', () => {
             account1.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const transferTransaction2 = TransferTransaction.create(
@@ -532,13 +520,13 @@ describe('AggregateTransactionService', () => {
             account4.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account4.publicAccount), transferTransaction2.toAggregate(account1.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -562,13 +550,13 @@ describe('AggregateTransactionService', () => {
             account4.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig3.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 
@@ -592,13 +580,13 @@ describe('AggregateTransactionService', () => {
             account4.address,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(multisig3.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
 

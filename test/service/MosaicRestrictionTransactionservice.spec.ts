@@ -105,7 +105,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicId,
                 key,
                 '2000',
@@ -125,7 +125,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicId,
                 key,
                 '2000',
@@ -146,7 +146,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicRestrictionTransactionService
             .createMosaicAddressRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicId,
                 key,
                 account.address,
@@ -165,7 +165,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 unresolvedMosaicId,
                 key,
                 '2000',
@@ -185,7 +185,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicRestrictionTransactionService
             .createMosaicAddressRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 unresolvedMosaicId,
                 key,
                 unresolvedAddress,
@@ -204,7 +204,7 @@ describe('MosaicRestrictionTransactionService', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 unresolvedAddress,
                 key,
                 '2000',
@@ -217,7 +217,7 @@ describe('MosaicRestrictionTransactionService', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicId,
                 key,
                 unresolvedMosaicId,
@@ -230,7 +230,7 @@ describe('MosaicRestrictionTransactionService', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicId,
                 key,
                 'wrong value',
@@ -241,7 +241,7 @@ describe('MosaicRestrictionTransactionService', () => {
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicId,
                 key,
                 account.address,
@@ -254,7 +254,7 @@ describe('MosaicRestrictionTransactionService', () => {
         mosaicRestrictionTransactionService
             .createMosaicAddressRestrictionTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 mosaicIdWrongKey,
                 invalidKey,
                 account.address,

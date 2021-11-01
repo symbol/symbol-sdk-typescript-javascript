@@ -46,7 +46,7 @@ import { MetadataTransactionService } from '../../src/service/MetadataTransactio
 
 describe('MetadataHttp', () => {
     const epochAdjustment = 1573430400;
-    const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
+    const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
     const mosaicId = new MosaicId('941299B2B7E1291C');
     const namespaceId = new NamespaceId('some.address');
 
@@ -366,7 +366,7 @@ describe('MetadataHttp', () => {
         metadataTransactionService
             .createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
@@ -399,7 +399,7 @@ describe('MetadataHttp', () => {
         metadataTransactionService
             .createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 address,
                 mosaicId,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -433,7 +433,7 @@ describe('MetadataHttp', () => {
         metadataTransactionService
             .createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 address,
                 namespaceId,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -473,7 +473,7 @@ describe('MetadataHttp', () => {
         await metadataTransactionService
             .createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 address,
                 UInt64.fromHex('85BBEA6CC462B244'),
                 'test',
@@ -502,7 +502,7 @@ describe('MetadataHttp', () => {
         await metadataTransactionService
             .createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 address,
                 mosaicId,
                 UInt64.fromHex('85BBEA6CC462B244'),
@@ -532,7 +532,7 @@ describe('MetadataHttp', () => {
         await metadataTransactionService
             .createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 address,
                 namespaceId,
                 UInt64.fromHex('85BBEA6CC462B244'),

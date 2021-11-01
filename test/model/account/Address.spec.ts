@@ -21,21 +21,15 @@ import { NetworkType } from '../../../src/model/network/NetworkType';
 
 describe('Address', () => {
     const publicKey = '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F';
-    it('createComplete an address given publicKey + NetworkType.PRIVATE_TEST', () => {
-        const address = Address.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
-        expect(address.plain()).to.be.equal('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
-        expect(address.networkType).to.be.equal(NetworkType.PRIVATE_TEST);
+    it('createComplete an address given publicKey + NetworkType.TEST_NET', () => {
+        const address = Address.createFromPublicKey(publicKey, NetworkType.TEST_NET);
+        expect(address.plain()).to.be.equal('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
+        expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
     it('print the address in pretty format', () => {
-        const address = Address.createFromPublicKey(publicKey, NetworkType.PRIVATE_TEST);
-        expect(address.pretty()).to.be.equal('VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ');
-    });
-
-    it('createComplete an address given publicKey + NetworkType.PRIVATE', () => {
-        const address = Address.createFromPublicKey(publicKey, NetworkType.PRIVATE);
-        expect(address.plain()).to.be.equal('PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI');
-        expect(address.networkType).to.be.equal(NetworkType.PRIVATE);
+        const address = Address.createFromPublicKey(publicKey, NetworkType.TEST_NET);
+        expect(address.pretty()).to.be.equal('TATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA37JG-O5Q');
     });
 
     it('createComplete an address given publicKey + NetworkType.MAIN_NET', () => {
@@ -50,16 +44,6 @@ describe('Address', () => {
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
-    it('createComplete an address given VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ', () => {
-        const address = Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ');
-        expect(address.networkType).to.be.equal(NetworkType.PRIVATE_TEST);
-    });
-
-    it('createComplete an address given PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI', () => {
-        const address = Address.createFromRawAddress('PATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35OETNI');
-        expect(address.networkType).to.be.equal(NetworkType.PRIVATE);
-    });
-
     it('createComplete an address given NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y', () => {
         const address = Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y');
         expect(address.networkType).to.be.equal(NetworkType.MAIN_NET);
@@ -68,12 +52,6 @@ describe('Address', () => {
     it('createComplete an address given TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q', () => {
         const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
-    });
-
-    it('createComplete an address given VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ', () => {
-        const address = Address.createFromRawAddress('VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ');
-        expect(address.networkType).to.be.equal(NetworkType.PRIVATE_TEST);
-        expect(address.pretty()).to.be.equal('VATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA35C4-KNQ');
     });
 
     it('should throw Error when the address contain an invalid network identifier', () => {
@@ -106,7 +84,7 @@ describe('Address', () => {
     });
 
     it('It creates the address from an encoded value', () => {
-        const encoded = '917E7E29A01014C2F3000000000000000000000000000000';
+        const encoded = '99C2860B73398FD8D3000000000000000000000000000000';
         const address = Address.createFromEncoded(encoded);
         expect(address.encoded()).to.be.equal(encoded);
     });
@@ -114,15 +92,13 @@ describe('Address', () => {
     describe('isValidRawAddress', () => {
         it('returns true for valid address when generated', () => {
             // Assert:
-            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.PRIVATE_TEST).address.plain())).to.equal(true);
             expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.MAIN_NET).address.plain())).to.equal(true);
-            expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.PRIVATE).address.plain())).to.equal(true);
             expect(Address.isValidRawAddress(Account.generateNewAccount(NetworkType.TEST_NET).address.plain())).to.equal(true);
         });
 
         it('returns true for valid address', () => {
             // Arrange:
-            const rawAddress = 'VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ';
+            const rawAddress = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
 
             // Assert:
             expect(Address.isValidRawAddress(rawAddress)).to.equal(true);
@@ -179,9 +155,7 @@ describe('Address', () => {
     describe('isValidEncodedAddress', () => {
         it('returns true for valid address when generated', () => {
             // Assert:
-            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.PRIVATE_TEST).address.encoded())).to.equal(true);
             expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.MAIN_NET).address.encoded())).to.equal(true);
-            expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.PRIVATE).address.encoded())).to.equal(true);
             expect(Address.isValidEncodedAddress(Account.generateNewAccount(NetworkType.TEST_NET).address.encoded())).to.equal(true);
         });
 

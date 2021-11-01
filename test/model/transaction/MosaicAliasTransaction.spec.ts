@@ -42,7 +42,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -57,7 +57,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             new UInt64([1, 0]),
         );
 
@@ -73,7 +73,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -97,7 +97,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ) as MosaicAliasTransaction;
 
         expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -122,7 +122,7 @@ describe('MosaicAliasTransaction', () => {
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
             expect(mosaicAliasTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
@@ -135,7 +135,7 @@ describe('MosaicAliasTransaction', () => {
                 AliasAction.Link,
                 namespaceId,
                 mosaicId,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
             expect(mosaicAliasTransaction.size).to.be.equal(145);
             expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
@@ -151,7 +151,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ).setMaxFee(2);
         expect(mosaicAliasTransaction.maxFee.compact()).to.be.equal(290);
 
@@ -167,7 +167,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         const resolved = mosaicAliasTransaction.resolveAliases();
         deepEqual(mosaicAliasTransaction, resolved);
@@ -181,7 +181,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         Object.assign(mosaicAliasTransaction, { signer: account.publicAccount });
@@ -201,7 +201,7 @@ describe('MosaicAliasTransaction', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

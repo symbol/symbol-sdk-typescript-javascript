@@ -75,7 +75,7 @@ describe('NamespaceInfo', () => {
                 level0: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
                 ownerAddress: Address.createFromPublicKey(
                     'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 ).encoded(),
                 parentId: new NamespaceId([0, 0]),
                 startHeight: new UInt64([1, 0]),
@@ -98,7 +98,7 @@ describe('NamespaceInfo', () => {
                 parentId: NamespaceId.createFromEncoded('BD4DD689FD08BCB2'),
                 ownerAddress: Address.createFromPublicKey(
                     '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 ).encoded(),
                 startHeight: [795, 0],
                 endHeight: new UInt64([4294967295, 4294967295]),
@@ -189,7 +189,7 @@ describe('NamespaceInfo', () => {
         const root = createRootFromDTO(rootNamespaceDTO);
         const sub = createSubnamespaceFromDTO(subNamespaceDTO);
         expect(Convert.uint8ToHex(root.serialize([root, sub]))).to.be.equal(
-            '0100B2BC08FD89D64DBDA822D04812D05000F96C283657B0C17990932BC8499C7D940100000000000000FFFFFFFFFFFFFFFF01E329AD1CBE7FC60D01000000000000000118A70593DDEAF99D00',
+            '0100B2BC08FD89D64DBD9822D04812D05000F96C283657B0C17990932BC84939F2E20100000000000000FFFFFFFFFFFFFFFF01E329AD1CBE7FC60D01000000000000000118A70593DDEAF99D00',
         );
     });
 });

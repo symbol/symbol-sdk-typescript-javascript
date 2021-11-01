@@ -39,33 +39,15 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('Listener', () => {
-    const account = Account.createFromPrivateKey(
-        '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930',
-        NetworkType.PRIVATE_TEST,
-    );
-    const account1 = Address.createFromPublicKey(
-        '68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763',
-        NetworkType.PRIVATE_TEST,
-    );
-    const account2 = Address.createFromPublicKey(
-        'DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14',
-        NetworkType.PRIVATE_TEST,
-    );
+    const account = Account.createFromPrivateKey('26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930', NetworkType.TEST_NET);
+    const account1 = Address.createFromPublicKey('68B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763', NetworkType.TEST_NET);
+    const account2 = Address.createFromPublicKey('DAB1C38C3E1642494FCCB33138B95E81867B5FB59FC4277A1D53761C8B9F6D14', NetworkType.TEST_NET);
 
-    const account3 = Address.createFromPublicKey(
-        '1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B',
-        NetworkType.PRIVATE_TEST,
-    );
+    const account3 = Address.createFromPublicKey('1674016C27FE2C2EB5DFA73996FA54A183B38AED0AA64F756A3918BAF08E061B', NetworkType.TEST_NET);
 
-    const multisig1 = Address.createFromPublicKey(
-        'B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-        NetworkType.PRIVATE_TEST,
-    );
+    const multisig1 = Address.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D', NetworkType.TEST_NET);
 
-    const multisig2 = Address.createFromPublicKey(
-        'CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB',
-        NetworkType.PRIVATE_TEST,
-    );
+    const multisig2 = Address.createFromPublicKey('CF893FFCC47C33E7F68AB1DB56365C156B0736824A0C1E273F9E00B8DF8F01EB', NetworkType.TEST_NET);
     let namespaceRepoMock: NamespaceRepository;
     let namespaceRepo: NamespaceRepository;
     let multisigRepoMock: MultisigRepository;
@@ -103,7 +85,7 @@ describe('Listener', () => {
 
     describe('Invalid Channel', () => {
         it('should throw error if channel is not supported', () => {
-            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
+            const errorEncodedAddress = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -142,7 +124,7 @@ describe('Listener', () => {
 
     describe('onStatusWhenAddressIsTheSame', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
+            const errorEncodedAddress = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -186,7 +168,7 @@ describe('Listener', () => {
 
     describe('onConfirmed', () => {
         it('Should forward status', () => {
-            const errorEncodedAddress = '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5';
+            const errorEncodedAddress = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
 
             const errorAddress = Address.createFromEncoded(errorEncodedAddress);
 
@@ -299,7 +281,7 @@ describe('Listener', () => {
                     multisig2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -329,7 +311,7 @@ describe('Listener', () => {
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -373,7 +355,7 @@ describe('Listener', () => {
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -413,7 +395,7 @@ describe('Listener', () => {
                     alias,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -452,7 +434,7 @@ describe('Listener', () => {
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
@@ -498,7 +480,7 @@ describe('Listener', () => {
                     alias2,
                     [],
                     PlainMessage.create('test-message'),
-                    NetworkType.PRIVATE_TEST,
+                    NetworkType.TEST_NET,
                     undefined,
                     undefined,
                     account.publicAccount,
@@ -683,7 +665,7 @@ describe('Listener', () => {
                             '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
                             'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
                         signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                        beneficiaryAddress: '7826D27E1D0A26CA4E316F901E23E55C8711DB20DF5C49B5',
+                        beneficiaryAddress: '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776',
                         timestamp: '0',
                         type: 32768,
                         version: 1,

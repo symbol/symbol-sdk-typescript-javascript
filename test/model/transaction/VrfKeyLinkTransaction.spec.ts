@@ -38,7 +38,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(vrfKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -50,7 +50,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             new UInt64([1, 0]),
         );
 
@@ -63,7 +63,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -72,7 +72,7 @@ describe('VrfKeyLinkTransaction', () => {
         const signedTransaction = vrfKeyLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B601',
+            '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F01',
         );
     });
 
@@ -81,7 +81,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -90,7 +90,7 @@ describe('VrfKeyLinkTransaction', () => {
         const signedTransaction = vrfKeyLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B600',
+            '2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F00',
         );
     });
 
@@ -100,7 +100,7 @@ describe('VrfKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
             expect(Convert.hexToUint8(vrfKeyLinkTransaction.serialize()).length).to.be.equal(vrfKeyLinkTransaction.size);
             expect(vrfKeyLinkTransaction.size).to.be.equal(161);
@@ -112,7 +112,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ).setMaxFee(2);
         expect(vrfKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -125,12 +125,12 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VDR6EW2WBHJQDYMNGFX2UBZHMMZC5PGL22BHJVI'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });

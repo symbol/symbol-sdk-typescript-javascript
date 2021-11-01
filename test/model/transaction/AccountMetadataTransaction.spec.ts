@@ -43,7 +43,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         expect(accountMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -57,7 +57,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             new UInt64([1, 0]),
         );
 
@@ -72,13 +72,13 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const signedTransaction = accountMetadataTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            'A8D66C33420E5411995BACFCA2B28CF1C9F5DD7AB181BFA8E80300000000000001000A0000000000000000000000',
+            '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776E80300000000000001000A0000000000000000000000',
         );
     });
 
@@ -90,7 +90,7 @@ describe('AccountMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
 
             expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
@@ -107,7 +107,7 @@ describe('AccountMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
 
             expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
@@ -124,7 +124,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         Object.assign(accountMetadataTransaction, { signer: account.publicAccount });
@@ -143,7 +143,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const resolved = accountMetadataTransaction.resolveAliases();
@@ -159,13 +159,13 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 
-        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'));
+        canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'));
         expect(canNotify).to.be.false;
 
         Object.assign(tx, { signer: account.publicAccount });
@@ -181,7 +181,7 @@ describe('AccountMetadataTransaction', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         let canNotify = tx.shouldNotifyAccount(alias);

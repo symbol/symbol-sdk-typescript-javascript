@@ -74,7 +74,7 @@ describe('Transaction', () => {
         it('should return true when there is no Transaction Info', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -90,7 +90,7 @@ describe('Transaction', () => {
         it('should return true when height is 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -104,7 +104,7 @@ describe('Transaction', () => {
         it('should return false when height is not 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -120,7 +120,7 @@ describe('Transaction', () => {
         it('should return true when height is not 0', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -136,7 +136,7 @@ describe('Transaction', () => {
         it('should return false when height is 0 and hash and markehash are different', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -152,7 +152,7 @@ describe('Transaction', () => {
         it('should throw an error if the transaction is announced', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -167,7 +167,7 @@ describe('Transaction', () => {
         it('should return a new transaction', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -181,7 +181,7 @@ describe('Transaction', () => {
         it('should overide deadline properly', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -203,7 +203,7 @@ describe('Transaction', () => {
         it('should throw exception when adding an aggregated transaction as inner transaction', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -214,7 +214,7 @@ describe('Transaction', () => {
             const aggregateTransaction = AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 [],
             );
 
@@ -228,15 +228,15 @@ describe('Transaction', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
                 [],
                 PlainMessage.create('test-message'),
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
             );
             const serialized = transaction.serialize();
 
             expect(serialized.substring(256, serialized.length)).to.be.equal(
-                'A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C5360D0000000000000000746573742D6D657373616765',
+                '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD267760D0000000000000000746573742D6D657373616765',
             );
         });
     });
@@ -245,7 +245,7 @@ describe('Transaction', () => {
         it('should return version in hex format', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
-                NetworkType.PRIVATE_TEST,
+                NetworkType.TEST_NET,
                 1,
                 Deadline.create(epochAdjustment),
                 UInt64.fromUint(0),
@@ -253,7 +253,7 @@ describe('Transaction', () => {
                 undefined,
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
-            expect(transaction.versionToHex()).to.be.equal('0xa801');
+            expect(transaction.versionToHex()).to.be.equal('0x9801');
         });
     });
 
@@ -278,7 +278,6 @@ describe('Transaction', () => {
             '7373616765000000';
 
         // expected values
-        const knownHash_sha3 = 'F0F5A62A0863D45E832B50EFF4E2F68157268A5D1674EC1068D82EC5F88D950B';
         const generationHashBytes = Array.from(Convert.hexToUint8('988C4CDCE4D188013C13DE7914C7FD4D626169EF256722F61C52EFBE06BD5A2C'));
         const generationHashBytes_mt = Array.from(Convert.hexToUint8('17FA4747F5014B50413CCF968749604D728D7065DC504291EEE556899A534CBB'));
 
@@ -342,14 +341,6 @@ describe('Transaction', () => {
             expect(hash1).to.equal(hash2);
         });
 
-        it('create correct SHA3 transaction hash given network type PRIVATE or PRIVATE_TEST', () => {
-            const hash1 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
-            const hash2 = Transaction.createTransactionHash(knownPayload, generationHashBytes);
-
-            expect(hash1).to.equal(knownHash_sha3);
-            expect(hash2).to.equal(knownHash_sha3);
-        });
-
         it('hash only merkle transaction hash for aggregate transactions', () => {
             const hash1 = Transaction.createTransactionHash(knownAggregatePayload, generationHashBytes);
 
@@ -379,29 +370,29 @@ describe('Transaction', () => {
     it('is signed', () => {
         let tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ) as Transaction;
 
         expect(tx.isSigned(account.address)).to.be.false;
         const signed = tx.signWith(account, '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6');
         tx = TransactionMapping.createFromPayload(signed.payload) as Transaction;
         expect((tx as Transaction).isSigned(account.address)).to.be.true;
-        expect((tx as Transaction).isSigned(Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'))).to.be.false;
+        expect((tx as Transaction).isSigned(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'))).to.be.false;
     });
 
     it('should prepare valid transaction payload', () => {
         const tx = TransferTransaction.create(
             Deadline.createFromDTO('1'),
-            Address.createFromRawAddress('VATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA35C4KNQ'),
+            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ) as Transaction;
         const expectedPayload =
-            'AD00000000000000F5CEC2900A317ED93F5BC6621AE11FF960E07BD9D780CF625EA49FD8F073973EB4DF2598B089CC78A6C48519138EB1CC0A0927467D1925838DDA074C6C81170F9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B60000000001A8544100000000000000000100000000000000A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C5360D0000000000000000746573742D6D657373616765';
+            'AD00000000000000F5CEC2900A317ED93F5BC6621AE11FF960E07BD9D780CF625EA49FD8F073973EB4DF2598B089CC78A6C48519138EB1CC0A0927467D1925838DDA074C6C81170F2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F0000000001985441000000000000000001000000000000009826D27E1D0A26CA4E316F901E23E55C8711DB20DFD267760D0000000000000000746573742D6D657373616765';
         const signature =
             'F5CEC2900A317ED93F5BC6621AE11FF960E07BD9D780CF625EA49FD8F073973EB4DF2598B089CC78A6C48519138EB1CC0A0927467D1925838DDA074C6C81170F';
         const payload = Transaction.preparePayload(Convert.hexToUint8(tx.serialize()), Convert.hexToUint8(signature), account.publicKey);
@@ -410,9 +401,9 @@ describe('Transaction', () => {
 
     it('should sign raw transaction and produce a valid signature', () => {
         const txSigningBytes =
-            '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D601A8544100000000000000000100000000000000A826D27E1D0A26CA4E316F901E23E55C8711DB20DF45C5360D0000000000000000746573742D6D657373616765';
+            '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D601A85441000000000000000001000000000000009826D27E1D0A26CA4E316F901E23E55C8711DB20DFD267760D0000000000000000746573742D6D657373616765';
         const expectedSignature =
-            'F5CEC2900A317ED93F5BC6621AE11FF960E07BD9D780CF625EA49FD8F073973EB4DF2598B089CC78A6C48519138EB1CC0A0927467D1925838DDA074C6C81170F';
+            'FF2BB279CC5AAE9C7983569C458830A95C625F56547C36E2B29452AD1367CBDA9EE8C606F00E68E618E482E61F7BDEE373582A0215D2125B9D530A271FE7CC0C';
         const signature = Transaction.signRawTransaction(account.privateKey, Convert.hexToUint8(txSigningBytes));
         expect(Convert.uint8ToHex(signature)).to.be.eq(expectedSignature);
     });

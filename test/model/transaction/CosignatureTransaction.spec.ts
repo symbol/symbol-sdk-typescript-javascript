@@ -95,8 +95,8 @@ describe('CosignatureTransaction', () => {
 
         expect(cosignatureSignedTransaction.parentHash).to.be.equal(aggregateTransferTransaction.transactionInfo!.hash);
         expect(cosignatureSignedTransaction.signature).to.be.equal(
-            '5EA75D1A2C8AD25DA4F400C1BD2DA84449FAF583AFD813E' +
-                '1179E72AF0CDF5AC1C0F7404AF6FC7268EE416204240DD3D5B11420D80215F19AA314FC86D6E03E0D',
+            'B8360C62113098F648120F603D3ACA435FD24DBFA600BC4' +
+                'F93A925B0DED3065357088B06D53BAC498A65826E3BC9D6519B4A81CD9941262A55C1759209AD2B0A',
         );
         expect(cosignatureSignedTransaction.signerPublicKey).to.be.equal(account.publicKey);
         expect(cosignatureSignedTransaction.version.toString()).to.be.equal('0');
@@ -108,12 +108,12 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         ).serialize();
 
         const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
 
-        expect(signedTx.signerPublicKey).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6');
+        expect(signedTx.signerPublicKey).to.be.equal('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
         expect(signedTx.signerPublicKey).to.be.equal(account.publicKey);
         expect(signedTx.version.toString()).to.be.equal('0');
     });
@@ -124,13 +124,13 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregate = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
         const txHash = '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6';
@@ -140,7 +140,7 @@ describe('CosignatureTransaction', () => {
         const signedTx = cosignTx.signWith(account, txHash);
 
         expect(signedTx.parentHash).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6');
-        expect(signedTx.signerPublicKey).to.be.equal('9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6');
+        expect(signedTx.signerPublicKey).to.be.equal('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
         expect(signedTx.signerPublicKey).to.be.equal(account.publicKey);
         expect(signedTx.version.toString()).to.be.equal('0');
     });
@@ -151,13 +151,13 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
         );
 
         const aggregate = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.PRIVATE_TEST,
+            NetworkType.TEST_NET,
             [],
         );
         const cosignTx = new CosignatureTransaction(aggregate);
