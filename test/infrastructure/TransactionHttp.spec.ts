@@ -59,6 +59,8 @@ describe('TransactionHttp', () => {
     cosignature.signature = 'signature';
     cosignature.version = '0';
     const epochAdjustment = 1573430400;
+    const testAddress = Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y');
+    const testNetworkType = NetworkType.TEST_NET;
 
     before(() => {
         transactionRoutesApi = mock();
@@ -74,12 +76,12 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
         const aggTx = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.TEST_NET,
+            testNetworkType,
             [],
         );
 
@@ -108,7 +110,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain();
+        transactionDto.recipientAddress = testAddress.plain();
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -183,9 +185,7 @@ describe('TransactionHttp', () => {
 
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
 
@@ -196,9 +196,7 @@ describe('TransactionHttp', () => {
 
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
 
@@ -209,9 +207,7 @@ describe('TransactionHttp', () => {
 
         expect(transactions.data.length).to.be.equal(1);
         expect(transactions.data[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
 
@@ -232,7 +228,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain();
+        transactionDto.recipientAddress = testAddress.plain();
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -248,27 +244,21 @@ describe('TransactionHttp', () => {
         let transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Confirmed).toPromise();
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
 
         transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Partial).toPromise();
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
 
         transaction = await transactionHttp.getTransaction(generationHash, TransactionGroup.Unconfirmed).toPromise();
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
     });
@@ -286,7 +276,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain();
+        transactionDto.recipientAddress = testAddress.plain();
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -316,25 +306,19 @@ describe('TransactionHttp', () => {
 
         expect(transactionConfirmed.length).to.be.equal(1);
         expect(transactionConfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactionConfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transactionConfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transactionConfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionConfirmed[0].transactionInfo?.hash).to.be.equal('hash');
 
         expect(transactionUnconfirmed.length).to.be.equal(1);
         expect(transactionUnconfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactionUnconfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transactionUnconfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transactionUnconfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionUnconfirmed[0].transactionInfo?.hash).to.be.equal('hash');
 
         expect(transactionPartial.length).to.be.equal(1);
         expect(transactionPartial[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
-        expect(((transactionPartial[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(
-            Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain(),
-        );
+        expect(((transactionPartial[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(testAddress.plain());
         expect(transactionPartial[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionPartial[0].transactionInfo?.hash).to.be.equal('hash');
     });
@@ -352,7 +336,7 @@ describe('TransactionHttp', () => {
         transactionDto.maxFee = '1';
         transactionDto.mosaics = [];
         transactionDto.network = NetworkTypeEnum.NUMBER_104;
-        transactionDto.recipientAddress = Address.createFromRawAddress('NATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA34SQ33Y').plain();
+        transactionDto.recipientAddress = testAddress.plain();
         transactionDto.type = TransactionType.TRANSFER.valueOf();
         transactionDto.version = 1;
 
@@ -372,7 +356,7 @@ describe('TransactionHttp', () => {
         blockDTO.timestamp = '7';
         blockDTO.beneficiaryAddress = Address.createFromPublicKey(
             '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A8',
-            NetworkType.TEST_NET,
+            testNetworkType,
         ).encoded();
 
         const blockMetaDTO = {} as BlockMetaDTO;
@@ -402,7 +386,7 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         const signedTx = account.sign(tx, generationHash);
@@ -421,13 +405,13 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         const aggTx = AggregateTransaction.createBonded(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.TEST_NET,
+            testNetworkType,
             [],
         );
 
@@ -509,7 +493,7 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         const signedTx = account.sign(tx, generationHash);
@@ -529,13 +513,13 @@ describe('TransactionHttp', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('Hi'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         const aggTx = AggregateTransaction.createBonded(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            NetworkType.TEST_NET,
+            testNetworkType,
             [],
         );
         const signedTx = account.sign(aggTx, generationHash);

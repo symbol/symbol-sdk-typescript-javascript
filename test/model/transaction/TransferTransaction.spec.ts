@@ -42,6 +42,9 @@ describe('TransferTransaction', () => {
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
     const epochAdjustment = 1573430400;
+    const testAddress = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
+    const testNetworkType = NetworkType.TEST_NET;
+
     before(() => {
         account = TestingAccount;
     });
@@ -65,10 +68,10 @@ describe('TransferTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.maxFee.higher).to.be.equal(0);
@@ -78,10 +81,10 @@ describe('TransferTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -92,10 +95,10 @@ describe('TransferTransaction', () => {
     it('should createComplete an TransferTransaction object and sign it without mosaics', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -113,10 +116,10 @@ describe('TransferTransaction', () => {
     it('should createComplete an TransferTransaction object with empty message', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [],
             EmptyMessage,
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('');
@@ -134,10 +137,10 @@ describe('TransferTransaction', () => {
     it('should createComplete an TransferTransaction object and sign it with mosaics', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -160,7 +163,7 @@ describe('TransferTransaction', () => {
             addressAlias,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -180,10 +183,10 @@ describe('TransferTransaction', () => {
     it('should format TransferTransaction payload with 24 bytes binary address', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         // test recipientToString with Address recipient
@@ -200,7 +203,7 @@ describe('TransferTransaction', () => {
             new NamespaceId('nem.owner'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         // test recipientToString with NamespaceId recipient
@@ -215,10 +218,10 @@ describe('TransferTransaction', () => {
         it('should return 180 for TransferTransaction with 1 mosaic and message NEM', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                NetworkType.TEST_NET,
+                testNetworkType,
             );
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
@@ -227,10 +230,10 @@ describe('TransferTransaction', () => {
         it('should set payloadsize', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                NetworkType.TEST_NET,
+                testNetworkType,
             );
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
@@ -241,10 +244,10 @@ describe('TransferTransaction', () => {
     it('should create TransferTransaction and sign using catbuffer-typescript', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -263,10 +266,10 @@ describe('TransferTransaction', () => {
     it('should create Transafer transaction for persistent harvesting delegation request transaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [],
             PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.message.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
@@ -275,10 +278,10 @@ describe('TransferTransaction', () => {
     it('should createComplete an persistentDelegationRequestTransaction object and sign it', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [],
             PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
         expect(transferTransaction.message.payload.length).to.be.equal(248 + messageMarker.length);
         expect(transferTransaction.message.payload.includes(messageMarker)).to.be.true;
@@ -296,10 +299,10 @@ describe('TransferTransaction', () => {
         expect(() => {
             TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-                NetworkType.TEST_NET,
+                testNetworkType,
             );
         }).to.throw(Error, 'PersistentDelegationRequestTransaction should be created without Mosaic');
     });
@@ -308,10 +311,10 @@ describe('TransferTransaction', () => {
         expect(() => {
             TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create('abc', vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-                NetworkType.TEST_NET,
+                testNetworkType,
             );
         }).to.throw();
     });
@@ -352,10 +355,10 @@ describe('TransferTransaction', () => {
         expect(() => {
             TransferTransaction.create(
                 Deadline.create(epochAdjustment),
-                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-                NetworkType.TEST_NET,
+                testNetworkType,
             );
         }).to.throw();
     });
@@ -368,10 +371,10 @@ describe('TransferTransaction', () => {
 
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             mosaics,
             PlainMessage.create('NEM'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.mosaics[0].id.id.compact()).to.be.equal(200);
@@ -397,10 +400,10 @@ describe('TransferTransaction', () => {
 
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             mosaics,
             PlainMessage.create('NEM'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(transferTransaction.mosaics[0].id.toHex()).to.be.equal('D525AD41D95FCF29');
@@ -421,7 +424,7 @@ describe('TransferTransaction', () => {
             namespaceId,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
         const payload = transferTransaction.serialize();
         const newTransaction = CreateTransactionFromPayload(payload) as TransferTransaction;
@@ -433,10 +436,10 @@ describe('TransferTransaction', () => {
     it('Test set maxFee using multiplier', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         ).setMaxFee(2);
         expect(transferTransaction.maxFee.compact()).to.be.equal(378);
 
@@ -447,17 +450,17 @@ describe('TransferTransaction', () => {
     it('Test set maxFee using multiplier to throw', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
-            Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+            testAddress,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
 
         expect(() => {
             AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [transferTransaction.toAggregate(account.publicAccount)],
-                NetworkType.TEST_NET,
+                testNetworkType,
                 [],
             ).setMaxFee(2);
         }).to.throw();
@@ -465,7 +468,7 @@ describe('TransferTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const transferTransaction = new TransferTransaction(
-            NetworkType.TEST_NET,
+            testNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -486,13 +489,13 @@ describe('TransferTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
+        const address = testAddress;
         const tx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             address,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(address);
         expect(canNotify).to.be.true;
@@ -511,7 +514,7 @@ describe('TransferTransaction', () => {
             namespaceId,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            NetworkType.TEST_NET,
+            testNetworkType,
         ).shouldNotifyAccount(namespaceId);
         expect(canNotify).to.be.true;
     });
