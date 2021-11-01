@@ -27,7 +27,7 @@ import { NamespaceId } from '../../../src/model/namespace';
 import { NetworkType } from '../../../src/model/network';
 import { ReceiptSource, ResolutionEntry, ResolutionStatement, ResolutionType, Statement } from '../../../src/model/receipt';
 import { AggregateTransaction, Deadline, TransactionInfo, TransferTransaction } from '../../../src/model/transaction';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('TransferTransaction', () => {
@@ -43,7 +43,6 @@ describe('TransferTransaction', () => {
     const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
     const epochAdjustment = 1573430400;
     const testAddress = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
-    const testNetworkType = NetworkType.TEST_NET;
 
     before(() => {
         account = TestingAccount;
@@ -71,7 +70,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.maxFee.higher).to.be.equal(0);
@@ -84,7 +83,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -98,7 +97,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -119,7 +118,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [],
             EmptyMessage,
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('');
@@ -140,7 +139,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -163,7 +162,7 @@ describe('TransferTransaction', () => {
             addressAlias,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -186,7 +185,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         // test recipientToString with Address recipient
@@ -203,7 +202,7 @@ describe('TransferTransaction', () => {
             new NamespaceId('nem.owner'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         // test recipientToString with NamespaceId recipient
@@ -221,7 +220,7 @@ describe('TransferTransaction', () => {
                 testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                testNetworkType,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
@@ -233,7 +232,7 @@ describe('TransferTransaction', () => {
                 testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                testNetworkType,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
             expect(transaction.size).to.be.equal(180);
@@ -247,7 +246,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
@@ -269,7 +268,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [],
             PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.message.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
@@ -281,7 +280,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [],
             PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-            testNetworkType,
+            TestNetworkType,
         );
         expect(transferTransaction.message.payload.length).to.be.equal(248 + messageMarker.length);
         expect(transferTransaction.message.payload.includes(messageMarker)).to.be.true;
@@ -302,7 +301,7 @@ describe('TransferTransaction', () => {
                 testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-                testNetworkType,
+                TestNetworkType,
             );
         }).to.throw(Error, 'PersistentDelegationRequestTransaction should be created without Mosaic');
     });
@@ -314,7 +313,7 @@ describe('TransferTransaction', () => {
                 testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create('abc', vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-                testNetworkType,
+                TestNetworkType,
             );
         }).to.throw();
     });
@@ -358,7 +357,7 @@ describe('TransferTransaction', () => {
                 testAddress,
                 [NetworkCurrencyLocal.createRelative(100)],
                 PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, vrfPrivateKey, recipientPublicKey, NetworkType.TEST_NET),
-                testNetworkType,
+                TestNetworkType,
             );
         }).to.throw();
     });
@@ -374,7 +373,7 @@ describe('TransferTransaction', () => {
             testAddress,
             mosaics,
             PlainMessage.create('NEM'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.mosaics[0].id.id.compact()).to.be.equal(200);
@@ -403,7 +402,7 @@ describe('TransferTransaction', () => {
             testAddress,
             mosaics,
             PlainMessage.create('NEM'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(transferTransaction.mosaics[0].id.toHex()).to.be.equal('D525AD41D95FCF29');
@@ -424,7 +423,7 @@ describe('TransferTransaction', () => {
             namespaceId,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
         const payload = transferTransaction.serialize();
         const newTransaction = CreateTransactionFromPayload(payload) as TransferTransaction;
@@ -439,7 +438,7 @@ describe('TransferTransaction', () => {
             testAddress,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(transferTransaction.maxFee.compact()).to.be.equal(378);
 
@@ -453,14 +452,14 @@ describe('TransferTransaction', () => {
             testAddress,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(() => {
             AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [transferTransaction.toAggregate(account.publicAccount)],
-                testNetworkType,
+                TestNetworkType,
                 [],
             ).setMaxFee(2);
         }).to.throw();
@@ -468,7 +467,7 @@ describe('TransferTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const transferTransaction = new TransferTransaction(
-            testNetworkType,
+            TestNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -495,7 +494,7 @@ describe('TransferTransaction', () => {
             address,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(address);
         expect(canNotify).to.be.true;
@@ -514,7 +513,7 @@ describe('TransferTransaction', () => {
             namespaceId,
             [NetworkCurrencyLocal.createAbsolute(1)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         ).shouldNotifyAccount(namespaceId);
         expect(canNotify).to.be.true;
     });

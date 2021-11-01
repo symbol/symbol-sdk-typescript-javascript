@@ -19,7 +19,6 @@ import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
@@ -30,7 +29,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicGlobalRestrictionTransaction } from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('MosaicGlobalRestrictionTransaction', () => {
     let account: Account;
@@ -63,7 +62,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             referenceMosaicId,
         );
 
@@ -93,7 +92,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             referenceMosaicId,
         );
 
@@ -127,7 +126,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             namespacId,
         );
 
@@ -157,7 +156,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             referenceMosaicId,
         ).setMaxFee(2);
         expect(mosaicGlobalRestrictionTransaction.maxFee.compact()).to.be.equal(340);
@@ -168,7 +167,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicGlobalRestrictionTransaction = new MosaicGlobalRestrictionTransaction(
-            NetworkType.TEST_NET,
+            TestNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -203,7 +202,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             referenceMosaicId,
         );
 

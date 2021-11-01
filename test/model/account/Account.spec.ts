@@ -24,6 +24,7 @@ import { CosignatureSignedTransaction } from '../../../src/model/transaction/Cos
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { TestNetworkType } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('Account', () => {
@@ -77,21 +78,21 @@ describe('Account', () => {
             account2.address,
             [sendAmount],
             PlainMessage.create('payout'),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         const bobTransferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             account.address,
             [backAmount],
             PlainMessage.create('payout'),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [aliceTransferTransaction.toAggregate(account.publicAccount), bobTransferTransaction.toAggregate(account2.publicAccount)],
-            NetworkType.TEST_NET,
+            TestNetworkType,
             [],
         );
 
@@ -116,7 +117,7 @@ describe('Account', () => {
         it('utf-8', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
@@ -126,7 +127,7 @@ describe('Account', () => {
         it('hexa', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
@@ -136,7 +137,7 @@ describe('Account', () => {
         it('utf-8 - NIS1', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('catapult rocks!');
@@ -146,7 +147,7 @@ describe('Account', () => {
         it('hexa - NIS1', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
@@ -156,7 +157,7 @@ describe('Account', () => {
         it('hexa without 0x previx', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('66128B29E8197352A2FEB51B50CF5D02F1D05B20D44B3F7953B98ACD2BCA15D4');
@@ -166,7 +167,7 @@ describe('Account', () => {
         it('hexa without 0x previx should be the same as with 0x', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('AA');
@@ -178,7 +179,7 @@ describe('Account', () => {
         it('hexa without 0x previx should be the same as with 0x', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('ff60983e0c5d21d2fb83c67598d560f3cf0e28ae667b5616aaa58a059666cd8cf826b026243c92cf');
@@ -197,7 +198,7 @@ describe('Account', () => {
         it('sign empty', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             const publicAccount = account.publicAccount;
             const signed = account.signData('');

@@ -40,6 +40,7 @@ import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatem
 import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
+import { TestAddress } from '../../conf/conf.spec';
 
 describe('Receipt', () => {
     let account: Account;
@@ -47,6 +48,7 @@ describe('Receipt', () => {
     let addressResolutionStatementsDTO;
     let mosaicResolutionStatementsDTO;
     let statementDTO;
+    const unresolvedEncodedAddress = '99C51FB4C93FCA5095000000000000000000000000000000';
 
     before(() => {
         account = Account.createFromPrivateKey('575DBB3062267EFF57C970A336EBBC8FBCFE12C5BD3ED7BC11EB0481D7704CED', NetworkType.TEST_NET);
@@ -74,14 +76,14 @@ describe('Receipt', () => {
             {
                 statement: {
                     height: '1488',
-                    unresolved: '99C51FB4C93FCA5095000000000000000000000000000000',
+                    unresolved: unresolvedEncodedAddress,
                     resolutionEntries: [
                         {
                             source: {
                                 primaryId: 4,
                                 secondaryId: 0,
                             },
-                            resolved: Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q').encoded(),
+                            resolved: TestAddress.encoded(),
                         },
                     ],
                 },
@@ -89,7 +91,7 @@ describe('Receipt', () => {
             {
                 statement: {
                     height: '1488',
-                    unresolved: '99C51FB4C93FCA5095000000000000000000000000000000',
+                    unresolved: unresolvedEncodedAddress,
                     resolutionEntries: [
                         {
                             source: {
@@ -147,7 +149,7 @@ describe('Receipt', () => {
             version: 1,
             type: 4685,
             senderAddress: account.address.encoded(),
-            recipientAddress: '99C51FB4C93FCA5095000000000000000000000000000000',
+            recipientAddress: unresolvedEncodedAddress,
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
         };
@@ -165,7 +167,7 @@ describe('Receipt', () => {
         deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Levy);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
-        deepEqual(receipt.recipientAddress, Address.createFromEncoded('99C51FB4C93FCA5095000000000000000000000000000000'));
+        deepEqual(receipt.recipientAddress, Address.createFromEncoded(unresolvedEncodedAddress));
     });
 
     it('should createComplete a balance transfer receipt - Mosaic Rental Fee', () => {
@@ -173,7 +175,7 @@ describe('Receipt', () => {
             version: 1,
             type: 4685,
             senderAddress: account.address.encoded(),
-            recipientAddress: '99C51FB4C93FCA5095000000000000000000000000000000',
+            recipientAddress: unresolvedEncodedAddress,
             mosaicId: '941299B2B7E1291C',
             amount: '1000',
         };
@@ -189,7 +191,7 @@ describe('Receipt', () => {
 
         deepEqual(receipt.senderAddress.encoded(), receiptDTO.senderAddress);
         deepEqual(receipt.amount.toString(), receiptDTO.amount);
-        deepEqual(receipt.recipientAddress, Address.createFromEncoded('99C51FB4C93FCA5095000000000000000000000000000000'));
+        deepEqual(receipt.recipientAddress, Address.createFromEncoded(unresolvedEncodedAddress));
         deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Rental_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
@@ -312,10 +314,7 @@ describe('Receipt', () => {
                 );
             }),
         );
-        deepEqual(
-            (statement.unresolved as Address).plain(),
-            Address.createFromEncoded('99C51FB4C93FCA5095000000000000000000000000000000').plain(),
-        );
+        deepEqual((statement.unresolved as Address).plain(), Address.createFromEncoded(unresolvedEncodedAddress).plain());
         deepEqual((statement.resolutionEntries[0].resolved as Address).plain(), 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
     });
 

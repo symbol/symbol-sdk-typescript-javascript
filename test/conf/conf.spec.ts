@@ -15,6 +15,7 @@
  */
 
 import { Account } from '../../src/model/account/Account';
+import { Address } from '../../src/model/account/Address';
 import { NetworkType } from '../../src/model/network/NetworkType';
 
 export const TestingAccount = Account.createFromPrivateKey(
@@ -41,5 +42,9 @@ export const Cosignatory3Account = Account.createFromPrivateKey(
     'C325EA529674396DB5675939E7988883D59A5FC17A28CA977E3BA85370232A83',
     NetworkType.TEST_NET,
 );
+
+export const TestAddress = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
+
+export const TestNetworkType = NetworkType.TEST_NET;
 
 export const NIS2_URL = 'http://localhost:3000';

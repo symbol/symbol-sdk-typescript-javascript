@@ -92,9 +92,9 @@ describe('address', () => {
     });
 
     describe('publicKeyToAddress', () => {
+        const expectedHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
         it('can create address from public key for custom network', () => {
             // Arrange:
-            const expectedHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
@@ -111,12 +111,11 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('2E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
-            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(address.isValidAddress(decoded1)).to.equal(true);
-            expect(decoded1).to.deep.equal(decoded2);
+            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(decoded).to.deep.equal(decoded);
         });
 
         it('different public keys result in different addresses', () => {
@@ -150,9 +149,10 @@ describe('address', () => {
     });
 
     describe('isValidAddress', () => {
+        const validHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
+
         it('returns true for valid address', () => {
             // Arrange:
-            const validHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
@@ -161,7 +161,6 @@ describe('address', () => {
 
         it('returns false for address with invalid checksum', () => {
             // Arrange:
-            const validHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
             const decoded = convert.hexToUint8(validHex);
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
@@ -171,7 +170,6 @@ describe('address', () => {
 
         it('returns false for address with invalid hash', () => {
             // Arrange:
-            const validHex = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
             const decoded = convert.hexToUint8(validHex);
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 

@@ -20,11 +20,10 @@ import { Account } from '../../../src/model/account/Account';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
@@ -42,7 +41,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(mosaicDefinitionTransaction.maxFee.higher).to.be.equal(0);
@@ -57,7 +56,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -73,7 +72,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(mosaicDefinitionTransaction.duration!.lower).to.be.equal(1000);
@@ -98,7 +97,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(1000),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(mosaicDefinitionTransaction.duration!.lower).to.be.equal(1000);
@@ -124,7 +123,7 @@ describe('MosaicDefinitionTransaction', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(mosaicDefinitionTransaction.size).to.be.equal(150);
             expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
@@ -137,7 +136,7 @@ describe('MosaicDefinitionTransaction', () => {
                 MosaicFlags.create(true, true, false),
                 3,
                 UInt64.fromUint(1000),
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(mosaicDefinitionTransaction.size).to.be.equal(150);
             expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
@@ -153,7 +152,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(mosaicDefinitionTransaction.divisibility).to.be.equal(3);
@@ -176,7 +175,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(mosaicDefinitionTransaction.maxFee.compact()).to.be.equal(300);
 
@@ -192,7 +191,7 @@ describe('MosaicDefinitionTransaction', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         Object.assign(tx, { signer: account.publicAccount });

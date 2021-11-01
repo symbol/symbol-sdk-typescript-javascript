@@ -17,7 +17,7 @@
 import { expect } from 'chai';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/network/NetworkType';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('PublicAccount', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
@@ -43,7 +43,7 @@ describe('Signature verification', () => {
         // Arrange:
         const signerPublicAccount = PublicAccount.createFromPublicKey(
             '22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         const data = 'I am so so so awesome as always';
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C5486'; // Act & Assert:
@@ -56,7 +56,7 @@ describe('Signature verification', () => {
         // Arrange:
         const signerPublicAccount = PublicAccount.createFromPublicKey(
             '22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         const data = 'I am so so so awesome as always';
         const signature =
@@ -70,7 +70,7 @@ describe('Signature verification', () => {
         // Arrange:
         const signerPublicAccount = PublicAccount.createFromPublicKey(
             '12816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB509',
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         const data = 'I am so so so awesome as always';
         const signature =
@@ -82,7 +82,7 @@ describe('Signature verification', () => {
         // Arrange:
         const signerPublicAccount = PublicAccount.createFromPublicKey(
             '22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         const data = 'I am awesome as always';
         const signature =
@@ -94,7 +94,7 @@ describe('Signature verification', () => {
         // Arrange:
         const signerPublicAccount = PublicAccount.createFromPublicKey(
             '22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         const data = 'I am so so so awesome as always';
         const signature =

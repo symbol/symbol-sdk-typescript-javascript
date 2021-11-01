@@ -20,7 +20,6 @@ import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
@@ -30,7 +29,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('MosaicAddressRestrictionTransaction', () => {
     let account: Account;
@@ -65,7 +64,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
             UInt64.fromUint(1),
             account.address,
             UInt64.fromUint(8),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             UInt64.fromUint(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
@@ -89,7 +88,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
             UInt64.fromUint(1),
             account.address,
             UInt64.fromUint(8),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             UInt64.fromUint(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(namespacId.toHex());
@@ -114,7 +113,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
             UInt64.fromUint(1),
             namespacId,
             UInt64.fromUint(8),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             UInt64.fromUint(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
@@ -137,7 +136,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
             UInt64.fromUint(1),
             new NamespaceId('nem.owner'),
             UInt64.fromUint(8),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             UInt64.fromUint(9),
         );
 
@@ -158,7 +157,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
             UInt64.fromUint(1),
             new NamespaceId('nem.owner'),
             UInt64.fromUint(8),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             UInt64.fromUint(9),
         ).setMaxFee(2);
         expect(transaction.maxFee.compact()).to.be.equal(368);
@@ -169,7 +168,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const transaction = new MosaicAddressRestrictionTransaction(
-            NetworkType.TEST_NET,
+            TestNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),

@@ -21,11 +21,10 @@ import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestAddress, TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -37,13 +36,12 @@ describe('AddressAliasTransaction', () => {
 
     it('should default maxFee field be set to 0', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
-            address,
-            NetworkType.TEST_NET,
+            TestAddress,
+            TestNetworkType,
         );
 
         expect(addressAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -52,13 +50,12 @@ describe('AddressAliasTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
-            address,
-            NetworkType.TEST_NET,
+            TestAddress,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -68,13 +65,12 @@ describe('AddressAliasTransaction', () => {
 
     it('should createComplete an AddressAliasTransaction object and sign it', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
-            address,
-            NetworkType.TEST_NET,
+            TestAddress,
+            TestNetworkType,
         );
 
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -91,13 +87,12 @@ describe('AddressAliasTransaction', () => {
 
     it('should createComplete an AddressAliasTransaction using abstract', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressAliasTransaction = AliasTransaction.createForAddress(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
-            address,
-            NetworkType.TEST_NET,
+            TestAddress,
+            TestNetworkType,
         ) as AddressAliasTransaction;
 
         expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
@@ -115,13 +110,12 @@ describe('AddressAliasTransaction', () => {
     describe('size', () => {
         it('should return 161 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
-            const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
-                address,
-                NetworkType.TEST_NET,
+                TestAddress,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
             expect(addressAliasTransaction.size).to.be.equal(161);
@@ -129,13 +123,12 @@ describe('AddressAliasTransaction', () => {
 
         it('should set payload size', () => {
             const namespaceId = new NamespaceId([33347626, 3779697293]);
-            const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(epochAdjustment),
                 AliasAction.Link,
                 namespaceId,
-                address,
-                NetworkType.TEST_NET,
+                TestAddress,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
             expect(addressAliasTransaction.size).to.be.equal(161);
@@ -145,29 +138,27 @@ describe('AddressAliasTransaction', () => {
 
     it('Test set maxFee using multiplier', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
-            address,
-            NetworkType.TEST_NET,
+            TestAddress,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(addressAliasTransaction.maxFee.compact()).to.be.equal(322);
     });
 
     it('Notify Account', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
-        const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
         const tx = AddressAliasTransaction.create(
             Deadline.create(epochAdjustment),
             AliasAction.Link,
             namespaceId,
-            address,
-            NetworkType.TEST_NET,
+            TestAddress,
+            TestNetworkType,
         );
 
-        let canNotify = tx.shouldNotifyAccount(address);
+        let canNotify = tx.shouldNotifyAccount(TestAddress);
         expect(canNotify).to.be.true;
 
         canNotify = tx.shouldNotifyAccount(Address.createFromRawAddress('TAMJCSC2BEW52LVAULFRRJJTSRHLI7ABRHFJZ5I'));

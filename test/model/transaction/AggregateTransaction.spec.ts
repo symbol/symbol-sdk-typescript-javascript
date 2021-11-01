@@ -48,7 +48,7 @@ import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo'
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
-import { Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount } from '../../conf/conf.spec';
+import { Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('AggregateTransaction', () => {
@@ -59,7 +59,6 @@ describe('AggregateTransaction', () => {
     const unresolvedMosaicId = new NamespaceId('mosaic');
     const resolvedMosaicId = new MosaicId('0DC67FBE1CAD29E5');
     const epochAdjustment = 1573430400;
-    const testNetworkType = NetworkType.TEST_NET;
 
     before(() => {
         account = TestingAccount;
@@ -87,13 +86,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -107,13 +106,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
             new UInt64([1, 0]),
         );
@@ -128,13 +127,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -150,13 +149,13 @@ describe('AggregateTransaction', () => {
             Deadline.create(epochAdjustment),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [registerNamespaceTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -177,13 +176,13 @@ describe('AggregateTransaction', () => {
             MosaicFlags.create(true, true, true),
             3,
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -203,13 +202,13 @@ describe('AggregateTransaction', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -232,12 +231,12 @@ describe('AggregateTransaction', () => {
                 Address.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4', NetworkType.TEST_NET),
             ],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [modifyMultisigAccountTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -256,12 +255,12 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
         const signedTransaction = CosignatoryAccount.signTransactionWithCosignatories(
@@ -284,13 +283,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(epochAdjustment, 2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -385,7 +384,7 @@ describe('AggregateTransaction', () => {
     });
 
     it("should have type 0x4141 when it's complete", () => {
-        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(epochAdjustment), [], testNetworkType, []);
+        const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(epochAdjustment), [], TestNetworkType, []);
 
         expect(aggregateTransaction.type).to.be.equal(0x4141);
     });
@@ -402,13 +401,13 @@ describe('AggregateTransaction', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -416,7 +415,7 @@ describe('AggregateTransaction', () => {
             AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [aggregateTransaction.toAggregate(account.publicAccount)],
-                testNetworkType,
+                TestNetworkType,
                 [],
             );
         }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
@@ -435,21 +434,21 @@ describe('AggregateTransaction', () => {
             accountBob.address,
             [],
             PlainMessage.create('a to b'),
-            testNetworkType,
+            TestNetworkType,
         );
         const BtoATx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             accountAlice.address,
             [],
             PlainMessage.create('b to a'),
-            testNetworkType,
+            TestNetworkType,
         );
         const CtoATx = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             accountAlice.address,
             [],
             PlainMessage.create('c to a'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         // 01. Alice creates the aggregated tx and sign it, Then payload send to Bob & Carol
@@ -460,7 +459,7 @@ describe('AggregateTransaction', () => {
                 BtoATx.toAggregate(accountBob.publicAccount),
                 CtoATx.toAggregate(accountCarol.publicAccount),
             ],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -505,19 +504,19 @@ describe('AggregateTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            testNetworkType,
+            TestNetworkType,
         );
         const transferTx2 = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             account.address,
             [],
             PlainMessage.create('b to a'),
-            testNetworkType,
+            TestNetworkType,
         );
         let aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTx1.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -536,12 +535,12 @@ describe('AggregateTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            testNetworkType,
+            TestNetworkType,
         );
         let aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTx1.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -568,12 +567,12 @@ describe('AggregateTransaction', () => {
                 Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                testNetworkType,
+                TestNetworkType,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
-                testNetworkType,
+                TestNetworkType,
                 [],
             );
             expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
@@ -585,12 +584,12 @@ describe('AggregateTransaction', () => {
                 Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
                 [NetworkCurrencyLocal.createRelative(100)],
                 PlainMessage.create('NEM'),
-                testNetworkType,
+                TestNetworkType,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(epochAdjustment),
                 [transaction.toAggregate(account.publicAccount)],
-                testNetworkType,
+                TestNetworkType,
                 [],
             );
             expect(aggregateTransaction.size).to.be.equal(272);
@@ -605,13 +604,13 @@ describe('AggregateTransaction', () => {
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         ).setMaxFeeForAggregate(2, 10);
         const size = aggregateTransaction.size;
@@ -628,14 +627,14 @@ describe('AggregateTransaction', () => {
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         expect(() => {
             AggregateTransaction.createComplete(
                 Deadline.create(epochAdjustment),
                 [transferTransaction.toAggregate(account.publicAccount)],
-                testNetworkType,
+                TestNetworkType,
                 [],
             ).setMaxFee(2);
         }).to.throw();
@@ -643,7 +642,7 @@ describe('AggregateTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const transferTransaction = new TransferTransaction(
-            testNetworkType,
+            TestNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -656,7 +655,7 @@ describe('AggregateTransaction', () => {
         );
 
         const aggregateTransaction = new AggregateTransaction(
-            testNetworkType,
+            TestNetworkType,
             TransactionType.AGGREGATE_COMPLETE,
             1,
             Deadline.createFromDTO('1'),
@@ -683,12 +682,12 @@ describe('AggregateTransaction', () => {
             account.address,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
         const tx = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
@@ -707,12 +706,12 @@ describe('AggregateTransaction', () => {
             unresolvedAddress,
             [new Mosaic(unresolvedMosaicId, UInt64.fromUint(1))],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
         const tx = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
         let canNotify = tx.shouldNotifyAccount(unresolvedAddress);

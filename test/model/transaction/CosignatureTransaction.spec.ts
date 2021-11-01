@@ -18,18 +18,16 @@ import { expect } from 'chai';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import { Account } from '../../../src/model/account/Account';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('CosignatureTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const epochAdjustment = 1573430400;
-    const testNetworkType = NetworkType.TEST_NET;
 
     before(() => {
         account = TestingAccount;
@@ -110,7 +108,7 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            testNetworkType,
+            TestNetworkType,
         ).serialize();
 
         const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
@@ -126,13 +124,13 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregate = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
         const txHash = '9801508C58666C746F471538E43002B85B1CD542F9874B2861183919BA8787B6';
@@ -153,13 +151,13 @@ describe('CosignatureTransaction', () => {
             account.address,
             [],
             PlainMessage.create('a to b'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregate = AggregateTransaction.createComplete(
             Deadline.create(epochAdjustment),
             [tx.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
         const cosignTx = new CosignatureTransaction(aggregate);

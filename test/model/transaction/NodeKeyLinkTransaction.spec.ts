@@ -18,12 +18,11 @@ import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { NodeKeyLinkTransaction } from '../../../src/model/transaction/NodeKeyLinkTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('NodeKeyLinkTransaction', () => {
     let account: Account;
@@ -38,7 +37,7 @@ describe('NodeKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(nodeKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -50,7 +49,7 @@ describe('NodeKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -63,7 +62,7 @@ describe('NodeKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(nodeKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -81,7 +80,7 @@ describe('NodeKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(nodeKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -100,7 +99,7 @@ describe('NodeKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(nodeKeyLinkTransaction.serialize()).length).to.be.equal(nodeKeyLinkTransaction.size);
             expect(nodeKeyLinkTransaction.size).to.be.equal(161);
@@ -110,7 +109,7 @@ describe('NodeKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(nodeKeyLinkTransaction.serialize()).length).to.be.equal(nodeKeyLinkTransaction.size);
             expect(nodeKeyLinkTransaction.size).to.be.equal(161);
@@ -123,7 +122,7 @@ describe('NodeKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(nodeKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -132,12 +131,7 @@ describe('NodeKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = NodeKeyLinkTransaction.create(
-            Deadline.create(epochAdjustment),
-            account.publicKey,
-            LinkAction.Unlink,
-            NetworkType.TEST_NET,
-        );
+        const tx = NodeKeyLinkTransaction.create(Deadline.create(epochAdjustment), account.publicKey, LinkAction.Unlink, TestNetworkType);
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 

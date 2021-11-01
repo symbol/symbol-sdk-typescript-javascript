@@ -18,12 +18,11 @@ import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { VrfKeyLinkTransaction } from '../../../src/model/transaction/VrfKeyLinkTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('VrfKeyLinkTransaction', () => {
     let account: Account;
@@ -38,7 +37,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(vrfKeyLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -50,7 +49,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.TEST_NET,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -63,7 +62,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Link,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(1);
@@ -81,7 +80,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(vrfKeyLinkTransaction.linkAction).to.be.equal(0);
@@ -100,7 +99,7 @@ describe('VrfKeyLinkTransaction', () => {
                 Deadline.create(epochAdjustment),
                 account.publicKey,
                 LinkAction.Unlink,
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(Convert.hexToUint8(vrfKeyLinkTransaction.serialize()).length).to.be.equal(vrfKeyLinkTransaction.size);
             expect(vrfKeyLinkTransaction.size).to.be.equal(161);
@@ -112,7 +111,7 @@ describe('VrfKeyLinkTransaction', () => {
             Deadline.create(epochAdjustment),
             account.publicKey,
             LinkAction.Unlink,
-            NetworkType.TEST_NET,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(vrfKeyLinkTransaction.maxFee.compact()).to.be.equal(322);
 
@@ -121,12 +120,7 @@ describe('VrfKeyLinkTransaction', () => {
     });
 
     it('Notify Account', () => {
-        const tx = VrfKeyLinkTransaction.create(
-            Deadline.create(epochAdjustment),
-            account.publicKey,
-            LinkAction.Unlink,
-            NetworkType.TEST_NET,
-        );
+        const tx = VrfKeyLinkTransaction.create(Deadline.create(epochAdjustment), account.publicKey, LinkAction.Unlink, TestNetworkType);
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
 

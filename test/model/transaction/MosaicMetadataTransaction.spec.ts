@@ -21,7 +21,6 @@ import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { NetworkType } from '../../../src/model/network/NetworkType';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
@@ -32,7 +31,7 @@ import { MosaicMetadataTransaction } from '../../../src/model/transaction/Mosaic
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('MosaicMetadataTransaction', () => {
     let account: Account;
@@ -62,7 +61,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         expect(mosaicMetadataTransaction.maxFee.higher).to.be.equal(0);
@@ -77,7 +76,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
             new UInt64([1, 0]),
         );
 
@@ -93,7 +92,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
@@ -112,7 +111,7 @@ describe('MosaicMetadataTransaction', () => {
             namespacId,
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
@@ -131,7 +130,7 @@ describe('MosaicMetadataTransaction', () => {
                 new MosaicId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
@@ -145,7 +144,7 @@ describe('MosaicMetadataTransaction', () => {
                 new MosaicId([2262289484, 3405110546]),
                 1,
                 Convert.uint8ToUtf8(new Uint8Array(10)),
-                NetworkType.TEST_NET,
+                TestNetworkType,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
             expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
@@ -161,7 +160,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         ).setMaxFee(2);
         expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(364);
 
@@ -171,7 +170,7 @@ describe('MosaicMetadataTransaction', () => {
 
     it('Test resolveAlias can resolve', () => {
         const mosaicMetadataTransaction = new MosaicMetadataTransaction(
-            NetworkType.TEST_NET,
+            TestNetworkType,
             1,
             Deadline.createFromDTO('1'),
             UInt64.fromUint(0),
@@ -199,7 +198,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
 
         Object.assign(mosaicMetadataTransaction, { signer: account.publicAccount });
@@ -219,7 +218,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
         expect(canNotify).to.be.true;
@@ -241,7 +240,7 @@ describe('MosaicMetadataTransaction', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            NetworkType.TEST_NET,
+            TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(alias);
         expect(canNotify).to.be.true;

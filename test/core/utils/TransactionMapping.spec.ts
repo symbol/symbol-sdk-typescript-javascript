@@ -60,7 +60,7 @@ import {
     TransferTransaction,
     VrfKeyLinkTransaction,
 } from '../../../src/model/transaction';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestAddress, TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 import { NetworkCurrencyLocal } from '../../model/mosaic/Currency.spec';
 
 const assertSerialization = (t: Transaction, expectedHex: string): void => {
@@ -69,8 +69,6 @@ const assertSerialization = (t: Transaction, expectedHex: string): void => {
     const transaction = TransactionMapping.createFromPayload(serializedHex);
     expect(DtoMapping.assign(transaction, { signature: undefined, signer: undefined }).serialize()).to.be.equal(expectedHex);
 };
-const address = Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q');
-const testNetworkType = NetworkType.TEST_NET;
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
@@ -84,9 +82,9 @@ describe('TransactionMapping - createFromPayload', () => {
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.createFromDTO('555'),
             AddressRestrictionFlag.AllowIncomingAddress,
-            [address],
+            [TestAddress],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
@@ -109,7 +107,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
@@ -131,7 +129,7 @@ describe('TransactionMapping - createFromPayload', () => {
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
@@ -152,8 +150,8 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             AliasAction.Link,
             namespaceId,
-            address,
-            testNetworkType,
+            TestAddress,
+            TestNetworkType,
         );
 
         const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
@@ -178,7 +176,7 @@ describe('TransactionMapping - createFromPayload', () => {
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
@@ -203,7 +201,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -230,7 +228,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -255,7 +253,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -280,7 +278,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
@@ -305,7 +303,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -330,7 +328,7 @@ describe('TransactionMapping - createFromPayload', () => {
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
@@ -354,7 +352,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
@@ -380,7 +378,7 @@ describe('TransactionMapping - createFromPayload', () => {
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = secretLockTransaction.signWith(account, generationHash);
@@ -406,7 +404,7 @@ describe('TransactionMapping - createFromPayload', () => {
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = secretProofTransaction.signWith(account, generationHash);
@@ -429,7 +427,7 @@ describe('TransactionMapping - createFromPayload', () => {
             1,
             [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.TEST_NET)],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
@@ -456,26 +454,26 @@ describe('TransactionMapping - createFromPayload', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const accountLinkTransaction = AccountKeyLinkTransaction.create(
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
         const vrfKeyLinkTransaction = VrfKeyLinkTransaction.create(
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
         const nodeKeyLinkTransaction = NodeKeyLinkTransaction.create(
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const votingKeyLinkTransaction = VotingKeyLinkTransaction.create(
@@ -484,7 +482,7 @@ describe('TransactionMapping - createFromPayload', () => {
             1,
             3,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
             TransactionVersion.VOTING_KEY_LINK,
         );
 
@@ -492,7 +490,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.createFromDTO('555'),
@@ -502,7 +500,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicRestrictionType.NONE,
             UInt64.fromUint(0),
             MosaicRestrictionType.GE,
-            testNetworkType,
+            TestNetworkType,
         );
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.createFromDTO('555'),
@@ -510,7 +508,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
             UInt64.fromUint(0),
         );
         const accountMetadataTransaction = AccountMetadataTransaction.create(
@@ -519,7 +517,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            testNetworkType,
+            TestNetworkType,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
             Deadline.createFromDTO('555'),
@@ -528,7 +526,7 @@ describe('TransactionMapping - createFromPayload', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            testNetworkType,
+            TestNetworkType,
         );
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
             Deadline.createFromDTO('555'),
@@ -537,7 +535,7 @@ describe('TransactionMapping - createFromPayload', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
@@ -545,7 +543,7 @@ describe('TransactionMapping - createFromPayload', () => {
             AliasAction.Link,
             new NamespaceId([2262289484, 3405110546]),
             new MosaicId([2262289484, 3405110546]),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const secretProofTransaction = SecretProofTransaction.create(
@@ -554,7 +552,7 @@ describe('TransactionMapping - createFromPayload', () => {
             sha3_256.create().update(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7')).hex(),
             account.address,
             'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
@@ -574,7 +572,7 @@ describe('TransactionMapping - createFromPayload', () => {
                 mosaicAliasTransaction.toAggregate(account.publicAccount),
                 secretProofTransaction.toAggregate(account.publicAccount),
             ],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -597,13 +595,13 @@ describe('TransactionMapping - createFromPayload', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.createFromDTO('555'),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -620,14 +618,14 @@ describe('TransactionMapping - createFromPayload', () => {
     });
 
     it('should create LockFundTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.createFromDTO('555'), [], testNetworkType, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.createFromDTO('555'), [], TestNetworkType, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
             Deadline.createFromDTO('555'),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedLockFundTransaction = lockTransaction.signWith(account, generationHash);
@@ -648,7 +646,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -668,7 +666,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -688,7 +686,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -711,7 +709,7 @@ describe('TransactionMapping - createFromPayload', () => {
             1,
             3,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
             TransactionVersion.VOTING_KEY_LINK,
         );
 
@@ -734,7 +732,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -755,7 +753,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.createFromDTO('555'),
             'root-test-namespace',
             'parent-test-namespace',
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
@@ -775,7 +773,7 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicRestrictionType.NONE,
             UInt64.fromUint(0),
             MosaicRestrictionType.GE,
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -804,7 +802,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
             UInt64.fromUint(0),
         );
 
@@ -832,7 +830,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
             UInt64.fromUint(0),
         );
 
@@ -861,7 +859,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            testNetworkType,
+            TestNetworkType,
         );
 
         assertSerialization(
@@ -888,7 +886,7 @@ describe('TransactionMapping - createFromPayload', () => {
             new MosaicId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -916,7 +914,7 @@ describe('TransactionMapping - createFromPayload', () => {
             new NamespaceId([2262289484, 3405110546]),
             1,
             Convert.uint8ToUtf8(new Uint8Array(10)),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -942,7 +940,7 @@ describe('TransactionMapping - createFromPayload', () => {
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
@@ -967,7 +965,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -987,7 +985,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             new NamespaceId([33347626, 3779697293]),
             [NetworkCurrencyLocal.createRelative(100)],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1008,7 +1006,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [NetworkCurrencyLocal.createRelative(100)],
             new EncryptedMessage('12324556'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1027,7 +1025,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON()) as AccountKeyLinkTransaction;
@@ -1041,7 +1039,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1060,7 +1058,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             account.publicKey,
             LinkAction.Link,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1078,9 +1076,9 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.createFromDTO('555'),
             AddressRestrictionFlag.AllowIncomingAddress,
-            [address],
+            [TestAddress],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1104,7 +1102,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             MosaicRestrictionFlag.AllowMosaic,
             [mosaicId],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1126,7 +1124,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             OperationRestrictionFlag.AllowOutgoingTransactionType,
             [operation],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1148,8 +1146,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             AliasAction.Link,
             namespaceId,
-            address,
-            testNetworkType,
+            TestAddress,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1170,7 +1168,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             AliasAction.Link,
             namespaceId,
             mosaicId,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1191,7 +1189,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             MosaicFlags.create(false, false, false),
             3,
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1214,7 +1212,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1237,7 +1235,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1260,7 +1258,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1284,7 +1282,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             LockHashAlgorithm.Op_Sha3_256,
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1306,7 +1304,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1331,7 +1329,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             proof,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1354,7 +1352,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             1,
             [Address.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24', NetworkType.TEST_NET)],
             [],
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1376,13 +1374,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.createFromDTO('555'),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -1402,13 +1400,13 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [],
             PlainMessage.create('test-message'),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.createFromDTO('555'),
             [transferTransaction.toAggregate(account.publicAccount)],
-            testNetworkType,
+            TestNetworkType,
             [],
         );
 
@@ -1423,14 +1421,14 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
     });
 
     it('should create LockFundTransaction', () => {
-        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.createFromDTO('555'), [], testNetworkType, []);
+        const aggregateTransaction = AggregateTransaction.createBonded(Deadline.createFromDTO('555'), [], TestNetworkType, []);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(
             Deadline.createFromDTO('555'),
             NetworkCurrencyLocal.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1448,7 +1446,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             'root-test-namespace',
             UInt64.fromUint(1000),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1465,7 +1463,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             'root-test-namespace',
             new NamespaceId([4294967295, 4294967295]),
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1486,7 +1484,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             MosaicRestrictionType.NONE,
             UInt64.fromUint(0),
             MosaicRestrictionType.GE,
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1514,7 +1512,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            testNetworkType,
+            TestNetworkType,
             UInt64.fromUint(0),
         );
 
@@ -1541,7 +1539,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             1,
             'Test Value',
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1565,7 +1563,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             new MosaicId([2262289484, 3405110546]),
             1,
             'Test Value',
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
@@ -1590,7 +1588,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             new NamespaceId([2262289484, 3405110546]),
             1,
             'Test Value',
-            testNetworkType,
+            TestNetworkType,
         );
 
         const expectedHex =
