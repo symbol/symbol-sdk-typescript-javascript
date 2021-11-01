@@ -99,6 +99,9 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#encodeunresolvedaddress" class="tsd-kind-icon">encode<wbr>Unresolved<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#encoded" class="tsd-kind-icon">encoded</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#equals" class="tsd-kind-icon">equals</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#isaddress" class="tsd-kind-icon">is<wbr>Address</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#ismosaicid" class="tsd-kind-icon">is<wbr>Mosaic<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#isnamespaceid" class="tsd-kind-icon">is<wbr>Namespace<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#plain" class="tsd-kind-icon">plain</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#pretty" class="tsd-kind-icon">pretty</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_account_address.address.html#tobuilder" class="tsd-kind-icon">to<wbr>Builder</a></li>
@@ -129,13 +132,13 @@
 					<a name="encodeunresolvedaddress" class="tsd-anchor"></a>
 					<h3>encode<wbr>Unresolved<wbr>Address</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">encode<wbr>Unresolved<wbr>Address<span class="tsd-signature-symbol">(</span>networkType<span class="tsd-signature-symbol">: </span><a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+						<li class="tsd-signature tsd-kind-icon">encode<wbr>Unresolved<wbr>Address<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L171">model/account/Address.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L167">model/account/Address.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -144,12 +147,6 @@
 									zero padded.</p>
 								</div>
 							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>networkType: <a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
 						</li>
 					</ul>
@@ -164,7 +161,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L124">model/account/Address.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L124">model/account/Address.ts:124</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -186,7 +183,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L141">model/account/Address.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L141">model/account/Address.ts:141</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -208,6 +205,72 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isaddress" class="tsd-anchor"></a>
+					<h3>is<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Address<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L180">model/account/Address.ts:180</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>returns that the instance is an address</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="ismosaicid" class="tsd-anchor"></a>
+					<h3>is<wbr>Mosaic<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Mosaic<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L187">model/account/Address.ts:187</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>returns that the instance is not a mosaic id</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isnamespaceid" class="tsd-anchor"></a>
+					<h3>is<wbr>Namespace<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Namespace<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L174">model/account/Address.ts:174</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>returns that this instance is a resolved, not an alias, address.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="plain" class="tsd-anchor"></a>
 					<h3>plain</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -217,7 +280,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L116">model/account/Address.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L116">model/account/Address.ts:116</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -239,7 +302,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L132">model/account/Address.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L132">model/account/Address.ts:132</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -261,7 +324,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L161">model/account/Address.ts:161</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L158">model/account/Address.ts:158</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -283,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L151">model/account/Address.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L148">model/account/Address.ts:148</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -305,7 +368,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L63">model/account/Address.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L63">model/account/Address.ts:63</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -336,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L30">model/account/Address.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L30">model/account/Address.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -373,7 +436,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L42">model/account/Address.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L42">model/account/Address.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -405,7 +468,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L88">model/account/Address.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L88">model/account/Address.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -437,7 +500,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/2274bf3/src/model/account/Address.ts#L72">model/account/Address.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/f8fe7d8/src/model/account/Address.ts#L72">model/account/Address.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -490,6 +553,15 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="model_account_address.address.html#equals" class="tsd-kind-icon">equals</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="model_account_address.address.html#isaddress" class="tsd-kind-icon">is<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="model_account_address.address.html#ismosaicid" class="tsd-kind-icon">is<wbr>Mosaic<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="model_account_address.address.html#isnamespaceid" class="tsd-kind-icon">is<wbr>Namespace<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="model_account_address.address.html#plain" class="tsd-kind-icon">plain</a>
