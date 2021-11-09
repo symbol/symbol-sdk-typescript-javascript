@@ -15,6 +15,7 @@
  */
 import { LocalDateTime } from '@js-joda/core';
 import { deepEqual } from 'assert';
+import { TransactionTypeDto } from 'catbuffer-typescript';
 import { expect } from 'chai';
 import { NamespaceRegistrationTypeEnum, TransactionInfoDTO, TransferTransactionDTO } from 'symbol-openapi-typescript-fetch-client';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction';
@@ -568,6 +569,58 @@ describe('CreateTransactionFromDTO', () => {
             expect(aggregateMosaicSupplyChangeTransaction.size).eq(100);
 
             ValidateTransaction.validateAggregateTx(aggregateMosaicSupplyChangeTransaction, aggregateMosaicSupplyChangeTransactionDTO);
+        });
+    });
+
+    describe('MosaicSupplyRevocationTransaction', () => {
+        it('standalone', () => {
+            const dto: TransactionInfoDTO = {
+                meta: {
+                    height: '212',
+                    hash: '700E495D9E57B5701B3009BF02F522A9C1D7B15ECBBA65B3BD6F52A79EBBC7EB',
+                    merkleComponentHash: '700E495D9E57B5701B3009BF02F522A9C1D7B15ECBBA65B3BD6F52A79EBBC7EB',
+                    index: 0,
+                    timestamp: '62955743775',
+                    feeMultiplier: 11904,
+                },
+                transaction: {
+                    size: 168,
+                    signature:
+                        '6F2FE34C6F09E8C4FB98569831E46A274809CA2D18405E811A0480EEC424C8034D51B65C692CA36BC0533733E4C7B83076B9F9B2FE439314B74E4AD78B36100F',
+                    signerPublicKey: '5AB0BC217283542BF3BC45570FCC5C7232825B8DDDFBFF1F9CA06747BB939F92',
+                    version: 1,
+                    network: 152,
+                    type: 17229,
+                    maxFee: '2000000',
+                    deadline: '62962930644',
+                    sourceAddress: '986E584F3CE223A494D3444BDCA4A425AECED2B1C3318DF1',
+                    mosaicId: '6CEE17786759C983',
+                    amount: '1',
+                },
+                id: '61894560E8034A392B5FD905',
+            };
+
+            const transaction = CreateTransactionFromDTO(dto);
+            expect(transaction.type).eq(TransactionTypeDto.MOSAIC_SUPPLY_REVOCATION);
+            expect(transaction.toJSON()).deep.eq({
+                transaction: {
+                    type: 17229,
+                    network: 152,
+                    version: 1,
+                    maxFee: '2000000',
+                    deadline: '62962930644',
+                    signature:
+                        '6F2FE34C6F09E8C4FB98569831E46A274809CA2D18405E811A0480EEC424C8034D51B65C692CA36BC0533733E4C7B83076B9F9B2FE439314B74E4AD78B36100F',
+                    signerPublicKey: '5AB0BC217283542BF3BC45570FCC5C7232825B8DDDFBFF1F9CA06747BB939F92',
+                    sourceAddress: {
+                        address: 'TBXFQTZ44IR2JFGTIRF5ZJFEEWXM5UVRYMYY34I',
+                        networkType: 152,
+                    },
+                    mosaicId: '6CEE17786759C983',
+                    amount: '1',
+                },
+            });
+            ValidateTransaction.validateStandaloneTx(transaction, dto);
         });
     });
 

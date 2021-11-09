@@ -32,6 +32,7 @@ import {
     MosaicGlobalRestrictionTransaction,
     MosaicMetadataTransaction,
     MosaicSupplyChangeTransaction,
+    MosaicSupplyRevocationTransaction,
     MultisigAccountModificationTransaction,
     NamespaceMetadataTransaction,
     NamespaceRegistrationTransaction,
@@ -99,6 +100,8 @@ export const CreateTransactionFromPayload = (payload: string, isEmbedded = false
         return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.VRF_KEY_LINK) {
         return VrfKeyLinkTransaction.createFromPayload(payload, isEmbedded);
+    } else if (type === TransactionType.MOSAIC_SUPPLY_REVOCATION) {
+        return MosaicSupplyRevocationTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.NODE_KEY_LINK) {
         return NodeKeyLinkTransaction.createFromPayload(payload, isEmbedded);
     } else if (type === TransactionType.VOTING_KEY_LINK && version == TransactionVersion.VOTING_KEY_LINK) {

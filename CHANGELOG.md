@@ -14,6 +14,7 @@ Catbuffer | v1.0.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuf
 Client Library | v1.0.2  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
 
 - fix: replaced `instanceof` statements. These statements are problematic when npm installs the dependency in multiples modules. 
+- feat: added mosaic revocation support.
 
 ## [1.0.2] - 25-Oct-2021
 

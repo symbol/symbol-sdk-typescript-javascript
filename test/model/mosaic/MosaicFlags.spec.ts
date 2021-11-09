@@ -23,41 +23,64 @@ describe('MosaicFlags', () => {
         expect(mosaicFlags.supplyMutable).to.be.equal(true);
         expect(mosaicFlags.transferable).to.be.equal(true);
         expect(mosaicFlags.restrictable).to.be.equal(true);
+        expect(mosaicFlags.revokable).to.be.equal(false);
     });
 
     it('should createComplete an mosaicFlags object with static method', () => {
-        const mosaicFlags = MosaicFlags.create(false, false, false);
+        const mosaicFlags = MosaicFlags.create(false, false, false, false);
 
         expect(mosaicFlags.supplyMutable).to.be.equal(false);
         expect(mosaicFlags.transferable).to.be.equal(false);
         expect(mosaicFlags.restrictable).to.be.equal(false);
+        expect(mosaicFlags.revokable).to.be.equal(false);
     });
 
-    it('should return corredt flags value', () => {
-        let mosaicFlags = MosaicFlags.create(false, false, false);
+    it('should return correct flags value', () => {
+        let mosaicFlags = MosaicFlags.create(false, false, false, false);
         expect(mosaicFlags.getValue()).to.be.equal(0);
 
-        mosaicFlags = MosaicFlags.create(true, false, false);
+        mosaicFlags = MosaicFlags.create(true, false, false, false);
         expect(mosaicFlags.getValue()).to.be.equal(1);
 
-        mosaicFlags = MosaicFlags.create(false, true, false);
+        mosaicFlags = MosaicFlags.create(false, true, false, false);
         expect(mosaicFlags.getValue()).to.be.equal(2);
 
-        mosaicFlags = MosaicFlags.create(false, false, true);
+        mosaicFlags = MosaicFlags.create(false, false, true, false);
         expect(mosaicFlags.getValue()).to.be.equal(4);
 
-        mosaicFlags = MosaicFlags.create(true, true, true);
+        mosaicFlags = MosaicFlags.create(true, true, true, false);
         expect(mosaicFlags.getValue()).to.be.equal(7);
 
-        mosaicFlags = MosaicFlags.create(true, false, true);
+        mosaicFlags = MosaicFlags.create(true, false, true, false);
         expect(mosaicFlags.getValue()).to.be.equal(5);
 
-        mosaicFlags = MosaicFlags.create(true, true, false);
+        mosaicFlags = MosaicFlags.create(true, true, false, false);
         expect(mosaicFlags.getValue()).to.be.equal(3);
+
+        mosaicFlags = MosaicFlags.create(false, false, false, true);
+        expect(mosaicFlags.getValue()).to.be.equal(8);
+
+        mosaicFlags = MosaicFlags.create(true, false, false, true);
+        expect(mosaicFlags.getValue()).to.be.equal(9);
+
+        mosaicFlags = MosaicFlags.create(false, true, false, true);
+        expect(mosaicFlags.getValue()).to.be.equal(10);
+
+        mosaicFlags = MosaicFlags.create(false, false, true, true);
+        expect(mosaicFlags.getValue()).to.be.equal(12);
+
+        mosaicFlags = MosaicFlags.create(true, true, true, true);
+        expect(mosaicFlags.getValue()).to.be.equal(15);
+
+        mosaicFlags = MosaicFlags.create(true, false, true, true);
+        expect(mosaicFlags.getValue()).to.be.equal(13);
+
+        mosaicFlags = MosaicFlags.create(true, true, false, true);
+        expect(mosaicFlags.getValue()).to.be.equal(3 + 8);
     });
 
-    it('should return corredt flags json object', () => {
-        const mosaicFlags = MosaicFlags.create(true, true, true);
-        expect(mosaicFlags.toDTO().flags).to.be.equal(7);
+    it('should return correct flags json object', () => {
+        const mosaicFlags = MosaicFlags.create(true, true, true, true);
+        expect(mosaicFlags.toDTO().flags).to.be.equal(15);
     });
 });

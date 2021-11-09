@@ -19,7 +19,14 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { Convert } from '../../../src/core/format';
 import { DtoMapping, TransactionMapping } from '../../../src/core/utils';
-import { MessageMarker, Transaction, TransactionVersion, UInt64, VotingKeyLinkTransaction } from '../../../src/model';
+import {
+    MessageMarker,
+    MosaicSupplyRevocationTransaction,
+    Transaction,
+    TransactionVersion,
+    UInt64,
+    VotingKeyLinkTransaction,
+} from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
 import { LockHashAlgorithm } from '../../../src/model/lock';
 import { EncryptedMessage, MessageType, PlainMessage } from '../../../src/model/message';
@@ -1615,5 +1622,46 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             MessageMarker.PersistentDelegationUnlock +
                 'CBD67E2DBA5D69157CE32874EFDD680E41B1BFFD12B781F84E8AD883920BBB50EA38AFE078E99EE5EE4BDFDA77E8C101EBD3100C0D471673471A61B23E513FC7E21F7803316B906A688F14AA75002913A3B57DD13469BC27CF8C82FD5C4C76867011AEDC7C4870D8C5AF9C175F0DA5A8E2AD3A327D868BFBA34A5E3D',
         );
+    });
+
+    it('should serialize, deserialize top level MosaicSupplyRevocationTransaction', () => {
+        const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
+        const transaction = MosaicSupplyRevocationTransaction.create(
+            Deadline.createFromDTO('100'),
+            account.address,
+            new Mosaic(mosaicId, UInt64.fromUint(5)),
+            NetworkType.TEST_NET,
+        );
+
+        const expectedPayload =
+            'A8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001984D43000000000000000064000000000000009826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776E529AD1CBE7FC60D0500000000000000';
+        expect(transaction.serialize()).eq(expectedPayload);
+
+        const transactionFromPayload = TransactionMapping.createFromPayload(expectedPayload);
+        expect(transactionFromPayload).deep.equal(transaction);
+    });
+
+    it('should serialize, deserialize aggregate MosaicSupplyRevocationTransaction', () => {
+        const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
+        const transaction = MosaicSupplyRevocationTransaction.create(
+            Deadline.createFromDTO('0'),
+            account.address,
+            new Mosaic(mosaicId, UInt64.fromUint(5)),
+            NetworkType.TEST_NET,
+        );
+
+        const aggregate = AggregateTransaction.createComplete(
+            Deadline.createFromDTO('100'),
+            [transaction.toAggregate(account.publicAccount)],
+            TestNetworkType,
+            [],
+        );
+
+        const expectedPayload =
+            '00010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001984141000000000000000064000000000000003C9A8CDCB94A87722F2B1237BF8D297C6CB48B2CA2DC7C3E50271BB51A488091580000000000000058000000000000002E834140FD66CF87B254A693A2C7862C819217B676D3943267156625E816EC6F0000000001984D439826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776E529AD1CBE7FC60D0500000000000000';
+        expect(aggregate.serialize()).eq(expectedPayload);
+
+        const aggregateFromPayload = TransactionMapping.createFromPayload(expectedPayload);
+        expect(aggregateFromPayload).deep.equal(aggregate);
     });
 });

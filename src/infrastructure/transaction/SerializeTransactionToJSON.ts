@@ -30,6 +30,7 @@ import {
     MosaicGlobalRestrictionTransaction,
     MosaicMetadataTransaction,
     MosaicSupplyChangeTransaction,
+    MosaicSupplyRevocationTransaction,
     MultisigAccountModificationTransaction,
     NamespaceMetadataTransaction,
     NamespaceRegistrationTransaction,
@@ -156,6 +157,13 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             mosaicId: mosaicSupplyTx.mosaicId.toHex(),
             action: mosaicSupplyTx.action,
             delta: mosaicSupplyTx.delta.toString(),
+        };
+    } else if (transaction.type === TransactionType.MOSAIC_SUPPLY_REVOCATION) {
+        const mosaicSupplyTx = transaction as MosaicSupplyRevocationTransaction;
+        return {
+            sourceAddress: mosaicSupplyTx.sourceAddress.toDTO(),
+            mosaicId: mosaicSupplyTx.mosaic.id.toHex(),
+            amount: mosaicSupplyTx.mosaic.amount.toString(),
         };
     } else if (transaction.type === TransactionType.NAMESPACE_REGISTRATION) {
         const namespaceTx = transaction as NamespaceRegistrationTransaction;

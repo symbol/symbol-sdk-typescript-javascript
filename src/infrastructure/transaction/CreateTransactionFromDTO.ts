@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { MosaicSupplyRevocationTransactionDTO } from 'symbol-openapi-typescript-fetch-client';
 import { Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils';
-import { MessageFactory, TransactionVersion, UInt64 } from '../../model';
+import { MessageFactory, MosaicSupplyRevocationTransaction, NetworkType, TransactionVersion, UInt64 } from '../../model';
 import { Address, PublicAccount } from '../../model/account';
 import { Mosaic, MosaicFlags, MosaicId, MosaicNonce } from '../../model/mosaic';
 import { NamespaceId } from '../../model/namespace';
@@ -194,6 +195,21 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
             UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             transactionDTO.action,
             UInt64.fromNumericString(transactionDTO.delta),
+            signature,
+            transactionDTO.signerPublicKey
+                ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
+                : undefined,
+            transactionInfo,
+        ).setPayloadSize(transactionDTO.size);
+    } else if (type === TransactionType.MOSAIC_SUPPLY_REVOCATION) {
+        const dto = transactionDTO as MosaicSupplyRevocationTransactionDTO;
+        return new MosaicSupplyRevocationTransaction(
+            (dto.network as any) as NetworkType,
+            version,
+            deadline,
+            maxFee,
+            UnresolvedMapping.toUnresolvedAddress(dto.sourceAddress),
+            new Mosaic(new MosaicId(transactionDTO.mosaicId), UInt64.fromNumericString(transactionDTO.amount)),
             signature,
             transactionDTO.signerPublicKey
                 ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey, transactionDTO.network)
