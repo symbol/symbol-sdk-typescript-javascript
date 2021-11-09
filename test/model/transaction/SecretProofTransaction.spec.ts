@@ -272,7 +272,7 @@ describe('SecretProofTransaction', () => {
         const embedded = secretProofTransaction.toEmbeddedTransaction();
 
         expect(embedded).to.be.instanceOf(EmbeddedTransactionBuilder);
-        expect(Convert.uint8ToHex(embedded.signerPublicKey.key)).to.be.equal(account.publicKey);
+        expect(Convert.uint8ToHex(embedded.signerPublicKey.publicKey)).to.be.equal(account.publicKey);
         expect(embedded.type.valueOf()).to.be.equal(TransactionType.SECRET_PROOF.valueOf());
     });
 

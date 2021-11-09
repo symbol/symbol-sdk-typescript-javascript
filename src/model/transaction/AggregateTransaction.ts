@@ -22,7 +22,7 @@ import {
     EmbeddedTransactionBuilder,
     GeneratorUtils,
     Hash256Dto,
-    KeyDto,
+    PublicKeyDto,
     SignatureDto,
     TimestampDto,
     TransactionBuilder,
@@ -162,12 +162,12 @@ export class AggregateTransaction extends Transaction {
         const type = (builder.type as number) as TransactionType;
         const innerTransactions = builder.getTransactions();
         const networkType = builder.getNetwork().valueOf();
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const signature = Transaction.getSignatureFromPayload(payload, false);
         const consignatures = builder.getCosignatures().map((cosig) => {
             return new AggregateTransactionCosignature(
                 Convert.uint8ToHex(cosig.signature.signature),
-                PublicAccount.createFromPublicKey(Convert.uint8ToHex(cosig.signerPublicKey.key), networkType),
+                PublicAccount.createFromPublicKey(Convert.uint8ToHex(cosig.signerPublicKey.publicKey), networkType),
                 new UInt64(cosig.version),
             );
         });
@@ -302,7 +302,7 @@ export class AggregateTransaction extends Transaction {
         const cosignatures = this.cosignatures.map((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
             const signatureBytes = Convert.hexToUint8(cosignature.signature);
-            return new CosignatureBuilder(cosignature.version.toDTO(), new KeyDto(signerBytes), new SignatureDto(signatureBytes));
+            return new CosignatureBuilder(cosignature.version.toDTO(), new PublicKeyDto(signerBytes), new SignatureDto(signatureBytes));
         });
 
         const builder =

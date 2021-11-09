@@ -18,8 +18,8 @@ import {
     AmountDto,
     EmbeddedNodeKeyLinkTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
     NodeKeyLinkTransactionBuilder,
+    PublicKeyDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
@@ -110,14 +110,14 @@ export class NodeKeyLinkTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedNodeKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : NodeKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = NodeKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as NodeKeyLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getLinkedPublicKey().key),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().publicKey),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NodeKeyLinkTransactionBuilder).fee.amount),
@@ -140,7 +140,7 @@ export class NodeKeyLinkTransaction extends Transaction {
             TransactionType.NODE_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new PublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }
@@ -155,7 +155,7 @@ export class NodeKeyLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.NODE_KEY_LINK.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new PublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }

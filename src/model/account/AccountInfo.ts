@@ -27,10 +27,10 @@ import {
     ImportanceDto,
     ImportanceHeightDto,
     ImportanceSnapshotBuilder,
-    KeyDto,
     MosaicBuilder,
     PinnedVotingKeyBuilder,
-    VotingKeyDto,
+    PublicKeyDto,
+    VotingPublicKeyDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { Mosaic, MosaicId } from '../mosaic';
@@ -112,16 +112,16 @@ export class AccountInfo {
     public serialize(): Uint8Array {
         const address: AddressDto = this.address.toBuilder();
         const addressHeight: HeightDto = new HeightDto(this.addressHeight.toDTO());
-        const publicKey: KeyDto = new KeyDto(Convert.hexToUint8(this.publicKey));
+        const publicKey: PublicKeyDto = new PublicKeyDto(Convert.hexToUint8(this.publicKey));
         const publicKeyHeight: HeightDto = new HeightDto(this.publicKeyHeight.toDTO());
         const accountType = this.accountType.valueOf();
         const supplementalPublicKeysMask = this.getAccountKeyTypeFlags();
         const votingPublicKeys: PinnedVotingKeyBuilder[] =
             this.supplementalPublicKeys.voting?.map((key) => AccountInfo.toPinnedVotingKeyBuilder(key)) || [];
         const balances: MosaicBuilder[] = this.mosaics.map((m) => AccountInfo.toMosaicBuilder(m));
-        const linkedPublicKey: KeyDto | undefined = AccountInfo.toKeyDto(this?.supplementalPublicKeys?.linked?.publicKey);
-        const nodePublicKey = AccountInfo.toKeyDto(this?.supplementalPublicKeys?.node?.publicKey);
-        const vrfPublicKey = AccountInfo.toKeyDto(this?.supplementalPublicKeys?.vrf?.publicKey);
+        const linkedPublicKey: PublicKeyDto | undefined = AccountInfo.toPublicKeyDto(this?.supplementalPublicKeys?.linked?.publicKey);
+        const nodePublicKey = AccountInfo.toPublicKeyDto(this?.supplementalPublicKeys?.node?.publicKey);
+        const vrfPublicKey = AccountInfo.toPublicKeyDto(this?.supplementalPublicKeys?.vrf?.publicKey);
         const importanceSnapshots: ImportanceSnapshotBuilder = new ImportanceSnapshotBuilder(
             new ImportanceDto(this.importance.toDTO()),
             new ImportanceHeightDto(this.importanceHeight.toDTO()),
@@ -179,21 +179,21 @@ export class AccountInfo {
     }
 
     private static toPinnedVotingKeyBuilder(key: AccountLinkVotingKey): PinnedVotingKeyBuilder {
-        const votingKeyDto = new VotingKeyDto(Convert.hexToUint8(key.publicKey).slice(0, 32));
+        const votingPublicKeyDto = new VotingPublicKeyDto(Convert.hexToUint8(key.publicKey).slice(0, 32));
         const startEpoch: FinalizationEpochDto = new FinalizationEpochDto(key.startEpoch);
         const endEpoch: FinalizationEpochDto = new FinalizationEpochDto(key.endEpoch);
-        return new PinnedVotingKeyBuilder(votingKeyDto, startEpoch, endEpoch);
+        return new PinnedVotingKeyBuilder(votingPublicKeyDto, startEpoch, endEpoch);
     }
 
     private static toMosaicBuilder(m: Mosaic): MosaicBuilder {
         return new MosaicBuilder((m.id as MosaicId).toBuilder(), new AmountDto(m.amount.toDTO()));
     }
 
-    private static toKeyDto(publicKey: string | undefined): KeyDto | undefined {
+    private static toPublicKeyDto(publicKey: string | undefined): PublicKeyDto | undefined {
         if (!publicKey) {
             return undefined;
         }
-        return new KeyDto(Convert.hexToUint8(publicKey));
+        return new PublicKeyDto(Convert.hexToUint8(publicKey));
     }
 
     private static toHeightActivityBucketsBuilder(b: ActivityBucket): HeightActivityBucketBuilder {

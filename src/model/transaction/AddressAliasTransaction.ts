@@ -123,7 +123,7 @@ export class AddressAliasTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = AddressAliasTransaction.create(

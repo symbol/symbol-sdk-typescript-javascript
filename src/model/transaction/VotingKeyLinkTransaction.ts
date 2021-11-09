@@ -21,8 +21,8 @@ import {
     FinalizationEpochDto,
     TimestampDto,
     TransactionBuilder,
-    VotingKeyDto,
     VotingKeyLinkTransactionBuilder,
+    VotingPublicKeyDto,
 } from 'catbuffer-typescript';
 import { Convert } from '../../core/format';
 import { Address, PublicAccount } from '../account';
@@ -116,14 +116,14 @@ export class VotingKeyLinkTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedVotingKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : VotingKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = VotingKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as VotingKeyLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getLinkedPublicKey().votingKey),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().votingPublicKey),
             builder.getStartEpoch().finalizationEpoch,
             builder.getEndEpoch().finalizationEpoch,
             builder.getLinkAction().valueOf(),
@@ -149,7 +149,7 @@ export class VotingKeyLinkTransaction extends Transaction {
             TransactionType.VOTING_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new VotingKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new VotingPublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             new FinalizationEpochDto(this.startEpoch),
             new FinalizationEpochDto(this.endEpoch),
             this.linkAction.valueOf(),
@@ -166,7 +166,7 @@ export class VotingKeyLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.VOTING_KEY_LINK.valueOf(),
-            new VotingKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new VotingPublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             new FinalizationEpochDto(this.startEpoch),
             new FinalizationEpochDto(this.endEpoch),
             this.linkAction.valueOf(),

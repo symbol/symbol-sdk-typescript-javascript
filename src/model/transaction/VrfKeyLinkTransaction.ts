@@ -18,7 +18,7 @@ import {
     AmountDto,
     EmbeddedTransactionBuilder,
     EmbeddedVrfKeyLinkTransactionBuilder,
-    KeyDto,
+    PublicKeyDto,
     TimestampDto,
     TransactionBuilder,
     VrfKeyLinkTransactionBuilder,
@@ -111,12 +111,12 @@ export class VrfKeyLinkTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedVrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : VrfKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = VrfKeyLinkTransaction.create(
             isEmbedded ? Deadline.createEmtpy() : Deadline.createFromDTO((builder as VrfKeyLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getLinkedPublicKey().key),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().publicKey),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as VrfKeyLinkTransactionBuilder).fee.amount),
@@ -139,7 +139,7 @@ export class VrfKeyLinkTransaction extends Transaction {
             TransactionType.VRF_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new PublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
         return transactionBuilder;
@@ -155,7 +155,7 @@ export class VrfKeyLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.VRF_KEY_LINK.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new PublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }
