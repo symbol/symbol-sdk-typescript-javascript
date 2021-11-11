@@ -119,7 +119,7 @@ export class MosaicAliasTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = MosaicAliasTransaction.create(

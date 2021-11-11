@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyDto } from 'catbuffer-typescript';
+import { PublicKeyDto } from 'catbuffer-typescript';
 import { KeyPair } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { NetworkType } from '../network/NetworkType';
@@ -101,7 +101,7 @@ export class PublicAccount {
     /**
      * Create Builder object
      */
-    toBuilder(): KeyDto {
-        return new KeyDto(Convert.hexToUint8(this.publicKey));
+    toBuilder(): PublicKeyDto {
+        return new PublicKeyDto(Convert.hexToUint8(this.publicKey));
     }
 }

@@ -144,7 +144,7 @@ export class MosaicMetadataTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedMosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : MosaicMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = MosaicMetadataTransaction.create(

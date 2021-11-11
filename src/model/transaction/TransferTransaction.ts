@@ -132,7 +132,7 @@ export class TransferTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = TransferTransaction.create(

@@ -180,7 +180,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
             ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const registrationType = builder.getRegistrationType().valueOf();
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction =
@@ -217,7 +217,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
     protected createBuilder(): TransactionBuilder {
         let transactionBuilder: NamespaceRegistrationTransactionBuilder;
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderRoot(
+            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderROOT(
                 this.getSignatureAsBuilder(),
                 this.getSignerAsBuilder(),
                 this.versionToDTO(),
@@ -230,7 +230,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
             );
         } else {
-            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderChild(
+            transactionBuilder = NamespaceRegistrationTransactionBuilder.createNamespaceRegistrationTransactionBuilderCHILD(
                 this.getSignatureAsBuilder(),
                 this.getSignerAsBuilder(),
                 this.versionToDTO(),
@@ -252,7 +252,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
      */
     public toEmbeddedTransaction(): EmbeddedTransactionBuilder {
         if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
-            return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderRoot(
+            return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderROOT(
                 this.getSignerAsBuilder(),
                 this.versionToDTO(),
                 this.networkType.valueOf(),
@@ -262,7 +262,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
             );
         }
-        return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderChild(
+        return EmbeddedNamespaceRegistrationTransactionBuilder.createEmbeddedNamespaceRegistrationTransactionBuilderCHILD(
             this.getSignerAsBuilder(),
             this.versionToDTO(),
             this.networkType.valueOf(),

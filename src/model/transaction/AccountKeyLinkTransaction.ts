@@ -19,7 +19,7 @@ import {
     AmountDto,
     EmbeddedAccountKeyLinkTransactionBuilder,
     EmbeddedTransactionBuilder,
-    KeyDto,
+    PublicKeyDto,
     TimestampDto,
     TransactionBuilder,
 } from 'catbuffer-typescript';
@@ -114,14 +114,14 @@ export class AccountKeyLinkTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedAccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AccountKeyLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = AccountKeyLinkTransaction.create(
             isEmbedded
                 ? Deadline.createEmtpy()
                 : Deadline.createFromDTO((builder as AccountKeyLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getLinkedPublicKey().key),
+            Convert.uint8ToHex(builder.getLinkedPublicKey().publicKey),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountKeyLinkTransactionBuilder).fee.amount),
@@ -144,7 +144,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             TransactionType.ACCOUNT_KEY_LINK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new PublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }
@@ -159,7 +159,7 @@ export class AccountKeyLinkTransaction extends Transaction {
             this.versionToDTO(),
             this.networkType.valueOf(),
             TransactionType.ACCOUNT_KEY_LINK.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.linkedPublicKey)),
+            new PublicKeyDto(Convert.hexToUint8(this.linkedPublicKey)),
             this.linkAction.valueOf(),
         );
     }

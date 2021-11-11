@@ -110,7 +110,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const builder = isEmbedded
             ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload))
             : AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().publicKey);
         const networkType = builder.getNetwork().valueOf();
         const signature = Transaction.getSignatureFromPayload(payload, isEmbedded);
         const transaction = AccountOperationRestrictionTransaction.create(
