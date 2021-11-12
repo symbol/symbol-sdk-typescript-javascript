@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MosaicMetadataTransaction | symbol-sdk</title>
+	<title>MosaicSupplyRevocationTransaction | symbol-sdk</title>
 	<meta name="description" content="Documentation for symbol-sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">symbol-sdk</a>
 				</li>
 				<li>
-					<a href="../modules/model_transaction_mosaicmetadatatransaction.html">model/transaction/MosaicMetadataTransaction</a>
+					<a href="../modules/model_transaction_mosaicsupplyrevocationtransaction.html">model/transaction/MosaicSupplyRevocationTransaction</a>
 				</li>
 				<li>
-					<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html">MosaicMetadataTransaction</a>
+					<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html">MosaicSupplyRevocationTransaction</a>
 				</li>
 			</ul>
-			<h1>Class MosaicMetadataTransaction</h1>
+			<h1>Class MosaicSupplyRevocationTransaction</h1>
 		</div>
 	</div>
 </header>
@@ -71,7 +71,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Announce an mosaic metadata transaction to associate a key-value state to an account.</p>
+						<p>Creators of a revokable mosaic will be able to recall any and all balances from any holders. Holders of these mosaics implicitly place trust in the issuer.
+						The mosaic issuer can revoke and recall balances using this transaction.</p>
 					</div>
 				</div>
 			</section>
@@ -82,7 +83,7 @@
 						<a href="model_transaction_transaction.transaction.html" class="tsd-signature-type" data-tsd-kind="Class">Transaction</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">MosaicMetadataTransaction</span>
+								<span class="target">MosaicSupplyRevocationTransaction</span>
 							</li>
 						</ul>
 					</li>
@@ -95,55 +96,52 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#deadline" class="tsd-kind-icon">deadline</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#maxfee" class="tsd-kind-icon">max<wbr>Fee</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#networktype" class="tsd-kind-icon">network<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#scopedmetadatakey" class="tsd-kind-icon">scoped<wbr>Metadata<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#signature" class="tsd-kind-icon">signature</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#signer" class="tsd-kind-icon">signer</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#targetaddress" class="tsd-kind-icon">target<wbr>Address</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#targetmosaicid" class="tsd-kind-icon">target<wbr>Mosaic<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#transactioninfo" class="tsd-kind-icon">transaction<wbr>Info</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#value" class="tsd-kind-icon">value</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#valuesizedelta" class="tsd-kind-icon">value<wbr>Size<wbr>Delta</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#version" class="tsd-kind-icon">version</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#body_index" class="tsd-kind-icon">Body_<wbr><wbr>Index</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#header_size" class="tsd-kind-icon">Header_<wbr><wbr>Size</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#type_index" class="tsd-kind-icon">Type_<wbr><wbr>Index</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#deadline" class="tsd-kind-icon">deadline</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#maxfee" class="tsd-kind-icon">max<wbr>Fee</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#mosaic" class="tsd-kind-icon">mosaic</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#networktype" class="tsd-kind-icon">network<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#signature" class="tsd-kind-icon">signature</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#signer" class="tsd-kind-icon">signer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#sourceaddress" class="tsd-kind-icon">source<wbr>Address</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#transactioninfo" class="tsd-kind-icon">transaction<wbr>Info</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#version" class="tsd-kind-icon">version</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#body_index" class="tsd-kind-icon">Body_<wbr><wbr>Index</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#header_size" class="tsd-kind-icon">Header_<wbr><wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#type_index" class="tsd-kind-icon">Type_<wbr><wbr>Index</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#size" class="tsd-kind-icon">size</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#size" class="tsd-kind-icon">size</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#aggregatetransaction" class="tsd-kind-icon">aggregate<wbr>Transaction</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#getsigningbytes" class="tsd-kind-icon">get<wbr>Signing<wbr>Bytes</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#hasmissingsignatures" class="tsd-kind-icon">has<wbr>Missing<wbr>Signatures</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#isconfirmed" class="tsd-kind-icon">is<wbr>Confirmed</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#isunannounced" class="tsd-kind-icon">is<wbr>Unannounced</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#isunconfirmed" class="tsd-kind-icon">is<wbr>Unconfirmed</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#reapplygiven" class="tsd-kind-icon">reapply<wbr>Given</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#serialize" class="tsd-kind-icon">serialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#setmaxfee" class="tsd-kind-icon">set<wbr>Max<wbr>Fee</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#toaggregate" class="tsd-kind-icon">to<wbr>Aggregate</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#tojson" class="tsd-kind-icon">toJSON</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#create" class="tsd-kind-icon">create</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#createfrompayload" class="tsd-kind-icon">create<wbr>From<wbr>Payload</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#createtransactionhash" class="tsd-kind-icon">create<wbr>Transaction<wbr>Hash</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#preparepayload" class="tsd-kind-icon">prepare<wbr>Payload</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#signrawtransaction" class="tsd-kind-icon">sign<wbr>Raw<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#aggregatetransaction" class="tsd-kind-icon">aggregate<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#getsigningbytes" class="tsd-kind-icon">get<wbr>Signing<wbr>Bytes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#hasmissingsignatures" class="tsd-kind-icon">has<wbr>Missing<wbr>Signatures</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#isconfirmed" class="tsd-kind-icon">is<wbr>Confirmed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#isunannounced" class="tsd-kind-icon">is<wbr>Unannounced</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#isunconfirmed" class="tsd-kind-icon">is<wbr>Unconfirmed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#reapplygiven" class="tsd-kind-icon">reapply<wbr>Given</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#serialize" class="tsd-kind-icon">serialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#setmaxfee" class="tsd-kind-icon">set<wbr>Max<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#toaggregate" class="tsd-kind-icon">to<wbr>Aggregate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#tojson" class="tsd-kind-icon">toJSON</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#create" class="tsd-kind-icon">create</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#createfrompayload" class="tsd-kind-icon">create<wbr>From<wbr>Payload</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#createtransactionhash" class="tsd-kind-icon">create<wbr>Transaction<wbr>Hash</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#preparepayload" class="tsd-kind-icon">prepare<wbr>Payload</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#signrawtransaction" class="tsd-kind-icon">sign<wbr>Raw<wbr>Transaction</a></li>
 							</ul>
 						</section>
 					</div>
@@ -155,14 +153,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Mosaic<wbr>Metadata<wbr>Transaction<span class="tsd-signature-symbol">(</span>networkType<span class="tsd-signature-symbol">: </span><a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, deadline<span class="tsd-signature-symbol">: </span><a href="model_transaction_deadline.deadline.html" class="tsd-signature-type" data-tsd-kind="Class">Deadline</a>, maxFee<span class="tsd-signature-symbol">: </span><a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a>, targetAddress<span class="tsd-signature-symbol">: </span><a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a>, scopedMetadataKey<span class="tsd-signature-symbol">: </span><a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a>, targetMosaicId<span class="tsd-signature-symbol">: </span><a href="../modules/model_mosaic_unresolvedmosaicid.html#unresolvedmosaicid" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedMosaicId</a>, valueSizeDelta<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="model_account_publicaccount.publicaccount.html" class="tsd-signature-type" data-tsd-kind="Class">PublicAccount</a>, transactionInfo<span class="tsd-signature-symbol">?: </span><a href="model_transaction_transactioninfo.transactioninfo.html" class="tsd-signature-type" data-tsd-kind="Class">TransactionInfo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicMetadataTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Mosaic<wbr>Supply<wbr>Revocation<wbr>Transaction<span class="tsd-signature-symbol">(</span>networkType<span class="tsd-signature-symbol">: </span><a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, deadline<span class="tsd-signature-symbol">: </span><a href="model_transaction_deadline.deadline.html" class="tsd-signature-type" data-tsd-kind="Class">Deadline</a>, maxFee<span class="tsd-signature-symbol">: </span><a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a>, sourceAddress<span class="tsd-signature-symbol">: </span><a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a>, mosaic<span class="tsd-signature-symbol">: </span><a href="model_mosaic_mosaic.mosaic.html" class="tsd-signature-type" data-tsd-kind="Class">Mosaic</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="model_account_publicaccount.publicaccount.html" class="tsd-signature-type" data-tsd-kind="Class">PublicAccount</a>, transactionInfo<span class="tsd-signature-symbol">?: </span><a href="model_transaction_transactioninfo.transactioninfo.html" class="tsd-signature-type" data-tsd-kind="Class">TransactionInfo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicSupplyRevocationTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="model_transaction_transaction.transaction.html">Transaction</a>.<a href="model_transaction_transaction.transaction.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/transaction/MosaicMetadataTransaction.ts#L88">model/transaction/MosaicMetadataTransaction.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/transaction/MosaicSupplyRevocationTransaction.ts#L80">model/transaction/MosaicSupplyRevocationTransaction.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -180,19 +178,10 @@
 									<h5>maxFee: <a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a></h5>
 								</li>
 								<li>
-									<h5>targetAddress: <a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a></h5>
+									<h5>sourceAddress: <a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a></h5>
 								</li>
 								<li>
-									<h5>scopedMetadataKey: <a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a></h5>
-								</li>
-								<li>
-									<h5>targetMosaicId: <a href="../modules/model_mosaic_unresolvedmosaicid.html#unresolvedmosaicid" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedMosaicId</a></h5>
-								</li>
-								<li>
-									<h5>valueSizeDelta: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>value: <span class="tsd-signature-type">string</span></h5>
+									<h5>mosaic: <a href="model_mosaic_mosaic.mosaic.html" class="tsd-signature-type" data-tsd-kind="Class">Mosaic</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> signature: <span class="tsd-signature-type">string</span></h5>
@@ -206,7 +195,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicMetadataTransaction</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicSupplyRevocationTransaction</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -229,19 +218,19 @@
 						<p>Inherited from <a href="model_transaction_transaction.transaction.html">Transaction</a>.<a href="model_transaction_transaction.transaction.html#maxfee">maxFee</a></p>
 					</aside>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="mosaic" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> mosaic</h3>
+					<div class="tsd-signature tsd-kind-icon">mosaic<span class="tsd-signature-symbol">:</span> <a href="model_mosaic_mosaic.mosaic.html" class="tsd-signature-type" data-tsd-kind="Class">Mosaic</a></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="networktype" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> network<wbr>Type</h3>
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="model_transaction_transaction.transaction.html">Transaction</a>.<a href="model_transaction_transaction.transaction.html#networktype">networkType</a></p>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="scopedmetadatakey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> scoped<wbr>Metadata<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">scoped<wbr>Metadata<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a></div>
-					<aside class="tsd-sources">
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
@@ -261,16 +250,9 @@
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="targetaddress" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> target<wbr>Address</h3>
-					<div class="tsd-signature tsd-kind-icon">target<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a></div>
-					<aside class="tsd-sources">
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="targetmosaicid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> target<wbr>Mosaic<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">target<wbr>Mosaic<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../modules/model_mosaic_unresolvedmosaicid.html#unresolvedmosaicid" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedMosaicId</a></div>
+					<a name="sourceaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> source<wbr>Address</h3>
+					<div class="tsd-signature tsd-kind-icon">source<wbr>Address<span class="tsd-signature-symbol">:</span> <a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a></div>
 					<aside class="tsd-sources">
 					</aside>
 				</section>
@@ -288,20 +270,6 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="model_transaction_transaction.transaction.html">Transaction</a>.<a href="model_transaction_transaction.transaction.html#type">type</a></p>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="value" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="valuesizedelta" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> value<wbr>Size<wbr>Delta</h3>
-					<div class="tsd-signature tsd-kind-icon">value<wbr>Size<wbr>Delta<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
@@ -732,18 +700,18 @@
 					<a name="create" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><a href="model_transaction_deadline.deadline.html" class="tsd-signature-type" data-tsd-kind="Class">Deadline</a>, targetAddress<span class="tsd-signature-symbol">: </span><a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a>, scopedMetadataKey<span class="tsd-signature-symbol">: </span><a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a>, targetMosaicId<span class="tsd-signature-symbol">: </span><a href="../modules/model_mosaic_unresolvedmosaicid.html#unresolvedmosaicid" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedMosaicId</a>, valueSizeDelta<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a>, maxFee<span class="tsd-signature-symbol">?: </span><a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="model_account_publicaccount.publicaccount.html" class="tsd-signature-type" data-tsd-kind="Class">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicMetadataTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>deadline<span class="tsd-signature-symbol">: </span><a href="model_transaction_deadline.deadline.html" class="tsd-signature-type" data-tsd-kind="Class">Deadline</a>, sourceAddress<span class="tsd-signature-symbol">: </span><a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a>, mosaic<span class="tsd-signature-symbol">: </span><a href="model_mosaic_mosaic.mosaic.html" class="tsd-signature-type" data-tsd-kind="Class">Mosaic</a>, networkType<span class="tsd-signature-symbol">: </span><a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a>, maxFee<span class="tsd-signature-symbol">?: </span><a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a>, signature<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, signer<span class="tsd-signature-symbol">?: </span><a href="model_account_publicaccount.publicaccount.html" class="tsd-signature-type" data-tsd-kind="Class">PublicAccount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicSupplyRevocationTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/transaction/MosaicMetadataTransaction.ts#L63">model/transaction/MosaicMetadataTransaction.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/transaction/MosaicSupplyRevocationTransaction.ts#L61">model/transaction/MosaicSupplyRevocationTransaction.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create a mosaic meta data transaction object</p>
+									<p>Create a mosaic supply revocation transaction object</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -751,44 +719,26 @@
 								<li>
 									<h5>deadline: <a href="model_transaction_deadline.deadline.html" class="tsd-signature-type" data-tsd-kind="Class">Deadline</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>transaction deadline</p>
+										<p>The deadline to include the transaction.</p>
 									</div>
 								</li>
 								<li>
-									<h5>targetAddress: <a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a></h5>
+									<h5>sourceAddress: <a href="../modules/model_account_unresolvedaddress.html#unresolvedaddress" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedAddress</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>target account address.</p>
+										<p>Address from which tokens should be revoked.</p>
 									</div>
 								</li>
 								<li>
-									<h5>scopedMetadataKey: <a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a></h5>
+									<h5>mosaic: <a href="model_mosaic_mosaic.mosaic.html" class="tsd-signature-type" data-tsd-kind="Class">Mosaic</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Metadata key scoped to source, target and type.</p>
-									</div>
-								</li>
-								<li>
-									<h5>targetMosaicId: <a href="../modules/model_mosaic_unresolvedmosaicid.html#unresolvedmosaicid" class="tsd-signature-type" data-tsd-kind="Type alias">UnresolvedMosaicId</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Target unresolved mosaic identifier.</p>
-									</div>
-								</li>
-								<li>
-									<h5>valueSizeDelta: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Change in value size in bytes.</p>
-									</div>
-								</li>
-								<li>
-									<h5>value: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>String value with UTF-8 encoding
-											Difference between the previous value and new value.
-											You can calculate value as xor(previous-value, new-value).
-										If there is no previous value, use directly the new value.</p>
+										<p>Revoked mosaic and amount.</p>
 									</div>
 								</li>
 								<li>
 									<h5>networkType: <a href="../enums/model_network_networktype.networktype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">NetworkType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The network type.</p>
+									</div>
 								</li>
 								<li>
 									<h5>maxFee: <a href="model_uint64.uint64.html" class="tsd-signature-type" data-tsd-kind="Class">UInt64</a><span class="tsd-signature-symbol"> = ...</span></h5>
@@ -809,7 +759,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicMetadataTransaction</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicSupplyRevocationTransaction</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -823,7 +773,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/transaction/MosaicMetadataTransaction.ts#L143">model/transaction/MosaicMetadataTransaction.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/transaction/MosaicSupplyRevocationTransaction.ts#L120">model/transaction/MosaicSupplyRevocationTransaction.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -993,7 +943,7 @@
 						<a href="../modules.html">Exports</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/model_transaction_mosaicmetadatatransaction.html">model/transaction/<wbr>Mosaic<wbr>Metadata<wbr>Transaction</a>
+						<a href="../modules/model_transaction_mosaicsupplyrevocationtransaction.html">model/transaction/<wbr>Mosaic<wbr>Supply<wbr>Revocation<wbr>Transaction</a>
 					</li>
 				</ul>
 			</nav>
@@ -1002,109 +952,100 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html" class="tsd-kind-icon">Mosaic<wbr>Metadata<wbr>Transaction</a>
+						<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html" class="tsd-kind-icon">Mosaic<wbr>Supply<wbr>Revocation<wbr>Transaction</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#deadline" class="tsd-kind-icon">deadline</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#deadline" class="tsd-kind-icon">deadline</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#maxfee" class="tsd-kind-icon">max<wbr>Fee</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#networktype" class="tsd-kind-icon">network<wbr>Type</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#maxfee" class="tsd-kind-icon">max<wbr>Fee</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#scopedmetadatakey" class="tsd-kind-icon">scoped<wbr>Metadata<wbr>Key</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#mosaic" class="tsd-kind-icon">mosaic</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#signature" class="tsd-kind-icon">signature</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#networktype" class="tsd-kind-icon">network<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#signer" class="tsd-kind-icon">signer</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#signature" class="tsd-kind-icon">signature</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#signer" class="tsd-kind-icon">signer</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#targetaddress" class="tsd-kind-icon">target<wbr>Address</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#targetmosaicid" class="tsd-kind-icon">target<wbr>Mosaic<wbr>Id</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#sourceaddress" class="tsd-kind-icon">source<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#transactioninfo" class="tsd-kind-icon">transaction<wbr>Info</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#transactioninfo" class="tsd-kind-icon">transaction<wbr>Info</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#value" class="tsd-kind-icon">value</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#valuesizedelta" class="tsd-kind-icon">value<wbr>Size<wbr>Delta</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#type" class="tsd-kind-icon">type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#version" class="tsd-kind-icon">version</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#version" class="tsd-kind-icon">version</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#body_index" class="tsd-kind-icon">Body_<wbr><wbr>Index</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#body_index" class="tsd-kind-icon">Body_<wbr><wbr>Index</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#header_size" class="tsd-kind-icon">Header_<wbr><wbr>Size</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#header_size" class="tsd-kind-icon">Header_<wbr><wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#type_index" class="tsd-kind-icon">Type_<wbr><wbr>Index</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#type_index" class="tsd-kind-icon">Type_<wbr><wbr>Index</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#size" class="tsd-kind-icon">size</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#size" class="tsd-kind-icon">size</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#aggregatetransaction" class="tsd-kind-icon">aggregate<wbr>Transaction</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#aggregatetransaction" class="tsd-kind-icon">aggregate<wbr>Transaction</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#getsigningbytes" class="tsd-kind-icon">get<wbr>Signing<wbr>Bytes</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#getsigningbytes" class="tsd-kind-icon">get<wbr>Signing<wbr>Bytes</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#hasmissingsignatures" class="tsd-kind-icon">has<wbr>Missing<wbr>Signatures</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#hasmissingsignatures" class="tsd-kind-icon">has<wbr>Missing<wbr>Signatures</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#isconfirmed" class="tsd-kind-icon">is<wbr>Confirmed</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#isconfirmed" class="tsd-kind-icon">is<wbr>Confirmed</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#isunannounced" class="tsd-kind-icon">is<wbr>Unannounced</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#isunannounced" class="tsd-kind-icon">is<wbr>Unannounced</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#isunconfirmed" class="tsd-kind-icon">is<wbr>Unconfirmed</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#isunconfirmed" class="tsd-kind-icon">is<wbr>Unconfirmed</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#reapplygiven" class="tsd-kind-icon">reapply<wbr>Given</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#reapplygiven" class="tsd-kind-icon">reapply<wbr>Given</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#serialize" class="tsd-kind-icon">serialize</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#serialize" class="tsd-kind-icon">serialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#setmaxfee" class="tsd-kind-icon">set<wbr>Max<wbr>Fee</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#setmaxfee" class="tsd-kind-icon">set<wbr>Max<wbr>Fee</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#toaggregate" class="tsd-kind-icon">to<wbr>Aggregate</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#toaggregate" class="tsd-kind-icon">to<wbr>Aggregate</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#tojson" class="tsd-kind-icon">toJSON</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#tojson" class="tsd-kind-icon">toJSON</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#create" class="tsd-kind-icon">create</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#create" class="tsd-kind-icon">create</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#createfrompayload" class="tsd-kind-icon">create<wbr>From<wbr>Payload</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#createfrompayload" class="tsd-kind-icon">create<wbr>From<wbr>Payload</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#createtransactionhash" class="tsd-kind-icon">create<wbr>Transaction<wbr>Hash</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#createtransactionhash" class="tsd-kind-icon">create<wbr>Transaction<wbr>Hash</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#preparepayload" class="tsd-kind-icon">prepare<wbr>Payload</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#preparepayload" class="tsd-kind-icon">prepare<wbr>Payload</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="model_transaction_mosaicmetadatatransaction.mosaicmetadatatransaction.html#signrawtransaction" class="tsd-kind-icon">sign<wbr>Raw<wbr>Transaction</a>
+								<a href="model_transaction_mosaicsupplyrevocationtransaction.mosaicsupplyrevocationtransaction.html#signrawtransaction" class="tsd-kind-icon">sign<wbr>Raw<wbr>Transaction</a>
 							</li>
 						</ul>
 					</li>

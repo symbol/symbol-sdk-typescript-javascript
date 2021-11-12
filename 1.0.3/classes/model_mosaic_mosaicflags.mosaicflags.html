@@ -97,6 +97,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_mosaic_mosaicflags.mosaicflags.html#restrictable" class="tsd-kind-icon">restrictable</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_mosaic_mosaicflags.mosaicflags.html#revokable" class="tsd-kind-icon">revokable</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_mosaic_mosaicflags.mosaicflags.html#supplymutable" class="tsd-kind-icon">supply<wbr>Mutable</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="model_mosaic_mosaicflags.mosaicflags.html#transferable" class="tsd-kind-icon">transferable</a></li>
 							</ul>
@@ -107,6 +108,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_mosaic_mosaicflags.mosaicflags.html#getvalue" class="tsd-kind-icon">get<wbr>Value</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="model_mosaic_mosaicflags.mosaicflags.html#todto" class="tsd-kind-icon">toDTO</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="model_mosaic_mosaicflags.mosaicflags.html#create" class="tsd-kind-icon">create</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="model_mosaic_mosaicflags.mosaicflags.html#toflag" class="tsd-kind-icon">to<wbr>Flag</a></li>
 							</ul>
 						</section>
 					</div>
@@ -124,13 +126,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L41">model/mosaic/MosaicFlags.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L48">model/mosaic/MosaicFlags.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>flags: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="model_mosaic_mosaicflags.mosaicflags.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicFlags</a></h4>
@@ -146,7 +150,7 @@
 					<div class="tsd-signature tsd-kind-icon">restrictable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L41">model/mosaic/MosaicFlags.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L43">model/mosaic/MosaicFlags.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -158,12 +162,27 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="revokable" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> revokable</h3>
+					<div class="tsd-signature tsd-kind-icon">revokable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L48">model/mosaic/MosaicFlags.ts:48</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> The creator can choose if he can revoke tokens after a transfer.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="supplymutable" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> supply<wbr>Mutable</h3>
 					<div class="tsd-signature tsd-kind-icon">supply<wbr>Mutable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L25">model/mosaic/MosaicFlags.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L27">model/mosaic/MosaicFlags.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -179,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">transferable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L34">model/mosaic/MosaicFlags.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L36">model/mosaic/MosaicFlags.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -205,7 +224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L71">model/mosaic/MosaicFlags.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L82">model/mosaic/MosaicFlags.ts:82</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -227,7 +246,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L78">model/mosaic/MosaicFlags.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L89">model/mosaic/MosaicFlags.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -243,13 +262,13 @@
 					<a name="create" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>supplyMutable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, transferable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, restrictable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_mosaic_mosaicflags.mosaicflags.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicFlags</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>supplyMutable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, transferable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, restrictable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, revokable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="model_mosaic_mosaicflags.mosaicflags.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicFlags</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/0f4f4f3/src/model/mosaic/MosaicFlags.ts#L62">model/mosaic/MosaicFlags.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L68">model/mosaic/MosaicFlags.ts:68</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,11 +286,68 @@
 								</li>
 								<li>
 									<h5>restrictable: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+								<li>
+									<h5>revokable: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="model_mosaic_mosaicflags.mosaicflags.html" class="tsd-signature-type" data-tsd-kind="Class">MosaicFlags</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-static">
+					<a name="toflag" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> to<wbr>Flag</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Flag<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>restrictable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>revokable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>supplyMutable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>transferable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/symbol/symbol-sdk-typescript-javascript/blob/aa1ebf9/src/model/mosaic/MosaicFlags.ts#L104">model/mosaic/MosaicFlags.ts:104</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>It &quot;adds up&quot; individual flags into a bit wise number flag.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>restrictable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>revokable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>supplyMutable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>transferable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>restrictable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography">
+												<p>if the transaction can be restricted. Third flag.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>revokable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography">
+												<p>if the balance can be revoked. Fourth flag.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>supply<wbr>Mutable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography">
+												<p>if the supply is mutable. First flag.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>transferable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography">
+												<p>if the balance can be transferred. Second flag.</p>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -302,6 +378,9 @@
 								<a href="model_mosaic_mosaicflags.mosaicflags.html#restrictable" class="tsd-kind-icon">restrictable</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="model_mosaic_mosaicflags.mosaicflags.html#revokable" class="tsd-kind-icon">revokable</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="model_mosaic_mosaicflags.mosaicflags.html#supplymutable" class="tsd-kind-icon">supply<wbr>Mutable</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -315,6 +394,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="model_mosaic_mosaicflags.mosaicflags.html#create" class="tsd-kind-icon">create</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-static">
+								<a href="model_mosaic_mosaicflags.mosaicflags.html#toflag" class="tsd-kind-icon">to<wbr>Flag</a>
 							</li>
 						</ul>
 					</li>
