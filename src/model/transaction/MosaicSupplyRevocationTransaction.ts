@@ -44,11 +44,11 @@ import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Creators of a revokable mosaic will be able to recall any and all balances from any holders. Holders of these mosaics implicitly place trust in the issuer.
-  The mosaic issuer can revoke and recall balances using this transaction.
+ * The mosaic issuer can revoke and recall balances using this transaction.
  */
 export class MosaicSupplyRevocationTransaction extends Transaction {
     /**
-     * Create a mosaic supply change transaction object
+     * Create a mosaic supply revocation transaction object
      * @param deadline - The deadline to include the transaction.
      * @param sourceAddress - Address from which tokens should be revoked.
      * @param mosaic - Revoked mosaic and amount.

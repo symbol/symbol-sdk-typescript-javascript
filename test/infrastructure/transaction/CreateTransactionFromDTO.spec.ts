@@ -602,24 +602,7 @@ describe('CreateTransactionFromDTO', () => {
 
             const transaction = CreateTransactionFromDTO(dto);
             expect(transaction.type).eq(TransactionTypeDto.MOSAIC_SUPPLY_REVOCATION);
-            expect(transaction.toJSON()).deep.eq({
-                transaction: {
-                    type: 17229,
-                    network: 152,
-                    version: 1,
-                    maxFee: '2000000',
-                    deadline: '62962930644',
-                    signature:
-                        '6F2FE34C6F09E8C4FB98569831E46A274809CA2D18405E811A0480EEC424C8034D51B65C692CA36BC0533733E4C7B83076B9F9B2FE439314B74E4AD78B36100F',
-                    signerPublicKey: '5AB0BC217283542BF3BC45570FCC5C7232825B8DDDFBFF1F9CA06747BB939F92',
-                    sourceAddress: {
-                        address: 'TBXFQTZ44IR2JFGTIRF5ZJFEEWXM5UVRYMYY34I',
-                        networkType: 152,
-                    },
-                    mosaicId: '6CEE17786759C983',
-                    amount: '1',
-                },
-            });
+
             ValidateTransaction.validateStandaloneTx(transaction, dto);
         });
     });

@@ -46,6 +46,7 @@ export class MosaicFlags {
      *  The creator can choose if he can revoke tokens after a transfer.
      */
     public readonly revokable: boolean;
+
     /**
      * @param flags
      */
@@ -65,7 +66,12 @@ export class MosaicFlags {
      * @param revokable
      */
     public static create(supplyMutable: boolean, transferable: boolean, restrictable = false, revokable = false): MosaicFlags {
-        const flags = (supplyMutable ? 1 : 0) + (transferable ? 2 : 0) + (restrictable ? 4 : 0) + (revokable ? 8 : 0);
+        const flags = this.toFlag({
+            supplyMutable: supplyMutable,
+            transferable: transferable,
+            restrictable: restrictable,
+            revokable: revokable,
+        });
         return new MosaicFlags(flags);
     }
 
@@ -74,7 +80,7 @@ export class MosaicFlags {
      * @returns {number}
      */
     public getValue(): number {
-        return (this.supplyMutable ? 1 : 0) + (this.transferable ? 2 : 0) + (this.restrictable ? 4 : 0) + (this.revokable ? 8 : 0);
+        return MosaicFlags.toFlag(this);
     }
 
     /**
@@ -84,5 +90,28 @@ export class MosaicFlags {
         return {
             flags: this.getValue(),
         };
+    }
+
+    /**
+     * It "adds up" individual flags into a bit wise number flag.
+     *
+     * @param supplyMutable - if the supply is mutable. First flag.
+     * @param transferable - if the balance can be transferred. Second flag.
+     * @param restrictable - if the transaction can be restricted. Third flag.
+     * @param revokable - if the balance can be revoked. Fourth flag.
+     * @private
+     */
+    private static toFlag({
+        supplyMutable,
+        transferable,
+        restrictable,
+        revokable,
+    }: {
+        supplyMutable: boolean;
+        transferable: boolean;
+        restrictable: boolean;
+        revokable: boolean;
+    }): number {
+        return (supplyMutable ? 1 : 0) + (transferable ? 2 : 0) + (restrictable ? 4 : 0) + (revokable ? 8 : 0);
     }
 }

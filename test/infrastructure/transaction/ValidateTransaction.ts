@@ -46,6 +46,8 @@ const ValidateTransaction = {
             ValidateTransaction.validateMosaicCreationTx(transaction, transactionDTO);
         } else if (transaction.type === TransactionType.MOSAIC_SUPPLY_CHANGE) {
             ValidateTransaction.validateMosaicSupplyChangeTx(transaction, transactionDTO);
+        } else if (transaction.type === TransactionType.MOSAIC_SUPPLY_REVOCATION) {
+            ValidateTransaction.validateMosaicSupplyRevocationTx(transaction, transactionDTO);
         } else if (transaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
             ValidateTransaction.validateMultisigModificationTx(transaction, transactionDTO);
         }
@@ -82,6 +84,12 @@ const ValidateTransaction = {
         deepEqual(mosaicSupplyChangeTransaction.mosaicId, new MosaicId(mosaicSupplyChangeTransactionDTO.transaction.mosaicId));
         expect(mosaicSupplyChangeTransaction.action).to.be.equal(mosaicSupplyChangeTransactionDTO.transaction.action);
         deepEqual(mosaicSupplyChangeTransaction.delta, UInt64.fromNumericString(mosaicSupplyChangeTransactionDTO.transaction.delta));
+    },
+    validateMosaicSupplyRevocationTx: (mosaicSupplyRevocationTransaction: any, mosaicSupplyRevocationTransactionDTO: any): void => {
+        deepEqual(mosaicSupplyRevocationTransaction.mosaic.id, new MosaicId(mosaicSupplyRevocationTransactionDTO.transaction.mosaicId));
+        expect(mosaicSupplyRevocationTransaction.sourceAddress.encoded()).to.be.equal(
+            mosaicSupplyRevocationTransactionDTO.transaction.sourceAddress,
+        );
     },
     validateMultisigModificationTx: (modifyMultisigAccountTransaction: any, modifyMultisigAccountTransactionDTO: any): void => {
         expect(modifyMultisigAccountTransaction.minApprovalDelta).to.be.equal(
