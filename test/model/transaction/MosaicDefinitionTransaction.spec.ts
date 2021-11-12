@@ -38,7 +38,7 @@ describe('MosaicDefinitionTransaction', () => {
             Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
-            MosaicFlags.create(true, true, true),
+            MosaicFlags.create(true, true, true, true),
             3,
             UInt64.fromUint(1000),
             TestNetworkType,
@@ -64,12 +64,12 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.maxFee.lower).to.be.equal(1);
     });
 
-    it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 7', () => {
+    it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 15', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
-            MosaicFlags.create(true, true, true),
+            MosaicFlags.create(true, true, true, true),
             3,
             UInt64.fromUint(1000),
             TestNetworkType,
@@ -81,11 +81,12 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.flags.supplyMutable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.flags.transferable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.flags.restrictable).to.be.equal(true);
+        expect(mosaicDefinitionTransaction.flags.revokable).to.be.equal(true);
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
-            '0100000000000000E803000000000000E6DE84B80703',
+            '0100000000000000E803000000000000E6DE84B80F03',
         );
     });
 
@@ -94,7 +95,7 @@ describe('MosaicDefinitionTransaction', () => {
             Deadline.create(epochAdjustment),
             MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
-            MosaicFlags.create(false, false, false),
+            MosaicFlags.create(false, false, false, false),
             3,
             UInt64.fromUint(1000),
             TestNetworkType,
@@ -106,6 +107,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.flags.supplyMutable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.flags.transferable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.flags.restrictable).to.be.equal(false);
+        expect(mosaicDefinitionTransaction.flags.revokable).to.be.equal(false);
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 

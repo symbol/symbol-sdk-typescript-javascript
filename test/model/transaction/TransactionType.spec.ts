@@ -22,6 +22,7 @@ describe('TransactionType', () => {
         expect(TransactionType.NAMESPACE_REGISTRATION).to.be.equal(0x414e);
         expect(TransactionType.MOSAIC_DEFINITION).to.be.equal(0x414d);
         expect(TransactionType.MOSAIC_SUPPLY_CHANGE).to.be.equal(0x424d);
+        expect(TransactionType.MOSAIC_SUPPLY_REVOCATION).to.be.equal(0x434d);
         expect(TransactionType.MULTISIG_ACCOUNT_MODIFICATION).to.be.equal(0x4155);
         expect(TransactionType.AGGREGATE_COMPLETE).to.be.equal(0x4141);
         expect(TransactionType.AGGREGATE_BONDED).to.be.equal(0x4241);

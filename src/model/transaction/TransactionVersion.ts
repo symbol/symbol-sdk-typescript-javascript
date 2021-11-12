@@ -51,6 +51,11 @@ export class TransactionVersion {
     public static readonly MOSAIC_SUPPLY_CHANGE = 1;
 
     /**
+     * Mosaic supply revocation transaction.
+     * @type {number}
+     */
+    public static readonly MOSAIC_SUPPLY_REVOCATION = 1;
+    /**
      * Modify multisig account transaction version.
      * @type {number}
      */

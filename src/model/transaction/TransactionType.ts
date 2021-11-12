@@ -57,6 +57,12 @@ export enum TransactionType {
     MOSAIC_SUPPLY_CHANGE = 16973,
 
     /**
+     * Mosaic supply revocation transaction.
+     * @type {number}
+     */
+    MOSAIC_SUPPLY_REVOCATION = 17229,
+
+    /**
      * Modify multisig account transaction type.
      * @type {number}
      */

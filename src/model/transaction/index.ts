@@ -26,6 +26,7 @@ export * from './MosaicDefinitionTransaction';
 export * from './MosaicGlobalRestrictionTransaction';
 export * from './MosaicMetadataTransaction';
 export * from './MosaicSupplyChangeTransaction';
+export * from './MosaicSupplyRevocationTransaction';
 export * from './MultisigAccountModificationTransaction';
 export * from './MultisigCosignatoryModification';
 export * from './NamespaceMetadataTransaction';

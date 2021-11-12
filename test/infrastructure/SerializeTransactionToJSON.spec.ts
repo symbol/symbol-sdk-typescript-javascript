@@ -19,7 +19,7 @@ import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils';
-import { Transaction, TransactionVersion, UInt64 } from '../../src/model';
+import { Mosaic, MosaicSupplyRevocationTransaction, Transaction, TransactionVersion, UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -215,6 +215,22 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
         expect(json.transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
+    });
+
+    it('should create MosaicSupplyRevocationTransaction', () => {
+        const mosaicId = new MosaicId('0DC67FBE1CAD29E5');
+        const transaction = MosaicSupplyRevocationTransaction.create(
+            Deadline.createFromDTO('100'),
+            account.address,
+            new Mosaic(mosaicId, UInt64.fromUint(5)),
+            NetworkType.TEST_NET,
+        );
+
+        const json = validateToFromJson(transaction);
+        expect(json.transaction.version).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_REVOCATION);
+        expect(json.transaction.mosaicId).to.be.equal(mosaicId.toHex());
+        expect(json.transaction.sourceAddress.address).to.be.equal(account.address.plain());
     });
 
     it('should create TransferTransaction', () => {
