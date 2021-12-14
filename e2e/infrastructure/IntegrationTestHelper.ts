@@ -129,11 +129,11 @@ export class IntegrationTestHelper {
             .toPromise();
     }
 
-    public static sleep(ms: number): Promise<any> {
+    public static sleep(ms: number): Promise<void> {
         // Create a promise that rejects in <ms> milliseconds
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve();
+                resolve(undefined);
             }, ms);
         });
     }
