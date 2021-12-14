@@ -60,6 +60,9 @@
     "homepage": "https://github.com/nemtech/symbol-sdk-typescript-javascript#readme",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
+    "engines": {
+        "node": ">=12.22.1"
+    },
     "devDependencies": {
         "@types/chai": "^4.2.12",
         "@types/lodash": "^4.14.161",
