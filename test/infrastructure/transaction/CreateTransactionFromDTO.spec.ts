@@ -17,7 +17,12 @@ import { LocalDateTime } from '@js-joda/core';
 import { deepEqual } from 'assert';
 import { TransactionTypeDto } from 'catbuffer-typescript';
 import { expect } from 'chai';
-import { NamespaceRegistrationTypeEnum, TransactionInfoDTO, TransferTransactionDTO } from 'symbol-openapi-typescript-fetch-client';
+import {
+    NamespaceRegistrationTypeEnum,
+    NetworkTypeEnum,
+    TransactionInfoDTO,
+    TransferTransactionDTO,
+} from 'symbol-openapi-typescript-fetch-client';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction';
 import { Address } from '../../../src/model/account';
 import { TransferTransaction } from '../../../src/model/transaction';
@@ -32,7 +37,7 @@ describe('CreateTransactionFromDTO', () => {
                     '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
                 signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
                 version: 1,
-                network: 144,
+                network: NetworkTypeEnum.NUMBER_104,
                 type: 16724,
                 maxFee: '0',
                 deadline: '1000',

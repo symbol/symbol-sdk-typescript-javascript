@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.4] - NEXY
+
+**Milestone**: Symbol Mainnet
+Package  | Version  | Link
+---|---|---
+SDK Core| v1.0.4 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v1.0.1 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v1.0.3  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- fix: Upgraded Node to 12.22.1.
+- fix: Upgraded typescript to 4.5.4.
+
 ## [1.0.3] - 16-Nov-2021
 
 **Milestone**: Symbol Mainnet

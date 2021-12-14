@@ -125,12 +125,11 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
 /**
  * @internal
  * @param transactionDTO
- * @param transactionInfo
  * @param isEmbedded
  * @returns {any}
  * @constructor
  */
-const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isEmbedded: boolean): Transaction => {
+const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
     const type: TransactionType = transactionDTO.type;
     const version: number = transactionDTO.version;
     const signature = Transaction.resolveSignature(transactionDTO.signature, false);
@@ -489,7 +488,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                   innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
                   innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
                   innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo, true);
+                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
               })
             : [];
         return new AggregateTransaction(
@@ -518,7 +517,6 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
         return CreateStandaloneTransactionFromDTO(
             transactionDTO.transaction,
             extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
-            false,
         );
     }
 };

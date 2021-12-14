@@ -1412,7 +1412,10 @@ describe('TransactionHttp', () => {
         it('should return transaction info given transactionHash', async () => {
             const transaction = await transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed).toPromise();
             expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
-            transactionId = transaction.transactionInfo?.id!;
+            if (!transaction.transactionInfo?.id) {
+                throw new Error('transactionId must be defined');
+            }
+            transactionId = transaction.transactionInfo?.id;
         });
 
         it('should return transaction info given transactionId', async () => {
