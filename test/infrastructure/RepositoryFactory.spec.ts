@@ -43,6 +43,7 @@ import {
     TransactionHttp,
     TransactionStatusHttp,
 } from '../../src/infrastructure';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { NetworkCurrencies } from '../../src/model/mosaic';
 import { NodeInfo } from '../../src/model/node';
 import { TestNetworkType } from '../conf/conf.spec';
@@ -86,7 +87,7 @@ describe('RepositoryFactory', () => {
         try {
             const nodeRepository = repositoryFactory.createNodeRepository();
             (nodeRepository as any).nodeRoutesApi = instance(nodeRoutesApi);
-            await nodeRepository.getNodeHealth().toPromise();
+            await toPromise(nodeRepository.getNodeHealth());
             expect(true).to.be.false;
         } catch (e) {
             expect(e.message).eq('{"statusCode":666,"statusMessage":"Some status text error","body":"This is the body"}');
@@ -395,7 +396,7 @@ describe('RepositoryFactory', () => {
     it('Fail remote call ', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:2000');
         try {
-            await factory.getGenerationHash().toPromise();
+            await toPromise(factory.getGenerationHash());
             expect(true).eq(false);
         } catch (e) {
             expect(e.message).contains('request to http://localhost:2000');
@@ -405,7 +406,7 @@ describe('RepositoryFactory', () => {
     it('Fail remote call invalid transaction', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:3000');
         try {
-            await factory.createTransactionRepository().getTransaction('abc', TransactionGroup.Confirmed).toPromise();
+            await toPromise(factory.createTransactionRepository().getTransaction('abc', TransactionGroup.Confirmed));
             expect(true).eq(false);
         } catch (e) {
             if (
@@ -424,7 +425,7 @@ describe('RepositoryFactory', () => {
     it('Fail remote getCurrencies ', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:2000');
         try {
-            await factory.getCurrencies().toPromise();
+            await toPromise(factory.getCurrencies());
             expect(true).eq(false);
         } catch (e) {
             expect(e.message).contains('request to http://localhost:2000');
@@ -433,13 +434,13 @@ describe('RepositoryFactory', () => {
 
     it('getCurrencies', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:2000', { networkCurrencies: NetworkCurrencies.PUBLIC });
-        const networkCurrencies = await factory.getCurrencies().toPromise();
+        const networkCurrencies = await toPromise(factory.getCurrencies());
         expect(networkCurrencies).eq(NetworkCurrencies.PUBLIC);
     });
 
     // it('howToUse', async () => {
     //     const factory = new RepositoryFactoryHttp('http://localhost:3000');
-    //     const networkCurrencies = await factory.getCurrencies().toPromise();
+    //     const networkCurrencies = await toPromise(factory.getCurrencies());
     //     const namespaceName: string = networkCurrencies.currency!.namespaceId!.fullName!;
     //     const mosaic: Mosaic = networkCurrencies.currency.createRelative(1000);
     //     // a mosaic ready to use for transactions

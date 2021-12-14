@@ -35,6 +35,7 @@ import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/AccountPaginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { AccountInfo } from '../../src/model/account/AccountInfo';
 import { AccountType } from '../../src/model/account/AccountType';
 import { Address } from '../../src/model/account/Address';
@@ -116,7 +117,7 @@ describe('AccountHttp', () => {
 
     it('getAccountInfo', async () => {
         when(accountRoutesApi.getAccountInfo(address.plain())).thenReturn(Promise.resolve(accountInfoDto));
-        const accountInfo = await accountRepository.getAccountInfo(address).toPromise();
+        const accountInfo = await toPromise(accountRepository.getAccountInfo(address));
         assertAccountInfo(accountInfo);
     });
 
@@ -124,7 +125,7 @@ describe('AccountHttp', () => {
         const accountIds = {} as AccountIds;
         accountIds.addresses = [address.plain()];
         when(accountRoutesApi.getAccountsInfo(deepEqual(accountIds))).thenReturn(Promise.resolve([accountInfoDto]));
-        const accountInfos = await accountRepository.getAccountsInfo([address]).toPromise();
+        const accountInfos = await toPromise(accountRepository.getAccountsInfo([address]));
         assertAccountInfo(accountInfos[0]);
     });
 
@@ -139,7 +140,7 @@ describe('AccountHttp', () => {
         when(accountRoutesApi.searchAccounts(undefined, undefined, undefined, undefined, undefined, mosaic.id)).thenReturn(
             Promise.resolve(body),
         );
-        const infos = await accountRepository.search({ mosaicId: new MosaicId(mosaic.id) }).toPromise();
+        const infos = await toPromise(accountRepository.search({ mosaicId: new MosaicId(mosaic.id) }));
         assertAccountInfo(infos.data[0]);
     });
 
@@ -179,7 +180,7 @@ describe('AccountHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(accountRoutesApi.getAccountInfoMerkle(deepEqual(address.plain()))).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await accountRepository.getAccountInfoMerkle(address).toPromise();
+        const merkle = await toPromise(accountRepository.getAccountInfoMerkle(address));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

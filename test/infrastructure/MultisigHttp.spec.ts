@@ -26,6 +26,7 @@ import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MultisigHttp } from '../../src/infrastructure/MultisigHttp';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account/Account';
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -75,7 +76,7 @@ describe('MultisigHttp', () => {
 
     it('getMultisigAccountInfo', async () => {
         when(multisigRoutesApi.getAccountMultisig(address.plain())).thenReturn(Promise.resolve(accountInfoDto));
-        const accountInfo = await accountRepository.getMultisigAccountInfo(address).toPromise();
+        const accountInfo = await toPromise(accountRepository.getMultisigAccountInfo(address));
         assertMultisigInfo(accountInfo);
     });
 
@@ -88,7 +89,7 @@ describe('MultisigHttp', () => {
         body2.level = 20;
         body2.multisigEntries = [accountInfoDto, accountInfoDto];
         when(multisigRoutesApi.getAccountMultisigGraph(address.plain())).thenReturn(Promise.resolve([body, body2]));
-        const graphInfo = await accountRepository.getMultisigAccountGraphInfo(address).toPromise();
+        const graphInfo = await toPromise(accountRepository.getMultisigAccountGraphInfo(address));
         expect(graphInfo.multisigEntries.size).to.be.eq(2);
         const list10: MultisigAccountInfo[] = graphInfo.multisigEntries.get(10) as MultisigAccountInfo[];
         expect(list10.length).to.be.eq(3);

@@ -19,6 +19,7 @@ import { expect } from 'chai';
 import { take, toArray } from 'rxjs/operators';
 import { AccountRepository, MultisigRepository, NamespaceRepository, Order, RepositoryCallError } from '../../src/infrastructure';
 import { AccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { AccountOrderBy } from '../../src/infrastructure/searchCriteria';
 import { UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
@@ -164,24 +165,24 @@ describe('AccountHttp', () => {
 
     describe('getAccountInfo', () => {
         it('should return account data given a NEM Address', async () => {
-            const accountInfo = await accountRepository.getAccountInfo(accountAddress).toPromise();
+            const accountInfo = await toPromise(accountRepository.getAccountInfo(accountAddress));
             expect(accountInfo.publicKey).to.be.equal(accountPublicKey);
 
-            const merkleInfo = await accountRepository.getAccountInfoMerkle(accountInfo.address).toPromise();
+            const merkleInfo = await toPromise(accountRepository.getAccountInfoMerkle(accountInfo.address));
             expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 
     describe('getAccountsInfo', () => {
         it('should return account data given a NEM Address', async () => {
-            const accountsInfo = await accountRepository.getAccountsInfo([accountAddress]).toPromise();
+            const accountsInfo = await toPromise(accountRepository.getAccountsInfo([accountAddress]));
             expect(accountsInfo[0].publicKey).to.be.equal(accountPublicKey);
         });
     });
 
     describe('searchAccount', () => {
         it('should return account info', async () => {
-            const info = await accountRepository.search({}).toPromise();
+            const info = await toPromise(accountRepository.search({}));
             expect(info.data.length).to.be.greaterThan(0);
         });
     });
@@ -189,11 +190,10 @@ describe('AccountHttp', () => {
     describe('searchAccount with streamer', () => {
         it('should return account info', async () => {
             const streamer = new AccountPaginationStreamer(accountRepository);
-            const infoStreamer = await streamer
-                .search({ pageSize: 20, order: Order.Asc, orderBy: AccountOrderBy.Id })
-                .pipe(take(20), toArray())
-                .toPromise();
-            const info = await accountRepository.search({ pageSize: 20, order: Order.Asc, orderBy: AccountOrderBy.Id }).toPromise();
+            const infoStreamer = await toPromise(
+                streamer.search({ pageSize: 20, order: Order.Asc, orderBy: AccountOrderBy.Id }).pipe(take(20), toArray()),
+            );
+            const info = await toPromise(accountRepository.search({ pageSize: 20, order: Order.Asc, orderBy: AccountOrderBy.Id }));
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });
@@ -201,26 +201,23 @@ describe('AccountHttp', () => {
 
     describe('transactions', () => {
         it('should not return accounts when account does not exist', () => {
-            return accountRepository
-                .getAccountInfo(Account.generateNewAccount(networkType).address)
-                .toPromise()
-                .then(
-                    () => {
-                        return Promise.reject('should fail!');
-                    },
-                    (err) => {
-                        const error: RepositoryCallError = JSON.parse(err.message);
-                        expect(error.statusCode).to.be.eq(404);
-                        expect(error.statusMessage).to.be.eq('Not Found');
-                        return Promise.resolve();
-                    },
-                );
+            return toPromise(accountRepository.getAccountInfo(Account.generateNewAccount(networkType).address)).then(
+                () => {
+                    return Promise.reject('should fail!');
+                },
+                (err) => {
+                    const error: RepositoryCallError = JSON.parse(err.message);
+                    expect(error.statusCode).to.be.eq(404);
+                    expect(error.statusMessage).to.be.eq('Not Found');
+                    return Promise.resolve();
+                },
+            );
         });
     });
 
     describe('getAddressNames', () => {
         it('should call getAddressNames successfully', async () => {
-            const addressNames = await namespaceRepository.getAccountsNames([accountAddress]).toPromise();
+            const addressNames = await toPromise(namespaceRepository.getAccountsNames([accountAddress]));
             expect(addressNames.length).to.be.greaterThan(0);
         });
     });
@@ -228,15 +225,15 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            const multisigAccountGraphInfo = await multisigRepository
-                .getMultisigAccountGraphInfo(multisigAccount.publicAccount.address)
-                .toPromise();
+            const multisigAccountGraphInfo = await toPromise(
+                multisigRepository.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address),
+            );
             expect(multisigAccountGraphInfo.multisigEntries.get(0)![0].accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
         });
     });
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', async () => {
-            const multisigAccountInfo = await multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address).toPromise();
+            const multisigAccountInfo = await toPromise(multisigRepository.getMultisigAccountInfo(multisigAccount.publicAccount.address));
             expect(multisigAccountInfo.accountAddress.plain()).to.be.equal(multisigAccount.address.plain());
         });
     });

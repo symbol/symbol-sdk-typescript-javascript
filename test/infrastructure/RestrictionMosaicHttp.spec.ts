@@ -34,6 +34,7 @@ import {
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils';
 import { RestrictionMosaicHttp, RestrictionMosaicPaginationStreamer } from '../../src/infrastructure';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { UInt64 } from '../../src/model';
 import { PublicAccount } from '../../src/model/account';
 import { MosaicId } from '../../src/model/mosaic';
@@ -112,7 +113,7 @@ describe('RestrictionMosaicHttp', () => {
             ),
         ).thenReturn(Promise.resolve(body));
 
-        const page = await restrictionMosaicRepository.search({ mosaicId: mosaicId }).toPromise();
+        const page = await toPromise(restrictionMosaicRepository.search({ mosaicId: mosaicId }));
         expect(page).to.be.not.null;
         expect(page.data.length).to.be.equal(2);
         expect(page.data[1].compositeHash).to.be.equal('hash');
@@ -163,7 +164,7 @@ describe('RestrictionMosaicHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(restrictionMosaicRoutesApi.getMosaicRestrictionsMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await restrictionMosaicRepository.getMosaicRestrictionsMerkle('hash').toPromise();
+        const merkle = await toPromise(restrictionMosaicRepository.getMosaicRestrictionsMerkle('hash'));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

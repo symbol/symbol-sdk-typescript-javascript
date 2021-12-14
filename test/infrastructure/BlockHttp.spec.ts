@@ -33,6 +33,7 @@ import { BlockPaginationStreamer, NemesisImportanceBlockInfo } from '../../src';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { BlockHttp } from '../../src/infrastructure/BlockHttp';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Address } from '../../src/model/account/Address';
 import { BlockInfo } from '../../src/model/blockchain/BlockInfo';
 import { BlockType } from '../../src/model/blockchain/BlockType';
@@ -144,13 +145,13 @@ describe('BlockHttp', () => {
 
     it('getBlockInfo', async () => {
         when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve(blockInfoDto));
-        const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
+        const blockInfo = await toPromise(blockRepository.getBlockByHeight(UInt64.fromUint(1)));
         assertBlockInfo(blockInfo);
     });
 
     it('getImportanceBlockInfo', async () => {
         when(blockRoutesApi.getBlockByHeight('1')).thenReturn(Promise.resolve(importanceBlockInfoDto));
-        const blockInfo = await blockRepository.getBlockByHeight(UInt64.fromUint(1)).toPromise();
+        const blockInfo = await toPromise(blockRepository.getBlockByHeight(UInt64.fromUint(1)));
         assertBlockInfo(blockInfo, true);
     });
 
@@ -173,7 +174,7 @@ describe('BlockHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(body));
-        const blockInfos = await blockRepository.search({ signerPublicKey: blockDTO.signerPublicKey }).toPromise();
+        const blockInfos = await toPromise(blockRepository.search({ signerPublicKey: blockDTO.signerPublicKey }));
         assertBlockInfo(blockInfos.data[0]);
     });
 
@@ -185,7 +186,7 @@ describe('BlockHttp', () => {
         merkleProofInfoDTO.merklePath = [merklePathItemDTO];
 
         when(blockRoutesApi.getMerkleTransaction('2', 'abc')).thenReturn(Promise.resolve(merkleProofInfoDTO));
-        const merkleProofInfo = await blockRepository.getMerkleTransaction(UInt64.fromUint(2), 'abc').toPromise();
+        const merkleProofInfo = await toPromise(blockRepository.getMerkleTransaction(UInt64.fromUint(2), 'abc'));
         expect(merkleProofInfo).to.be.not.null;
         expect(merkleProofInfo.merklePath).to.deep.equals([new MerklePathItem(MerklePosition.Left, 'bbb')]);
     });
@@ -199,7 +200,7 @@ describe('BlockHttp', () => {
 
         when(blockRoutesApi.getMerkleReceipts('1', 'Hash')).thenReturn(Promise.resolve(merkleProofInfoDto));
 
-        const proof = await blockRepository.getMerkleReceipts(UInt64.fromUint(1), 'Hash').toPromise();
+        const proof = await toPromise(blockRepository.getMerkleReceipts(UInt64.fromUint(1), 'Hash'));
         expect(proof).to.be.not.null;
         expect(proof.merklePath!.length).to.be.greaterThan(0);
         expect(proof.merklePath![0].hash).to.be.equal('merkleHash');

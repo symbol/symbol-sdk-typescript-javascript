@@ -33,6 +33,7 @@ import {
     TransactionStatusRepository,
 } from '../../src/infrastructure';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionVersion, UInt64 } from '../../src/model';
 import { Account } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
@@ -1410,7 +1411,7 @@ describe('TransactionHttp', () => {
 
     describe('getTransaction', () => {
         it('should return transaction info given transactionHash', async () => {
-            const transaction = await transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed).toPromise();
+            const transaction = await toPromise(transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed));
             expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
             if (!transaction.transactionInfo?.id) {
                 throw new Error('transactionId must be defined');
@@ -1419,7 +1420,7 @@ describe('TransactionHttp', () => {
         });
 
         it('should return transaction info given transactionId', async () => {
-            const transaction = await transactionRepository.getTransaction(transactionId, TransactionGroup.Confirmed).toPromise();
+            const transaction = await toPromise(transactionRepository.getTransaction(transactionId, TransactionGroup.Confirmed));
             expect(transaction.transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transaction.transactionInfo!.id).to.be.equal(transactionId);
         });
@@ -1427,13 +1428,13 @@ describe('TransactionHttp', () => {
 
     describe('getTransactionsById', () => {
         it('should return transaction info given array of transactionHash', async () => {
-            const transactions = await transactionRepository.getTransactionsById([transactionHash], TransactionGroup.Confirmed).toPromise();
+            const transactions = await toPromise(transactionRepository.getTransactionsById([transactionHash], TransactionGroup.Confirmed));
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
 
         it('should return transaction info given array of transactionId', async () => {
-            const transactions = await transactionRepository.getTransactionsById([transactionId], TransactionGroup.Confirmed).toPromise();
+            const transactions = await toPromise(transactionRepository.getTransactionsById([transactionId], TransactionGroup.Confirmed));
             expect(transactions[0].transactionInfo!.hash).to.be.equal(transactionHash);
             expect(transactions[0].transactionInfo!.id).to.be.equal(transactionId);
         });
@@ -1442,7 +1443,7 @@ describe('TransactionHttp', () => {
     describe('getTransactionStatus', () => {
         it('should return transaction status given transactionHash', async () => {
             await new Promise((resolve) => setTimeout(resolve, 2000));
-            const transactionStatus = await transactionStatusRepository.getTransactionStatus(transactionHash).toPromise();
+            const transactionStatus = await toPromise(transactionStatusRepository.getTransactionStatus(transactionHash));
             expect(transactionStatus.group).to.be.equal('confirmed');
             expect(transactionStatus.height!.lower).to.be.greaterThan(0);
             expect(transactionStatus.height!.higher).to.be.equal(0);
@@ -1451,7 +1452,7 @@ describe('TransactionHttp', () => {
 
     describe('getTransactionsStatuses', () => {
         it('should return transaction status given array of transactionHash', async () => {
-            const transactionStatuses = await transactionStatusRepository.getTransactionStatuses([transactionHash]).toPromise();
+            const transactionStatuses = await toPromise(transactionStatusRepository.getTransactionStatuses([transactionHash]));
             expect(transactionStatuses[0].group).to.be.equal('confirmed');
             expect(transactionStatuses[0].height!.lower).to.be.greaterThan(0);
             expect(transactionStatuses[0].height!.higher).to.be.equal(0);
@@ -1469,7 +1470,7 @@ describe('TransactionHttp', () => {
                 helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            const transactionAnnounceResponse = await transactionRepository.announce(signedTransaction).toPromise();
+            const transactionAnnounceResponse = await toPromise(transactionRepository.announce(signedTransaction));
             expect(transactionAnnounceResponse.message).to.be.equal('packet 9 was pushed to the network via /transactions');
         });
     });
@@ -1492,7 +1493,7 @@ describe('TransactionHttp', () => {
                 helper.maxFee,
             );
             const signedTransaction = aggregateTransaction.signWith(cosignAccount1, generationHash);
-            const transactionAnnounceResponse = await transactionRepository.announceAggregateBonded(signedTransaction).toPromise();
+            const transactionAnnounceResponse = await toPromise(transactionRepository.announceAggregateBonded(signedTransaction));
             expect(transactionAnnounceResponse.message).to.be.equal('packet 256 was pushed to the network via /transactions/partial');
         });
     });
@@ -1500,14 +1501,14 @@ describe('TransactionHttp', () => {
     describe('announceAggregateBondedCosignature', () => {
         it('should return success when announceAggregateBondedCosignature', async () => {
             const payload = new CosignatureSignedTransaction('', '', '');
-            const transactionAnnounceResponse = await transactionRepository.announceAggregateBondedCosignature(payload).toPromise();
+            const transactionAnnounceResponse = await toPromise(transactionRepository.announceAggregateBondedCosignature(payload));
             expect(transactionAnnounceResponse.message).to.be.equal('packet 257 was pushed to the network via /transactions/cosignature');
         });
     });
 
     describe('getTransactionEffectiveFee', () => {
         it('should return effective paid fee given transactionHash', async () => {
-            const effectiveFee = await transactionRepository.getTransactionEffectiveFee(transactionHash).toPromise();
+            const effectiveFee = await toPromise(transactionRepository.getTransactionEffectiveFee(transactionHash));
             expect(effectiveFee).to.not.be.undefined;
             expect(effectiveFee).not.to.be.equal(0);
         });
@@ -1515,15 +1516,18 @@ describe('TransactionHttp', () => {
 
     describe('searchTransactions', () => {
         it('should return transaction info given address', async () => {
-            const transactions = await transactionRepository
-                .search({ group: TransactionGroup.Confirmed, address: account.address } as TransactionSearchCriteria)
-                .toPromise();
+            const transactions = await toPromise(
+                transactionRepository.search({ group: TransactionGroup.Confirmed, address: account.address } as TransactionSearchCriteria),
+            );
             expect(transactions.data.length).to.be.greaterThan(0);
         });
         it('should return transaction info given height all types', async () => {
-            const transactions = await transactionRepository
-                .search({ group: TransactionGroup.Confirmed, height: UInt64.fromUint(1) } as TransactionSearchCriteria)
-                .toPromise();
+            const transactions = await toPromise(
+                transactionRepository.search({
+                    group: TransactionGroup.Confirmed,
+                    height: UInt64.fromUint(1),
+                } as TransactionSearchCriteria),
+            );
 
             const mosaicDefinitions = transactions.data.filter((t) => t.type == TransactionType.MOSAIC_DEFINITION).length;
             const namespaceRegistration = transactions.data.filter((t) => t.type == TransactionType.NAMESPACE_REGISTRATION).length;
@@ -1536,13 +1540,13 @@ describe('TransactionHttp', () => {
         });
 
         it('should return transaction info given height and namesapce, mosaic types', async () => {
-            const transactions = await transactionRepository
-                .search({
+            const transactions = await toPromise(
+                transactionRepository.search({
                     group: TransactionGroup.Confirmed,
                     height: UInt64.fromUint(1),
                     type: [TransactionType.MOSAIC_DEFINITION, TransactionType.NAMESPACE_REGISTRATION],
-                } as TransactionSearchCriteria)
-                .toPromise();
+                } as TransactionSearchCriteria),
+            );
             const mosaicDefinitions = transactions.data.filter((t) => t.type == TransactionType.MOSAIC_DEFINITION).length;
             const namespaceRegistration = transactions.data.filter((t) => t.type == TransactionType.NAMESPACE_REGISTRATION).length;
             const others = transactions.data.filter(
@@ -1557,13 +1561,16 @@ describe('TransactionHttp', () => {
     describe('searchTransactions using streamer', () => {
         it('should return transaction info given address', async () => {
             const streamer = new TransactionPaginationStreamer(transactionRepository);
-            const transactionsNoStreamer = await transactionRepository
-                .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 } as TransactionSearchCriteria)
-                .toPromise();
-            const transactions = await streamer
-                .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 })
-                .pipe(take(10), toArray())
-                .toPromise();
+            const transactionsNoStreamer = await toPromise(
+                transactionRepository.search({
+                    group: TransactionGroup.Confirmed,
+                    address: account.address,
+                    pageSize: 10,
+                } as TransactionSearchCriteria),
+            );
+            const transactions = await toPromise(
+                streamer.search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 }).pipe(take(10), toArray()),
+            );
             expect(transactions.length).to.be.greaterThan(0);
             deepEqual(transactionsNoStreamer.data, transactions);
         });

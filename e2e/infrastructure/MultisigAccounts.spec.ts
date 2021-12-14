@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -78,11 +79,11 @@ describe('MultisigAccounts', () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
             const multisigRepository = helper.repositoryFactory.createMultisigRepository();
 
-            const infoFromId = await multisigRepository.getMultisigAccountInfo(multisigAccount.address).toPromise();
+            const infoFromId = await toPromise(multisigRepository.getMultisigAccountInfo(multisigAccount.address));
             expect(infoFromId).to.not.be.undefined;
             expect(infoFromId.accountAddress).to.deep.eq(multisigAccount.address);
             expect(infoFromId.cosignatoryAddresses).to.deep.eq([cosignAccount1.address, cosignAccount3.address, cosignAccount2.address]);
-            const merkleInfo = await multisigRepository.getMultisigAccountInfoMerkle(multisigAccount.address).toPromise();
+            const merkleInfo = await toPromise(multisigRepository.getMultisigAccountInfoMerkle(multisigAccount.address));
             expect(merkleInfo.raw).to.not.be.undefined;
         });
     });

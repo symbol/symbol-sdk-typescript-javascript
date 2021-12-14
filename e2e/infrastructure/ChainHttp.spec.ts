@@ -16,6 +16,7 @@
 
 import { expect } from 'chai';
 import { ChainRepository } from '../../src/infrastructure/ChainRepository';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('ChainHttp', () => {
@@ -34,7 +35,7 @@ describe('ChainHttp', () => {
 
     describe('getChainInfo', () => {
         it('should return blockchain score', async () => {
-            const info = await chainRepository.getChainInfo().toPromise();
+            const info = await toPromise(chainRepository.getChainInfo());
             expect(info.scoreLow).to.not.be.equal(undefined);
             expect(info.scoreHigh.lower).to.be.equal(0);
             expect(info.scoreHigh.higher).to.be.equal(0);

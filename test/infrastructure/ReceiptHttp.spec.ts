@@ -34,6 +34,7 @@ import { Convert } from '../../src/core/format/Convert';
 import { RawAddress } from '../../src/core/format/RawAddress';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { MosaicId, NamespaceId, ResolutionType, UInt64 } from '../../src/model';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -83,11 +84,11 @@ describe('ReceiptHttp', () => {
             Promise.resolve(resolutionPage),
         );
 
-        const statement = await receiptRepository
-            .searchMosaicResolutionStatements({
+        const statement = await toPromise(
+            receiptRepository.searchMosaicResolutionStatements({
                 height: UInt64.fromUint(1),
-            })
-            .toPromise();
+            }),
+        );
         expect(statement).to.be.not.null;
         expect(statement.data[0].height.toString()).to.be.equal('1');
         expect(statement.data[0].resolutionType.valueOf()).to.be.equal(ResolutionType.Mosaic);
@@ -122,11 +123,11 @@ describe('ReceiptHttp', () => {
             Promise.resolve(resolutionPage),
         );
 
-        const statement = await receiptRepository
-            .searchAddressResolutionStatements({
+        const statement = await toPromise(
+            receiptRepository.searchAddressResolutionStatements({
                 height: UInt64.fromUint(1),
-            })
-            .toPromise();
+            }),
+        );
         expect(statement).to.be.not.null;
         expect(statement.data[0].height.toString()).to.be.equal('1');
         expect(statement.data[0].resolutionType.valueOf()).to.be.equal(ResolutionType.Address);
@@ -176,11 +177,11 @@ describe('ReceiptHttp', () => {
             ),
         ).thenReturn(Promise.resolve(resolutionPage));
 
-        const statement = await receiptRepository
-            .searchReceipts({
+        const statement = await toPromise(
+            receiptRepository.searchReceipts({
                 height: UInt64.fromUint(1),
-            })
-            .toPromise();
+            }),
+        );
         expect(statement).to.be.not.null;
         expect(statement.data[0].height.toString()).to.be.equal('1');
         expect((statement.data[0].receipts[0] as BalanceChangeReceipt).amount.toString()).to.be.equal('100');
@@ -203,10 +204,9 @@ describe('ReceiptHttp', () => {
                 undefined,
             ),
         ).thenReject(new Error('Mocked Error'));
-        await receiptRepository
-            .searchReceipts({ height: UInt64.fromUint(1) })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await toPromise(receiptRepository.searchReceipts({ height: UInt64.fromUint(1) })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('searchResolutionMosaic - Error', async () => {

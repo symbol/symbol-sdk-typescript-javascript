@@ -17,6 +17,7 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { first, take, toArray } from 'rxjs/operators';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { MosaicId } from '../../src/model/mosaic';
@@ -40,16 +41,19 @@ describe('TransactionSearch', () => {
         it('should return transaction info given address', async () => {
             const transactionRepository = helper.repositoryFactory.createTransactionRepository();
             const account = helper.account;
-            const transactions = await transactionRepository
-                .search({ group: TransactionGroup.Confirmed, address: account.address } as TransactionSearchCriteria)
-                .toPromise();
+            const transactions = await toPromise(
+                transactionRepository.search({ group: TransactionGroup.Confirmed, address: account.address } as TransactionSearchCriteria),
+            );
             expect(transactions.data.length).to.be.greaterThan(0);
         });
         it('should return transaction info given height all types', async () => {
             const transactionRepository = helper.repositoryFactory.createTransactionRepository();
-            const transactions = await transactionRepository
-                .search({ group: TransactionGroup.Confirmed, height: UInt64.fromUint(1) } as TransactionSearchCriteria)
-                .toPromise();
+            const transactions = await toPromise(
+                transactionRepository.search({
+                    group: TransactionGroup.Confirmed,
+                    height: UInt64.fromUint(1),
+                } as TransactionSearchCriteria),
+            );
 
             const mosaicDefinitions = transactions.data.filter((t) => t.type == TransactionType.MOSAIC_DEFINITION).length;
             const namespaceRegistration = transactions.data.filter((t) => t.type == TransactionType.NAMESPACE_REGISTRATION).length;
@@ -61,15 +65,15 @@ describe('TransactionSearch', () => {
             expect(others).to.be.greaterThan(0);
         });
 
-        it('should return transaction info given height and namesapce, mosaic types', async () => {
+        it('should return transaction info given height and namesapce,             const transactions = await transactionRepository\nmosaic types', async () => {
             const transactionRepository = helper.repositoryFactory.createTransactionRepository();
-            const transactions = await transactionRepository
-                .search({
+            const transactions = await toPromise(
+                transactionRepository.search({
                     group: TransactionGroup.Confirmed,
                     height: UInt64.fromUint(1),
                     type: [TransactionType.MOSAIC_DEFINITION, TransactionType.NAMESPACE_REGISTRATION],
-                } as TransactionSearchCriteria)
-                .toPromise();
+                } as TransactionSearchCriteria),
+            );
             const mosaicDefinitions = transactions.data.filter((t) => t.type == TransactionType.MOSAIC_DEFINITION).length;
             const namespaceRegistration = transactions.data.filter((t) => t.type == TransactionType.NAMESPACE_REGISTRATION).length;
             const others = transactions.data.filter(
@@ -86,13 +90,16 @@ describe('TransactionSearch', () => {
             const transactionRepository = helper.repositoryFactory.createTransactionRepository();
             const streamer = new TransactionPaginationStreamer(transactionRepository);
             const account = helper.account;
-            const transactionsNoStreamer = await transactionRepository
-                .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 } as TransactionSearchCriteria)
-                .toPromise();
-            const transactions = await streamer
-                .search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 })
-                .pipe(take(10), toArray())
-                .toPromise();
+            const transactionsNoStreamer = await toPromise(
+                transactionRepository.search({
+                    group: TransactionGroup.Confirmed,
+                    address: account.address,
+                    pageSize: 10,
+                } as TransactionSearchCriteria),
+            );
+            const transactions = await toPromise(
+                streamer.search({ group: TransactionGroup.Confirmed, address: account.address, pageSize: 10 }).pipe(take(10), toArray()),
+            );
             expect(transactions.length).to.be.greaterThan(0);
             deepEqual(transactionsNoStreamer.data, transactions);
         });
@@ -118,7 +125,7 @@ describe('TransactionSearch', () => {
                 transferMosaicId: mosaicId as MosaicId,
             };
 
-            const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
+            const transactions = await toPromise(streamer.search(criteria).pipe(toArray()));
             expect(transactions.length).to.be.greaterThan(0);
 
             transactions.forEach((t) => {
@@ -151,7 +158,7 @@ describe('TransactionSearch', () => {
                 transferMosaicId: mosaicId as MosaicId,
             };
 
-            const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
+            const transactions = await toPromise(streamer.search(criteria).pipe(toArray()));
             expect(transactions.length).to.be.greaterThan(0);
 
             transactions.forEach((t) => {
@@ -184,7 +191,7 @@ describe('TransactionSearch', () => {
                 transferMosaicId: mosaicId as MosaicId,
             };
 
-            const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
+            const transactions = await toPromise(streamer.search(criteria).pipe(toArray()));
             expect(transactions.length).to.be.greaterThan(0);
 
             transactions.forEach((t) => {
@@ -217,7 +224,7 @@ describe('TransactionSearch', () => {
                 transferMosaicId: mosaicId as MosaicId,
             };
 
-            const transactions = await streamer.search(criteria).pipe(toArray()).toPromise();
+            const transactions = await toPromise(streamer.search(criteria).pipe(toArray()));
             expect(transactions.length).to.be.greaterThan(0);
 
             transactions.forEach((t) => {

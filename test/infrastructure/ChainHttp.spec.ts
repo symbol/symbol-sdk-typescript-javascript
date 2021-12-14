@@ -20,6 +20,7 @@ import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ChainHttp } from '../../src/infrastructure/ChainHttp';
 import { ChainRepository } from '../../src/infrastructure/ChainRepository';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 
 describe('ChainHttp', () => {
     const url = 'http://someHost';
@@ -46,7 +47,7 @@ describe('ChainHttp', () => {
         finalizedBlockDto.height = '1';
         chainInfoDTO.latestFinalizedBlock = finalizedBlockDto;
         when(chainRoutesApi.getChainInfo()).thenReturn(Promise.resolve(chainInfoDTO));
-        const info = await chainRepository.getChainInfo().toPromise();
+        const info = await toPromise(chainRepository.getChainInfo());
         expect(info).to.be.not.null;
         expect(info.height.toString()).to.be.equals(chainInfoDTO.height);
         expect(info.scoreLow.toString()).to.be.equals(chainInfoDTO.scoreLow);

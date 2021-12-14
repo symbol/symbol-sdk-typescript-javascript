@@ -37,6 +37,7 @@ import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -129,7 +130,7 @@ describe('NamespaceHttp', () => {
         when(namespaceRoutesApi.getAccountsNames(deepEqual({ addresses: [address.plain()] }))).thenReturn(
             Promise.resolve(accountsNamesDto),
         );
-        const accountNames = await namespaceRepository.getAccountsNames([address]).toPromise();
+        const accountNames = await toPromise(namespaceRepository.getAccountsNames([address]));
         expect(accountNames.length).to.be.greaterThan(0);
         expect(accountNames[0].address.plain()).to.be.equal(address.plain());
         expect(accountNames[0].names.map((n) => n.name).join(',')).to.be.equal(['name1', 'name2'].join(','));
@@ -143,7 +144,7 @@ describe('NamespaceHttp', () => {
         mosaicsNamesDto.mosaicNames = [mosaicNamesDto];
 
         when(namespaceRoutesApi.getMosaicsNames(deepEqual({ mosaicIds: [mosaicId.toHex()] }))).thenReturn(Promise.resolve(mosaicsNamesDto));
-        const names = await namespaceRepository.getMosaicsNames([mosaicId]).toPromise();
+        const names = await toPromise(namespaceRepository.getMosaicsNames([mosaicId]));
         expect(names.length).to.be.greaterThan(0);
         expect(names[0].mosaicId.toHex()).to.be.equal(mosaicId.toHex());
         expect(names[0].names.map((n) => n.name).join(',')).to.be.equal(['name1', 'name2'].join(','));
@@ -151,7 +152,7 @@ describe('NamespaceHttp', () => {
 
     it('getNamespace', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
-        const namespace = await namespaceRepository.getNamespace(namespaceId).toPromise();
+        const namespace = await toPromise(namespaceRepository.getNamespace(namespaceId));
         assertNamespaceInfo(namespace);
     });
 
@@ -168,7 +169,7 @@ describe('NamespaceHttp', () => {
         when(namespaceRoutesApi.getNamespacesNames(deepEqual({ namespaceIds: [namespaceId.toHex()] }))).thenReturn(
             Promise.resolve([namespaceNameParent, namespaceNameChild]),
         );
-        const namespace = await namespaceRepository.getNamespacesNames([namespaceId]).toPromise();
+        const namespace = await toPromise(namespaceRepository.getNamespacesNames([namespaceId]));
         expect(namespace.length).to.be.equal(2);
         expect(namespace[0].name).to.be.equal('parent');
         expect(namespace[0].namespaceId.toHex()).to.be.equal(namespaceId.toHex());
@@ -180,14 +181,14 @@ describe('NamespaceHttp', () => {
 
     it('getLinkedAddress', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
-        const namespaces = await namespaceRepository.getLinkedAddress(namespaceId).toPromise();
+        const namespaces = await toPromise(namespaceRepository.getLinkedAddress(namespaceId));
 
         expect(namespaces?.plain()).to.be.equal(address.plain());
     });
 
     it('getLinkedMosaicId', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoMosaic));
-        const namespaces = await namespaceRepository.getLinkedMosaicId(namespaceId).toPromise();
+        const namespaces = await toPromise(namespaceRepository.getLinkedMosaicId(namespaceId));
 
         expect(namespaces?.toHex()).to.be.equal(mosaicId.toHex());
     });
@@ -228,7 +229,7 @@ describe('NamespaceHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(body));
-        const infos = await namespaceRepository.search({ ownerAddress: address }).toPromise();
+        const infos = await toPromise(namespaceRepository.search({ ownerAddress: address }));
         assertNamespaceInfo(infos.data[0]);
     });
 
@@ -250,7 +251,7 @@ describe('NamespaceHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(namespaceRoutesApi.getNamespaceMerkle(namespaceId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
+        const merkle = await toPromise(namespaceRepository.getNamespaceMerkle(namespaceId));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

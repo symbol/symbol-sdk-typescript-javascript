@@ -31,6 +31,7 @@ import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { MosaicPaginationStreamer } from '../../src/infrastructure/paginationStreamer/MosaicPaginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicInfo } from '../../src/model/mosaic/MosaicInfo';
@@ -86,7 +87,7 @@ describe('MosaicHttp', () => {
 
     it('getMosaic', async () => {
         when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReturn(Promise.resolve(mosaicInfoDto));
-        const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
+        const mosaicInfo = await toPromise(mosaicRepository.getMosaic(mosaicId));
         assertMosaicInfo(mosaicInfo);
     });
 
@@ -94,7 +95,7 @@ describe('MosaicHttp', () => {
         const mosaicIds = {} as MosaicIds;
         mosaicIds.mosaicIds = [mosaicId.toHex()];
         when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReturn(Promise.resolve([mosaicInfoDto]));
-        const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
+        const mosaicInfos = await toPromise(mosaicRepository.getMosaics([mosaicId]));
         assertMosaicInfo(mosaicInfos[0]);
     });
 
@@ -110,7 +111,7 @@ describe('MosaicHttp', () => {
         when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve(body),
         );
-        const mosaicsInfo = await mosaicRepository.search({ ownerAddress: address }).toPromise();
+        const mosaicsInfo = await toPromise(mosaicRepository.search({ ownerAddress: address }));
         assertMosaicInfo(mosaicsInfo.data[0]);
     });
 
@@ -160,7 +161,7 @@ describe('MosaicHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(mosaicRoutesApi.getMosaicMerkle(mosaicId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await mosaicRepository.getMosaicMerkle(mosaicId).toPromise();
+        const merkle = await toPromise(mosaicRepository.getMosaicMerkle(mosaicId));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

@@ -27,6 +27,7 @@ import {
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { FinalizationHttp } from '../../src/infrastructure/FinalizationHttp';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { FinalizationProof } from '../../src/model/finalization/FinalizationProof';
 import { UInt64 } from '../../src/model/UInt64';
 
@@ -80,13 +81,13 @@ describe('FinalizationHttp', () => {
 
     it('getFinalizationProofAtEpoch', async () => {
         when(finalizationRoutesApi.getFinalizationProofAtEpoch(1)).thenReturn(Promise.resolve(dto));
-        const model = await finalizationRepository.getFinalizationProofAtEpoch(1).toPromise();
+        const model = await toPromise(finalizationRepository.getFinalizationProofAtEpoch(1));
         assertDto(model);
     });
 
     it('getFinalizationProofAtHeight', async () => {
         when(finalizationRoutesApi.getFinalizationProofAtHeight('1')).thenReturn(Promise.resolve(dto));
-        const model = await finalizationRepository.getFinalizationProofAtHeight(UInt64.fromUint(1)).toPromise();
+        const model = await toPromise(finalizationRepository.getFinalizationProofAtHeight(UInt64.fromUint(1)));
         assertDto(model);
     });
 

@@ -15,6 +15,7 @@ Client Library | v1.0.3  | [symbol-openapi-typescript-fetch-client](https://www.
 
 - fix: Upgraded Node to 12.22.1.
 - fix: Upgraded typescript to 4.5.4.
+- fix: Upgraded RXJS to 7.4.0.
 
 ## [1.0.3] - 16-Nov-2021
 

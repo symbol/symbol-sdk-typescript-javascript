@@ -18,6 +18,7 @@ import { expect } from 'chai';
 import { Observable } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { Order, RepositoryFactoryHttp, SearchCriteria, SearcherRepository } from '../../src/infrastructure';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { NamespaceRegistrationType } from '../../src/model/namespace';
 import { StateMerkleProof } from '../../src/model/state';
 import { StateProofService } from '../../src/service';
@@ -39,12 +40,12 @@ async function test<E, C extends SearchCriteria>(
     criteria: C = { order, pageSize: stateCounts } as C,
 ): Promise<void> {
     const streamer = repository.streamer();
-    const infos = await streamer.search(criteria).pipe(take(stateCounts), toArray()).toPromise();
+    const infos = await toPromise(streamer.search(criteria).pipe(take(stateCounts), toArray()));
     const promises = infos.map(async (info) => {
         const idText = getId(info);
         const stateUrl = `${url}/${path}/${idText}`;
         try {
-            const merkle = await merkleMethod(info).toPromise();
+            const merkle = await toPromise(merkleMethod(info));
             expect(merkle).to.not.undefined;
             if (merkle.valid) console.log(stateUrl + ' ' + merkle.valid + ' ' + merkle.stateHash);
             else {

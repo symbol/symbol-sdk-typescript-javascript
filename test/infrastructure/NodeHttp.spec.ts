@@ -30,6 +30,7 @@ import {
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils';
 import { NodeHttp } from '../../src/infrastructure';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { RoleType } from '../../src/model';
 import { NetworkType } from '../../src/model/network';
 
@@ -52,7 +53,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getNodeHealth()).thenReturn(Promise.resolve(body));
 
-        const nodeHealth = await nodeRepository.getNodeHealth().toPromise();
+        const nodeHealth = await toPromise(nodeRepository.getNodeHealth());
         expect(nodeHealth).to.be.not.null;
         expect(nodeHealth.apiNode).to.be.equals(NodeStatusEnum.Down);
         expect(nodeHealth.db).to.be.equals(NodeStatusEnum.Up);
@@ -66,7 +67,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getServerInfo()).thenReturn(Promise.resolve(body));
 
-        const serverInfo = await nodeRepository.getServerInfo().toPromise();
+        const serverInfo = await toPromise(nodeRepository.getServerInfo());
         expect(serverInfo).to.be.not.null;
         expect(serverInfo.restVersion).to.be.equals(body.serverInfo.restVersion);
         expect(serverInfo.sdkVersion).to.be.equals(body.serverInfo.sdkVersion);
@@ -87,7 +88,7 @@ describe('NodeHttp', () => {
         };
 
         when(nodeRoutesApi.getServerInfo()).thenReturn(Promise.resolve(body));
-        const serverInfo = await nodeRepository.getServerInfo().toPromise();
+        const serverInfo = await toPromise(nodeRepository.getServerInfo());
         expect(serverInfo).to.be.not.null;
         expect(serverInfo.restVersion).to.be.equals(body.serverInfo.restVersion);
         expect(serverInfo.deployment).to.be.deep.equals(body.serverInfo.deployment);
@@ -106,7 +107,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
 
-        const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+        const nodeInfo = await toPromise(nodeRepository.getNodeInfo());
         expect(nodeInfo).to.be.not.null;
         expect(nodeInfo.friendlyName).to.be.equal(body.friendlyName);
         expect(nodeInfo.host).to.be.equal(body.host);
@@ -137,7 +138,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getNodeInfo()).thenReturn(Promise.resolve(body));
 
-        const nodeInfo = await nodeRepository.getNodeInfo().toPromise();
+        const nodeInfo = await toPromise(nodeRepository.getNodeInfo());
         expect(nodeInfo).to.be.not.null;
         expect(nodeInfo.friendlyName).to.be.equal(body.friendlyName);
         expect(nodeInfo.host).to.be.equal(body.host);
@@ -171,7 +172,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getNodePeers()).thenReturn(Promise.resolve([body]));
 
-        const nodeInfoList = await nodeRepository.getNodePeers().toPromise();
+        const nodeInfoList = await toPromise(nodeRepository.getNodePeers());
         const nodeInfo = nodeInfoList[0];
         expect(nodeInfo).to.be.not.null;
         expect(nodeInfo.friendlyName).to.be.equal(body.friendlyName);
@@ -198,7 +199,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve(body));
 
-        const nodeTime = await nodeRepository.getNodeTime().toPromise();
+        const nodeTime = await toPromise(nodeRepository.getNodeTime());
         expect(nodeTime).to.be.not.null;
         if (nodeTime.receiveTimeStamp && nodeTime.sendTimeStamp) {
             expect(nodeTime.receiveTimeStamp.toDTO()).to.deep.equals([1111, 0]);
@@ -214,7 +215,7 @@ describe('NodeHttp', () => {
         when(nodeRoutesApi.getNodeTime()).thenReturn(Promise.resolve(body));
 
         try {
-            await nodeRepository.getNodeTime().toPromise();
+            await toPromise(nodeRepository.getNodeTime());
         } catch (e) {
             expect(e.message).to.deep.equals('Node time not available');
         }
@@ -225,7 +226,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getUnlockedAccount()).thenReturn(Promise.resolve(body));
 
-        const unlockedAccount = await nodeRepository.getUnlockedAccount().toPromise();
+        const unlockedAccount = await toPromise(nodeRepository.getUnlockedAccount());
         expect(unlockedAccount).to.be.not.null;
         expect(unlockedAccount[0]).to.be.equal('key1');
         expect(unlockedAccount[1]).to.be.equal('key2');
@@ -239,7 +240,7 @@ describe('NodeHttp', () => {
 
         when(nodeRoutesApi.getNodeStorage()).thenReturn(Promise.resolve(body));
 
-        const storageInfo = await nodeRepository.getStorageInfo().toPromise();
+        const storageInfo = await toPromise(nodeRepository.getStorageInfo());
         expect(storageInfo).to.deep.equals(body);
     });
 
@@ -250,7 +251,7 @@ describe('NodeHttp', () => {
             }),
         );
         try {
-            await nodeRepository.getStorageInfo().toPromise();
+            await toPromise(nodeRepository.getStorageInfo());
         } catch (e) {
             expect(e.message).to.deep.equals('{"statusCode":500,"statusMessage":"Some Error","body":"The Body"}');
         }
@@ -263,7 +264,7 @@ describe('NodeHttp', () => {
             }),
         );
         try {
-            await nodeRepository.getStorageInfo().toPromise();
+            await toPromise(nodeRepository.getStorageInfo());
         } catch (e) {
             expect(e.message).to.deep.equals(
                 '{"statusCode":500,"statusMessage":"Some Error","body":"{\\"someResponse\\":\\"the body\\"}"}',
@@ -288,7 +289,7 @@ describe('NodeHttp', () => {
             Promise.reject({ status: 500, statusText: 'Some Error', text: () => Promise.resolve('Some body text') }),
         );
         try {
-            await nodeRepository.getStorageInfo().toPromise();
+            await toPromise(nodeRepository.getStorageInfo());
         } catch (e) {
             expect(e.message).to.deep.equals('{"statusCode":500,"statusMessage":"Some Error","body":"Some body text"}');
         }

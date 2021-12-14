@@ -16,6 +16,7 @@
 
 import { ChronoUnit, Duration, Instant } from '@js-joda/core';
 import { RepositoryFactory } from '../infrastructure';
+import { toPromise } from '../infrastructure/rxUtils';
 import { Deadline, defaultChronoUnit, defaultDeadline } from '../model/transaction';
 
 /**
@@ -51,7 +52,7 @@ export class DeadlineService {
      * @param chronoUnit the unit of the value.
      */
     public async createDeadlineUsingServerTime(deadline = defaultDeadline, chronoUnit: ChronoUnit = defaultChronoUnit): Promise<Deadline> {
-        const serverTime = (await this.repositoryFactory.createNodeRepository().getNodeTime().toPromise()).receiveTimeStamp.compact();
+        const serverTime = (await toPromise(this.repositoryFactory.createNodeRepository().getNodeTime())).receiveTimeStamp.compact();
         return Deadline.createFromAdjustedValue(Duration.ofMillis(serverTime).plus(deadline, chronoUnit).toMillis());
     }
 
@@ -83,8 +84,8 @@ export class DeadlineService {
      * @param repositoryFactory the repository factory to call the rest servers.
      */
     public static async create(repositoryFactory: RepositoryFactory): Promise<DeadlineService> {
-        const epochAdjustment = await repositoryFactory.getEpochAdjustment().toPromise();
-        const serverTime = (await repositoryFactory.createNodeRepository().getNodeTime().toPromise()).receiveTimeStamp.compact();
+        const epochAdjustment = await toPromise(repositoryFactory.getEpochAdjustment());
+        const serverTime = (await toPromise(repositoryFactory.createNodeRepository().getNodeTime())).receiveTimeStamp.compact();
         return new DeadlineService(repositoryFactory, epochAdjustment, serverTime);
     }
 }

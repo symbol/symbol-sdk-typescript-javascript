@@ -16,6 +16,7 @@
 
 import { ChronoUnit } from '@js-joda/core';
 import { expect } from 'chai';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -130,14 +131,11 @@ describe('TransactionService - AggregateBonded', () => {
                 helper.maxFee,
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
-            return transactionService
-                .announce(signedTransaction, helper.listener)
-                .toPromise()
-                .then((tx: TransferTransaction) => {
-                    expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
-                    expect((tx.recipientAddress as Address).equals(account2.address)).to.be.true;
-                    expect(tx.message.payload).to.be.equal('test-message');
-                });
+            return toPromise(transactionService.announce(signedTransaction, helper.listener)).then((tx: TransferTransaction) => {
+                expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
+                expect((tx.recipientAddress as Address).equals(account2.address)).to.be.true;
+                expect(tx.message.payload).to.be.equal('test-message');
+            });
         });
     });
 
@@ -153,9 +151,13 @@ describe('TransactionService - AggregateBonded', () => {
                 helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            const tx = await transactionService
-                .announceHashLockAggregateBonded(signedLockFundsTransaction, signedAggregatedTransaction, helper.listener)
-                .toPromise();
+            const tx = await toPromise(
+                transactionService.announceHashLockAggregateBonded(
+                    signedLockFundsTransaction,
+                    signedAggregatedTransaction,
+                    helper.listener,
+                ),
+            );
             expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
             expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         });
@@ -173,11 +175,11 @@ describe('TransactionService - AggregateBonded', () => {
                 helper.maxFee,
             );
             const signedLockFundsTransaction = lockFundsTransaction.signWith(account, generationHash);
-            const signedLockFundsTransactionResponse = await transactionService
-                .announce(signedLockFundsTransaction, helper.listener)
-                .toPromise();
+            const signedLockFundsTransactionResponse = await toPromise(
+                transactionService.announce(signedLockFundsTransaction, helper.listener),
+            );
             expect(signedLockFundsTransactionResponse.transactionInfo!.hash).to.be.equal(signedLockFundsTransaction.hash);
-            const tx = await transactionService.announceAggregateBonded(signedAggregatedTransaction, helper.listener).toPromise();
+            const tx = await toPromise(transactionService.announceAggregateBonded(signedAggregatedTransaction, helper.listener));
             expect(tx.signer!.publicKey).to.be.equal(account.publicKey);
             expect(tx.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         });

@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account/Account';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -73,7 +74,7 @@ describe('AccountService', () => {
      */
     describe('call accountInfoWithResolvedMosaic', () => {
         it('accountInfoWithResolvedMosaic', async () => {
-            const info = await accountService.accountInfoWithResolvedMosaic([account.address]).toPromise();
+            const info = await toPromise(accountService.accountInfoWithResolvedMosaic([account.address]));
             expect(info).to.not.be.undefined;
             expect(info[0].resolvedMosaics).to.not.be.undefined;
             expect(info[0].resolvedMosaics?.length).to.be.greaterThan(0);
@@ -82,7 +83,7 @@ describe('AccountService', () => {
 
     describe('call accountNamespacesWithName', () => {
         it('accountNamespacesWithName', async () => {
-            const info = await accountService.accountNamespacesWithName(account.address).toPromise();
+            const info = await toPromise(accountService.accountNamespacesWithName(account.address));
             expect(info).to.not.be.undefined;
             expect(info.find((i) => i.id.equals(namespaceId))).to.not.be.undefined;
             expect(info.find((i) => i.id.equals(namespaceId))?.namespaceName).to.be.equal(name);

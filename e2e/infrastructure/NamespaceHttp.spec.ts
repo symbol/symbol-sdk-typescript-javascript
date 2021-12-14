@@ -18,6 +18,7 @@ import { expect } from 'chai';
 import { take, toArray } from 'rxjs/operators';
 import { NamespaceRepository, Order } from '../../src/infrastructure';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
 import { AliasAction, NamespaceId } from '../../src/model/namespace';
@@ -46,7 +47,7 @@ describe('NamespaceHttp', () => {
     });
 
     const validateMerkle = async (namespaceId: NamespaceId): Promise<void> => {
-        const merkleInfo = await namespaceRepository.getNamespaceMerkle(namespaceId).toPromise();
+        const merkleInfo = await toPromise(namespaceRepository.getNamespaceMerkle(namespaceId));
         expect(merkleInfo.raw).to.not.be.undefined;
     };
 
@@ -83,7 +84,7 @@ describe('NamespaceHttp', () => {
 
     describe('getNamespace', () => {
         it('should return namespace data given namepsaceId', async () => {
-            const namespace = await namespaceRepository.getNamespace(defaultNamespaceId).toPromise();
+            const namespace = await toPromise(namespaceRepository.getNamespace(defaultNamespaceId));
             expect(namespace.startHeight.lower).to.be.equal(1);
             expect(namespace.startHeight.higher).to.be.equal(0);
             await validateMerkle(namespace.id);
@@ -92,28 +93,28 @@ describe('NamespaceHttp', () => {
 
     describe('getNamespacesName', () => {
         it('should return namespace name given array of namespaceIds', async () => {
-            const namespaceNames = await namespaceRepository.getNamespacesNames([defaultNamespaceId]).toPromise();
+            const namespaceNames = await toPromise(namespaceRepository.getNamespacesNames([defaultNamespaceId]));
             expect(namespaceNames[0].name).to.be.equal('currency');
         });
     });
 
     describe('getLinkedMosaicId', () => {
         it('should return mosaicId given currency namespaceId', async () => {
-            const mosaicId = await namespaceRepository.getLinkedMosaicId(defaultNamespaceId).toPromise();
+            const mosaicId = await toPromise(namespaceRepository.getLinkedMosaicId(defaultNamespaceId));
             expect(mosaicId).to.not.be.null;
         });
     });
 
     describe('getLinkedAddress', () => {
         it('should return address given namespaceId', async () => {
-            const address = (await namespaceRepository.getLinkedAddress(namespaceId).toPromise()) as Address;
+            const address = (await toPromise(namespaceRepository.getLinkedAddress(namespaceId))) as Address;
             expect(address.plain()).to.be.equal(account.address.plain());
         });
     });
 
     describe('searchNamespace', () => {
         it('should return namespace info', async () => {
-            const info = await namespaceRepository.search({ ownerAddress: account.address }).toPromise();
+            const info = await toPromise(namespaceRepository.search({ ownerAddress: account.address }));
             expect(info.data.length).to.be.greaterThan(0);
             validateMerkle(info.data[0].id);
         });
@@ -122,11 +123,10 @@ describe('NamespaceHttp', () => {
     describe('searchNamespace with streamer', () => {
         it('should return namespace info', async () => {
             const streamer = new NamespacePaginationStreamer(namespaceRepository);
-            const infoStreamer = await streamer
-                .search({ ownerAddress: account.address, pageSize: 20, order: Order.Desc })
-                .pipe(take(20), toArray())
-                .toPromise();
-            const info = await namespaceRepository.search({ pageSize: 20, order: Order.Desc }).toPromise();
+            const infoStreamer = await toPromise(
+                streamer.search({ ownerAddress: account.address, pageSize: 20, order: Order.Desc }).pipe(take(20), toArray()),
+            );
+            const info = await toPromise(namespaceRepository.search({ pageSize: 20, order: Order.Desc }));
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });

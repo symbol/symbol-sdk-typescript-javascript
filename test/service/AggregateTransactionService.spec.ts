@@ -22,6 +22,7 @@ import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account/Account';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
@@ -591,13 +592,13 @@ describe('AggregateTransactionService', () => {
 
     it('should call getNetworkMaxCosignaturesPerAggregate and returns', async () => {
         when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties('15')));
-        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        const max = await toPromise(aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate());
         expect(max).to.be.equal(15);
     });
 
     it('should call getNetworkMaxCosignaturesPerAggregate and returns with single quote', async () => {
         when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties(`1'000`)));
-        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        const max = await toPromise(aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate());
         expect(max).to.be.equal(1000);
     });
 
@@ -612,7 +613,7 @@ describe('AggregateTransactionService', () => {
     });
 
     it('should call getMaxCosignatures and returns', async () => {
-        const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
+        const max = await toPromise(aggregateTransactionService.getMaxCosignatures(multisig2.address));
         expect(max).to.be.equal(4);
     });
 
@@ -620,7 +621,7 @@ describe('AggregateTransactionService', () => {
         when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig2.address))).thenReturn(
             observableOf(givenMultisig2AccountGraphInfoDuplicated()),
         );
-        const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
+        const max = await toPromise(aggregateTransactionService.getMaxCosignatures(multisig2.address));
         expect(max).to.be.equal(4);
     });
 });

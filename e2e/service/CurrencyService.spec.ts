@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Currency, MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
@@ -37,7 +38,7 @@ describe('CurrencyService', () => {
     describe('Load network currencies', () => {
         it('Load symbol network currencies', async () => {
             const networkCurrencyService = new CurrencyService(helper.repositoryFactory);
-            const currencies = await networkCurrencyService.getNetworkCurrencies().toPromise();
+            const currencies = await toPromise(networkCurrencyService.getNetworkCurrencies());
             expect(currencies.currency.unresolvedMosaicId).to.be.deep.eq(currencies.currency.mosaicId);
             expect(currencies.currency.namespaceId).to.be.deep.eq(NetworkCurrencyLocal.namespaceId);
             expect(currencies.currency.unresolvedMosaicId).to.be.deep.eq(NetworkCurrencyLocal.unresolvedMosaicId);
@@ -65,7 +66,7 @@ describe('CurrencyService', () => {
             await helper.announce(mosaicDefinitionTransaction.signWith(account, helper.generationHash));
 
             await IntegrationTestHelper.sleep(100);
-            const currencies = await networkCurrencyService.getCurrencies([mosaicId]).toPromise();
+            const currencies = await toPromise(networkCurrencyService.getCurrencies([mosaicId]));
             expect(currencies.length).eq(1);
             expect(currencies[0]).to.deep.eq({
                 unresolvedMosaicId: mosaicId,

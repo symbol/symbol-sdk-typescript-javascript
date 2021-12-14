@@ -22,6 +22,7 @@ import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
+import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account';
 import { Currency, MosaicFlags, MosaicId, MosaicInfo, MosaicNames } from '../../src/model/mosaic';
 import { NamespaceId, NamespaceName } from '../../src/model/namespace';
@@ -103,7 +104,7 @@ describe('CurrencyService', () => {
         const repositoryFactory = instance(mockRepoFactory);
 
         const service = new CurrencyService(repositoryFactory);
-        const currencies = await service.getNetworkCurrencies().toPromise();
+        const currencies = await toPromise(service.getNetworkCurrencies());
 
         const currencyNamespaceId = currencyMosaicNames.names[0].namespaceId;
         expect(currencies.currency).to.be.deep.equal(
@@ -188,7 +189,7 @@ describe('CurrencyService', () => {
         const repositoryFactory = instance(mockRepoFactory);
 
         const service = new CurrencyService(repositoryFactory);
-        const [currency, harvest] = await service.getCurrencies([currencyMosaicId, harvestingMosaicId]).toPromise();
+        const [currency, harvest] = await toPromise(service.getCurrencies([currencyMosaicId, harvestingMosaicId]));
 
         expect(currency).to.be.deep.equal(
             new Currency({
