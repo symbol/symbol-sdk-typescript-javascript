@@ -65,7 +65,7 @@ describe('TransactionSearch', () => {
             expect(others).to.be.greaterThan(0);
         });
 
-        it('should return transaction info given height and namesapce,             const transactions = await transactionRepository\nmosaic types', async () => {
+        it('should return transaction info given height and namesapce, mosaic types', async () => {
             const transactionRepository = helper.repositoryFactory.createTransactionRepository();
             const transactions = await toPromise(
                 transactionRepository.search({
