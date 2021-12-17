@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import { ChainInfoDTO, ChainRoutesApi, FinalizedBlockDTO } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
@@ -46,7 +47,7 @@ describe('ChainHttp', () => {
         finalizedBlockDto.height = '1';
         chainInfoDTO.latestFinalizedBlock = finalizedBlockDto;
         when(chainRoutesApi.getChainInfo()).thenReturn(Promise.resolve(chainInfoDTO));
-        const info = await chainRepository.getChainInfo().toPromise();
+        const info = await firstValueFrom(chainRepository.getChainInfo());
         expect(info).to.be.not.null;
         expect(info.height.toString()).to.be.equals(chainInfoDTO.height);
         expect(info.scoreLow.toString()).to.be.equals(chainInfoDTO.scoreLow);

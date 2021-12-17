@@ -17,6 +17,7 @@ Client Library | v1.0.3  | [symbol-openapi-typescript-fetch-client](https://www.
 - fix: Upgraded typescript to 4.5.4.
 - fix: Improved message API.
 - fix: EncryptedMessage payload wasn't reproducible.
+- fix: Upgraded RXJS to 7.4.0.
 
 ## [1.0.3] - 16-Nov-2021
 

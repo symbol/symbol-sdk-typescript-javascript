@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Observable, of as observableOf } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, mergeMap, toArray } from 'rxjs/operators';
 import { AccountRepository } from '../infrastructure/AccountRepository';
 import { MosaicRepository } from '../infrastructure/MosaicRepository';
@@ -42,7 +42,7 @@ export class MosaicService {
      * @returns {Observable<MosaicView[]>}
      */
     mosaicsView(mosaicIds: MosaicId[]): Observable<MosaicView[]> {
-        return observableOf(mosaicIds).pipe(
+        return of(mosaicIds).pipe(
             mergeMap(() =>
                 this.mosaicRepository.getMosaics(mosaicIds).pipe(
                     mergeMap((info) => info),
@@ -84,7 +84,7 @@ export class MosaicService {
      * @returns {Observable<MosaicAmountView[]>}
      */
     mosaicsAmountViewFromAddress(address: Address): Observable<MosaicAmountView[]> {
-        return observableOf(address).pipe(
+        return of(address).pipe(
             mergeMap((_) => this.accountRepository.getAccountInfo(_)),
             mergeMap((_) => this.mosaicsAmountView(_.mosaics)),
         );

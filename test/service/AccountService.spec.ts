@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { of as observableOf } from 'rxjs';
+import { firstValueFrom, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { AccountRepository } from '../../src/infrastructure/AccountRepository';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
@@ -169,7 +169,7 @@ describe('AccountService', () => {
     });
 
     it('should return accountInfo with resolved mosaic name', async () => {
-        const result = await accountService.accountInfoWithResolvedMosaic([account.address]).toPromise();
+        const result = await firstValueFrom(accountService.accountInfoWithResolvedMosaic([account.address]));
         expect(result[0].resolvedMosaics).to.not.be.undefined;
         expect(result[0].resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
         expect(result[0].resolvedMosaics![1].namespaceName?.name).to.be.equal('symbol.xym');
@@ -178,7 +178,7 @@ describe('AccountService', () => {
 
     it('should return accountInfo with mosaicId', async () => {
         when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true)));
-        const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
+        const result = await firstValueFrom(accountService.accountInfoWithResolvedMosaic([account2.address]));
         expect(result[0].resolvedMosaics).to.not.be.undefined;
         expect(result[0].resolvedMosaics![0].namespaceName?.name).to.be.equal('catapult.currency');
         expect(result[0].resolvedMosaics![1].namespaceName?.name).to.be.equal('symbol.xym');
@@ -188,7 +188,7 @@ describe('AccountService', () => {
     });
 
     it('should return namespaceInfo with resolved name', async () => {
-        const result = await accountService.accountNamespacesWithName(account.address).toPromise();
+        const result = await firstValueFrom(accountService.accountNamespacesWithName(account.address));
         expect(result).to.not.be.undefined;
         expect(result.length).to.be.greaterThan(0);
         expect(result![0].namespaceName).to.be.equal('catapult.currency');
@@ -198,7 +198,7 @@ describe('AccountService', () => {
 
     it('should return empty resolved namespaceInfo', async () => {
         when(mockAccountRepository.getAccountsInfo(deepEqual([account2.address]))).thenReturn(observableOf(mockAccountInfo(true, true)));
-        const result = await accountService.accountInfoWithResolvedMosaic([account2.address]).toPromise();
+        const result = await firstValueFrom(accountService.accountInfoWithResolvedMosaic([account2.address]));
         expect(result).to.not.be.undefined;
         expect(result.length).to.be.greaterThan(0);
         expect(result![0].resolvedMosaics?.length).to.be.equal(1);

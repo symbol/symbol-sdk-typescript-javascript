@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { firstValueFrom } from 'rxjs';
 import { map, mergeMap, toArray } from 'rxjs/operators';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
@@ -65,7 +66,7 @@ describe('TransactionPaginationStreamer', () => {
                 );
             }),
         );
-        return observableOfResults.pipe(toArray()).toPromise();
+        return firstValueFrom(observableOfResults.pipe(toArray()));
     };
 
     describe('Get Transactions', () => {
