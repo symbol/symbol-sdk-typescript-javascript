@@ -431,12 +431,4 @@ describe('RepositoryFactory', () => {
         const networkCurrencies = await firstValueFrom(factory.getCurrencies());
         expect(networkCurrencies).eq(NetworkCurrencies.PUBLIC);
     });
-
-    // it('howToUse', async () => {
-    //     const factory = new RepositoryFactoryHttp('http://localhost:3000');
-    //     const networkCurrencies = await firstValueFrom(factory.getCurrencies());
-    //     const namespaceName: string = networkCurrencies.currency!.namespaceId!.fullName!;
-    //     const mosaic: Mosaic = networkCurrencies.currency.createRelative(1000);
-    //     // a mosaic ready to use for transactions
-    // });
 });

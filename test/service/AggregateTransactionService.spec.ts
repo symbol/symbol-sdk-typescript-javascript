@@ -218,7 +218,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -248,7 +248,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -286,7 +286,7 @@ describe('AggregateTransactionService', () => {
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -324,7 +324,7 @@ describe('AggregateTransactionService', () => {
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -352,7 +352,7 @@ describe('AggregateTransactionService', () => {
             [],
         );
         const signedTransaction = aggregateTransaction.signWith(account2, generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -380,7 +380,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signWith(account1, generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -409,7 +409,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signWith(account4, generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -494,7 +494,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -521,7 +521,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -548,7 +548,7 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [], generationHash);
-        firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
