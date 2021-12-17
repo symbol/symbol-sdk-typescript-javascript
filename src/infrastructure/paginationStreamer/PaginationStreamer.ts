@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { concat, Observable } from 'rxjs';
-import { defer } from 'rxjs/internal/observable/defer';
-import { from } from 'rxjs/internal/observable/from';
+import { concat, defer, from, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { SearchCriteria } from '../searchCriteria/SearchCriteria';
 import { Searcher } from './Searcher';

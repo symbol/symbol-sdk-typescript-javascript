@@ -16,7 +16,7 @@
 
 import { ChronoUnit } from '@js-joda/core';
 import { expect } from 'chai';
-import { EMPTY, from, of as observableOf } from 'rxjs';
+import { EMPTY, firstValueFrom, from, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { IListener, ReceiptRepository, TransactionRepository } from '../../src/infrastructure';
 import { UInt64 } from '../../src/model';
@@ -86,7 +86,7 @@ describe('TransactionService', () => {
         when(transactionRepositoryMock.announce(deepEqual(signedTransaction))).thenReturn(from(Promise.reject(Error('break this!'))));
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
         try {
-            await service.announce(signedTransaction, instance(listener)).toPromise();
+            await firstValueFrom(service.announce(signedTransaction, instance(listener)));
             expect(false).true;
         } catch (e) {
             expect(e.message).eq('break this!');
@@ -98,7 +98,7 @@ describe('TransactionService', () => {
         when(transactionRepositoryMock.announce(deepEqual(signedTransaction))).thenThrow(Error('break this!'));
         const service = new TransactionService(instance(transactionRepositoryMock), instance(mockedReceiptRepository));
         try {
-            await service.announce(signedTransaction, instance(listener)).toPromise();
+            await firstValueFrom(service.announce(signedTransaction, instance(listener)));
             expect(false).true;
         } catch (e) {
             expect(e.message).eq('break this!');
@@ -122,7 +122,7 @@ describe('TransactionService', () => {
 
         const announcedTransaction = service.announce(signedTransaction, instance(listener));
 
-        const transaction = await announcedTransaction.toPromise();
+        const transaction = await firstValueFrom(announcedTransaction);
         expect(transaction).to.be.equal(transferTransaction);
     });
 
@@ -147,7 +147,7 @@ describe('TransactionService', () => {
         const announcedTransaction = service.announce(signedTransaction, instance(listener));
 
         try {
-            await announcedTransaction.toPromise();
+            await firstValueFrom(announcedTransaction);
         } catch (e) {
             expect(e.message).to.be.equal('Some Error');
         }
@@ -171,7 +171,7 @@ describe('TransactionService', () => {
 
         const announcedTransaction = service.announceAggregateBonded(signedTransaction, instance(listener));
 
-        const transaction = await announcedTransaction.toPromise();
+        const transaction = await firstValueFrom(announcedTransaction);
         expect(transaction).to.be.equal(aggregateCompleteTransaction);
     });
 
@@ -198,7 +198,7 @@ describe('TransactionService', () => {
         const announcedTransaction = service.announceAggregateBonded(signedTransaction, instance(listener));
 
         try {
-            await announcedTransaction.toPromise();
+            await firstValueFrom(announcedTransaction);
         } catch (e) {
             expect(e.message).to.be.equal('Some Error');
         }
@@ -237,7 +237,7 @@ describe('TransactionService', () => {
             instance(listener),
         );
 
-        const transaction = await announcedTransaction.toPromise();
+        const transaction = await firstValueFrom(announcedTransaction);
         expect(transaction).to.be.equal(aggregateBondedTransaction);
     });
 });

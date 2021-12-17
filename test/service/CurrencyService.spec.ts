@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { of as observableOf } from 'rxjs';
+import { firstValueFrom, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { MosaicRepository } from '../../src/infrastructure/MosaicRepository';
@@ -103,7 +103,7 @@ describe('CurrencyService', () => {
         const repositoryFactory = instance(mockRepoFactory);
 
         const service = new CurrencyService(repositoryFactory);
-        const currencies = await service.getNetworkCurrencies().toPromise();
+        const currencies = await firstValueFrom(service.getNetworkCurrencies());
 
         const currencyNamespaceId = currencyMosaicNames.names[0].namespaceId;
         expect(currencies.currency).to.be.deep.equal(
@@ -188,7 +188,7 @@ describe('CurrencyService', () => {
         const repositoryFactory = instance(mockRepoFactory);
 
         const service = new CurrencyService(repositoryFactory);
-        const [currency, harvest] = await service.getCurrencies([currencyMosaicId, harvestingMosaicId]).toPromise();
+        const [currency, harvest] = await firstValueFrom(service.getCurrencies([currencyMosaicId, harvestingMosaicId]));
 
         expect(currency).to.be.deep.equal(
             new Currency({

@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     HashLockEntryDTO,
     HashLockInfoDTO,
@@ -71,7 +72,7 @@ describe('HashLockHttp', () => {
 
     it('getHashLockInfo', async () => {
         when(hashLockRoutesApi.getHashLock(lockDto.hash)).thenReturn(Promise.resolve(dto));
-        const hashInfo = await hashLockRepository.getHashLock(lockDto.hash).toPromise();
+        const hashInfo = await firstValueFrom(hashLockRepository.getHashLock(lockDto.hash));
         assertHashInfo(hashInfo);
     });
 
@@ -86,16 +87,13 @@ describe('HashLockHttp', () => {
         when(hashLockRoutesApi.searchHashLock(address.plain(), undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve(body),
         );
-        const infos = await hashLockRepository.search({ address }).toPromise();
+        const infos = await firstValueFrom(hashLockRepository.search({ address }));
         assertHashInfo(infos.data[0]);
     });
 
     it('getHashLockInfo - Error', async () => {
         when(hashLockRoutesApi.getHashLock(lockDto.hash)).thenReject(new Error('Mocked Error'));
-        await hashLockRepository
-            .getHashLock(lockDto.hash)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(hashLockRepository.getHashLock(lockDto.hash)).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('streamer', async () => {
@@ -116,7 +114,7 @@ describe('HashLockHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(hashLockRoutesApi.getHashLockMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await hashLockRepository.getHashLockMerkle('hash').toPromise();
+        const merkle = await firstValueFrom(hashLockRepository.getHashLockMerkle('hash'));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

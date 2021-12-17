@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { KeyGenerator } from '../../src/core/format';
 import { NamespaceRepository, RestrictionMosaicRepository } from '../../src/infrastructure';
 import { UInt64 } from '../../src/model';
@@ -191,8 +192,8 @@ describe('MosaicRestrictionTransactionService', () => {
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
             const deadline = Deadline.create(helper.epochAdjustment);
 
-            return service
-                .createMosaicGlobalRestrictionTransaction(
+            return firstValueFrom(
+                service.createMosaicGlobalRestrictionTransaction(
                     deadline,
                     networkType,
                     mosaicId,
@@ -201,16 +202,15 @@ describe('MosaicRestrictionTransactionService', () => {
                     MosaicRestrictionType.GE,
                     undefined,
                     helper.maxFee,
-                )
-                .toPromise()
-                .then((transaction: MosaicGlobalRestrictionTransaction) => {
-                    expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-                    expect(transaction.previousRestrictionValue.toString()).to.be.equal('0');
-                    expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
-                    expect(transaction.newRestrictionValue.toString()).to.be.equal('1');
-                    expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
-                    expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
-                });
+                ),
+            ).then((transaction: MosaicGlobalRestrictionTransaction) => {
+                expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
+                expect(transaction.previousRestrictionValue.toString()).to.be.equal('0');
+                expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
+                expect(transaction.newRestrictionValue.toString()).to.be.equal('1');
+                expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
+                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
+            });
         });
     });
 
@@ -219,8 +219,8 @@ describe('MosaicRestrictionTransactionService', () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
             const deadline = Deadline.create(helper.epochAdjustment);
             const service = new MosaicRestrictionTransactionService(restrictionRepository, namespaceRepository);
-            const transaction = (await service
-                .createMosaicGlobalRestrictionTransaction(
+            const transaction = (await firstValueFrom(
+                service.createMosaicGlobalRestrictionTransaction(
                     deadline,
                     networkType,
                     namespaceIdMosaic,
@@ -229,8 +229,8 @@ describe('MosaicRestrictionTransactionService', () => {
                     MosaicRestrictionType.GE,
                     undefined,
                     helper.maxFee,
-                )
-                .toPromise()) as MosaicGlobalRestrictionTransaction;
+                ),
+            )) as MosaicGlobalRestrictionTransaction;
             expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
             expect(transaction.previousRestrictionValue.toString()).to.be.equal('0');
             expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);

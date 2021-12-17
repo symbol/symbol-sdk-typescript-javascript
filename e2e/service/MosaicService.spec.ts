@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { firstValueFrom } from 'rxjs';
 import { AccountRepository, MosaicRepository } from '../../src/infrastructure';
 import { Address } from '../../src/model/account';
 import { MosaicService } from '../../src/service';
@@ -39,13 +40,10 @@ describe('MosaicService', () => {
 
     it('should return the mosaic list skipping the expired mosaics', () => {
         const mosaicService = new MosaicService(accountRepository, mosaicRepository);
-        return mosaicService
-            .mosaicsAmountViewFromAddress(accountAddress)
-            .toPromise()
-            .then((amountViews) => {
-                return amountViews.map((v) => {
-                    return { mosaicId: v.fullName(), amount: v.relativeAmount() };
-                });
+        return firstValueFrom(mosaicService.mosaicsAmountViewFromAddress(accountAddress)).then((amountViews) => {
+            return amountViews.map((v) => {
+                return { mosaicId: v.fullName(), amount: v.relativeAmount() };
             });
+        });
     });
 });

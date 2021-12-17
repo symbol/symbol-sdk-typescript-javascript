@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { forkJoin, Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/internal/operators';
+import { firstValueFrom, forkJoin, Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
 import { Currency, MosaicId, MosaicInfo, MosaicNames, NetworkCurrencies } from '../model/mosaic';
@@ -36,7 +36,7 @@ export class CurrencyService implements ICurrencyService {
             .createNetworkRepository()
             .getNetworkProperties()
             .pipe(
-                flatMap((properties) => {
+                mergeMap((properties) => {
                     if (!properties.chain.currencyMosaicId) {
                         throw new Error('currencyMosaicId could not be loaded from network properties!!');
                     }
@@ -64,8 +64,8 @@ export class CurrencyService implements ICurrencyService {
         // get mosaicInfo and mosaic names from the network,
         // build network currency models
         return forkJoin({
-            mosaicsInfo: mosaicHttp.getMosaics(mosaicIds).toPromise(),
-            mosaicNames: namespaceHttp.getMosaicsNames(mosaicIds).toPromise(),
+            mosaicsInfo: firstValueFrom(mosaicHttp.getMosaics(mosaicIds)),
+            mosaicNames: firstValueFrom(namespaceHttp.getMosaicsNames(mosaicIds)),
         }).pipe(
             map(({ mosaicsInfo, mosaicNames }) =>
                 mosaicsInfo.map((mosaicInfo) => {

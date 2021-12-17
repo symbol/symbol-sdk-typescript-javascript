@@ -16,7 +16,7 @@
 
 import { ChronoUnit } from '@js-joda/core';
 import { expect } from 'chai';
-import { of as observableOf } from 'rxjs';
+import { firstValueFrom, of as observableOf } from 'rxjs';
 import { AggregateNetworkPropertiesDTO, NetworkConfigurationDTO, PluginsPropertiesDTO } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { MultisigRepository } from '../../src/infrastructure/MultisigRepository';
@@ -188,12 +188,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.true;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
     });
 
     it('should return  isComplete: false for aggregated complete transaction - 2 levels Multisig', () => {
@@ -221,12 +218,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.false;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.false;
+        });
     });
 
     it('should return  isComplete: false for aggregated complete transaction - 2 levels Multisig', () => {
@@ -254,12 +248,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.false;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.false;
+        });
     });
 
     it('should return correct isComplete status for aggregated complete transaction - 2 levels Multisig, multi inner transaction', () => {
@@ -295,12 +286,9 @@ describe('AggregateTransactionService', () => {
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.false;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.false;
+        });
     });
 
     it('should return correct isComplete status for aggregated complete transaction - 2 levels Multisig, multi inner transaction', () => {
@@ -336,12 +324,9 @@ describe('AggregateTransactionService', () => {
             [],
         );
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.true;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
     });
 
     it('should use minRemoval for multisig account validation if inner transaction is modify multisig remove', () => {
@@ -367,12 +352,9 @@ describe('AggregateTransactionService', () => {
             [],
         );
         const signedTransaction = aggregateTransaction.signWith(account2, generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.true;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
     });
 
     it('should return correct isComplete status (false) for aggregated complete transaction - none multisig', () => {
@@ -398,12 +380,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signWith(account1, generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.false;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.false;
+        });
     });
 
     it('should return correct isComplete status (true) for aggregated complete transaction - none multisig', () => {
@@ -430,12 +409,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signWith(account4, generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.true;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
     });
 
     it('should return correct isComplete status TRUE - multiple normal account', () => {
@@ -476,12 +452,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.true;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
     });
 
     it('should return correct isComplete status FALSE - multiple normal account', () => {
@@ -521,12 +494,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.false;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.false;
+        });
     });
 
     it('should return correct isComplete status TRUE - multisig Single Level', () => {
@@ -551,12 +521,9 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.true;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
     });
 
     it('should return correct isComplete status FALSE - multisig Single Level', () => {
@@ -581,38 +548,32 @@ describe('AggregateTransactionService', () => {
         );
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [], generationHash);
-        aggregateTransactionService
-            .isComplete(signedTransaction)
-            .toPromise()
-            .then((isComplete) => {
-                expect(isComplete).to.be.false;
-            });
+        return firstValueFrom(aggregateTransactionService.isComplete(signedTransaction)).then((isComplete) => {
+            expect(isComplete).to.be.false;
+        });
     });
 
     it('should call getNetworkMaxCosignaturesPerAggregate and returns', async () => {
         when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties('15')));
-        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        const max = await firstValueFrom(aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate());
         expect(max).to.be.equal(15);
     });
 
     it('should call getNetworkMaxCosignaturesPerAggregate and returns with single quote', async () => {
         when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties(`1'000`)));
-        const max = await aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate().toPromise();
+        const max = await firstValueFrom(aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate());
         expect(max).to.be.equal(1000);
     });
 
     it('should call getNetworkMaxCosignaturesPerAggregate and throw', () => {
         when(mockNetworkRepository.getNetworkProperties()).thenReturn(observableOf(getNetworkProperties('')));
-        aggregateTransactionService
-            .getNetworkMaxCosignaturesPerAggregate()
-            .toPromise()
-            .catch((error) => {
-                expect(error).not.to.be.undefined;
-            });
+        return firstValueFrom(aggregateTransactionService.getNetworkMaxCosignaturesPerAggregate()).catch((error) => {
+            expect(error).not.to.be.undefined;
+        });
     });
 
     it('should call getMaxCosignatures and returns', async () => {
-        const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
+        const max = await firstValueFrom(aggregateTransactionService.getMaxCosignatures(multisig2.address));
         expect(max).to.be.equal(4);
     });
 
@@ -620,7 +581,7 @@ describe('AggregateTransactionService', () => {
         when(mockedAccountRepository.getMultisigAccountGraphInfo(deepEqual(multisig2.address))).thenReturn(
             observableOf(givenMultisig2AccountGraphInfoDuplicated()),
         );
-        const max = await aggregateTransactionService.getMaxCosignatures(multisig2.address).toPromise();
+        const max = await firstValueFrom(aggregateTransactionService.getMaxCosignatures(multisig2.address));
         expect(max).to.be.equal(4);
     });
 });

@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     AccountRestrictionDTO,
     AccountRestrictionFlagsEnum,
@@ -64,7 +65,7 @@ describe('RestrictionAccountHttp', () => {
     it('getAccountRestrictions', async () => {
         when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReturn(Promise.resolve(restrictionInfo));
 
-        const restrictions = (await restrictionAccountRepository.getAccountRestrictions(address).toPromise()).restrictions;
+        const restrictions = (await firstValueFrom(restrictionAccountRepository.getAccountRestrictions(address))).restrictions;
         expect(restrictions).to.be.not.null;
         expect(restrictions.length).to.be.greaterThan(0);
         expect(restrictions[0].restrictionFlags).to.be.equals(AddressRestrictionFlag.AllowIncomingAddress);
@@ -73,10 +74,9 @@ describe('RestrictionAccountHttp', () => {
 
     it('getAccountRestrictions - Error', async () => {
         when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReject(new Error('Mocked Error'));
-        await restrictionAccountRepository
-            .getAccountRestrictions(address)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(restrictionAccountRepository.getAccountRestrictions(address)).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('streamer', async () => {
@@ -97,7 +97,7 @@ describe('RestrictionAccountHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(restrictionAccountRoutesApi.getAccountRestrictionsMerkle(address.plain())).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await restrictionAccountRepository.getAccountRestrictionsMerkle(address).toPromise();
+        const merkle = await firstValueFrom(restrictionAccountRepository.getAccountRestrictionsMerkle(address));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });
