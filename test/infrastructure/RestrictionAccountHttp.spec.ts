@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     AccountRestrictionDTO,
     AccountRestrictionFlagsEnum,
@@ -28,7 +29,6 @@ import { deepEqual, instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { RestrictionAccountPaginationStreamer } from '../../src/infrastructure/paginationStreamer/RestrictionAccountPaginationStreamer';
 import { RestrictionAccountHttp } from '../../src/infrastructure/RestrictionAccountHttp';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -65,7 +65,7 @@ describe('RestrictionAccountHttp', () => {
     it('getAccountRestrictions', async () => {
         when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReturn(Promise.resolve(restrictionInfo));
 
-        const restrictions = (await toPromise(restrictionAccountRepository.getAccountRestrictions(address))).restrictions;
+        const restrictions = (await firstValueFrom(restrictionAccountRepository.getAccountRestrictions(address))).restrictions;
         expect(restrictions).to.be.not.null;
         expect(restrictions.length).to.be.greaterThan(0);
         expect(restrictions[0].restrictionFlags).to.be.equals(AddressRestrictionFlag.AllowIncomingAddress);
@@ -74,10 +74,9 @@ describe('RestrictionAccountHttp', () => {
 
     it('getAccountRestrictions - Error', async () => {
         when(restrictionAccountRoutesApi.getAccountRestrictions(deepEqual(address.plain()))).thenReject(new Error('Mocked Error'));
-        await restrictionAccountRepository
-            .getAccountRestrictions(address)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(restrictionAccountRepository.getAccountRestrictions(address)).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('streamer', async () => {
@@ -98,7 +97,7 @@ describe('RestrictionAccountHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(restrictionAccountRoutesApi.getAccountRestrictionsMerkle(address.plain())).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await toPromise(restrictionAccountRepository.getAccountRestrictionsMerkle(address));
+        const merkle = await firstValueFrom(restrictionAccountRepository.getAccountRestrictionsMerkle(address));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

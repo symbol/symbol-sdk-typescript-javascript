@@ -17,10 +17,10 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
+import { firstValueFrom } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { Crypto } from '../../src/core/crypto';
 import { Order, SecretLockPaginationStreamer } from '../../src/infrastructure';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
 import { Account } from '../../src/model/account/Account';
 import { LockHashAlgorithm } from '../../src/model/lock/LockHashAlgorithm';
@@ -87,7 +87,7 @@ describe('SecretLockHttp', () => {
         it('should return hash lock info given hash', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
 
-            const page = await toPromise(secretLockRepository.search({ address: account.address, secret }));
+            const page = await firstValueFrom(secretLockRepository.search({ address: account.address, secret }));
             expect(page.data.length).eq(1);
             expect(page.pageNumber).eq(1);
 
@@ -96,16 +96,16 @@ describe('SecretLockHttp', () => {
             expect(info.recipientAddress.plain()).to.be.equal(account2.address.plain());
             expect(info.amount.toString()).to.be.equal('10');
 
-            const infoFromId = await toPromise(secretLockRepository.getSecretLock(info.compositeHash));
+            const infoFromId = await firstValueFrom(secretLockRepository.getSecretLock(info.compositeHash));
             expect(infoFromId).deep.eq(info);
-            const merkleInfo = await toPromise(secretLockRepository.getSecretLockMerkle(info.compositeHash));
+            const merkleInfo = await firstValueFrom(secretLockRepository.getSecretLockMerkle(info.compositeHash));
             expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
 
     describe('searchSecretLock', () => {
         it('should return hash lock page info', async () => {
-            const info = await toPromise(secretLockRepository.search({ address: account.address }));
+            const info = await firstValueFrom(secretLockRepository.search({ address: account.address }));
             expect(info.data.length).to.be.greaterThan(0);
         });
     });
@@ -113,10 +113,10 @@ describe('SecretLockHttp', () => {
     describe('searchSecretLock with streamer', () => {
         it('should return hash lock page info', async () => {
             const streamer = new SecretLockPaginationStreamer(secretLockRepository);
-            const infoStreamer = await toPromise(
+            const infoStreamer = await firstValueFrom(
                 streamer.search({ address: account.address, pageSize: 20, order: Order.Asc }).pipe(take(20), toArray()),
             );
-            const info = await toPromise(
+            const info = await firstValueFrom(
                 secretLockRepository.search({
                     address: account.address,
                     secret: undefined,

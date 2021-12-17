@@ -17,10 +17,10 @@
 import { ChronoUnit } from '@js-joda/core';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { HashLockPaginationStreamer, Order } from '../../src/infrastructure';
 import { HashLockRepository } from '../../src/infrastructure/HashLockRepository';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -155,14 +155,14 @@ describe('HashLockHttp', () => {
     describe('searchHashLock', () => {
         it('should return hash lock page info', async () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            const page = await toPromise(hashLockRepo.search({ address: account.address }));
+            const page = await firstValueFrom(hashLockRepo.search({ address: account.address }));
             const info = page.data[0];
             hash = info.hash;
             expect(page.data.length).to.be.greaterThan(0);
 
-            const infoFromId = await toPromise(hashLockRepo.getHashLock(hash));
+            const infoFromId = await firstValueFrom(hashLockRepo.getHashLock(hash));
             expect(infoFromId).deep.eq(info);
-            const merkleInfo = await toPromise(hashLockRepo.getHashLockMerkle(hash));
+            const merkleInfo = await firstValueFrom(hashLockRepo.getHashLockMerkle(hash));
             expect(merkleInfo.raw).to.not.be.undefined;
         });
     });
@@ -170,10 +170,10 @@ describe('HashLockHttp', () => {
     describe('searchHashLock with streamer', () => {
         it('should return hash lock page info', async () => {
             const streamer = new HashLockPaginationStreamer(hashLockRepo);
-            const infoStreamer = await toPromise(
+            const infoStreamer = await firstValueFrom(
                 streamer.search({ address: account.address, pageSize: 20, order: Order.Asc }).pipe(take(20), toArray()),
             );
-            const info = await toPromise(hashLockRepo.search({ address: account.address, pageSize: 20, order: Order.Asc }));
+            const info = await firstValueFrom(hashLockRepo.search({ address: account.address, pageSize: 20, order: Order.Asc }));
             expect(infoStreamer.length).to.be.greaterThan(0);
             deepEqual(infoStreamer[0], info.data[0]);
         });
@@ -181,7 +181,7 @@ describe('HashLockHttp', () => {
 
     describe('getHashLock', () => {
         it('should return hash lock info given hash', async () => {
-            const info = await toPromise(hashLockRepo.getHashLock(hash));
+            const info = await firstValueFrom(hashLockRepo.getHashLock(hash));
             expect(info.ownerAddress.plain()).to.be.equal(account.address.plain());
             expect(info.amount.toString()).to.be.equal('10000000');
         });

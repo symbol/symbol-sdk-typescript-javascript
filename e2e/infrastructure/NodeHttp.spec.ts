@@ -15,8 +15,8 @@
  */
 
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { NodeRepository } from '../../src/infrastructure/NodeRepository';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
 describe('NodeHttp', () => {
@@ -35,7 +35,7 @@ describe('NodeHttp', () => {
 
     describe('getNodeInfo', () => {
         it('should return node info FER', async () => {
-            const nodeInfo = await toPromise(nodeRepository.getNodeInfo());
+            const nodeInfo = await firstValueFrom(nodeRepository.getNodeInfo());
             expect(nodeInfo.friendlyName).not.to.be.undefined;
             expect(nodeInfo.host).not.to.be.undefined;
             expect(nodeInfo.networkIdentifier).not.to.be.undefined;
@@ -49,7 +49,7 @@ describe('NodeHttp', () => {
 
     describe('getNodePeers', () => {
         it('should return node peers', async () => {
-            const nodeInfo = await toPromise(nodeRepository.getNodePeers());
+            const nodeInfo = await firstValueFrom(nodeRepository.getNodePeers());
             expect(nodeInfo[0].friendlyName).not.to.be.undefined;
             expect(nodeInfo[0].host).not.to.be.undefined;
             expect(nodeInfo[0].networkIdentifier).not.to.be.undefined;
@@ -62,7 +62,7 @@ describe('NodeHttp', () => {
 
     describe('getNodeTime', () => {
         it('should return node time', async () => {
-            const nodeTime = await toPromise(nodeRepository.getNodeTime());
+            const nodeTime = await firstValueFrom(nodeRepository.getNodeTime());
             expect(nodeTime.receiveTimeStamp).not.to.be.undefined;
             expect(nodeTime.sendTimeStamp).not.to.be.undefined;
         });
@@ -70,7 +70,7 @@ describe('NodeHttp', () => {
 
     describe('getStorageInfo', () => {
         it('should return storage info', async () => {
-            const blockchainStorageInfo = await toPromise(nodeRepository.getStorageInfo());
+            const blockchainStorageInfo = await firstValueFrom(nodeRepository.getStorageInfo());
             expect(blockchainStorageInfo.numBlocks).to.be.greaterThan(0);
             expect(blockchainStorageInfo.numTransactions).to.be.greaterThan(0);
             expect(blockchainStorageInfo.numAccounts).to.be.greaterThan(0);
@@ -79,7 +79,7 @@ describe('NodeHttp', () => {
 
     describe('getServerInfo', () => {
         it('should return server info', async () => {
-            const serverInfo = await toPromise(nodeRepository.getServerInfo());
+            const serverInfo = await firstValueFrom(nodeRepository.getServerInfo());
             expect(serverInfo.restVersion).not.to.be.null;
             expect(serverInfo.sdkVersion).not.to.be.null;
         });
@@ -87,7 +87,7 @@ describe('NodeHttp', () => {
 
     describe('getNodeHealth', () => {
         it('should return node health', async () => {
-            const health = await toPromise(nodeRepository.getNodeHealth());
+            const health = await firstValueFrom(nodeRepository.getNodeHealth());
             expect(health.apiNode).not.to.be.null;
             expect(health.db).not.to.be.null;
         });
@@ -95,7 +95,7 @@ describe('NodeHttp', () => {
 
     describe('getUnlockedAccount', () => {
         it('should return unlocked account', async () => {
-            const unlockedAccount = await toPromise(nodeRepository.getUnlockedAccount());
+            const unlockedAccount = await firstValueFrom(nodeRepository.getUnlockedAccount());
             expect(unlockedAccount).not.to.be.null;
             expect(unlockedAccount.length).greaterThan(0);
         });

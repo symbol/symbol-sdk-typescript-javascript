@@ -38,7 +38,6 @@ export * from './RestrictionAccountHttp';
 export * from './RestrictionAccountRepository';
 export * from './RestrictionMosaicHttp';
 export * from './RestrictionMosaicRepository';
-export * from './rxUtils';
 export * from './searchCriteria';
 export * from './SecretLockHttp';
 export * from './SecretLockRepository';

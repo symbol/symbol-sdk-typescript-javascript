@@ -1,7 +1,7 @@
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { Convert } from '../../src/core/format';
 import { MetadataRepository } from '../../src/infrastructure/MetadataRepository';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { Account } from '../../src/model/account/Account';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -147,7 +147,7 @@ describe('MetadataTransactionService', () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
 
             const deadline = Deadline.create(helper.epochAdjustment);
-            const transaction = await toPromise(
+            const transaction = await firstValueFrom(
                 metaDataService.createAccountMetadataTransaction(
                     deadline,
                     networkType,
@@ -169,7 +169,7 @@ describe('MetadataTransactionService', () => {
             const metaDataService = new MetadataTransactionService(metadataRepository);
             const updateValue = newValue + 'delta';
             const deadline = Deadline.create(helper.epochAdjustment);
-            const transaction = await toPromise(
+            const transaction = await firstValueFrom(
                 metaDataService.createMosaicMetadataTransaction(
                     deadline,
                     networkType,
@@ -197,7 +197,7 @@ describe('MetadataTransactionService', () => {
 
             const deadline = Deadline.create(helper.epochAdjustment);
             const updateValue = newValue + 'delta';
-            const transaction = await toPromise(
+            const transaction = await firstValueFrom(
                 metaDataService.createNamespaceMetadataTransaction(
                     deadline,
                     networkType,
@@ -225,7 +225,7 @@ describe('MetadataTransactionService', () => {
         it('should create MosaicMetadataTransaction and announce', async () => {
             const deadline = Deadline.create(helper.epochAdjustment);
             const metaDataService = new MetadataTransactionService(metadataRepository);
-            const transaction = await toPromise(
+            const transaction = await firstValueFrom(
                 metaDataService.createMosaicMetadataTransaction(
                     deadline,
                     networkType,
@@ -254,7 +254,7 @@ describe('MetadataTransactionService', () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
             const deadline = Deadline.create(helper.epochAdjustment);
             const metaDataService = new MetadataTransactionService(metadataRepository);
-            const transaction = await toPromise(
+            const transaction = await firstValueFrom(
                 metaDataService.createMosaicMetadataTransaction(
                     deadline,
                     networkType,
@@ -283,7 +283,7 @@ describe('MetadataTransactionService', () => {
             await new Promise((resolve) => setTimeout(resolve, 3000));
             const deadline = Deadline.create(helper.epochAdjustment);
             const metaDataService = new MetadataTransactionService(metadataRepository);
-            const transaction = await toPromise(
+            const transaction = await firstValueFrom(
                 metaDataService.createMosaicMetadataTransaction(
                     deadline,
                     networkType,

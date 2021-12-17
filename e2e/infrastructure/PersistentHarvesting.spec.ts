@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { toPromise } from '../../src/infrastructure/rxUtils';
+import { firstValueFrom } from 'rxjs';
 import { Account } from '../../src/model/account';
 import { NetworkType } from '../../src/model/network';
 import {
@@ -62,7 +62,7 @@ describe('PersistentHarvesting', () => {
 
     describe('AccountKeyLinkTransaction', () => {
         it('standalone', async () => {
-            const accountInfo = await toPromise(helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address));
+            const accountInfo = await firstValueFrom(helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address));
             const publicKey = accountInfo.supplementalPublicKeys?.linked?.publicKey;
             if (publicKey) {
                 if (publicKey == remoteAccount.publicKey) {
@@ -86,7 +86,7 @@ describe('PersistentHarvesting', () => {
 
     describe('VrfKeyLinkTransaction', () => {
         it('standalone', async () => {
-            const accountInfo = await toPromise(helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address));
+            const accountInfo = await firstValueFrom(helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address));
 
             const publicKey = accountInfo.supplementalPublicKeys?.vrf?.publicKey;
             if (publicKey) {
@@ -113,7 +113,7 @@ describe('PersistentHarvesting', () => {
         it('standalone', async () => {
             const nodePublicKey = helper.bootstrapAddresses.nodes![0].transport!.publicKey;
 
-            const accountInfo = await toPromise(helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address));
+            const accountInfo = await firstValueFrom(helper.repositoryFactory.createAccountRepository().getAccountInfo(account.address));
 
             const publicKey = accountInfo.supplementalPublicKeys?.node?.publicKey;
             if (publicKey) {

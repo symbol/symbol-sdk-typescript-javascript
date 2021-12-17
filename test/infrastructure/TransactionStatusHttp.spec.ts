@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import {
     TransactionGroupEnum,
     TransactionStatusDTO,
@@ -22,7 +23,6 @@ import {
     TransactionStatusRoutesApi,
 } from 'symbol-openapi-typescript-fetch-client';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionStatusHttp } from '../../src/infrastructure/TransactionStatusHttp';
 import { NIS2_URL } from '../conf/conf.spec';
 
@@ -48,7 +48,7 @@ describe('TransactionStatusHttp', () => {
 
         when(transactionStatusRoutesApi.getTransactionStatus(deepEqual(hash))).thenReturn(Promise.resolve(transactionStatusDTO));
 
-        const transactionStatus = await toPromise(transactionStatusHttp.getTransactionStatus(hash));
+        const transactionStatus = await firstValueFrom(transactionStatusHttp.getTransactionStatus(hash));
 
         expect(transactionStatus.deadline.toString()).to.be.equal('1234');
         expect(transactionStatus.hash).to.be.equal(hash);
@@ -68,7 +68,7 @@ describe('TransactionStatusHttp', () => {
             Promise.resolve([transactionStatusDTO]),
         );
 
-        const transactionStatuses = await toPromise(transactionStatusHttp.getTransactionStatuses([hash]));
+        const transactionStatuses = await firstValueFrom(transactionStatusHttp.getTransactionStatuses([hash]));
         expect(transactionStatuses.length).to.be.equal(1);
         const transactionStatus = transactionStatuses[0];
 
@@ -80,17 +80,11 @@ describe('TransactionStatusHttp', () => {
 
     it('getTransactionStatus - Error', async () => {
         when(transactionStatusRoutesApi.getTransactionStatus('abc')).thenReject(new Error('Mocked Error'));
-        await transactionStatusHttp
-            .getTransactionStatus('abc')
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(transactionStatusHttp.getTransactionStatus('abc')).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getTransactionStatuss - Error', async () => {
         when(transactionStatusRoutesApi.getTransactionStatuses(deepEqual({ hashes: ['abc'] }))).thenReject(new Error('Mocked Error'));
-        await transactionStatusHttp
-            .getTransactionStatuses(['abc'])
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(transactionStatusHttp.getTransactionStatuses(['abc'])).catch((error) => expect(error).not.to.be.undefined);
     });
 });

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { firstValueFrom } from 'rxjs';
 import { map, mergeMap, toArray } from 'rxjs/operators';
 import { TransactionPaginationStreamer } from '../../src/infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionSearchCriteria } from '../../src/infrastructure/searchCriteria/TransactionSearchCriteria';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { Address } from '../../src/model/account';
@@ -66,7 +66,7 @@ describe('TransactionPaginationStreamer', () => {
                 );
             }),
         );
-        return toPromise(observableOfResults.pipe(toArray()));
+        return firstValueFrom(observableOfResults.pipe(toArray()));
     };
 
     describe('Get Transactions', () => {

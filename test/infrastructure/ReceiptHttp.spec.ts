@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     BalanceChangeReceiptDTO,
     Pagination,
@@ -34,7 +35,6 @@ import { Convert } from '../../src/core/format/Convert';
 import { RawAddress } from '../../src/core/format/RawAddress';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { ReceiptHttp } from '../../src/infrastructure/ReceiptHttp';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { MosaicId, NamespaceId, ResolutionType, UInt64 } from '../../src/model';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/network/NetworkType';
@@ -84,7 +84,7 @@ describe('ReceiptHttp', () => {
             Promise.resolve(resolutionPage),
         );
 
-        const statement = await toPromise(
+        const statement = await firstValueFrom(
             receiptRepository.searchMosaicResolutionStatements({
                 height: UInt64.fromUint(1),
             }),
@@ -123,7 +123,7 @@ describe('ReceiptHttp', () => {
             Promise.resolve(resolutionPage),
         );
 
-        const statement = await toPromise(
+        const statement = await firstValueFrom(
             receiptRepository.searchAddressResolutionStatements({
                 height: UInt64.fromUint(1),
             }),
@@ -177,7 +177,7 @@ describe('ReceiptHttp', () => {
             ),
         ).thenReturn(Promise.resolve(resolutionPage));
 
-        const statement = await toPromise(
+        const statement = await firstValueFrom(
             receiptRepository.searchReceipts({
                 height: UInt64.fromUint(1),
             }),
@@ -204,7 +204,7 @@ describe('ReceiptHttp', () => {
                 undefined,
             ),
         ).thenReject(new Error('Mocked Error'));
-        await toPromise(receiptRepository.searchReceipts({ height: UInt64.fromUint(1) })).catch(
+        await firstValueFrom(receiptRepository.searchReceipts({ height: UInt64.fromUint(1) })).catch(
             (error) => expect(error).not.to.be.undefined,
         );
     });
@@ -213,19 +213,17 @@ describe('ReceiptHttp', () => {
         when(receiptRoutesApi.searchMosaicResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReject(
             new Error('Mocked Error'),
         );
-        await receiptRepository
-            .searchMosaicResolutionStatements({ height: UInt64.fromUint(1) })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(receiptRepository.searchMosaicResolutionStatements({ height: UInt64.fromUint(1) })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('searchResolutionAddress - Error', async () => {
         when(receiptRoutesApi.searchAddressResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReject(
             new Error('Mocked Error'),
         );
-        await receiptRepository
-            .searchAddressResolutionStatements({ height: UInt64.fromUint(1) })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(receiptRepository.searchAddressResolutionStatements({ height: UInt64.fromUint(1) })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 });

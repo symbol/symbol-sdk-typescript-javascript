@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Addresses, BootstrapService, BootstrapUtils, ConfigLoader, StartParams } from 'symbol-bootstrap';
 import { IListener, RepositoryFactory, RepositoryFactoryHttp } from '../../src/infrastructure';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { UInt64 } from '../../src/model';
 import { Account } from '../../src/model/account';
 import { Currency, Mosaic } from '../../src/model/mosaic';
@@ -85,9 +85,9 @@ export class IntegrationTestHelper {
             this.repositoryFactory.createReceiptRepository(),
         );
 
-        this.networkType = await toPromise(this.repositoryFactory.getNetworkType());
-        this.generationHash = await toPromise(this.repositoryFactory.getGenerationHash());
-        this.epochAdjustment = await toPromise(this.repositoryFactory.getEpochAdjustment());
+        this.networkType = await firstValueFrom(this.repositoryFactory.getNetworkType());
+        this.generationHash = await firstValueFrom(this.repositoryFactory.getGenerationHash());
+        this.epochAdjustment = await firstValueFrom(this.repositoryFactory.getEpochAdjustment());
 
         let index = 0;
         this.accounts = accounts.map((account) => Account.createFromPrivateKey(account, this.networkType));
@@ -105,7 +105,7 @@ export class IntegrationTestHelper {
 
         // What would be the best maxFee? In the future we will load the fee multiplier from rest.
         this.maxFee = UInt64.fromUint(1000000);
-        this.networkCurrency = (await toPromise(this.repositoryFactory.getCurrencies())).currency;
+        this.networkCurrency = (await firstValueFrom(this.repositoryFactory.getCurrencies())).currency;
 
         if (openListener) {
             await this.listener.open();
@@ -119,7 +119,7 @@ export class IntegrationTestHelper {
 
     announce(signedTransaction: SignedTransaction): Promise<Transaction> {
         console.log(`Announcing transaction: ${signedTransaction.type}`);
-        return toPromise(
+        return firstValueFrom(
             this.transactionService.announce(signedTransaction, this.listener).pipe(
                 map((t) => {
                     console.log(`Transaction ${signedTransaction.type} confirmed`);

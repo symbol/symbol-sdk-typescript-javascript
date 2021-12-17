@@ -15,9 +15,9 @@
  */
 
 import { assert, expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account } from '../../src/model/account/Account';
@@ -90,10 +90,12 @@ describe('BlockService', () => {
 
     describe('Validate transactions', () => {
         it('call block service', async () => {
-            const transaction = await toPromise(transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed));
+            const transaction = await firstValueFrom(transactionRepository.getTransaction(transactionHash, TransactionGroup.Confirmed));
             const transactionInfo = transaction.transactionInfo;
             if (transactionInfo && transactionInfo.height !== undefined) {
-                const validationResult = await toPromise(blockService.validateTransactionInBlock(transactionHash, transactionInfo.height));
+                const validationResult = await firstValueFrom(
+                    blockService.validateTransactionInBlock(transactionHash, transactionInfo.height),
+                );
                 expect(validationResult).to.be.true;
             } else {
                 assert(false, `Transaction (hash: ${transactionHash}) not found`);
@@ -103,17 +105,19 @@ describe('BlockService', () => {
 
     describe('Validate receipt', () => {
         it('call block service', async () => {
-            const statements = await toPromise(receiptRepository.searchReceipts({ height: UInt64.fromUint(1) }));
+            const statements = await firstValueFrom(receiptRepository.searchReceipts({ height: UInt64.fromUint(1) }));
             const statement = statements.data[0] as TransactionStatement;
-            const validationResult = await toPromise(blockService.validateStatementInBlock(statement.generateHash(), UInt64.fromUint(1)));
+            const validationResult = await firstValueFrom(
+                blockService.validateStatementInBlock(statement.generateHash(), UInt64.fromUint(1)),
+            );
             expect(validationResult).to.be.true;
         });
     });
 
     describe('Calculate merkler transaction root hash', () => {
         it('Calculate merkler transaction root hash', async () => {
-            const calculated = await toPromise(blockService.calculateTransactionsMerkleRootHash(UInt64.fromUint(1)));
-            const block = await toPromise(blockRepository.getBlockByHeight(UInt64.fromUint(1)));
+            const calculated = await firstValueFrom(blockService.calculateTransactionsMerkleRootHash(UInt64.fromUint(1)));
+            const block = await firstValueFrom(blockRepository.getBlockByHeight(UInt64.fromUint(1)));
             const rootHash = block.blockTransactionsHash;
             expect(rootHash).to.be.equal(calculated);
         });

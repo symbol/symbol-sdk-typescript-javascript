@@ -15,13 +15,12 @@
  */
 
 import { expect } from 'chai';
-import { of as observableOf } from 'rxjs';
+import { firstValueFrom, of as observableOf } from 'rxjs';
 import { deepEqual, instance, mock, when } from 'ts-mockito';
 import { BlockRepository } from '../../src/infrastructure/BlockRepository';
 import { Page } from '../../src/infrastructure/Page';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
 import { RepositoryFactory } from '../../src/infrastructure/RepositoryFactory';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionGroup } from '../../src/infrastructure/TransactionGroup';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Deadline, TransactionInfo } from '../../src/model';
@@ -175,42 +174,42 @@ describe('BlockService', () => {
     });
 
     it('should validate transaction', async () => {
-        const result = await toPromise(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(1)));
+        const result = await firstValueFrom(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(1)));
         expect(result).to.be.true;
     });
 
     it('should validate transaction - wrong hash', async () => {
-        const result = await toPromise(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(2)));
+        const result = await firstValueFrom(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(2)));
         expect(result).to.be.false;
     });
 
     it('should validate transaction - emtpy path item', async () => {
-        const result = await toPromise(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(4)));
+        const result = await firstValueFrom(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(4)));
         expect(result).to.be.false;
     });
 
     it('should validate transaction - error', async () => {
-        const result = await toPromise(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(3)));
+        const result = await firstValueFrom(blockService.validateTransactionInBlock(leaf, UInt64.fromUint(3)));
         expect(result).to.be.false;
     });
 
     it('should validate statement', async () => {
-        const result = await toPromise(blockService.validateStatementInBlock(leaf, UInt64.fromUint(1)));
+        const result = await firstValueFrom(blockService.validateStatementInBlock(leaf, UInt64.fromUint(1)));
         expect(result).to.be.true;
     });
 
     it('should validate statement - wrong hash', async () => {
-        const result = await toPromise(blockService.validateStatementInBlock(leaf, UInt64.fromUint(2)));
+        const result = await firstValueFrom(blockService.validateStatementInBlock(leaf, UInt64.fromUint(2)));
         expect(result).to.be.false;
     });
 
     it('should validate statement - error', async () => {
-        const result = await toPromise(blockService.validateStatementInBlock(leaf, UInt64.fromUint(3)));
+        const result = await firstValueFrom(blockService.validateStatementInBlock(leaf, UInt64.fromUint(3)));
         expect(result).to.be.false;
     });
 
     it('should calculate root transaction merkle hash', async () => {
-        const result = await toPromise(blockService.calculateTransactionsMerkleRootHash(UInt64.fromUint(1)));
+        const result = await firstValueFrom(blockService.calculateTransactionsMerkleRootHash(UInt64.fromUint(1)));
         expect(result).to.be.equal('DCD14A040BC5096348FC55CACBD0D459DD6F81779C7E7C526EA52309BD6595F7');
     });
 });

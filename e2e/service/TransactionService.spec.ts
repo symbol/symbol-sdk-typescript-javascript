@@ -15,8 +15,8 @@
  */
 
 import { assert, expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { Convert } from '../../src/core/format';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { TransactionRepository } from '../../src/infrastructure/TransactionRepository';
 import { Account, Address } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
@@ -376,7 +376,7 @@ describe('TransactionService', () => {
 
     describe('should return resolved transaction', () => {
         it('call transaction service', () => {
-            return toPromise(transactionService.resolveAliases(transactionHashes)).then((transactions) => {
+            return firstValueFrom(transactionService.resolveAliases(transactionHashes)).then((transactions) => {
                 expect(transactions.length).to.be.equal(8);
                 transactions.map((tx) => {
                     if (tx instanceof TransferTransaction) {
@@ -403,7 +403,7 @@ describe('TransactionService', () => {
 
     describe('Test resolve alias with multiple transaction in single block', () => {
         it('call transaction service', () => {
-            return toPromise(transactionService.resolveAliases(transactionHashesMultiple)).then((tx) => {
+            return firstValueFrom(transactionService.resolveAliases(transactionHashesMultiple)).then((tx) => {
                 expect(tx.length).to.be.equal(3);
                 expect((tx[0] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());
                 expect((tx[1] as TransferTransaction).mosaics[0].id.toHex()).to.be.equal(mosaicId.toHex());

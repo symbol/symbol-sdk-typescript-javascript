@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     AccountNamesDTO,
     AccountsNamesDTO,
@@ -37,7 +38,6 @@ import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { NamespaceRepository } from '../../src/infrastructure/NamespaceRepository';
 import { NamespacePaginationStreamer } from '../../src/infrastructure/paginationStreamer/NamespacePaginationStreamer';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -130,7 +130,7 @@ describe('NamespaceHttp', () => {
         when(namespaceRoutesApi.getAccountsNames(deepEqual({ addresses: [address.plain()] }))).thenReturn(
             Promise.resolve(accountsNamesDto),
         );
-        const accountNames = await toPromise(namespaceRepository.getAccountsNames([address]));
+        const accountNames = await firstValueFrom(namespaceRepository.getAccountsNames([address]));
         expect(accountNames.length).to.be.greaterThan(0);
         expect(accountNames[0].address.plain()).to.be.equal(address.plain());
         expect(accountNames[0].names.map((n) => n.name).join(',')).to.be.equal(['name1', 'name2'].join(','));
@@ -144,7 +144,7 @@ describe('NamespaceHttp', () => {
         mosaicsNamesDto.mosaicNames = [mosaicNamesDto];
 
         when(namespaceRoutesApi.getMosaicsNames(deepEqual({ mosaicIds: [mosaicId.toHex()] }))).thenReturn(Promise.resolve(mosaicsNamesDto));
-        const names = await toPromise(namespaceRepository.getMosaicsNames([mosaicId]));
+        const names = await firstValueFrom(namespaceRepository.getMosaicsNames([mosaicId]));
         expect(names.length).to.be.greaterThan(0);
         expect(names[0].mosaicId.toHex()).to.be.equal(mosaicId.toHex());
         expect(names[0].names.map((n) => n.name).join(',')).to.be.equal(['name1', 'name2'].join(','));
@@ -152,7 +152,7 @@ describe('NamespaceHttp', () => {
 
     it('getNamespace', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
-        const namespace = await toPromise(namespaceRepository.getNamespace(namespaceId));
+        const namespace = await firstValueFrom(namespaceRepository.getNamespace(namespaceId));
         assertNamespaceInfo(namespace);
     });
 
@@ -169,7 +169,7 @@ describe('NamespaceHttp', () => {
         when(namespaceRoutesApi.getNamespacesNames(deepEqual({ namespaceIds: [namespaceId.toHex()] }))).thenReturn(
             Promise.resolve([namespaceNameParent, namespaceNameChild]),
         );
-        const namespace = await toPromise(namespaceRepository.getNamespacesNames([namespaceId]));
+        const namespace = await firstValueFrom(namespaceRepository.getNamespacesNames([namespaceId]));
         expect(namespace.length).to.be.equal(2);
         expect(namespace[0].name).to.be.equal('parent');
         expect(namespace[0].namespaceId.toHex()).to.be.equal(namespaceId.toHex());
@@ -181,32 +181,26 @@ describe('NamespaceHttp', () => {
 
     it('getLinkedAddress', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
-        const namespaces = await toPromise(namespaceRepository.getLinkedAddress(namespaceId));
+        const namespaces = await firstValueFrom(namespaceRepository.getLinkedAddress(namespaceId));
 
         expect(namespaces?.plain()).to.be.equal(address.plain());
     });
 
     it('getLinkedMosaicId', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoMosaic));
-        const namespaces = await toPromise(namespaceRepository.getLinkedMosaicId(namespaceId));
+        const namespaces = await firstValueFrom(namespaceRepository.getLinkedMosaicId(namespaceId));
 
         expect(namespaces?.toHex()).to.be.equal(mosaicId.toHex());
     });
 
     it('getLinkedMosaicId - Error', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDto));
-        await namespaceRepository
-            .getLinkedMosaicId(namespaceId)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(namespaceRepository.getLinkedMosaicId(namespaceId)).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getLinkedAddress - Error', async () => {
         when(namespaceRoutesApi.getNamespace(deepEqual(namespaceId.toHex()))).thenReturn(Promise.resolve(namespaceInfoDtoMosaic));
-        await namespaceRepository
-            .getLinkedAddress(namespaceId)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(namespaceRepository.getLinkedAddress(namespaceId)).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('searchNameapsces', async () => {
@@ -229,7 +223,7 @@ describe('NamespaceHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(body));
-        const infos = await toPromise(namespaceRepository.search({ ownerAddress: address }));
+        const infos = await firstValueFrom(namespaceRepository.search({ ownerAddress: address }));
         assertNamespaceInfo(infos.data[0]);
     });
 
@@ -251,7 +245,7 @@ describe('NamespaceHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(namespaceRoutesApi.getNamespaceMerkle(namespaceId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await toPromise(namespaceRepository.getNamespaceMerkle(namespaceId));
+        const merkle = await firstValueFrom(namespaceRepository.getNamespaceMerkle(namespaceId));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

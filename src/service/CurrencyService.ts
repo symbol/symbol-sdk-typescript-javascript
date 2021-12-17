@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { forkJoin, Observable } from 'rxjs';
+import { firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
-import { toPromise } from '../infrastructure/rxUtils';
 import { Currency, MosaicId, MosaicInfo, MosaicNames, NetworkCurrencies } from '../model/mosaic';
 import { NamespaceId } from '../model/namespace';
 import { ICurrencyService } from './interfaces';
@@ -65,8 +64,8 @@ export class CurrencyService implements ICurrencyService {
         // get mosaicInfo and mosaic names from the network,
         // build network currency models
         return forkJoin({
-            mosaicsInfo: toPromise(mosaicHttp.getMosaics(mosaicIds)),
-            mosaicNames: toPromise(namespaceHttp.getMosaicsNames(mosaicIds)),
+            mosaicsInfo: firstValueFrom(mosaicHttp.getMosaics(mosaicIds)),
+            mosaicNames: firstValueFrom(namespaceHttp.getMosaicsNames(mosaicIds)),
         }).pipe(
             map(({ mosaicsInfo, mosaicNames }) =>
                 mosaicsInfo.map((mosaicInfo) => {

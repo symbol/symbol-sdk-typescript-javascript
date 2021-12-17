@@ -15,10 +15,10 @@
  */
 
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { toArray } from 'rxjs/operators';
 import { ReceiptPaginationStreamer } from '../../src/infrastructure/paginationStreamer/ReceiptPaginationStreamer';
 import { ReceiptRepository } from '../../src/infrastructure/ReceiptRepository';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { ReceiptType, UInt64 } from '../../src/model';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
 
@@ -40,7 +40,7 @@ describe('ReceiptHttp', () => {
         async function searchByRecipientType(receiptTypes: ReceiptType[], empty: boolean): Promise<void> {
             const streamer = ReceiptPaginationStreamer.transactionStatements(receiptRepository);
 
-            const infos = await toPromise(
+            const infos = await firstValueFrom(
                 streamer.search({ pageSize: 20, height: UInt64.fromUint(1), receiptTypes: receiptTypes }).pipe(toArray()),
             );
 

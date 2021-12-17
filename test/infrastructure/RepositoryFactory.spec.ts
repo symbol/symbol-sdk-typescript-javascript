@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { of as observableOf, of } from 'rxjs';
+import { firstValueFrom, of as observableOf, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NetworkConfigurationDTO, NodeRoutesApi } from 'symbol-openapi-typescript-fetch-client';
 import { instance, mock, when } from 'ts-mockito';
@@ -43,7 +43,6 @@ import {
     TransactionHttp,
     TransactionStatusHttp,
 } from '../../src/infrastructure';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { NetworkCurrencies } from '../../src/model/mosaic';
 import { NodeInfo } from '../../src/model/node';
 import { TestNetworkType } from '../conf/conf.spec';
@@ -87,7 +86,7 @@ describe('RepositoryFactory', () => {
         try {
             const nodeRepository = repositoryFactory.createNodeRepository();
             (nodeRepository as any).nodeRoutesApi = instance(nodeRoutesApi);
-            await toPromise(nodeRepository.getNodeHealth());
+            await firstValueFrom(nodeRepository.getNodeHealth());
             expect(true).to.be.false;
         } catch (e) {
             expect(e.message).eq('{"statusCode":666,"statusMessage":"Some status text error","body":"This is the body"}');
@@ -396,7 +395,7 @@ describe('RepositoryFactory', () => {
     it('Fail remote call ', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:2000');
         try {
-            await toPromise(factory.getGenerationHash());
+            await firstValueFrom(factory.getGenerationHash());
             expect(true).eq(false);
         } catch (e) {
             expect(e.message).contains('request to http://localhost:2000');
@@ -406,15 +405,10 @@ describe('RepositoryFactory', () => {
     it('Fail remote call invalid transaction', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:3000');
         try {
-            await toPromise(factory.createTransactionRepository().getTransaction('abc', TransactionGroup.Confirmed));
+            await firstValueFrom(factory.createTransactionRepository().getTransaction('abc', TransactionGroup.Confirmed));
             expect(true).eq(false);
         } catch (e) {
-            if (
-                await factory
-                    .getGenerationHash()
-                    .pipe(catchError(() => of(false)))
-                    .toPromise()
-            ) {
+            if (await firstValueFrom(factory.getGenerationHash().pipe(catchError(() => of(false))))) {
                 expect(e.message).contains('"statusCode":500,"statusMessage":"Internal Server Error"');
             } else {
                 expect(e.message).contains('request to http://localhost:3000');
@@ -425,7 +419,7 @@ describe('RepositoryFactory', () => {
     it('Fail remote getCurrencies ', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:2000');
         try {
-            await toPromise(factory.getCurrencies());
+            await firstValueFrom(factory.getCurrencies());
             expect(true).eq(false);
         } catch (e) {
             expect(e.message).contains('request to http://localhost:2000');
@@ -434,13 +428,13 @@ describe('RepositoryFactory', () => {
 
     it('getCurrencies', async () => {
         const factory = new RepositoryFactoryHttp('http://localhost:2000', { networkCurrencies: NetworkCurrencies.PUBLIC });
-        const networkCurrencies = await toPromise(factory.getCurrencies());
+        const networkCurrencies = await firstValueFrom(factory.getCurrencies());
         expect(networkCurrencies).eq(NetworkCurrencies.PUBLIC);
     });
 
     // it('howToUse', async () => {
     //     const factory = new RepositoryFactoryHttp('http://localhost:3000');
-    //     const networkCurrencies = await toPromise(factory.getCurrencies());
+    //     const networkCurrencies = await firstValueFrom(factory.getCurrencies());
     //     const namespaceName: string = networkCurrencies.currency!.namespaceId!.fullName!;
     //     const mosaic: Mosaic = networkCurrencies.currency.createRelative(1000);
     //     // a mosaic ready to use for transactions

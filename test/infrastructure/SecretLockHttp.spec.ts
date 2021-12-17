@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     LockHashAlgorithmEnum,
     MerkleTreeLeafDTO,
@@ -28,7 +29,6 @@ import { MerkleStateInfoDTO } from 'symbol-openapi-typescript-fetch-client/src/m
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils/DtoMapping';
 import { SecretLockPaginationStreamer } from '../../src/infrastructure/paginationStreamer/SecretLockPaginationStreamer';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { SecretLockHttp } from '../../src/infrastructure/SecretLockHttp';
 import { SecretLockRepository } from '../../src/infrastructure/SecretLockRepository';
 import { Address } from '../../src/model/account/Address';
@@ -88,7 +88,7 @@ describe('SecretLockHttp', () => {
         when(secretLockRoutesApi.searchSecretLock(address.plain(), lockDto.secret, undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve(body),
         );
-        const infos = await toPromise(secretLockRepository.search({ address, secret: lockDto.secret }));
+        const infos = await firstValueFrom(secretLockRepository.search({ address, secret: lockDto.secret }));
         assertHashInfo(infos.data[0]);
     });
 
@@ -110,7 +110,7 @@ describe('SecretLockHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(secretLockRoutesApi.getSecretLockMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await toPromise(secretLockRepository.getSecretLockMerkle('hash'));
+        const merkle = await firstValueFrom(secretLockRepository.getSecretLockMerkle('hash'));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

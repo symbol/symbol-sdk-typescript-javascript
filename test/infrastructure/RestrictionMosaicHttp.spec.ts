@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     MerkleStateInfoDTO,
     MerkleTreeLeafDTO,
@@ -34,7 +35,6 @@ import {
 import { instance, mock, reset, when } from 'ts-mockito';
 import { DtoMapping } from '../../src/core/utils';
 import { RestrictionMosaicHttp, RestrictionMosaicPaginationStreamer } from '../../src/infrastructure';
-import { toPromise } from '../../src/infrastructure/rxUtils';
 import { UInt64 } from '../../src/model';
 import { PublicAccount } from '../../src/model/account';
 import { MosaicId } from '../../src/model/mosaic';
@@ -113,7 +113,7 @@ describe('RestrictionMosaicHttp', () => {
             ),
         ).thenReturn(Promise.resolve(body));
 
-        const page = await toPromise(restrictionMosaicRepository.search({ mosaicId: mosaicId }));
+        const page = await firstValueFrom(restrictionMosaicRepository.search({ mosaicId: mosaicId }));
         expect(page).to.be.not.null;
         expect(page.data.length).to.be.equal(2);
         expect(page.data[1].compositeHash).to.be.equal('hash');
@@ -140,10 +140,9 @@ describe('RestrictionMosaicHttp', () => {
                 undefined,
             ),
         ).thenReject(new Error('Mocked Error'));
-        await restrictionMosaicRepository
-            .search({ mosaicId: mosaicId })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(restrictionMosaicRepository.search({ mosaicId: mosaicId })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('streamer', async () => {
@@ -164,7 +163,7 @@ describe('RestrictionMosaicHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(restrictionMosaicRoutesApi.getMosaicRestrictionsMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await toPromise(restrictionMosaicRepository.getMosaicRestrictionsMerkle('hash'));
+        const merkle = await firstValueFrom(restrictionMosaicRepository.getMosaicRestrictionsMerkle('hash'));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });
