@@ -19,26 +19,21 @@ import { EmptyMessage, PlainMessage } from '../../../src/model/message';
 
 describe('PlainMessage', () => {
     it('should createComplete an empty message', () => {
-        expect(EmptyMessage.payload).to.be.equal('');
+        expect(EmptyMessage.toDTO()).to.be.equal('');
+        expect(EmptyMessage.toBuffer()).to.be.deep.equal(Uint8Array.of());
     });
 
     it('should createComplete message from payload with constructor', () => {
         const payload = 'test-message';
-        const message = new PlainMessage(payload);
+        const message = PlainMessage.create(payload);
         expect(message.payload).to.be.equal(payload);
         expect(message.toDTO()).to.be.equal('00746573742D6D657373616765');
     });
 
-    it('should createComplete message from payload with static method', () => {
-        const payload = '746573742D6D657373616765';
-        const message = PlainMessage.createFromPayload(payload);
-        expect(message.payload).to.be.equal('test-message');
-        expect(message.toDTO()).to.be.equal('00746573742D6D657373616765');
-    });
-
-    it('should decode hex message', () => {
-        const hexMessage = '746573742D6D657373616765';
-        const decodedMessage = PlainMessage.decodeHex(hexMessage);
-        expect(decodedMessage).to.be.equal('test-message');
+    it('should createComplete message from builder', () => {
+        const payload = 'test-message';
+        const message = PlainMessage.create(payload);
+        expect(message).to.be.deep.equal(PlainMessage.create(message.payload));
+        expect(message).to.be.deep.equal(PlainMessage.createFromBuilder(message.toBuffer()));
     });
 });

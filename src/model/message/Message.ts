@@ -15,51 +15,29 @@ import { Convert } from '../../core/format/Convert';
  * limitations under the License.
  */
 
-import { Convert } from '../../core/format';
 import { MessageType } from './MessageType';
 
 /**
  * An abstract message class that serves as the base class of all message types.
  */
-export abstract class Message {
+export interface Message {
     /**
-     * @internal
-     * @param hex
-     * @returns {string}
+     * The buffer to be used when serializing a transaction
      */
-    public static decodeHex(hex: string): string {
-        return Buffer.from(hex, 'hex').toString();
-    }
-
-    /**
-     * @internal
-     * @param type
-     * @param payload
-     */
-    constructor(
-        /**
-         * Message type
-         */
-        public readonly type: MessageType,
-        /**
-         * Message payload, it could be the message hex, encryped text or plain text depending on the message type.
-         */
-        public readonly payload: string,
-    ) {}
+    toBuffer(): Uint8Array;
 
     /**
      * Create DTO object
      */
-    toDTO(): string {
-        if (!this.payload) {
-            return '';
-        }
-        if (this.type === MessageType.PersistentHarvestingDelegationMessage) {
-            return this.payload;
-        }
-        if (this.type === MessageType.RawMessage) {
-            return this.payload;
-        }
-        return this.type.toString(16).padStart(2, '0').toUpperCase() + Convert.utf8ToHex(this.payload);
-    }
+    toDTO(): string;
+
+    /**
+     * validate if the content is correct
+     */
+    readonly type: MessageType;
+
+    /**
+     * Payload without type prefix.
+     */
+    readonly payload: string;
 }

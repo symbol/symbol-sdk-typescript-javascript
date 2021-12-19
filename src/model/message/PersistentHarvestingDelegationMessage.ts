@@ -22,11 +22,15 @@ import { Message } from './Message';
 import { MessageMarker } from './MessageMarker';
 import { MessageType } from './MessageType';
 
-export class PersistentHarvestingDelegationMessage extends Message {
+export class PersistentHarvestingDelegationMessage implements Message {
+    public type = MessageType.PersistentHarvestingDelegationMessage;
     public static readonly HEX_PAYLOAD_SIZE = 264;
 
-    constructor(payload: string) {
-        super(MessageType.PersistentHarvestingDelegationMessage, payload.toUpperCase());
+    /**
+     * @internal
+     * @param payload
+     */
+    constructor(public readonly payload: string) {
         if (!Convert.isHexString(payload)) {
             throw Error('Payload format is not valid hexadecimal string');
         }
@@ -85,5 +89,16 @@ export class PersistentHarvestingDelegationMessage extends Message {
         const payload = encryptMessage.payload.substring(markerLength + ephemeralPublicKey.length);
         const decrypted = Crypto.decode(privateKey, ephemeralPublicKey, payload);
         return decrypted.toUpperCase();
+    }
+
+    /**
+     * Create DTO object
+     */
+    toDTO(): string {
+        return this.payload;
+    }
+
+    toBuffer(): Uint8Array {
+        return Convert.hexToUint8(this.payload);
     }
 }

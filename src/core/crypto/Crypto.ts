@@ -107,19 +107,25 @@ export class Crypto {
     /**
      * Encode a message using AES-GCM algorithm
      *
-     * @param {string} senderPriv - A sender private key
-     * @param {string} recipientPub - A recipient public key
-     * @param {string} msg - A text message
-     * @param {boolean} isHexString - Is payload string a hexadecimal string (default = false)
+     * @param senderPriv - A sender private key
+     * @param recipientPub - A recipient public key
+     * @param msg - A text message
+     * @param isHexString - Is payload string a hexadecimal string (default = false)
+     * @param iv - the iv for unit testing, otherwise a random 12 byte array.
+     *
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv: string, recipientPub: string, msg: string, isHexString = false): string => {
+    public static encode = (
+        senderPriv: string,
+        recipientPub: string,
+        msg: string,
+        isHexString = false,
+        iv = Crypto.randomBytes(12),
+    ): string => {
         // Errors
         if (!senderPriv || !recipientPub || !msg) {
             throw new Error('Missing argument !');
         }
-        // Processing
-        const iv = Crypto.randomBytes(12);
         const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv);
         // Result
         return encoded;
@@ -171,9 +177,8 @@ export class Crypto {
         try {
             const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, tagAndIv);
             return decoded.toUpperCase();
-        } catch {
-            // To return empty string rather than error throwing if authentication failed
-            return '';
+        } catch (e) {
+            throw new Error(`Cannot decrypt payload. Error: ${e.message}`);
         }
     };
 
@@ -183,7 +188,7 @@ export class Crypto {
      *
      * @return {Uint8Array}
      */
-    public static randomBytes = (length: number): any => {
+    public static randomBytes = (length: number): Buffer => {
         return crypto.randomBytes(length);
     };
 }

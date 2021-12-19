@@ -37,10 +37,10 @@ describe('crypto tests', () => {
         const encryptedMessage = Crypto.encode(Convert.uint8ToHex(sender.privateKey), Convert.uint8ToHex(recipient.publicKey), message);
         const senderPublic = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const recipientPriv = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-        const expectedMessage = 'NEM is awesome !';
-        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage);
 
-        expect(decrypted).not.equal(convert.utf8ToHex(expectedMessage));
+        expect(() => Crypto.decode(recipientPriv, senderPublic, encryptedMessage)).to.throw(
+            'Cannot decrypt payload. Error: Unsupported state or unable to authenticate data',
+        );
     });
 
     describe('Encode & decode message edge-cases', () => {

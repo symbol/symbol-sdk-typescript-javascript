@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.4] - NEXY
+## [1.0.4] - NEXT
 
 **Milestone**: Symbol Mainnet
 Package  | Version  | Link
@@ -15,6 +15,8 @@ Client Library | v1.0.3  | [symbol-openapi-typescript-fetch-client](https://www.
 
 - fix: Upgraded Node to 12.22.1.
 - fix: Upgraded typescript to 4.5.4.
+- fix: Improved message API.
+- fix: EncryptedMessage payload wasn't reproducible.
 - fix: Upgraded RXJS to 7.4.0.
 
 ## [1.0.3] - 16-Nov-2021

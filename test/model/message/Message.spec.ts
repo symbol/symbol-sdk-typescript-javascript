@@ -16,17 +16,17 @@
 
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format';
-import { EncryptedMessage, Message, PersistentHarvestingDelegationMessage, PlainMessage } from '../../../src/model/message';
+import { PersistentHarvestingDelegationMessage, PlainMessage } from '../../../src/model/message';
 
 describe('Message', () => {
     it('should create an plain message dto object', () => {
-        const message = new PlainMessage('test');
+        const message = PlainMessage.create('test');
         expect(message.toDTO()).to.be.equal('00' + Convert.utf8ToHex('test'));
     });
 
-    it('should create an encrypted message dto object', () => {
-        const message = new EncryptedMessage('test');
-        expect(message.toDTO()).to.be.equal('01' + Convert.utf8ToHex('test'));
+    it('should create an plain message dto from buffer', () => {
+        const message = PlainMessage.createFromBuilder(PlainMessage.create('test').toBuffer());
+        expect(message.toDTO()).to.be.equal('00' + Convert.utf8ToHex('test'));
     });
 
     it('should throw exception on creating PersistentHarvestingDelegationMessage with wrong size', () => {
@@ -39,15 +39,5 @@ describe('Message', () => {
         expect(() => {
             new PersistentHarvestingDelegationMessage('test');
         }).to.throw(Error, 'Payload format is not valid hexadecimal string');
-    });
-
-    it('should decode hex string', () => {
-        const hex = '746573742D6D657373616765';
-        expect(Message.decodeHex(hex)).to.be.equal('test-message');
-    });
-
-    it('should decode hex string (emoji)', () => {
-        const hex = 'F09F9880E38193E38293E381ABE381A1E381AFF09F9880';
-        expect(Message.decodeHex(hex)).to.be.equal('😀こんにちは😀');
     });
 });

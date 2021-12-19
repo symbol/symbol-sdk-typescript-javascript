@@ -1019,7 +1019,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.createFromDTO('555'),
             Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
             [NetworkCurrencyLocal.createRelative(100)],
-            new EncryptedMessage('12324556'),
+            EncryptedMessage.createFromPayload('12324556'),
             TestNetworkType,
         );
 
