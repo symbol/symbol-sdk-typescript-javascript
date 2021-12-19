@@ -178,8 +178,7 @@ export class Crypto {
             const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, tagAndIv);
             return decoded.toUpperCase();
         } catch (e) {
-            // To return empty string rather than error throwing if authentication failed
-            return '';
+            throw new Error(`Cannot decrypt payload. Error: ${e.message}`);
         }
     };
 
