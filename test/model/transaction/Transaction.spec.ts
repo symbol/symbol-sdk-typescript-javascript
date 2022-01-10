@@ -178,7 +178,7 @@ describe('Transaction', () => {
             const newTransaction = transaction.reapplyGiven(Deadline.create(epochAdjustment));
             expect(newTransaction).to.not.equal(transaction);
         });
-        it('should overide deadline properly', () => {
+        it('should override deadline properly', () => {
             const transaction = new FakeTransaction(
                 TransactionType.TRANSFER,
                 NetworkType.TEST_NET,
