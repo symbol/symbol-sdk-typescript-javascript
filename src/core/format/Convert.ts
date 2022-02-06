@@ -190,7 +190,7 @@ export class Convert {
      * @return {Uint8Array}
      */
     public static utf8ToUint8 = (input: string): Uint8Array => {
-        const hex = Convert.utf8ToHex(Convert.rstr2utf8(input));
+        const hex = Convert.utf8ToHex(input);
         return Convert.hexToUint8(hex);
     };
 
