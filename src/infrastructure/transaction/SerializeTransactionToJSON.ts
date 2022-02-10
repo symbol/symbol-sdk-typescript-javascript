@@ -246,7 +246,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             scopedMetadataKey: accountMetadataTx.scopedMetadataKey.toHex(),
             valueSizeDelta: accountMetadataTx.valueSizeDelta,
             valueSize: accountMetadataTx.value.length,
-            value: Convert.utf8ToHex(accountMetadataTx.value),
+            value: accountMetadataTx.value,
         };
     } else if (transaction.type === TransactionType.MOSAIC_METADATA) {
         const mosaicMetadataTx = transaction as MosaicMetadataTransaction;

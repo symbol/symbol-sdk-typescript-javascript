@@ -393,7 +393,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 extractRecipient(transactionDTO.targetAddress),
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                convert.utf8ToUint8(transactionDTO.value),
                 signature,
                 signer,
                 transactionInfo,

@@ -534,7 +534,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             NetworkType.TEST_NET,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
@@ -969,7 +969,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             NetworkType.TEST_NET,
             undefined,
             testSignature,

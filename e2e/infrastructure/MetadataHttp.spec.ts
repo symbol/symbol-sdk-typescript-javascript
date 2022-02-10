@@ -18,6 +18,7 @@ import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import { firstValueFrom } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
+import { Convert } from '../..';
 import { MetadataPaginationStreamer, MetadataRepository, Order } from '../../src/infrastructure';
 import { Metadata, MetadataType, UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
@@ -115,7 +116,7 @@ describe('MetadataHttp', () => {
                 account.address,
                 UInt64.fromUint(6),
                 23,
-                `Test account meta value`,
+                Convert.utf8ToUint8(`Test account meta value`),
                 networkType,
                 helper.maxFee,
             );

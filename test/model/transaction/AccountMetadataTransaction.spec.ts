@@ -41,7 +41,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -55,7 +55,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
             new UInt64([1, 0]),
         );
@@ -70,7 +70,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -88,7 +88,7 @@ describe('AccountMetadataTransaction', () => {
                 account.address,
                 UInt64.fromUint(1000),
                 1,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                new Uint8Array(10),
                 TestNetworkType,
             );
 
@@ -105,7 +105,7 @@ describe('AccountMetadataTransaction', () => {
                 account.address,
                 UInt64.fromUint(1000),
                 1,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                new Uint8Array(10),
                 TestNetworkType,
             );
 
@@ -122,7 +122,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -141,7 +141,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -157,7 +157,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -179,7 +179,7 @@ describe('AccountMetadataTransaction', () => {
             alias,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 

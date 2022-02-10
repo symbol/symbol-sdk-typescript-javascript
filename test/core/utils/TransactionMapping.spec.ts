@@ -523,7 +523,7 @@ describe('TransactionMapping - createFromPayload', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
@@ -872,7 +872,7 @@ describe('TransactionMapping - createFromPayload', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -1552,7 +1552,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             account.address,
             UInt64.fromUint(1000),
             1,
-            'Test Value',
+            Convert.utf8ToUint8('Test Value'),
             TestNetworkType,
         );
 
@@ -1566,7 +1566,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.value).to.be.equal('Test Value');
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.utf8ToHex('Test Value'));
     });
 
     it('should create MosaicMetadataTransaction', () => {
