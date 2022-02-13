@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
-import { Convert } from '../../src/core/format';
 import { Account } from '../../src/model/account';
 import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags, MosaicId, MosaicNonce } from '../../src/model/mosaic';
@@ -165,7 +164,7 @@ describe('Unresolved Mapping', () => {
                 UInt64.fromUint(5),
                 namespaceIdMosaic,
                 10,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                new Uint8Array(10),
                 networkType,
                 helper.maxFee,
             );

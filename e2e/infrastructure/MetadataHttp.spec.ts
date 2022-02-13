@@ -141,7 +141,7 @@ describe('MetadataHttp', () => {
                 UInt64.fromUint(6),
                 mosaicId,
                 22,
-                `Test mosaic meta value`,
+                Convert.utf8ToUint8(`Test mosaic meta value`),
                 networkType,
                 helper.maxFee,
             );
@@ -166,7 +166,7 @@ describe('MetadataHttp', () => {
                 UInt64.fromUint(6),
                 namespaceId,
                 25,
-                `Test namespace meta value`,
+                Convert.utf8ToUint8(`Test namespace meta value`),
                 networkType,
                 helper.maxFee,
             );

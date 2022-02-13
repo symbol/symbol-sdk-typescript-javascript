@@ -46,8 +46,7 @@ export class AccountMetadataTransaction extends Transaction {
      * @param targetAddress - target account address.
      * @param scopedMetadataKey - Metadata key scoped to source, target and type.
      * @param valueSizeDelta - Change in value size in bytes.
-     * @param value - String value with UTF-8 encoding
-     *                Difference between the previous value and new value.
+     * @param value - Difference between the previous value and new value.
      *                You can calculate value as xor(previous-value, new-value).
      *                If there is no previous value, use directly the new value.
      * @param maxFee - (Optional) Max fee defined by the sender
