@@ -28,11 +28,14 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('AccountMetadataTransaction', () => {
-    let account: Account;
+    let account: Account, emptyValue: Uint8Array;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
+    });
+    beforeEach(() => {
+        emptyValue = new Uint8Array(10);
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -41,7 +44,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -55,7 +58,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
             new UInt64([1, 0]),
         );
@@ -70,7 +73,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -88,7 +91,7 @@ describe('AccountMetadataTransaction', () => {
                 account.address,
                 UInt64.fromUint(1000),
                 1,
-                new Uint8Array(10),
+                emptyValue,
                 TestNetworkType,
             );
 
@@ -105,7 +108,7 @@ describe('AccountMetadataTransaction', () => {
                 account.address,
                 UInt64.fromUint(1000),
                 1,
-                new Uint8Array(10),
+                emptyValue,
                 TestNetworkType,
             );
 
@@ -122,7 +125,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -141,7 +144,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -157,7 +160,7 @@ describe('AccountMetadataTransaction', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -179,7 +182,7 @@ describe('AccountMetadataTransaction', () => {
             alias,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 

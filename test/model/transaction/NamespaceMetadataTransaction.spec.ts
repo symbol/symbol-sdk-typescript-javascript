@@ -25,11 +25,14 @@ import { Deadline, NamespaceMetadataTransaction, TransactionType } from '../../.
 import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('NamespaceMetadataTransaction', () => {
-    let account: Account;
+    let account: Account, emptyValue: Uint8Array;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const epochAdjustment = 1573430400;
     before(() => {
         account = TestingAccount;
+    });
+    beforeEach(() => {
+        emptyValue = new Uint8Array(10);
     });
 
     it('should default maxFee field be set to 0', () => {
@@ -39,7 +42,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -54,7 +57,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
             new UInt64([1, 0]),
         );
@@ -70,7 +73,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -89,7 +92,7 @@ describe('NamespaceMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
                 1,
-                new Uint8Array(10),
+                emptyValue,
                 TestNetworkType,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
@@ -103,7 +106,7 @@ describe('NamespaceMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
                 1,
-                new Uint8Array(10),
+                emptyValue,
                 TestNetworkType,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(182);
@@ -119,7 +122,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         ).setMaxFee(2);
         expect(namespaceMetadataTransaction.maxFee.compact()).to.be.equal(364);
@@ -135,7 +138,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -155,7 +158,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
         const resolved = namespaceMetadataTransaction.resolveAliases();
@@ -171,7 +174,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
@@ -193,7 +196,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            emptyValue,
             TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(alias);
