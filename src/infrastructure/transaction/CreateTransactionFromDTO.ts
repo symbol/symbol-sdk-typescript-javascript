@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils';
 import { MessageFactory, MosaicSupplyRevocationTransaction, UInt64 } from '../../model';
 import { Address, PublicAccount } from '../../model/account';
@@ -393,7 +392,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 extractRecipient(transactionDTO.targetAddress),
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                transactionDTO.value,
                 signature,
                 signer,
                 transactionInfo,
@@ -408,7 +407,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 UnresolvedMapping.toUnresolvedMosaic(transactionDTO.targetMosaicId),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                transactionDTO.value,
                 signature,
                 signer,
                 transactionInfo,
@@ -423,7 +422,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                transactionDTO.value,
                 signature,
                 signer,
                 transactionInfo,

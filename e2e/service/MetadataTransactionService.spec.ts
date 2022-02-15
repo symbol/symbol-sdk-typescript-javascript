@@ -95,7 +95,7 @@ describe('MetadataTransactionService', () => {
                 key,
                 mosaicId,
                 newValue.length,
-                newValue,
+                Convert.utf8ToUint8(newValue),
                 networkType,
                 helper.maxFee,
             );
@@ -121,7 +121,7 @@ describe('MetadataTransactionService', () => {
                 key,
                 namespaceId,
                 newValue.length,
-                newValue,
+                Convert.utf8ToUint8(newValue),
                 networkType,
             );
 

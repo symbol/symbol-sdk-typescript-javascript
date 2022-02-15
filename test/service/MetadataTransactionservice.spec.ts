@@ -124,7 +124,7 @@ describe('MetadataTransactionService', () => {
             .subscribe((transaction: AccountMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(Convert.utf8ToHex(transaction.value)).to.be.equal(
+                expect(Convert.uint8ToHex(transaction.value)).to.be.equal(
                     Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)),
                 );
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
@@ -148,7 +148,7 @@ describe('MetadataTransactionService', () => {
             .subscribe((transaction: MosaicMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(Convert.utf8ToHex(transaction.value)).to.be.equal(
+                expect(Convert.uint8ToHex(transaction.value)).to.be.equal(
                     Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)),
                 );
                 expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
@@ -173,7 +173,7 @@ describe('MetadataTransactionService', () => {
             .subscribe((transaction: NamespaceMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(Convert.utf8ToHex(transaction.value)).to.be.equal(
+                expect(Convert.uint8ToHex(transaction.value)).to.be.equal(
                     Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)),
                 );
                 expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);

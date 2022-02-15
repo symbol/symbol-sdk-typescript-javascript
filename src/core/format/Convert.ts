@@ -26,7 +26,7 @@ export class Convert {
     public static toByte = (char1: string, char2: string): number => {
         const byte = utilities.tryParseByte(char1, char2);
         if (undefined === byte) {
-            throw Error(`unrecognized hex char`);
+            throw Error(`unrecognized hex char, char1:${char1}, char2:${char2}`);
         }
         return byte;
     };
@@ -149,33 +149,6 @@ export class Convert {
     };
 
     /**
-     * Converts a raw javascript string into a string of single byte characters using utf8 encoding.
-     * This makes it easier to perform other encoding operations on the string.
-     * @param {string} input - A raw string
-     * @return {string} - UTF-8 string
-     */
-    public static rstr2utf8 = (input: string): string => {
-        let output = '';
-
-        for (let n = 0; n < input.length; n++) {
-            const c = input.charCodeAt(n);
-
-            if (128 > c) {
-                output += String.fromCharCode(c);
-            } else if (127 < c && 2048 > c) {
-                output += String.fromCharCode((c >> 6) | 192);
-                output += String.fromCharCode((c & 63) | 128);
-            } else {
-                output += String.fromCharCode((c >> 12) | 224);
-                output += String.fromCharCode(((c >> 6) & 63) | 128);
-                output += String.fromCharCode((c & 63) | 128);
-            }
-        }
-
-        return output;
-    };
-
-    /**
      * Convert UTF-8 to hex
      * @param {string} input - An UTF-8 string
      * @return {string}
@@ -190,7 +163,7 @@ export class Convert {
      * @return {Uint8Array}
      */
     public static utf8ToUint8 = (input: string): Uint8Array => {
-        const hex = Convert.utf8ToHex(Convert.rstr2utf8(input));
+        const hex = Convert.utf8ToHex(input);
         return Convert.hexToUint8(hex);
     };
 
