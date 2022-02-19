@@ -19,7 +19,16 @@ import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils';
-import { Mosaic, MosaicSupplyRevocationTransaction, Transaction, TransactionVersion, UInt64 } from '../../src/model';
+import {
+    AccountMetadataTransaction,
+    Mosaic,
+    MosaicMetadataTransaction,
+    MosaicSupplyRevocationTransaction,
+    NamespaceMetadataTransaction,
+    Transaction,
+    TransactionVersion,
+    UInt64,
+} from '../../src/model';
 import { Account, Address } from '../../src/model/account';
 import { LockHashAlgorithm } from '../../src/model/lock';
 import { PlainMessage } from '../../src/model/message';
@@ -442,5 +451,87 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.startEpoch).to.be.equal(1);
         expect(json.transaction.endEpoch).to.be.equal(3);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    describe('Metadata Transactions', () => {
+        const baseMetadataTxTest = (expectedValue: Uint8Array, metadataTransaction: Transaction) => {
+            // act
+            const json = validateToFromJson(metadataTransaction);
+
+            // assert
+            expect(json.transaction.scopedMetadataKey).to.be.equal('00000000000003E8');
+            expect(json.transaction.valueSize).to.be.equal(expectedValue.length);
+            expect(json.transaction.valueSizeDelta).to.be.equal(expectedValue.length);
+            expect(json.transaction.version).to.be.equal(1);
+
+            return json;
+        };
+
+        it('should create AccountMetadataTransaction', () => {
+            // arrange
+            const value = Convert.utf8ToUint8('This is the message for this account! 汉字89664');
+            const accountMetadataTransaction = AccountMetadataTransaction.create(
+                Deadline.create(epochAdjustment),
+                account.address,
+                UInt64.fromUint(1000),
+                value.length,
+                value,
+                NetworkType.TEST_NET,
+            );
+
+            // act & assert
+            const json = baseMetadataTxTest(value, accountMetadataTransaction);
+
+            // assert more
+            expect(json.transaction.value).to.be.equal(
+                '5468697320697320746865206D65737361676520666F722074686973206163636F756E742120E6B189E5AD973839363634',
+            );
+        });
+
+        it('should create MosaicMetadataTransaction', () => {
+            // arrange
+            const value = Convert.utf8ToUint8('This is the message for this mosaic! 汉字89664');
+            const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+                Deadline.create(epochAdjustment),
+                account.address,
+                UInt64.fromUint(1000),
+                new MosaicId([2262289484, 3405110546]),
+                value.length,
+                value,
+                NetworkType.TEST_NET,
+            );
+
+            // act & assert
+            const json = baseMetadataTxTest(value, mosaicMetadataTransaction);
+
+            // assert more
+            expect(json.transaction.targetMosaicId).to.be.equal('CAF5DD1286D7CC4C');
+            expect(json.transaction.value).to.be.equal(
+                '5468697320697320746865206D65737361676520666F722074686973206D6F736169632120E6B189E5AD973839363634',
+            );
+        });
+
+        it('should create NamespaceMetadataTransaction', () => {
+            // arrange
+            const value = Convert.utf8ToUint8('This is the message for this namespace! 汉字89664');
+            const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+                Deadline.create(epochAdjustment),
+                account.address,
+                UInt64.fromUint(1000),
+                new NamespaceId([929036875, 2226345261]),
+                value.length,
+                value,
+                NetworkType.TEST_NET,
+            );
+
+            // act & assert
+            const json = baseMetadataTxTest(value, namespaceMetadataTransaction);
+
+            // assert more
+            expect(json.transaction.targetNamespaceId).to.be.equal('84B3552D375FFA4B');
+            expect(json.transaction.value).to.be.equal(
+                '5468697320697320746865206D65737361676520666F722074686973206E616D6573706163652120E6B189E5AD973839363634',
+            );
+        });
     });
 });

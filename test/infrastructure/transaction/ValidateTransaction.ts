@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { Convert } from '../../..';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
@@ -50,6 +51,12 @@ const ValidateTransaction = {
             ValidateTransaction.validateMosaicSupplyRevocationTx(transaction, transactionDTO);
         } else if (transaction.type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
             ValidateTransaction.validateMultisigModificationTx(transaction, transactionDTO);
+        } else if (transaction.type === TransactionType.ACCOUNT_METADATA) {
+            ValidateTransaction.validateMetadataTx(transaction, transactionDTO);
+        } else if (transaction.type === TransactionType.MOSAIC_METADATA) {
+            ValidateTransaction.validateMosaicMetadataTx(transaction, transactionDTO);
+        } else if (transaction.type === TransactionType.NAMESPACE_METADATA) {
+            ValidateTransaction.validateNamespaceMetadataTx(transaction, transactionDTO);
         }
     },
     validateAggregateTx: (aggregateTransaction: any, aggregateTransactionDTO: any): void => {
@@ -121,6 +128,26 @@ const ValidateTransaction = {
     validateTransferTx: (transferTransaction: any, transferTransactionDTO: any): void => {
         deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
         expect(transferTransaction.message.payload).to.be.equal('test-message');
+    },
+    validateMetadataTx: (metadataTransaction: any, metadataTransactionDTO: any): void => {
+        expect(metadataTransaction.targetAddress.plain()).to.be.equal(metadataTransactionDTO.transaction.targetAddress);
+        expect(metadataTransaction.metadataType).to.be.equal(metadataTransactionDTO.transaction.metadataType);
+        deepEqual(metadataTransaction.scopedMetadataKey, UInt64.fromHex(metadataTransactionDTO.transaction.scopedMetadataKey));
+        expect(metadataTransaction.valueSizeDelta).to.be.equal(metadataTransactionDTO.transaction.valueSizeDelta);
+        deepEqual(metadataTransaction.value, Convert.hexToUint8(metadataTransactionDTO.transaction.value));
+    },
+    validateAccountMetadataTx: (accountMetadataTransaction: any, accountMetadataTransactionDTO: any): void => {
+        ValidateTransaction.validateMetadataTx(accountMetadataTransaction, accountMetadataTransactionDTO);
+    },
+    validateMosaicMetadataTx: (mosaicMetadataTransaction: any, mosaicMetadataTransactionDTO: any): void => {
+        ValidateTransaction.validateMetadataTx(mosaicMetadataTransaction, mosaicMetadataTransactionDTO);
+        expect(mosaicMetadataTransaction.targetMosaicId.toHex()).to.be.equal(mosaicMetadataTransactionDTO.transaction.targetMosaicId);
+    },
+    validateNamespaceMetadataTx: (namespaceMetadataTransaction: any, namespaceMetadataTransactionDTO: any): void => {
+        ValidateTransaction.validateMetadataTx(namespaceMetadataTransaction, namespaceMetadataTransactionDTO);
+        expect(namespaceMetadataTransaction.targetNamespaceId.toHex()).to.be.equal(
+            namespaceMetadataTransactionDTO.transaction.targetNamespaceId,
+        );
     },
 };
 
