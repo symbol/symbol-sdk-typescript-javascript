@@ -21,8 +21,10 @@ import {
     NamespaceRegistrationTypeEnum,
     NetworkTypeEnum,
     TransactionInfoDTO,
+    TransactionTypeEnum,
     TransferTransactionDTO,
 } from 'symbol-openapi-typescript-fetch-client';
+import { MosaicId, NamespaceId } from '../../..';
 import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction';
 import { Address } from '../../../src/model/account';
 import { TransferTransaction } from '../../../src/model/transaction';
@@ -706,6 +708,173 @@ describe('CreateTransactionFromDTO', () => {
                 aggregateMultisigAccountModificationTransaction,
                 aggregateMultisigAccountModificationTransactionDTO,
             );
+        });
+    });
+
+    describe('Metadata Transactions', () => {
+        // standalone tx constants
+        const testTxSignature =
+            '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D';
+        const testTxSignerPublicKey = '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863';
+        const testTxDeadline = '71756535303';
+        const testTxHeight = '1';
+        const testTxHash = '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC';
+        const testTxMerkleComponentHash = '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC';
+        const testTxId = '5CD2B76B2B3F0F0001751380';
+        const testTxIndex = 0;
+        const testTxSize = 100;
+        const testTxMaxFee = '0';
+
+        // aggregate tx constants
+        const testAggTxId = '5A0069D83F17CF0001777E55';
+        const testAggTxHash = '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96';
+        const testAggTxHeight = '1860';
+        const testAggTxIndex = 0;
+        const testAggMerkleComponentHash = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
+        const testAggTxSize = 100;
+        const testAggTxCosigSignature =
+            '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
+            'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07';
+        const testAggCosigSignerPublicKey = 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630';
+        const testAggTxDeadline = '1000';
+        const testAggTxMaxFee = '0';
+        const testAggTxSignature =
+            '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
+            '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606';
+        const testAggTxSignerPublicKey = '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D';
+
+        // metadata tx constants
+        const testTargetAddress = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
+        const testScopedMedataKey = '00000000000003E8';
+
+        const prepBaseTxDto = (txType: TransactionTypeEnum) => ({
+            signerPublicKey: testTxSignerPublicKey,
+            version: 1,
+            network: NetworkTypeEnum.NUMBER_152,
+            type: txType,
+            maxFee: testTxMaxFee,
+            deadline: testTxDeadline,
+        });
+
+        const prepAggregateTxDto = (innerTransaction) => ({
+            id: testAggTxId,
+            meta: {
+                hash: testAggTxHash,
+                height: testAggTxHeight,
+                index: testAggTxIndex,
+                merkleComponentHash: testAggMerkleComponentHash,
+            },
+            transaction: {
+                size: testAggTxSize,
+                cosignatures: [
+                    {
+                        version: '0',
+                        signature: testAggTxCosigSignature,
+                        signerPublicKey: testAggCosigSignerPublicKey,
+                    },
+                ],
+                deadline: testAggTxDeadline,
+                maxFee: testAggTxMaxFee,
+                signature: testAggTxSignature,
+                signerPublicKey: testAggTxSignerPublicKey,
+                transactions: [
+                    {
+                        id: testTxId,
+                        meta: {
+                            aggregateHash: testAggTxHash,
+                            aggregateId: testAggTxId,
+                            height: testAggTxHeight,
+                            index: testAggTxIndex,
+                        },
+                        transaction: innerTransaction,
+                    },
+                ],
+                type: 16705,
+                version: 1,
+                network: NetworkTypeEnum.NUMBER_152,
+            },
+        });
+
+        const prepStandaloneTxDto = (transactionDto) => ({
+            id: testTxId,
+            meta: {
+                height: testTxHeight,
+                hash: testTxHash,
+                merkleComponentHash: testTxMerkleComponentHash,
+                index: testTxIndex,
+            },
+            transaction: transactionDto,
+        });
+
+        const prepTransactionDto = (txDetails) => ({
+            size: testTxSize,
+            signature: testTxSignature,
+            ...txDetails,
+        });
+
+        const testStandaloneAndAggregate = (baseMetadataTxDto, txType) => {
+            it('standalone', () => {
+                // arrange
+                const metadataTransactionDto: TransactionInfoDTO = prepStandaloneTxDto(prepTransactionDto(baseMetadataTxDto));
+
+                // act
+                const metadataTransaction = CreateTransactionFromDTO(metadataTransactionDto);
+
+                // assert
+                expect(metadataTransaction.type).eq(txType);
+                expect(metadataTransaction.size).eq(testTxSize);
+                ValidateTransaction.validateStandaloneTx(metadataTransaction, metadataTransactionDto);
+            });
+
+            it('aggregate', () => {
+                // arrange
+                const aggregateMetadataTransactionDto = prepAggregateTxDto(baseMetadataTxDto);
+
+                // act
+                const aggregateMetadataTransaction = CreateTransactionFromDTO(aggregateMetadataTransactionDto);
+
+                // assert
+                expect(aggregateMetadataTransaction.size).eq(testAggTxSize);
+                ValidateTransaction.validateAggregateTx(aggregateMetadataTransaction, aggregateMetadataTransactionDto);
+            });
+        };
+
+        describe('AccountMetadataTransaction', () => {
+            const baseAccountMetadataTxDto = {
+                ...prepBaseTxDto(TransactionTypeEnum.NUMBER_16708),
+                targetAddress: testTargetAddress,
+                scopedMetadataKey: testScopedMedataKey,
+                valueSizeDelta: 49,
+                valueSize: 49,
+                value: '5468697320697320746865206D65737361676520666F722074686973206163636F756E742120E6B189E5AD973839363634',
+            };
+            testStandaloneAndAggregate(baseAccountMetadataTxDto, TransactionTypeDto.ACCOUNT_METADATA);
+        });
+
+        describe('MosaicMetadataTransaction', () => {
+            const baseMosaicMetadataTxDto = {
+                ...prepBaseTxDto(TransactionTypeEnum.NUMBER_16964),
+                targetAddress: testTargetAddress,
+                scopedMetadataKey: testScopedMedataKey,
+                targetMosaicId: new MosaicId([2262289484, 3405110546]).toHex(),
+                valueSizeDelta: 48,
+                valueSize: 48,
+                value: '5468697320697320746865206D65737361676520666F722074686973206D6F736169632120E6B189E5AD973839363634',
+            };
+            testStandaloneAndAggregate(baseMosaicMetadataTxDto, TransactionTypeDto.MOSAIC_METADATA);
+        });
+
+        describe('NamespaceMetadataTransaction', () => {
+            const baseNamespaceMetadataTxDto = {
+                ...prepBaseTxDto(TransactionTypeEnum.NUMBER_17220),
+                targetAddress: testTargetAddress,
+                scopedMetadataKey: testScopedMedataKey,
+                targetNamespaceId: new NamespaceId([929036875, 2226345261]).toHex(),
+                valueSizeDelta: 51,
+                valueSize: 51,
+                value: '5468697320697320746865206D65737361676520666F722074686973206E616D6573706163652120E6B189E5AD973839363634',
+            };
+            testStandaloneAndAggregate(baseNamespaceMetadataTxDto, TransactionTypeDto.NAMESPACE_METADATA);
         });
     });
 });

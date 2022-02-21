@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Convert } from '../..';
 import {
     AccountAddressRestrictionTransaction,
     AccountKeyLinkTransaction,
@@ -245,7 +246,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             scopedMetadataKey: accountMetadataTx.scopedMetadataKey.toHex(),
             valueSizeDelta: accountMetadataTx.valueSizeDelta,
             valueSize: accountMetadataTx.value.length,
-            value: accountMetadataTx.value,
+            value: Convert.uint8ToHex(accountMetadataTx.value),
         };
     } else if (transaction.type === TransactionType.MOSAIC_METADATA) {
         const mosaicMetadataTx = transaction as MosaicMetadataTransaction;
@@ -255,7 +256,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             valueSizeDelta: mosaicMetadataTx.valueSizeDelta,
             targetMosaicId: mosaicMetadataTx.targetMosaicId.id.toHex(),
             valueSize: mosaicMetadataTx.value.length,
-            value: mosaicMetadataTx.value,
+            value: Convert.uint8ToHex(mosaicMetadataTx.value),
         };
     } else if (transaction.type === TransactionType.NAMESPACE_METADATA) {
         const namespaceMetaTx = transaction as NamespaceMetadataTransaction;
@@ -265,7 +266,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             valueSizeDelta: namespaceMetaTx.valueSizeDelta,
             targetNamespaceId: namespaceMetaTx.targetNamespaceId.id.toHex(),
             valueSize: namespaceMetaTx.value.length,
-            value: namespaceMetaTx.value,
+            value: Convert.uint8ToHex(namespaceMetaTx.value),
         };
     } else if (transaction.type === TransactionType.VRF_KEY_LINK) {
         const vrfKeyLinkTx = transaction as VrfKeyLinkTransaction;
