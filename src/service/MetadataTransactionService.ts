@@ -69,12 +69,14 @@ export class MetadataTransactionService {
                         const metadata = metadatas.data[0];
                         const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                         const newValueBytes = Convert.utf8ToUint8(value);
+                        const xoredBytes = Convert.hexToUint8(Convert.xor(currentValueByte, newValueBytes));
+
                         return AccountMetadataTransaction.create(
                             deadline,
                             targetAddress,
                             key,
                             newValueBytes.length - currentValueByte.length,
-                            Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
+                            xoredBytes,
                             networkType,
                             maxFee,
                         );
@@ -85,7 +87,7 @@ export class MetadataTransactionService {
                         targetAddress,
                         key,
                         newValueBytes.length,
-                        value,
+                        Convert.utf8ToUint8(value),
                         networkType,
                         maxFee,
                     );
@@ -126,13 +128,15 @@ export class MetadataTransactionService {
                         const metadata = metadatas.data[0];
                         const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                         const newValueBytes = Convert.utf8ToUint8(value);
+                        const xoredBytes = Convert.hexToUint8(Convert.xor(currentValueByte, newValueBytes));
+
                         return MosaicMetadataTransaction.create(
                             deadline,
                             targetAddress,
                             key,
                             mosaicId,
                             newValueBytes.length - currentValueByte.length,
-                            Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
+                            xoredBytes,
                             networkType,
                             maxFee,
                         );
@@ -144,7 +148,7 @@ export class MetadataTransactionService {
                         key,
                         mosaicId,
                         newValueBytes.length,
-                        value,
+                        Convert.utf8ToUint8(value),
                         networkType,
                         maxFee,
                     );
@@ -190,13 +194,14 @@ export class MetadataTransactionService {
                         const metadata = metadatas.data[0];
                         const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                         const newValueBytes = Convert.utf8ToUint8(value);
+                        const xoredBytes = Convert.hexToUint8(Convert.xor(currentValueByte, newValueBytes));
                         return NamespaceMetadataTransaction.create(
                             deadline,
                             targetAddress,
                             key,
                             namespaceId,
                             newValueBytes.length - currentValueByte.length,
-                            Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
+                            xoredBytes,
                             networkType,
                             maxFee,
                         );
@@ -208,7 +213,7 @@ export class MetadataTransactionService {
                         key,
                         namespaceId,
                         newValueBytes.length,
-                        value,
+                        Convert.utf8ToUint8(value),
                         networkType,
                         maxFee,
                     );

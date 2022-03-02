@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     BalanceChangeReceiptDTO,
     Pagination,
@@ -83,11 +84,11 @@ describe('ReceiptHttp', () => {
             Promise.resolve(resolutionPage),
         );
 
-        const statement = await receiptRepository
-            .searchMosaicResolutionStatements({
+        const statement = await firstValueFrom(
+            receiptRepository.searchMosaicResolutionStatements({
                 height: UInt64.fromUint(1),
-            })
-            .toPromise();
+            }),
+        );
         expect(statement).to.be.not.null;
         expect(statement.data[0].height.toString()).to.be.equal('1');
         expect(statement.data[0].resolutionType.valueOf()).to.be.equal(ResolutionType.Mosaic);
@@ -122,11 +123,11 @@ describe('ReceiptHttp', () => {
             Promise.resolve(resolutionPage),
         );
 
-        const statement = await receiptRepository
-            .searchAddressResolutionStatements({
+        const statement = await firstValueFrom(
+            receiptRepository.searchAddressResolutionStatements({
                 height: UInt64.fromUint(1),
-            })
-            .toPromise();
+            }),
+        );
         expect(statement).to.be.not.null;
         expect(statement.data[0].height.toString()).to.be.equal('1');
         expect(statement.data[0].resolutionType.valueOf()).to.be.equal(ResolutionType.Address);
@@ -176,11 +177,11 @@ describe('ReceiptHttp', () => {
             ),
         ).thenReturn(Promise.resolve(resolutionPage));
 
-        const statement = await receiptRepository
-            .searchReceipts({
+        const statement = await firstValueFrom(
+            receiptRepository.searchReceipts({
                 height: UInt64.fromUint(1),
-            })
-            .toPromise();
+            }),
+        );
         expect(statement).to.be.not.null;
         expect(statement.data[0].height.toString()).to.be.equal('1');
         expect((statement.data[0].receipts[0] as BalanceChangeReceipt).amount.toString()).to.be.equal('100');
@@ -203,29 +204,26 @@ describe('ReceiptHttp', () => {
                 undefined,
             ),
         ).thenReject(new Error('Mocked Error'));
-        await receiptRepository
-            .searchReceipts({ height: UInt64.fromUint(1) })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(receiptRepository.searchReceipts({ height: UInt64.fromUint(1) })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('searchResolutionMosaic - Error', async () => {
         when(receiptRoutesApi.searchMosaicResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReject(
             new Error('Mocked Error'),
         );
-        await receiptRepository
-            .searchMosaicResolutionStatements({ height: UInt64.fromUint(1) })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(receiptRepository.searchMosaicResolutionStatements({ height: UInt64.fromUint(1) })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 
     it('searchResolutionAddress - Error', async () => {
         when(receiptRoutesApi.searchAddressResolutionStatements('1', undefined, undefined, undefined, undefined)).thenReject(
             new Error('Mocked Error'),
         );
-        await receiptRepository
-            .searchAddressResolutionStatements({ height: UInt64.fromUint(1) })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(receiptRepository.searchAddressResolutionStatements({ height: UInt64.fromUint(1) })).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 });

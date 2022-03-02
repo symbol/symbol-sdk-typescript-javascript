@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { NetworkRepository } from '../../src/infrastructure/NetworkRepository';
 import { NetworkType } from '../../src/model/network/NetworkType';
 import { IntegrationTestHelper } from './IntegrationTestHelper';
@@ -36,14 +37,14 @@ describe('NetworkHttp', () => {
 
     describe('getNetworkType', () => {
         it('should return network type', async () => {
-            const sentNetworkType = await networkRepository.getNetworkType().toPromise();
+            const sentNetworkType = await firstValueFrom(networkRepository.getNetworkType());
             expect(sentNetworkType).to.be.equal(networkType);
         });
     });
 
     describe('getNetworkName', () => {
         it('should return network name and description', async () => {
-            const networkName = await networkRepository.getNetworkName().toPromise();
+            const networkName = await firstValueFrom(networkRepository.getNetworkName());
             expect(networkName.name.toLowerCase()).to.be.not.null;
             expect(networkName.description.toLowerCase()).to.be.not.null;
         });
@@ -51,7 +52,7 @@ describe('NetworkHttp', () => {
 
     describe('getTransactionFees', () => {
         it('should return transaction fees', async () => {
-            const fees = await networkRepository.getTransactionFees().toPromise();
+            const fees = await firstValueFrom(networkRepository.getTransactionFees());
             expect(fees.averageFeeMultiplier).to.be.not.null;
             expect(fees.highestFeeMultiplier).to.be.not.null;
             expect(fees.lowestFeeMultiplier).to.be.not.null;
@@ -60,7 +61,7 @@ describe('NetworkHttp', () => {
     });
     describe('getRentalFees', () => {
         it('should return rental fees', async () => {
-            const fees = await networkRepository.getRentalFees().toPromise();
+            const fees = await firstValueFrom(networkRepository.getRentalFees());
             expect(fees.effectiveChildNamespaceRentalFee).to.be.not.null;
             expect(fees.effectiveMosaicRentalFee).to.be.not.null;
             expect(fees.effectiveRootNamespaceRentalFeePerBlock).to.be.not.null;
@@ -69,7 +70,7 @@ describe('NetworkHttp', () => {
 
     describe('getNetworkProperties', () => {
         it('should return network configuration', async () => {
-            const config = await networkRepository.getNetworkProperties().toPromise();
+            const config = await firstValueFrom(networkRepository.getNetworkProperties());
             expect(config.network).to.be.not.null;
             expect(config.chain).to.be.not.null;
             expect(config.plugins).to.be.not.null;

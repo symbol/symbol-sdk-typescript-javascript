@@ -302,7 +302,11 @@ describe('Listener', () => {
                         .search(criteria)
                         .pipe(
                             mergeMap((page) => {
-                                return transactionRepository.getTransaction(page.data[0].transactionInfo?.hash!, TransactionGroup.Partial);
+                                const hash = page.data[0].transactionInfo?.hash;
+                                if (!hash) {
+                                    throw new Error('Hash must be defined!');
+                                }
+                                return transactionRepository.getTransaction(hash, TransactionGroup.Partial);
                             }),
                         )
                         .subscribe((transactions) => {

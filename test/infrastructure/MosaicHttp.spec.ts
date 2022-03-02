@@ -15,6 +15,7 @@
  */
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     MerkleTreeLeafDTO,
     Mosaic,
@@ -86,7 +87,7 @@ describe('MosaicHttp', () => {
 
     it('getMosaic', async () => {
         when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReturn(Promise.resolve(mosaicInfoDto));
-        const mosaicInfo = await mosaicRepository.getMosaic(mosaicId).toPromise();
+        const mosaicInfo = await firstValueFrom(mosaicRepository.getMosaic(mosaicId));
         assertMosaicInfo(mosaicInfo);
     });
 
@@ -94,7 +95,7 @@ describe('MosaicHttp', () => {
         const mosaicIds = {} as MosaicIds;
         mosaicIds.mosaicIds = [mosaicId.toHex()];
         when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReturn(Promise.resolve([mosaicInfoDto]));
-        const mosaicInfos = await mosaicRepository.getMosaics([mosaicId]).toPromise();
+        const mosaicInfos = await firstValueFrom(mosaicRepository.getMosaics([mosaicId]));
         assertMosaicInfo(mosaicInfos[0]);
     });
 
@@ -110,36 +111,27 @@ describe('MosaicHttp', () => {
         when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenReturn(
             Promise.resolve(body),
         );
-        const mosaicsInfo = await mosaicRepository.search({ ownerAddress: address }).toPromise();
+        const mosaicsInfo = await firstValueFrom(mosaicRepository.search({ ownerAddress: address }));
         assertMosaicInfo(mosaicsInfo.data[0]);
     });
 
     it('getMosaic - Error', async () => {
         when(mosaicRoutesApi.getMosaic(mosaicId.toHex())).thenReject(new Error('Mocked Error'));
-        await mosaicRepository
-            .getMosaic(mosaicId)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(mosaicRepository.getMosaic(mosaicId)).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getMosaics - Error', async () => {
         const mosaicIds = {} as MosaicIds;
         mosaicIds.mosaicIds = [mosaicId.toHex()];
         when(mosaicRoutesApi.getMosaics(deepEqual(mosaicIds))).thenReject(new Error('Mocked Error'));
-        await mosaicRepository
-            .getMosaics([mosaicId])
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(mosaicRepository.getMosaics([mosaicId])).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('searchMosaics - Error', async () => {
         when(mosaicRoutesApi.searchMosaics(deepEqual(address.plain()), undefined, undefined, undefined, undefined)).thenThrow(
             new Error('Mocked Error'),
         );
-        await mosaicRepository
-            .search({ ownerAddress: address })
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(mosaicRepository.search({ ownerAddress: address })).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('streamer', async () => {
@@ -160,7 +152,7 @@ describe('MosaicHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(mosaicRoutesApi.getMosaicMerkle(mosaicId.toHex())).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await mosaicRepository.getMosaicMerkle(mosaicId).toPromise();
+        const merkle = await firstValueFrom(mosaicRepository.getMosaicMerkle(mosaicId));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import {
     MerkleStateInfoDTO,
     MerkleTreeLeafDTO,
@@ -155,7 +156,7 @@ describe('MetadataHttp', () => {
                 Order.Asc,
             ),
         ).thenReturn(Promise.resolve(metadataPage));
-        const metadatas = await metadataRepository.search({ targetAddress: address, pageNumber: 1, order: Order.Asc }).toPromise();
+        const metadatas = await firstValueFrom(metadataRepository.search({ targetAddress: address, pageNumber: 1, order: Order.Asc }));
         expect(metadatas.data.length).to.be.equals(3);
         assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
@@ -176,7 +177,7 @@ describe('MetadataHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(metadataPage));
-        const metadatas = await metadataRepository.search({ targetAddress: address, scopedMetadataKey: 'aaa' }).toPromise();
+        const metadatas = await firstValueFrom(metadataRepository.search({ targetAddress: address, scopedMetadataKey: 'aaa' }));
         assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
         assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
@@ -196,14 +197,14 @@ describe('MetadataHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(metadataPageMosaic));
-        const metadata = await metadataRepository
-            .search({
+        const metadata = await firstValueFrom(
+            metadataRepository.search({
                 sourceAddress: address,
                 scopedMetadataKey: 'aaa',
                 targetAddress: address,
                 metadataType: MetadataType.Account,
-            })
-            .toPromise();
+            }),
+        );
         assertMetadataInfo(metadata.data[0], metadataDTOMosaic);
     });
 
@@ -221,14 +222,14 @@ describe('MetadataHttp', () => {
                 Order.Desc,
             ),
         ).thenReturn(Promise.resolve(metadataPage));
-        const metadatas = await metadataRepository
-            .search({
+        const metadatas = await firstValueFrom(
+            metadataRepository.search({
                 targetId: mosaicId,
                 metadataType: MetadataType.Mosaic,
                 pageSize: 2,
                 order: Order.Desc,
-            })
-            .toPromise();
+            }),
+        );
         expect(metadatas.data.length).to.be.equals(3);
         assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
@@ -249,9 +250,9 @@ describe('MetadataHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(metadataPage));
-        const metadatas = await metadataRepository
-            .search({ targetId: mosaicId, scopedMetadataKey: 'aaa', metadataType: MetadataType.Mosaic })
-            .toPromise();
+        const metadatas = await firstValueFrom(
+            metadataRepository.search({ targetId: mosaicId, scopedMetadataKey: 'aaa', metadataType: MetadataType.Mosaic }),
+        );
         assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
         assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
@@ -271,9 +272,14 @@ describe('MetadataHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(metadataPageMosaic));
-        const metadata = await metadataRepository
-            .search({ targetId: mosaicId, scopedMetadataKey: 'aaa', sourceAddress: address, metadataType: MetadataType.Mosaic })
-            .toPromise();
+        const metadata = await firstValueFrom(
+            metadataRepository.search({
+                targetId: mosaicId,
+                scopedMetadataKey: 'aaa',
+                sourceAddress: address,
+                metadataType: MetadataType.Mosaic,
+            }),
+        );
         assertMetadataInfo(metadata.data[0], metadataDTOMosaic);
     });
 
@@ -291,14 +297,14 @@ describe('MetadataHttp', () => {
                 Order.Desc,
             ),
         ).thenReturn(Promise.resolve(metadataPage));
-        const metadatas = await metadataRepository
-            .search({
+        const metadatas = await firstValueFrom(
+            metadataRepository.search({
                 targetId: namespaceId,
                 metadataType: MetadataType.Namespace,
                 pageSize: 2,
                 order: Order.Desc,
-            })
-            .toPromise();
+            }),
+        );
         expect(metadatas.data.length).to.be.equals(3);
         assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
@@ -319,9 +325,9 @@ describe('MetadataHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(metadataPage));
-        const metadatas = await metadataRepository
-            .search({ targetId: namespaceId, scopedMetadataKey: 'bbb', metadataType: MetadataType.Namespace })
-            .toPromise();
+        const metadatas = await firstValueFrom(
+            metadataRepository.search({ targetId: namespaceId, scopedMetadataKey: 'bbb', metadataType: MetadataType.Namespace }),
+        );
         assertMetadataInfo(metadatas.data[0], metadataDTOMosaic);
         assertMetadataInfo(metadatas.data[1], metadataDTOAddress);
         assertMetadataInfo(metadatas.data[2], metadataDTONamespace);
@@ -341,9 +347,14 @@ describe('MetadataHttp', () => {
                 undefined,
             ),
         ).thenReturn(Promise.resolve(metadataPageNamespace));
-        const metadata = await metadataRepository
-            .search({ sourceAddress: address, targetId: namespaceId, scopedMetadataKey: 'cccc', metadataType: MetadataType.Namespace })
-            .toPromise();
+        const metadata = await firstValueFrom(
+            metadataRepository.search({
+                sourceAddress: address,
+                targetId: namespaceId,
+                scopedMetadataKey: 'cccc',
+                metadataType: MetadataType.Namespace,
+            }),
+        );
         assertMetadataInfo(metadata.data[0], metadataDTONamespace);
     });
 
@@ -451,7 +462,7 @@ describe('MetadataHttp', () => {
     it('Namespace getMetadata', async () => {
         Object.assign(metadataPageNamespace, { data: [] });
         when(metadataRoutesApi.getMetadata('hash123')).thenReturn(Promise.resolve(metadataDTONamespace));
-        const metadata = await metadataRepository.getMetadata('hash123').toPromise();
+        const metadata = await firstValueFrom(metadataRepository.getMetadata('hash123'));
         assertMetadataInfo(metadata, metadataDTONamespace);
     });
 
@@ -470,8 +481,8 @@ describe('MetadataHttp', () => {
             ),
         ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
-        await metadataTransactionService
-            .createAccountMetadataTransaction(
+        await firstValueFrom(
+            metadataTransactionService.createAccountMetadataTransaction(
                 Deadline.create(epochAdjustment),
                 NetworkType.TEST_NET,
                 address,
@@ -479,9 +490,8 @@ describe('MetadataHttp', () => {
                 'test',
                 address,
                 UInt64.fromUint(2000),
-            )
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+            ),
+        ).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('Mosaic meta no previous value', async () => {
@@ -499,8 +509,8 @@ describe('MetadataHttp', () => {
             ),
         ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
-        await metadataTransactionService
-            .createMosaicMetadataTransaction(
+        await firstValueFrom(
+            metadataTransactionService.createMosaicMetadataTransaction(
                 Deadline.create(epochAdjustment),
                 NetworkType.TEST_NET,
                 address,
@@ -509,9 +519,8 @@ describe('MetadataHttp', () => {
                 'test',
                 address,
                 UInt64.fromUint(2000),
-            )
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+            ),
+        ).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('Namespace meta no previous value', async () => {
@@ -529,8 +538,8 @@ describe('MetadataHttp', () => {
             ),
         ).thenReturn(Promise.reject(notFoundResponse));
         const metadataTransactionService = new MetadataTransactionService(metadataRepository);
-        await metadataTransactionService
-            .createNamespaceMetadataTransaction(
+        await firstValueFrom(
+            metadataTransactionService.createNamespaceMetadataTransaction(
                 Deadline.create(epochAdjustment),
                 NetworkType.TEST_NET,
                 address,
@@ -539,9 +548,8 @@ describe('MetadataHttp', () => {
                 'test',
                 address,
                 UInt64.fromUint(2000),
-            )
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+            ),
+        ).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('streamer', async () => {
@@ -562,7 +570,7 @@ describe('MetadataHttp', () => {
         merkleStateInfoDTO.tree = [merkleLeafDTO];
 
         when(metadataRoutesApi.getMetadataMerkle('hash')).thenReturn(Promise.resolve(merkleStateInfoDTO));
-        const merkle = await metadataRepository.getMetadataMerkle('hash').toPromise();
+        const merkle = await firstValueFrom(metadataRepository.getMetadataMerkle('hash'));
         expect(merkle.raw).to.be.equal(merkleStateInfoDTO.raw);
         expect(merkle.tree.leaf).not.to.be.undefined;
     });

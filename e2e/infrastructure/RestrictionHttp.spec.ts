@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
+import { firstValueFrom } from 'rxjs';
 import { RestrictionAccountRepository, RestrictionMosaicRepository } from '../../src/infrastructure';
 import { UInt64 } from '../../src/model';
 import { Account, Address } from '../../src/model/account';
@@ -196,16 +197,16 @@ describe('RestrictionHttp', () => {
 
     describe('getAccountRestrictions', () => {
         it('should call getAccountRestrictions successfully', async () => {
-            const accountRestrictions = await restrictionAccountRepository.getAccountRestrictions(accountAddress).toPromise();
+            const accountRestrictions = await firstValueFrom(restrictionAccountRepository.getAccountRestrictions(accountAddress));
             expect(accountRestrictions.restrictions.length).to.be.greaterThan(0);
         });
     });
 
     describe('search', () => {
         it('should call search successfully', async () => {
-            const mosaicRestrictionPage = await restrictionMosaicRepository
-                .search({ mosaicId, targetAddress: account3.address })
-                .toPromise();
+            const mosaicRestrictionPage = await firstValueFrom(
+                restrictionMosaicRepository.search({ mosaicId, targetAddress: account3.address }),
+            );
             const info = mosaicRestrictionPage.data[0];
             deepEqual(info.mosaicId.toHex(), mosaicId.toHex());
             deepEqual(info.entryType, MosaicRestrictionEntryType.ADDRESS);
@@ -213,10 +214,10 @@ describe('RestrictionHttp', () => {
             deepEqual(addressRestriction.targetAddress.plain(), account3.address.plain());
             deepEqual(addressRestriction.getRestriction(UInt64.fromUint(60641))!.restrictionValue, UInt64.fromUint(2));
 
-            const infoFromId = await restrictionMosaicRepository.getMosaicRestrictions(info.compositeHash).toPromise();
+            const infoFromId = await firstValueFrom(restrictionMosaicRepository.getMosaicRestrictions(info.compositeHash));
             expect(infoFromId).to.be.equal(info);
 
-            const merkleInfo = await restrictionMosaicRepository.getMosaicRestrictionsMerkle(info.compositeHash).toPromise();
+            const merkleInfo = await firstValueFrom(restrictionMosaicRepository.getMosaicRestrictionsMerkle(info.compositeHash));
             expect(merkleInfo.raw).to.not.be.undefined;
         });
     });

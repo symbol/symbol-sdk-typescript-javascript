@@ -16,6 +16,7 @@
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as http from 'http';
+import { firstValueFrom } from 'rxjs';
 import {
     BmTreeSignature,
     FinalizationProofDTO,
@@ -80,29 +81,25 @@ describe('FinalizationHttp', () => {
 
     it('getFinalizationProofAtEpoch', async () => {
         when(finalizationRoutesApi.getFinalizationProofAtEpoch(1)).thenReturn(Promise.resolve(dto));
-        const model = await finalizationRepository.getFinalizationProofAtEpoch(1).toPromise();
+        const model = await firstValueFrom(finalizationRepository.getFinalizationProofAtEpoch(1));
         assertDto(model);
     });
 
     it('getFinalizationProofAtHeight', async () => {
         when(finalizationRoutesApi.getFinalizationProofAtHeight('1')).thenReturn(Promise.resolve(dto));
-        const model = await finalizationRepository.getFinalizationProofAtHeight(UInt64.fromUint(1)).toPromise();
+        const model = await firstValueFrom(finalizationRepository.getFinalizationProofAtHeight(UInt64.fromUint(1)));
         assertDto(model);
     });
 
     it('getFinalizationProofAtEpoch - Error', async () => {
         when(finalizationRoutesApi.getFinalizationProofAtEpoch(1)).thenReject(new Error('Mocked Error'));
-        await finalizationRepository
-            .getFinalizationProofAtEpoch(1)
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(finalizationRepository.getFinalizationProofAtEpoch(1)).catch((error) => expect(error).not.to.be.undefined);
     });
 
     it('getFinalizationProofAtHeight - Error', async () => {
         when(finalizationRoutesApi.getFinalizationProofAtHeight('1')).thenReject(new Error('Mocked Error'));
-        await finalizationRepository
-            .getFinalizationProofAtHeight(UInt64.fromUint(1))
-            .toPromise()
-            .catch((error) => expect(error).not.to.be.undefined);
+        await firstValueFrom(finalizationRepository.getFinalizationProofAtHeight(UInt64.fromUint(1))).catch(
+            (error) => expect(error).not.to.be.undefined,
+        );
     });
 });

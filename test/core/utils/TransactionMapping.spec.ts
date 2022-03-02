@@ -523,7 +523,7 @@ describe('TransactionMapping - createFromPayload', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
@@ -532,7 +532,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
         const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
@@ -541,7 +541,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -872,7 +872,7 @@ describe('TransactionMapping - createFromPayload', () => {
             account.address,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -899,7 +899,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -927,7 +927,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            new Uint8Array(10),
             TestNetworkType,
         );
 
@@ -1552,7 +1552,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             account.address,
             UInt64.fromUint(1000),
             1,
-            'Test Value',
+            Convert.utf8ToUint8('Test Value'),
             TestNetworkType,
         );
 
@@ -1566,7 +1566,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetAddress.equals(account.address)).to.be.true;
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(transaction.value).to.be.equal('Test Value');
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.utf8ToHex('Test Value'));
     });
 
     it('should create MosaicMetadataTransaction', () => {
@@ -1576,7 +1576,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            'Test Value',
+            Convert.utf8ToUint8('Test Value'),
             TestNetworkType,
         );
 
@@ -1591,7 +1591,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
-        expect(transaction.value).to.be.equal('Test Value');
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.utf8ToHex('Test Value'));
     });
 
     it('should create NamespaceMetadataTransaction', () => {
@@ -1601,7 +1601,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            'Test Value',
+            Convert.utf8ToUint8('Test Value'),
             TestNetworkType,
         );
 
@@ -1616,7 +1616,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.scopedMetadataKey.toString()).to.be.equal(UInt64.fromUint(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
-        expect(transaction.value).to.be.equal('Test Value');
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.utf8ToHex('Test Value'));
     });
 
     it('should create from payload with persistent delegate message', () => {

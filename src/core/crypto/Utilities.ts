@@ -15,7 +15,6 @@
  */
 
 import * as CryptoJS from 'crypto-js';
-import { WordArray } from 'crypto-js';
 import * as hkdf from 'futoin-hkdf';
 import { sha512 } from 'js-sha512';
 import { RawArray as array } from '../format';
@@ -34,7 +33,7 @@ export const Half_Hash_Size = Hash_Size / 2;
  *
  * @return {WordArray}
  */
-export const ua2words = (ua, uaLength): WordArray => {
+export const ua2words = (ua, uaLength): any => {
     const temp: number[] = [];
     for (let i = 0; i < uaLength; i += 4) {
         const x = ua[i] * 0x1000000 + (ua[i + 1] || 0) * 0x10000 + (ua[i + 2] || 0) * 0x100 + (ua[i + 3] || 0);

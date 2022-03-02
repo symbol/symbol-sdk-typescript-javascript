@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert } from '../../core/format';
+import { Convert } from '../..';
 import { UnresolvedMapping } from '../../core/utils';
 import { MessageFactory, MosaicSupplyRevocationTransaction, UInt64 } from '../../model';
 import { Address, PublicAccount } from '../../model/account';
@@ -125,12 +125,11 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
 /**
  * @internal
  * @param transactionDTO
- * @param transactionInfo
  * @param isEmbedded
  * @returns {any}
  * @constructor
  */
-const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isEmbedded: boolean): Transaction => {
+const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
     const type: TransactionType = transactionDTO.type;
     const version: number = transactionDTO.version;
     const signature = Transaction.resolveSignature(transactionDTO.signature, false);
@@ -394,7 +393,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 extractRecipient(transactionDTO.targetAddress),
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                Convert.hexToUint8(transactionDTO.value),
                 signature,
                 signer,
                 transactionInfo,
@@ -409,7 +408,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 UnresolvedMapping.toUnresolvedMosaic(transactionDTO.targetMosaicId),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                Convert.hexToUint8(transactionDTO.value),
                 signature,
                 signer,
                 transactionInfo,
@@ -424,7 +423,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo, isE
                 UInt64.fromHex(transactionDTO.scopedMetadataKey),
                 NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
                 transactionDTO.valueSizeDelta,
-                convert.decodeHex(transactionDTO.value),
+                Convert.hexToUint8(transactionDTO.value),
                 signature,
                 signer,
                 transactionInfo,
@@ -489,7 +488,7 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
                   innerTransactionDTO.transaction.maxFee = transactionDTO.transaction.maxFee;
                   innerTransactionDTO.transaction.deadline = transactionDTO.transaction.deadline;
                   innerTransactionDTO.transaction.signature = transactionDTO.transaction.signature;
-                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo, true);
+                  return CreateStandaloneTransactionFromDTO(innerTransactionDTO.transaction, aggregateTransactionInfo);
               })
             : [];
         return new AggregateTransaction(
@@ -518,7 +517,6 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
         return CreateStandaloneTransactionFromDTO(
             transactionDTO.transaction,
             extractTransactionMeta(transactionDTO.meta, transactionDTO.id),
-            false,
         );
     }
 };

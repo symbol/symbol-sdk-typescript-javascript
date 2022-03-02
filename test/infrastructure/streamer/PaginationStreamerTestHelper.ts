@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { deepEqual, instance, verify, when } from 'ts-mockito';
 import { Page } from '../../../src/infrastructure/Page';
@@ -55,7 +55,7 @@ export class PaginationStreamerTestHelper<E, C extends SearchCriteria> {
         if (limit) {
             search = search.pipe(take(limit));
         }
-        const returnedInfos = await search.pipe(toArray()).toPromise();
+        const returnedInfos = await firstValueFrom(search.pipe(toArray()));
         expect(returnedInfos).to.be.eql(infos.slice(0, !limit ? infos.length : limit));
         const totalPagesRead = limit == null ? pages.length : Math.ceil(limit / pageSize);
         verify(this.repository.search(deepEqual(this.criteria))).times(totalPagesRead);

@@ -34,7 +34,7 @@ import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
 
 describe('MosaicMetadataTransaction', () => {
-    let account: Account;
+    let account: Account, emptyValue: Uint8Array;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     let statement: Statement;
     const unresolvedMosaicId = new NamespaceId('mosaic');
@@ -52,6 +52,9 @@ describe('MosaicMetadataTransaction', () => {
             ],
         );
     });
+    beforeEach(() => {
+        emptyValue = new Uint8Array(10);
+    });
 
     it('should default maxFee field be set to 0', () => {
         const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
@@ -60,7 +63,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -75,7 +78,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
             new UInt64([1, 0]),
         );
@@ -91,7 +94,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -110,7 +113,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             namespacId,
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -129,7 +132,7 @@ describe('MosaicMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 new MosaicId([2262289484, 3405110546]),
                 1,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                emptyValue,
                 TestNetworkType,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
@@ -143,7 +146,7 @@ describe('MosaicMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 new MosaicId([2262289484, 3405110546]),
                 1,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                emptyValue,
                 TestNetworkType,
             );
             expect(mosaicMetadataTransaction.size).to.be.equal(182);
@@ -159,7 +162,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         ).setMaxFee(2);
         expect(mosaicMetadataTransaction.maxFee.compact()).to.be.equal(364);
@@ -178,7 +181,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             unresolvedMosaicId,
             10,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             '',
             account.publicAccount,
             new TransactionInfo(UInt64.fromUint(2), 0, ''),
@@ -197,7 +200,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         );
 
@@ -217,7 +220,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(account.address);
@@ -239,7 +242,7 @@ describe('MosaicMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            emptyValue,
             TestNetworkType,
         );
         let canNotify = tx.shouldNotifyAccount(alias);
