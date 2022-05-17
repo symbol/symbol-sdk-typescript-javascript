@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { bytesToHex } from '@noble/hashes/utils';
 import { sha256 } from 'js-sha256';
-import { sha3_256 } from 'js-sha3';
 import * as ripemd160 from 'ripemd160';
 import { LockHashAlgorithm } from '../../model/lock/LockHashAlgorithm';
+import { SHA3Hasher } from '../crypto';
 
 /**
  * Hash utilities for SecretLock hashing
@@ -29,7 +30,7 @@ export class LockHashUtils {
      * @returns {string} Hash in hexidecimal format
      */
     public static Op_Sha3_256(input: Uint8Array): string {
-        return sha3_256.create().update(input).hex().toUpperCase();
+        return bytesToHex(SHA3Hasher.getHasher(32)(input)).toUpperCase();
     }
 
     /**

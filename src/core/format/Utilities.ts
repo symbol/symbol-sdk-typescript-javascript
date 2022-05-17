@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { sha3_256 } from 'js-sha3';
+import { SHA3Hasher } from '../crypto';
 
 export const createBuilder = (): any => {
     const map = {};
@@ -126,10 +126,10 @@ export const split = (name: string, processor: any): any => {
 };
 
 export const generateNamespaceId = (parentId: number[], name: string): number[] => {
-    const hash = sha3_256.create();
-    hash.update(Uint32Array.from(parentId).buffer as any);
+    const hash = SHA3Hasher.getHasher(32).create();
+    hash.update(new Uint8Array(Uint32Array.from(parentId).buffer));
     hash.update(name);
-    const result = new Uint32Array(hash.arrayBuffer());
+    const result = new Uint32Array(hash.digest().buffer);
     // right zero-filling required to keep unsigned number representation
     return [result[0], (result[1] | 0x80000000) >>> 0];
 };

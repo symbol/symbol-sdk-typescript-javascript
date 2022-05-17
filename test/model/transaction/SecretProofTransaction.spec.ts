@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { EmbeddedTransactionBuilder } from 'catbuffer-typescript';
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
-import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { UInt64 } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
@@ -51,7 +52,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -66,7 +67,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -82,7 +83,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -185,7 +186,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -204,7 +205,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             recipientAddress,
             proof,
             NetworkType.TEST_NET,
@@ -220,7 +221,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -238,7 +239,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(epochAdjustment),
             UInt64.fromUint(0),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             unresolvedAddress,
             proof,
             '',
@@ -260,7 +261,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(epochAdjustment),
             UInt64.fromUint(0),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             unresolvedAddress,
             proof,
             '',
@@ -281,7 +282,7 @@ describe('SecretProofTransaction', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -296,7 +297,7 @@ describe('SecretProofTransaction', () => {
         const tx = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -317,7 +318,7 @@ describe('SecretProofTransaction', () => {
         const canNotify = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             namespaceId,
             proof,
             NetworkType.TEST_NET,

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { expect } from 'chai';
 import { sha256 } from 'js-sha256';
-import { sha3_256 } from 'js-sha3';
 import * as ripemd160 from 'ripemd160';
 import { Crypto } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format/Convert';
@@ -25,7 +26,7 @@ import { LockHashAlgorithm } from '../../../src/model/lock/LockHashAlgorithm';
 describe('Hashes', () => {
     it('Op_Sha3_256', () => {
         const secretSeed = Crypto.randomBytes(20);
-        const expected = sha3_256.create().update(secretSeed).hex();
+        const expected = bytesToHex(sha3_256(secretSeed));
         const hash = LockHashUtils.Op_Sha3_256(secretSeed);
         expect(expected.toUpperCase()).to.be.equal(hash);
     });
@@ -51,7 +52,7 @@ describe('Hashes', () => {
     it('Hash', () => {
         const secretSeed = Crypto.randomBytes(20);
 
-        const expectedSHA3 = sha3_256.create().update(secretSeed).hex();
+        const expectedSHA3 = bytesToHex(sha3_256(secretSeed));
         const hashSHA3 = LockHashUtils.Hash(LockHashAlgorithm.Op_Sha3_256, secretSeed);
         expect(expectedSHA3.toUpperCase()).to.be.equal(hashSHA3);
 

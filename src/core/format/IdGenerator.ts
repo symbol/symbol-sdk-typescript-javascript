@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { sha3_256 } from 'js-sha3';
+import { SHA3Hasher } from '../crypto';
 import * as utilities from './Utilities';
 
 export class IdGenerator {
@@ -23,11 +23,11 @@ export class IdGenerator {
      * @param {object} ownerAddress The address.
      * @returns {module:coders/uint64~uint64} The mosaic id.
      */
-    public static generateMosaicId = (nonce: any, ownerAddress: any): number[] => {
-        const hash = sha3_256.create();
-        hash.update(nonce);
-        hash.update(ownerAddress);
-        const result = new Uint32Array(hash.arrayBuffer());
+    public static generateMosaicId = (nonce: number[] | Uint8Array, ownerAddress: number[] | Uint8Array): number[] => {
+        const hash = SHA3Hasher.getHasher(32).create();
+        hash.update(new Uint8Array(nonce));
+        hash.update(new Uint8Array(ownerAddress));
+        const result = new Uint32Array(hash.digest().buffer);
         return [result[0], result[1] & 0x7fffffff];
     };
 

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { sha3_256 } from 'js-sha3';
 import { firstValueFrom } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
 import { Crypto } from '../../src/core/crypto';
@@ -46,7 +47,7 @@ describe('SecretLockHttp', () => {
             networkType = helper.networkType;
             generationHash = helper.generationHash;
             secretLockRepository = helper.repositoryFactory.createSecretLockRepository();
-            secret = sha3_256.create().update(Crypto.randomBytes(20)).hex();
+            secret = bytesToHex(sha3_256(Crypto.randomBytes(20)));
         });
     });
 

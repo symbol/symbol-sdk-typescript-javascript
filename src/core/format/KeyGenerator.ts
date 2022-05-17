@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
 import { UInt64 } from '../../model/UInt64';
+import { SHA3Hasher } from '../crypto';
 
 export class KeyGenerator {
     /**
@@ -27,7 +27,7 @@ export class KeyGenerator {
         if (input.length === 0) {
             throw Error(`Input must not be empty`);
         }
-        const buf = sha3_256.arrayBuffer(input);
+        const buf = SHA3Hasher.getHasher(32)(input).buffer;
         const result = new Uint32Array(buf);
         return new UInt64([result[0], (result[1] | 0x80000000) >>> 0]);
     }

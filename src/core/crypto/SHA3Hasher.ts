@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-import { sha3_256, sha3_512 } from 'js-sha3';
+import { Keccak, sha3_256, sha3_512 } from '@noble/hashes/sha3';
+import { Hash } from '@noble/hashes/utils';
 import { Convert as convert, RawArray as array } from '../format';
+
+export type HashLength = 32 | 64;
 
 export class SHA3Hasher {
     /**
@@ -24,9 +27,9 @@ export class SHA3Hasher {
      * @param {Uint8Array} data The data to hash.
      * @param {number} length The hash length in bytes.
      */
-    public static func = (dest: Uint8Array, data: Uint8Array, length: number): void => {
+    public static func = (dest: Uint8Array, data: Uint8Array, length: HashLength): void => {
         const hasher = SHA3Hasher.getHasher(length);
-        const hash = hasher.arrayBuffer(data);
+        const hash = hasher(data).buffer;
         array.copy(dest, array.uint8View(hash));
     };
 
@@ -35,8 +38,8 @@ export class SHA3Hasher {
      * @param {number} length The hash length in bytes.
      * @returns {object} The hasher.
      */
-    public static createHasher = (length = 64): any => {
-        let hash;
+    public static createHasher = (length: HashLength = 64) => {
+        let hash: Hash<Keccak>;
         return {
             reset: (): void => {
                 hash = SHA3Hasher.getHasher(length).create();
@@ -51,7 +54,7 @@ export class SHA3Hasher {
                 }
             },
             finalize: (result: any): void => {
-                array.copy(result, array.uint8View(hash.arrayBuffer()));
+                array.copy(result, array.uint8View(hash.digest().buffer));
             },
         };
     };
@@ -61,7 +64,7 @@ export class SHA3Hasher {
      * @param {numeric} length The hash length in bytes.
      * @returns {object} The hasher.
      */
-    public static getHasher = (length = 64): any => {
+    public static getHasher = (length: HashLength = 64) => {
         return {
             32: sha3_256,
             64: sha3_512,

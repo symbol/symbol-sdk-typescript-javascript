@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
 import * as ripemd160 from 'ripemd160';
 import { NetworkType } from '../../model/network/NetworkType';
+import { SHA3Hasher } from '../crypto';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
 import { RawArray } from './RawArray';
@@ -80,7 +80,7 @@ export class RawAddress {
      */
     public static publicKeyToAddress = (publicKey: Uint8Array, networkType: NetworkType): Uint8Array => {
         // step 1: sha3 hash of the public key
-        const publicKeyHash = sha3_256.arrayBuffer(publicKey);
+        const publicKeyHash = SHA3Hasher.getHasher(32)(publicKey).buffer;
 
         // step 2: ripemd160 hash of (1)
         const ripemdHash = new ripemd160().update(Buffer.from(publicKeyHash)).digest();
@@ -91,7 +91,7 @@ export class RawAddress {
         RawArray.copy(decodedAddress, ripemdHash, RawAddress.constants.sizes.ripemd160, 1);
 
         // step 4: concatenate (3) and the checksum of (3)
-        const hash = sha3_256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
+        const hash = SHA3Hasher.getHasher(32)(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1)).buffer;
 
         RawArray.copy(
             decodedAddress,
@@ -112,11 +112,11 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             return false;
         }
-        const hash = sha3_256.create();
+        const hash = SHA3Hasher.getHasher(32).create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
         hash.update(decoded.subarray(0, checksumBegin));
         const checksum = new Uint8Array(RawAddress.constants.sizes.checksum);
-        RawArray.copy(checksum, RawArray.uint8View(hash.arrayBuffer()), RawAddress.constants.sizes.checksum);
+        RawArray.copy(checksum, RawArray.uint8View(hash.digest().buffer), RawAddress.constants.sizes.checksum);
         return RawArray.deepEqual(checksum, decoded.subarray(checksumBegin));
     };
 }

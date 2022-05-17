@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SHA3Hasher } from './SHA3Hasher';
+import { HashLength, SHA3Hasher } from './SHA3Hasher';
 
 export class MerkleHashBuilder {
     /**
@@ -33,7 +33,7 @@ export class MerkleHashBuilder {
          *
          * @var {number}
          */
-        public readonly length: number,
+        public readonly length: HashLength,
     ) {}
 
     /**

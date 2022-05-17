@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { bytesToHex } from '@noble/hashes/utils';
 import {
     AddressResolutionEntryBuilder,
     AddressResolutionStatementBuilder,
@@ -23,7 +24,7 @@ import {
     UnresolvedAddressDto,
     UnresolvedMosaicIdDto,
 } from 'catbuffer-typescript';
-import { sha3_256 } from 'js-sha3';
+import { SHA3Hasher } from '../../core';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { Address } from '../account/Address';
 import { UnresolvedAddress } from '../account/UnresolvedAddress';
@@ -114,9 +115,9 @@ export class ResolutionStatement<U extends UnresolvedAddress | UnresolvedMosaicI
                               ),
                       ),
                   );
-        const hasher = sha3_256.create();
+        const hasher = SHA3Hasher.getHasher(32).create();
         hasher.update(builder.serialize());
-        return hasher.hex().toUpperCase();
+        return bytesToHex(hasher.digest()).toUpperCase();
     }
 
     /**

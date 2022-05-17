@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sha3_256 } from '@noble/hashes/sha3';
 import { expect } from 'chai';
-import { sha3_256 } from 'js-sha3';
 import { IdGenerator as idGenerator } from '../../../src/core/format';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -110,9 +110,9 @@ const mosaicTestVector = [
 describe('id generator', () => {
     function generateNamespaceId(parentId, name): number[] {
         const hash = sha3_256.create();
-        hash.update(Uint32Array.from(parentId).buffer);
+        hash.update(new Uint8Array(Uint32Array.from(parentId).buffer));
         hash.update(name);
-        const result = new Uint32Array(hash.arrayBuffer());
+        const result = new Uint32Array(hash.digest().buffer);
         // right zero-filling required to keep unsigned number representation
         return [result[0], (result[1] | 0x80000000) >>> 0];
     }

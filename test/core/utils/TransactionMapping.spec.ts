@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { sha3_256 } from 'js-sha3';
 import { Convert } from '../../../src/core/format';
 import { DtoMapping, TransactionMapping } from '../../../src/core/utils';
 import {
@@ -383,7 +384,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             recipientAddress,
             TestNetworkType,
         );
@@ -408,7 +409,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.createFromDTO('555'),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             account.address,
             proof,
             TestNetworkType,
@@ -556,7 +557,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.createFromDTO('555'),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7')).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'))),
             account.address,
             'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
             TestNetworkType,
@@ -1247,7 +1248,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             recipientAddress,
             TestNetworkType,
         );
@@ -1270,7 +1271,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             recipientAddress,
             TestNetworkType,
         );
@@ -1294,7 +1295,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             recipientAddress,
             TestNetworkType,
         );
@@ -1315,7 +1316,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.createFromDTO('555'),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             account.address,
             proof,
             TestNetworkType,
@@ -1329,7 +1330,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
-        expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
+        expect(transaction.secret).to.be.equal(bytesToHex(sha3_256(Convert.hexToUint8(proof))));
         deepEqual(transaction.recipientAddress, account.address);
         expect(transaction.proof).to.be.equal(proof);
     });
@@ -1340,7 +1341,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.createFromDTO('555'),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             recipientAddress,
             proof,
             TestNetworkType,
@@ -1354,7 +1355,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
-        expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
+        expect(transaction.secret).to.be.equal(bytesToHex(sha3_256(Convert.hexToUint8(proof))));
         expect(transaction.proof).to.be.equal(proof);
         expect((transaction.recipientAddress as NamespaceId).id.toHex()).to.be.equal(recipientAddress.toHex());
     });

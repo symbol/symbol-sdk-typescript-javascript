@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils';
@@ -371,7 +372,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             recipientAddress,
             NetworkType.TEST_NET,
             undefined,
@@ -404,7 +405,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -567,7 +568,7 @@ describe('TransactionMapping - createFromPayload with optional sigature and sign
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7')).hex(),
+            bytesToHex(sha3_256(Convert.hexToUint8('B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'))),
             account.address,
             'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7',
             NetworkType.TEST_NET,

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import { bytesToHex } from '@noble/hashes/utils';
 import { GeneratorUtils } from 'catbuffer-typescript';
-import { sha3_256 } from 'js-sha3';
+import { SHA3Hasher } from '../../core';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';
@@ -55,7 +56,7 @@ export class TransactionStatement {
      * @return {string} receipt hash in hex
      */
     public generateHash(): string {
-        const hasher = sha3_256.create();
+        const hasher = SHA3Hasher.getHasher(32).create();
         hasher.update(GeneratorUtils.uintToBuffer(ReceiptVersion.TRANSACTION_STATEMENT, 2));
         hasher.update(GeneratorUtils.uintToBuffer(ReceiptType.Transaction_Group, 2));
         hasher.update(this.source.serialize());
@@ -67,6 +68,6 @@ export class TransactionStatement {
         });
 
         hasher.update(receiptBytes);
-        return hasher.hex().toUpperCase();
+        return bytesToHex(hasher.digest()).toUpperCase();
     }
 }

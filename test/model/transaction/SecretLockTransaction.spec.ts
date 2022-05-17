@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
-import { sha3_256 } from 'js-sha3';
 import { Convert, Convert as convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
@@ -68,7 +69,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             TestAddress,
             TestNetworkType,
         );
@@ -84,7 +85,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             TestAddress,
             TestNetworkType,
             new UInt64([1, 0]),
@@ -101,7 +102,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             TestAddress,
             TestNetworkType,
         );
@@ -120,7 +121,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             TestAddress,
             TestNetworkType,
         );
@@ -252,7 +253,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             recipientAddress,
             TestNetworkType,
         );
@@ -271,7 +272,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             TestAddress,
             TestNetworkType,
         ).setMaxFee(2);
@@ -290,7 +291,7 @@ describe('SecretLockTransaction', () => {
             new Mosaic(unresolvedMosaicId, UInt64.fromUint(1)),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             unresolvedAddress,
             '',
             account.publicAccount,
@@ -312,7 +313,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             TestAddress,
             TestNetworkType,
         );
@@ -334,7 +335,7 @@ describe('SecretLockTransaction', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             namespaceId,
             TestNetworkType,
         ).shouldNotifyAccount(namespaceId);

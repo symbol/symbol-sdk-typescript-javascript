@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { bytesToHex } from '@noble/hashes/utils';
 import { SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { MerkleTreeBranch } from './MerkleTreeBranch';
@@ -192,10 +193,7 @@ export default class MerkleTreeParser {
         links.forEach((link) => {
             branchLinks[parseInt(`0x${link.bit}`, 16)] = link.link;
         });
-        return SHA3Hasher.getHasher(32)
-            .update(Convert.hexToUint8(encodedPath + branchLinks.join('')))
-            .hex()
-            .toUpperCase();
+        return bytesToHex(SHA3Hasher.getHasher(32)(Convert.hexToUint8(encodedPath + branchLinks.join('')))).toUpperCase();
     }
 
     /**
@@ -205,9 +203,6 @@ export default class MerkleTreeParser {
      * @returns {string} leaf hash (Hash(encodedPath + leaf value))
      */
     getLeafHash(encodedPath: string, leafValue): string {
-        return SHA3Hasher.getHasher(32)
-            .update(Convert.hexToUint8(encodedPath + leafValue))
-            .hex()
-            .toUpperCase();
+        return bytesToHex(SHA3Hasher.getHasher(32)(Convert.hexToUint8(encodedPath + leafValue))).toUpperCase();
     }
 }

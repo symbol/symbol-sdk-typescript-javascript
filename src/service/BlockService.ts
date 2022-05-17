@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import MerkleTree from 'merkletreejs';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, toArray } from 'rxjs/operators';
+import { SHA3Hasher } from '../core';
 import { BlockRepository } from '../infrastructure/BlockRepository';
 import { TransactionPaginationStreamer } from '../infrastructure/paginationStreamer/TransactionPaginationStreamer';
 import { RepositoryFactory } from '../infrastructure/RepositoryFactory';
@@ -96,13 +98,13 @@ export class BlockService implements IBlockService {
             return leaf.toUpperCase() === rootHash.toUpperCase();
         }
         const rootToCompare = merklePathItem.reduce((proofHash, pathItem) => {
-            const hasher = sha3_256.create();
+            const hasher = SHA3Hasher.getHasher(32).create();
             // Left
             if (pathItem.position !== undefined && pathItem.position === MerklePosition.Left) {
-                return hasher.update(Buffer.from(pathItem.hash + proofHash, 'hex')).hex();
+                return bytesToHex(hasher.update(Buffer.from(pathItem.hash + proofHash, 'hex')).digest());
             } else {
                 // Right
-                return hasher.update(Buffer.from(proofHash + pathItem.hash, 'hex')).hex();
+                return bytesToHex(hasher.update(Buffer.from(proofHash + pathItem.hash, 'hex')).digest());
             }
         }, leaf);
         return rootToCompare.toUpperCase() === rootHash.toUpperCase();

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import { ChronoUnit } from '@js-joda/core';
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
 import { sha256 } from 'js-sha256';
-import { sha3_256 } from 'js-sha3';
 import * as ripemd160 from 'ripemd160';
 import { firstValueFrom } from 'rxjs';
 import { take, toArray } from 'rxjs/operators';
@@ -1019,7 +1020,7 @@ describe('TransactionHttp', () => {
                 helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
-                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
+                bytesToHex(sha3_256(Crypto.randomBytes(20))),
                 account2.address,
                 networkType,
                 helper.maxFee,
@@ -1041,7 +1042,7 @@ describe('TransactionHttp', () => {
                 helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Sha3_256,
-                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
+                bytesToHex(sha3_256(Crypto.randomBytes(20))),
                 account2.address,
                 networkType,
                 helper.maxFee,
@@ -1105,7 +1106,7 @@ describe('TransactionHttp', () => {
                 helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
-                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
+                bytesToHex(sha3_256(Crypto.randomBytes(20))),
                 account2.address,
                 networkType,
                 helper.maxFee,
@@ -1120,7 +1121,7 @@ describe('TransactionHttp', () => {
                 helper.createCurrency(10, false),
                 UInt64.fromUint(100),
                 LockHashAlgorithm.Op_Hash_256,
-                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
+                bytesToHex(sha3_256(Crypto.randomBytes(20))),
                 account2.address,
                 networkType,
                 helper.maxFee,
@@ -1178,7 +1179,7 @@ describe('TransactionHttp', () => {
     describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
         it('aggregate', () => {
             const secretSeed = Crypto.randomBytes(20);
-            const secret = sha3_256.create().update(secretSeed).hex();
+            const secret = bytesToHex(sha3_256(secretSeed));
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(helper.epochAdjustment),

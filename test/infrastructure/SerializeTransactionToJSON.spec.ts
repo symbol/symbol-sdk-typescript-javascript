@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import { sha3_256 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { expect } from 'chai';
-import { sha3_256 } from 'js-sha3';
 import { Crypto } from '../../src/core/crypto';
 import { Convert as convert, Convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils';
@@ -268,7 +269,7 @@ describe('SerializeTransactionToJSON', () => {
             NetworkCurrencyLocal.createAbsolute(10),
             UInt64.fromUint(100),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             recipientAddress,
             NetworkType.TEST_NET,
         );
@@ -284,7 +285,7 @@ describe('SerializeTransactionToJSON', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(epochAdjustment),
             LockHashAlgorithm.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            bytesToHex(sha3_256(convert.hexToUint8(proof))),
             account.address,
             proof,
             NetworkType.TEST_NET,
@@ -294,7 +295,7 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.version).to.be.equal(1);
         expect(json.transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(json.transaction.hashAlgorithm).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
-        expect(json.transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
+        expect(json.transaction.secret).to.be.equal(bytesToHex(sha3_256(convert.hexToUint8(proof))));
         expect(json.transaction.proof).to.be.equal(proof);
     });
 

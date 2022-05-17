@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sha3_256, sha3_512 } from '@noble/hashes/sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { expect } from 'chai';
 import * as CryptoJS from 'crypto-js';
-import { sha3_256, sha3_512 } from 'js-sha3';
 import { LockHashAlgorithm, LockHashAlgorithmLengthValidator } from '../../../src/model/lock/LockHashAlgorithm';
 
 describe('LockHashAlgorithmLengthValidator', () => {
     it('LockHashAlgorithm.SHA3_256 should be exactly 64 chars length', () => {
-        expect(LockHashAlgorithmLengthValidator(LockHashAlgorithm.Op_Sha3_256, sha3_256.create().update('abcxyz').hex())).to.be.equal(true);
+        expect(LockHashAlgorithmLengthValidator(LockHashAlgorithm.Op_Sha3_256, bytesToHex(sha3_256('abcxyz')))).to.be.equal(true);
     });
 
     it('LockHashAlgorithm.SHA3_256 should return false if it is not 64 chars length', () => {
-        expect(LockHashAlgorithmLengthValidator(LockHashAlgorithm.Op_Sha3_256, sha3_512.create().update('abcxyz').hex())).to.be.equal(
-            false,
-        );
+        expect(LockHashAlgorithmLengthValidator(LockHashAlgorithm.Op_Sha3_256, bytesToHex(sha3_512('abcxyz')))).to.be.equal(false);
     });
 
     it('LockHashAlgorithm.SHA_256 should return false if it is not a hash valid', () => {

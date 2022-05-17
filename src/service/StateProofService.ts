@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
+import { bytesToHex } from '@noble/hashes/utils';
 import { Observable } from 'rxjs';
 import { map, mergeMap, toArray } from 'rxjs/operators';
+import { SHA3Hasher } from '../core';
 import { Convert } from '../core/format';
 import { BlockRepository, RepositoryFactory } from '../infrastructure';
 import {
@@ -245,7 +246,7 @@ export class StateProofService {
 
     private toProof(serialized: Uint8Array, merkle: MerkleStateInfo): StateMerkleProof {
         const hash = Convert.uint8ToHex(serialized);
-        const stateHash = sha3_256.create().update(Convert.hexToUint8(hash)).hex().toUpperCase();
+        const stateHash = bytesToHex(SHA3Hasher.getHasher(32)(Convert.hexToUint8(hash))).toUpperCase();
         const valid = stateHash === merkle.tree.leaf?.value;
         return new StateMerkleProof(stateHash, merkle.tree, this.getRootHash(merkle.tree), merkle.tree.leaf?.value, valid);
     }
