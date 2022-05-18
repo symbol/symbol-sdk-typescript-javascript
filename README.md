@@ -1,3 +1,5 @@
+:warning: **This SDK has been deprecated as of January 2022.** The new NEM & Symbol JavaScript SDK can be found [here](https://github.com/symbol/symbol/tree/dev/sdk/javascript). 
+
 # Symbol SDK for TypeScript and JavaScript
 
 [![npm version](https://badge.fury.io/js/symbol-sdk.svg)](https://badge.fury.io/js/symbol-sdk)
