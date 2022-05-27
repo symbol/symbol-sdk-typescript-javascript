@@ -101,6 +101,8 @@ describe('TransactionHttp', () => {
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
+        metaDto.timestamp = '0';
+        metaDto.feeMultiplier = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
         const transactionDto = {} as TransferTransactionDTO;
@@ -186,6 +188,8 @@ describe('TransactionHttp', () => {
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactions.data[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transactions.data[0].transactionInfo?.feeMultiplier).to.be.equal(0);
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
@@ -219,6 +223,8 @@ describe('TransactionHttp', () => {
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
+        metaDto.timestamp = '0';
+        metaDto.feeMultiplier = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
         const transactionDto = {} as TransferTransactionDTO;
@@ -245,6 +251,8 @@ describe('TransactionHttp', () => {
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
+        expect(transaction.transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transaction.transactionInfo?.feeMultiplier).to.be.equal(0);
 
         transaction = await firstValueFrom(transactionHttp.getTransaction(generationHash, TransactionGroup.Partial));
 
@@ -252,7 +260,6 @@ describe('TransactionHttp', () => {
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
-
         transaction = await firstValueFrom(transactionHttp.getTransaction(generationHash, TransactionGroup.Unconfirmed));
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
@@ -267,6 +274,8 @@ describe('TransactionHttp', () => {
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
+        metaDto.timestamp = '0';
+        metaDto.feeMultiplier = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
         const transactionDto = {} as TransferTransactionDTO;
@@ -309,6 +318,8 @@ describe('TransactionHttp', () => {
         expect(((transactionConfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactionConfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionConfirmed[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactionConfirmed[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transactionConfirmed[0].transactionInfo?.feeMultiplier).to.be.equal(0);
 
         expect(transactionUnconfirmed.length).to.be.equal(1);
         expect(transactionUnconfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
@@ -330,6 +341,8 @@ describe('TransactionHttp', () => {
         metaDto.height = '1';
         metaDto.index = 0;
         metaDto.merkleComponentHash = 'merkleHash';
+        metaDto.timestamp = '0';
+        metaDto.feeMultiplier = 0;
 
         const transactionDto = {} as TransferTransactionDTO;
         transactionDto.deadline = '1';

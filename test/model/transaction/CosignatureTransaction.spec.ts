@@ -40,6 +40,8 @@ describe('CosignatureTransaction', () => {
             id: '5A0069D83F17CF0001777E55',
             index: 0,
             merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+            timestamp: '0',
+            feeMultiplier: 0,
         },
         transaction: {
             cosignatures: [
@@ -65,6 +67,8 @@ describe('CosignatureTransaction', () => {
                         height: '18160',
                         id: '5A0069D83F17CF0001777E56',
                         index: 0,
+                        timestamp: '0',
+                        feeMultiplier: 0,
                     },
                     transaction: {
                         message: '00746573742D6D657373616765',
@@ -174,6 +178,8 @@ describe('CosignatureTransaction', () => {
                 id: '5A0069D83F17CF0001777E55',
                 index: 0,
                 merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                timestamp: '0',
+                feeMultiplier: 0,
             },
         });
         const aggregate = CreateTransactionFromDTO(aggregateTransferTransactionDTO) as AggregateTransaction;

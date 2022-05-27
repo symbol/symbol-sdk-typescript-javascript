@@ -285,7 +285,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash, timestamp: '0', feeMultiplier: 0 };
 
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMultisigMock, multisigRepo);
                 listener.open();
@@ -315,7 +315,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash, timestamp: '0', feeMultiplier: 0 };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMockAlias);
@@ -334,7 +334,10 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: { height: '2', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
+                        data: {
+                            meta: { height: '2', hash: 'new hash', timestamp: '2', feeMultiplier: 1 },
+                            transaction: transferTransactionDTO.transaction,
+                        },
                     },
                     null,
                 );
@@ -360,7 +363,7 @@ describe('Listener', () => {
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
                 const hash2 = 'abc2';
-                transferTransactionDTO.meta = { height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash, timestamp: '0', feeMultiplier: 0 };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMock);
@@ -379,7 +382,10 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
+                        data: {
+                            meta: { height: '1', hash: 'new hash', timestamp: '1', feeMultiplier: 1 },
+                            transaction: transferTransactionDTO.transaction,
+                        },
                     },
                     null,
                 );
@@ -399,7 +405,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash, timestamp: '0', feeMultiplier: 0 };
 
                 const reportedTransactions: Transaction[] = [];
                 const listener = new Listener('http://localhost:3000', namespaceRepo, WebSocketMockAlias);
@@ -418,7 +424,10 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
+                        data: {
+                            meta: { height: '1', hash: 'new hash', timestamp: '1', feeMultiplier: 1 },
+                            transaction: transferTransactionDTO.transaction,
+                        },
                     },
                     null,
                 );
@@ -438,7 +447,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash, timestamp: '0', feeMultiplier: 0 };
 
                 const reportedTransactions: Transaction[] = [];
 
@@ -458,7 +467,10 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
+                        data: {
+                            meta: { height: '1', hash: 'new hash', timestamp: '1', feeMultiplier: 1 },
+                            transaction: transferTransactionDTO.transaction,
+                        },
                     },
                     null,
                 );
@@ -487,7 +499,7 @@ describe('Listener', () => {
                 );
                 const transferTransactionDTO = transferTransaction.toJSON();
                 const hash = 'abc';
-                transferTransactionDTO.meta = { height: '1', hash: hash };
+                transferTransactionDTO.meta = { height: '1', hash: hash, timestamp: '0', feeMultiplier: 0 };
 
                 const reportedTransactions: Transaction[] = [];
 
@@ -507,7 +519,10 @@ describe('Listener', () => {
                 listener.handleMessage(
                     {
                         topic: name.toString(),
-                        data: { meta: { height: '1', hash: 'new hash' }, transaction: transferTransactionDTO.transaction },
+                        data: {
+                            meta: { height: '1', hash: 'new hash', timestamp: '1', feeMultiplier: 1 },
+                            transaction: transferTransactionDTO.transaction,
+                        },
                     },
                     null,
                 );

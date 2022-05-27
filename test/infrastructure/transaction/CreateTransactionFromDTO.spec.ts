@@ -59,6 +59,8 @@ describe('CreateTransactionFromDTO', () => {
                     hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     index: 0,
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: transactionDto,
             };
@@ -78,6 +80,8 @@ describe('CreateTransactionFromDTO', () => {
                     hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     index: 0,
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -113,6 +117,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1860',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -139,6 +145,8 @@ describe('CreateTransactionFromDTO', () => {
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
                                 index: 0,
+                                timestamp: '0',
+                                feeMultiplier: 0,
                             },
                             transaction: {
                                 message: '00746573742D6D657373616765',
@@ -177,6 +185,8 @@ describe('CreateTransactionFromDTO', () => {
                     aggregateHash: 'D6A48BFD66920825D748D2CF92B025588F3A030C98633C442B4704BF407160B9',
                     aggregateId: '5F729AA24655A25B54840CB7',
                     index: 0,
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
@@ -212,6 +222,8 @@ describe('CreateTransactionFromDTO', () => {
                         height: '1',
                         index: 19,
                         merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                        timestamp: '0',
+                        feeMultiplier: 0,
                     },
                     transaction: {
                         size: 100,
@@ -244,6 +256,8 @@ describe('CreateTransactionFromDTO', () => {
                         height: '1860',
                         index: 0,
                         merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                        timestamp: '0',
+                        feeMultiplier: 0,
                     },
                     transaction: {
                         size: 100,
@@ -270,6 +284,8 @@ describe('CreateTransactionFromDTO', () => {
                                     aggregateId: '5A0069D83F17CF0001777E55',
                                     height: '1860',
                                     index: 0,
+                                    timestamp: '0',
+                                    feeMultiplier: 0,
                                 },
                                 transaction: {
                                     duration: '1000',
@@ -307,6 +323,8 @@ describe('CreateTransactionFromDTO', () => {
                         height: '1',
                         index: 19,
                         merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                        timestamp: '0',
+                        feeMultiplier: 0,
                     },
                     transaction: {
                         size: 100,
@@ -338,6 +356,8 @@ describe('CreateTransactionFromDTO', () => {
                         height: '1860',
                         index: 0,
                         merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                        timestamp: '0',
+                        feeMultiplier: 0,
                     },
                     transaction: {
                         size: 100,
@@ -364,6 +384,8 @@ describe('CreateTransactionFromDTO', () => {
                                     aggregateId: '5A0069D83F17CF0001777E55',
                                     height: '1860',
                                     index: 0,
+                                    timestamp: '0',
+                                    feeMultiplier: 0,
                                 },
                                 transaction: {
                                     name: '0unius',
@@ -402,6 +424,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1',
                     index: 19,
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -436,6 +460,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1860',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -462,6 +488,8 @@ describe('CreateTransactionFromDTO', () => {
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
                                 index: 0,
+                                timestamp: '0',
+                                feeMultiplier: 0,
                             },
                             transaction: {
                                 id: '85BBEA6CC462B244',
@@ -497,6 +525,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1',
                     index: 19,
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -528,6 +558,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1860',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -554,6 +586,8 @@ describe('CreateTransactionFromDTO', () => {
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
                                 index: 0,
+                                timestamp: '0',
+                                feeMultiplier: 0,
                             },
                             transaction: {
                                 delta: '1000',
@@ -623,6 +657,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1',
                     index: 19,
                     merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -655,6 +691,8 @@ describe('CreateTransactionFromDTO', () => {
                     height: '1860',
                     index: 0,
                     merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
+                    timestamp: '0',
+                    feeMultiplier: 0,
                 },
                 transaction: {
                     size: 100,
@@ -681,6 +719,8 @@ describe('CreateTransactionFromDTO', () => {
                                 aggregateId: '5A0069D83F17CF0001777E55',
                                 height: '1860',
                                 index: 0,
+                                timestamp: '0',
+                                feeMultiplier: 0,
                             },
                             transaction: {
                                 minApprovalDelta: 1,
@@ -724,12 +764,16 @@ describe('CreateTransactionFromDTO', () => {
         const testTxIndex = 0;
         const testTxSize = 100;
         const testTxMaxFee = '0';
+        const testTxTimestamp = '0';
+        const testTxFeeMultiplier = 0;
 
         // aggregate tx constants
         const testAggTxId = '5A0069D83F17CF0001777E55';
         const testAggTxHash = '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96';
         const testAggTxHeight = '1860';
         const testAggTxIndex = 0;
+        const testAggTxTimestamp = '0';
+        const testAggTxFeeMultiplier = 0;
         const testAggMerkleComponentHash = '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7';
         const testAggTxSize = 100;
         const testAggTxCosigSignature =
@@ -762,6 +806,8 @@ describe('CreateTransactionFromDTO', () => {
                 hash: testAggTxHash,
                 height: testAggTxHeight,
                 index: testAggTxIndex,
+                timestamp: testAggTxTimestamp,
+                feeMultiplier: testAggTxFeeMultiplier,
                 merkleComponentHash: testAggMerkleComponentHash,
             },
             transaction: {
@@ -785,6 +831,8 @@ describe('CreateTransactionFromDTO', () => {
                             aggregateId: testAggTxId,
                             height: testAggTxHeight,
                             index: testAggTxIndex,
+                            timestamp: testAggTxTimestamp,
+                            feeMultiplier: testAggTxFeeMultiplier,
                         },
                         transaction: innerTransaction,
                     },
@@ -802,6 +850,8 @@ describe('CreateTransactionFromDTO', () => {
                 hash: testTxHash,
                 merkleComponentHash: testTxMerkleComponentHash,
                 index: testTxIndex,
+                timestamp: testTxTimestamp,
+                feeMultiplier: testTxFeeMultiplier,
             },
             transaction: transactionDto,
         });
