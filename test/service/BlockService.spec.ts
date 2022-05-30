@@ -130,7 +130,14 @@ describe('BlockService', () => {
             PlainMessage.create(''),
             undefined,
             undefined,
-            new TransactionInfo(UInt64.fromUint(1), 0, 'id', 'DCD14A040BC5096348FC55CACBD0D459DD6F81779C7E7C526EA52309BD6595F7'),
+            new TransactionInfo(
+                UInt64.fromUint(1),
+                0,
+                'id',
+                UInt64.fromUint(0),
+                0,
+                'DCD14A040BC5096348FC55CACBD0D459DD6F81779C7E7C526EA52309BD6595F7',
+            ),
         );
         return new Page<Transaction>([tx], 1, 20);
     }

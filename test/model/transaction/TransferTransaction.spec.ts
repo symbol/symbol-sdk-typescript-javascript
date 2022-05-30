@@ -326,6 +326,8 @@ describe('TransferTransaction', () => {
                 hash: '9661088F22C2DC72E76EE2B0F07BFC0D8E98EEE0CC8AE274362EDBB44F164F16',
                 merkleComponentHash: '9661088F22C2DC72E76EE2B0F07BFC0D8E98EEE0CC8AE274362EDBB44F164F16',
                 index: 0,
+                timestamp: '0',
+                feeMultiplier: 0,
             },
             transaction: {
                 size: 292,

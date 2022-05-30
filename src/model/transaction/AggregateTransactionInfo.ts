@@ -27,11 +27,15 @@ export class AggregateTransactionInfo extends TransactionInfo {
      * @param id
      * @param aggregateHash
      * @param aggregateId
+     * @param timestamp
+     * @param feeMultiplier
      */
     constructor(
         height: UInt64,
         index: number,
         id: string,
+        timestamp: UInt64,
+        feeMultiplier: number,
         /**
          * The hash of the aggregate transaction.
          */
@@ -41,6 +45,6 @@ export class AggregateTransactionInfo extends TransactionInfo {
          */
         public readonly aggregateId: string,
     ) {
-        super(height, index, id);
+        super(height, index, id, timestamp, feeMultiplier);
     }
 }

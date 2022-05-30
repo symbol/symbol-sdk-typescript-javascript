@@ -24,6 +24,8 @@ export class TransactionInfo {
      * @param height
      * @param index
      * @param id
+     * @param timestamp
+     * @param feeMultiplier
      * @param hash
      * @param merkleComponentHash
      */
@@ -40,6 +42,14 @@ export class TransactionInfo {
          * The transaction db id.
          */
         public readonly id: string,
+        /**
+         * The transaction timestamp.
+         */
+        public readonly timestamp?: UInt64,
+        /**
+         * The transaction fee multiplier.
+         */
+        public readonly feeMultiplier?: number,
         /**
          * The transaction hash.
          */

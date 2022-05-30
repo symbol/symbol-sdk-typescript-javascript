@@ -96,7 +96,7 @@ describe('Transaction', () => {
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(0), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(UInt64.fromUint(0), 1, 'id_hash', UInt64.fromUint(0), 0, 'hash', 'hash'),
             );
             expect(transaction.isUnconfirmed()).to.be.equal(true);
         });
@@ -110,7 +110,7 @@ describe('Transaction', () => {
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', UInt64.fromUint(100), 0, 'hash', 'hash'),
             );
             expect(transaction.isUnconfirmed()).to.be.equal(false);
         });
@@ -126,7 +126,7 @@ describe('Transaction', () => {
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', UInt64.fromUint(100), 0, 'hash', 'hash'),
             );
             expect(transaction.isConfirmed()).to.be.equal(true);
         });
@@ -142,7 +142,7 @@ describe('Transaction', () => {
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(0), 1, 'id_hash', 'hash', 'hash_2'),
+                new TransactionInfo(UInt64.fromUint(0), 1, 'id_hash', UInt64.fromUint(0), 0, 'hash', 'hash_2'),
             );
             expect(transaction.hasMissingSignatures()).to.be.equal(true);
         });
@@ -158,7 +158,7 @@ describe('Transaction', () => {
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', UInt64.fromUint(100), 0, 'hash', 'hash'),
             );
             expect(() => {
                 transaction.reapplyGiven(Deadline.create(epochAdjustment));
@@ -251,7 +251,7 @@ describe('Transaction', () => {
                 UInt64.fromUint(0),
                 undefined,
                 undefined,
-                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', UInt64.fromUint(100), 0, 'hash', 'hash'),
             );
             expect(transaction.versionToHex()).to.be.equal('0x9801');
         });
