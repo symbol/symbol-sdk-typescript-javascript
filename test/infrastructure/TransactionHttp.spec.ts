@@ -101,8 +101,6 @@ describe('TransactionHttp', () => {
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
-        metaDto.timestamp = '0';
-        metaDto.feeMultiplier = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
         const transactionDto = {} as TransferTransactionDTO;
@@ -139,7 +137,22 @@ describe('TransactionHttp', () => {
                 undefined,
                 undefined,
             ),
-        ).thenReturn(Promise.resolve(page));
+        ).thenReturn(
+            Promise.resolve({
+                data: [
+                    {
+                        id: 'id',
+                        meta: {
+                            ...metaDto,
+                            feeMultiplier: 100,
+                            timestamp: '1000',
+                        },
+                        transaction: transactionDto,
+                    },
+                ],
+                pagination: paginationDto,
+            }),
+        );
 
         when(
             transactionRoutesApi.searchPartialTransactions(
@@ -188,8 +201,8 @@ describe('TransactionHttp', () => {
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
-        expect(transactions.data[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
-        expect(transactions.data[0].transactionInfo?.feeMultiplier).to.be.equal(0);
+        expect(transactions.data[0].transactionInfo?.timestamp?.toString()).to.be.equal('1000');
+        expect(transactions.data[0].transactionInfo?.feeMultiplier).to.be.equal(100);
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
@@ -201,6 +214,8 @@ describe('TransactionHttp', () => {
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactions.data[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transactions.data[0].transactionInfo?.feeMultiplier).to.be.equal(0);
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
@@ -212,6 +227,8 @@ describe('TransactionHttp', () => {
         expect(((transactions.data[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactions.data[0].transactionInfo?.id).to.be.equal('id');
         expect(transactions.data[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactions.data[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transactions.data[0].transactionInfo?.feeMultiplier).to.be.equal(0);
 
         expect(transactions.pageNumber).to.be.equal(1);
         expect(transactions.pageSize).to.be.equal(1);
@@ -223,8 +240,6 @@ describe('TransactionHttp', () => {
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
-        metaDto.timestamp = '0';
-        metaDto.feeMultiplier = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
         const transactionDto = {} as TransferTransactionDTO;
@@ -240,7 +255,17 @@ describe('TransactionHttp', () => {
         transactionInfoDto.meta = metaDto;
         transactionInfoDto.transaction = transactionDto;
 
-        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
+        when(transactionRoutesApi.getConfirmedTransaction(generationHash)).thenReturn(
+            Promise.resolve({
+                id: 'id',
+                meta: {
+                    ...metaDto,
+                    feeMultiplier: 100,
+                    timestamp: '1000',
+                },
+                transaction: transactionDto,
+            }),
+        );
 
         when(transactionRoutesApi.getPartialTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
         when(transactionRoutesApi.getUnconfirmedTransaction(generationHash)).thenReturn(Promise.resolve(transactionInfoDto));
@@ -251,8 +276,8 @@ describe('TransactionHttp', () => {
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
-        expect(transaction.transactionInfo?.timestamp?.toString()).to.be.equal('0');
-        expect(transaction.transactionInfo?.feeMultiplier).to.be.equal(0);
+        expect(transaction.transactionInfo?.timestamp?.toString()).to.be.equal('1000');
+        expect(transaction.transactionInfo?.feeMultiplier).to.be.equal(100);
 
         transaction = await firstValueFrom(transactionHttp.getTransaction(generationHash, TransactionGroup.Partial));
 
@@ -260,12 +285,17 @@ describe('TransactionHttp', () => {
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
+        expect(transaction.transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transaction.transactionInfo?.feeMultiplier).to.be.equal(0);
+
         transaction = await firstValueFrom(transactionHttp.getTransaction(generationHash, TransactionGroup.Unconfirmed));
 
         expect(transaction.type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transaction as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transaction.transactionInfo?.id).to.be.equal('id');
         expect(transaction.transactionInfo?.hash).to.be.equal('hash');
+        expect(transaction.transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transaction.transactionInfo?.feeMultiplier).to.be.equal(0);
     });
 
     it('Test getTransactionsById method', async () => {
@@ -274,8 +304,6 @@ describe('TransactionHttp', () => {
         metaDto.hash = 'hash';
         metaDto.height = '1';
         metaDto.index = 0;
-        metaDto.timestamp = '0';
-        metaDto.feeMultiplier = 0;
         metaDto.merkleComponentHash = 'merkleHash';
 
         const transactionDto = {} as TransferTransactionDTO;
@@ -292,7 +320,17 @@ describe('TransactionHttp', () => {
         transactionInfoDto.transaction = transactionDto;
 
         when(transactionRoutesApi.getConfirmedTransactions(deepEqual({ transactionIds: [generationHash] }))).thenReturn(
-            Promise.resolve([transactionInfoDto]),
+            Promise.resolve([
+                {
+                    id: 'id',
+                    meta: {
+                        ...metaDto,
+                        feeMultiplier: 100,
+                        timestamp: '1000',
+                    },
+                    transaction: transactionDto,
+                },
+            ]),
         );
 
         const transactionConfirmed = await firstValueFrom(
@@ -318,20 +356,24 @@ describe('TransactionHttp', () => {
         expect(((transactionConfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactionConfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionConfirmed[0].transactionInfo?.hash).to.be.equal('hash');
-        expect(transactionConfirmed[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
-        expect(transactionConfirmed[0].transactionInfo?.feeMultiplier).to.be.equal(0);
+        expect(transactionConfirmed[0].transactionInfo?.timestamp?.toString()).to.be.equal('1000');
+        expect(transactionConfirmed[0].transactionInfo?.feeMultiplier).to.be.equal(100);
 
         expect(transactionUnconfirmed.length).to.be.equal(1);
         expect(transactionUnconfirmed[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactionUnconfirmed[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactionUnconfirmed[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionUnconfirmed[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactionUnconfirmed[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transactionUnconfirmed[0].transactionInfo?.feeMultiplier).to.be.equal(0);
 
         expect(transactionPartial.length).to.be.equal(1);
         expect(transactionPartial[0].type.valueOf()).to.be.equal(TransactionType.TRANSFER.valueOf());
         expect(((transactionPartial[0] as TransferTransaction).recipientAddress as Address).plain()).to.be.equal(TestAddress.plain());
         expect(transactionPartial[0].transactionInfo?.id).to.be.equal('id');
         expect(transactionPartial[0].transactionInfo?.hash).to.be.equal('hash');
+        expect(transactionPartial[0].transactionInfo?.timestamp?.toString()).to.be.equal('0');
+        expect(transactionPartial[0].transactionInfo?.feeMultiplier).to.be.equal(0);
     });
 
     it('Test getEffectiveFees method', async () => {
