@@ -122,8 +122,8 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
             UInt64.fromNumericString(meta.height),
             meta.index,
             id,
-            UInt64.fromNumericString(meta.timestamp),
-            meta.feeMultiplier,
+            UInt64.fromNumericString(meta.timestamp ?? '0'),
+            meta.feeMultiplier ?? 0,
             meta.aggregateHash,
             meta.aggregateId,
         );
@@ -132,8 +132,8 @@ const extractTransactionMeta = (meta: any, id: string): TransactionInfo | Aggreg
         UInt64.fromNumericString(meta.height),
         meta.index,
         id,
-        UInt64.fromNumericString(meta.timestamp),
-        meta.feeMultiplier,
+        UInt64.fromNumericString(meta.timestamp ?? '0'),
+        meta.feeMultiplier ?? 0,
         meta.hash,
         meta.merkleComponentHash,
     );
