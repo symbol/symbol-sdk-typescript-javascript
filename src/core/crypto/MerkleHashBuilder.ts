@@ -72,12 +72,14 @@ export class MerkleHashBuilder {
         while (numRemainingHashes > 1) {
             for (let i = 0; i < numRemainingHashes; i += 2) {
                 if (i + 1 < numRemainingHashes) {
-                    hashes.splice(i / 2, 0, this.hash([hashes[i], hashes[i + 1]]));
+                    const parentHash = this.hash([hashes[i], hashes[i + 1]]);
+                    hashes[Math.floor(i / 2)] = parentHash;
                     continue;
                 }
 
                 // if there is an odd number of hashes, duplicate the last one
-                hashes.splice(i / 2, 0, this.hash([hashes[i], hashes[i]]));
+                const parentHash = this.hash([hashes[i], hashes[i]]);
+                hashes[Math.floor(i / 2)] = parentHash;
                 ++numRemainingHashes;
             }
             numRemainingHashes /= 2;

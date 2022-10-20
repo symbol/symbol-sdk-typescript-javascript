@@ -20,7 +20,6 @@ import {
     AmountDto,
     CosignatureBuilder,
     EmbeddedTransactionBuilder,
-    GeneratorUtils,
     Hash256Dto,
     PublicKeyDto,
     SignatureDto,
@@ -345,8 +344,7 @@ export class AggregateTransaction extends Transaction {
             hasher.reset();
 
             const byte = transaction.toEmbeddedTransaction().serialize();
-            const padding = new Uint8Array(GeneratorUtils.getPaddingSize(byte.length, 8));
-            hasher.update(GeneratorUtils.concatTypedArrays(byte, padding));
+            hasher.update(byte);
             hasher.finalize(entityHash);
 
             // update merkle tree (add transaction hash)

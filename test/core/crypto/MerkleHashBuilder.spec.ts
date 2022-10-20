@@ -15,52 +15,96 @@
  */
 
 import { expect } from 'chai';
-import { MerkleHashBuilder } from '../../../src/core/crypto';
+import { Crypto, MerkleHashBuilder } from '../../../src/core/crypto';
 import { Convert } from '../../../src/core/format';
 
-describe('MerkleHashBuilder should', () => {
-    it('fill 0s for empty merkle tree', () => {
-        // Arrange:
+describe('MerkleHashBuilder', () => {
+    const calculateMerkleHash = (hashes) => {
         const builder = new MerkleHashBuilder(32);
+        hashes.forEach((embeddedHash) => builder.update(embeddedHash));
+        return builder.getRootHash();
+    };
 
-        const rootHash = builder.getRootHash();
+    const assertMerkleHash = (expectedHashHex, hashesHex) => {
+        // Act:
+        const calculatedHash = calculateMerkleHash(hashesHex.map(Convert.hexToUint8));
 
-        expect(Convert.uint8ToHex(rootHash)).equal('0000000000000000000000000000000000000000000000000000000000000000');
+        // Assert:
+        expect(expectedHashHex).to.equal(Convert.uint8ToHex(calculatedHash));
+    };
+
+    it('fill 0s for empty merkle tree', () => {
+        assertMerkleHash('0000000000000000000000000000000000000000000000000000000000000000', []);
     });
 
     it('return first hash given single child', () => {
-        // Arrange:
-        const builder = new MerkleHashBuilder(32);
-
-        builder.update(Convert.hexToUint8('215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9'));
-
-        const rootHash = builder.getRootHash();
-
-        expect(Convert.uint8ToHex(rootHash)).equal('215B158F0BD416B596271BCE527CD9DC8E4A639CC271D896F9156AF6F441EEB9');
+        const randomHashHex = Convert.uint8ToHex(Crypto.randomBytes(32));
+        assertMerkleHash(randomHashHex, [randomHashHex]);
     });
 
-    it('create correct merkle hash given two children', () => {
-        // Arrange:
-        const builder = new MerkleHashBuilder(32);
-
-        builder.update(Convert.hexToUint8('215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9'));
-        builder.update(Convert.hexToUint8('976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25'));
-
-        const rootHash = builder.getRootHash();
-
-        expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal('1c704e3ac99b124f92d2648649ec72c7a19ea4e2bb24f669b976180a295876fa');
+    it('can create from balanced tree', () => {
+        assertMerkleHash('7D853079F5F9EE30BDAE49C4956AF20CDF989647AFE971C069AC263DA1FFDF7E', [
+            '36C8213162CDBC78767CF43D4E06DDBE0D3367B6CEAEAEB577A50E2052441BC8',
+            '8A316E48F35CDADD3F827663F7535E840289A16A43E7134B053A86773E474C28',
+            '6D80E71F00DFB73B358B772AD453AEB652AE347D3E098AE269005A88DA0B84A7',
+            '2AE2CA59B5BB29721BFB79FE113929B6E52891CAA29CBF562EBEDC46903FF681',
+            '421D6B68A6DF8BB1D5C9ACF7ED44515E77945D42A491BECE68DA009B551EE6CE',
+            '7A1711AF5C402CFEFF87F6DA4B9C738100A7AC3EDAD38D698DF36CA3FE883480',
+            '1E6516B2CC617E919FAE0CF8472BEB2BFF598F19C7A7A7DC260BC6715382822C',
+            '410330530D04A277A7C96C1E4F34184FDEB0FFDA63563EFD796C404D7A6E5A20',
+        ]);
     });
 
-    it('create correct merkle hash given three children', () => {
+    it('can build from unbalanced tree', () => {
+        assertMerkleHash('DEFB4BF7ACF2145500087A02C88F8D1FCF27B8DEF4E0FDABE09413D87A3F0D09', [
+            '36C8213162CDBC78767CF43D4E06DDBE0D3367B6CEAEAEB577A50E2052441BC8',
+            '8A316E48F35CDADD3F827663F7535E840289A16A43E7134B053A86773E474C28',
+            '6D80E71F00DFB73B358B772AD453AEB652AE347D3E098AE269005A88DA0B84A7',
+            '2AE2CA59B5BB29721BFB79FE113929B6E52891CAA29CBF562EBEDC46903FF681',
+            '421D6B68A6DF8BB1D5C9ACF7ED44515E77945D42A491BECE68DA009B551EE6CE',
+        ]);
+    });
+
+    it('changing sub hash order changes merkle hash', () => {
         // Arrange:
-        const builder = new MerkleHashBuilder(32);
+        const seed1: Uint8Array[] = [];
+        for (let i = 0; i < 8; ++i) {
+            seed1.push(new Uint8Array(Crypto.randomBytes(32)));
+        }
 
-        builder.update(Convert.hexToUint8('215b158f0bd416b596271bce527cd9dc8e4a639cc271d896f9156af6f441eeb9'));
-        builder.update(Convert.hexToUint8('976c5ce6bf3f797113e5a3a094c7801c885daf783c50563ffd3ca6a5ef580e25'));
-        builder.update(Convert.hexToUint8('e926cc323886d47234bb0b49219c81e280e8a65748b437c2ae83b09b37a5aaf2'));
+        // - swap 5 and 3
+        // eslint-disable-next-line prettier/prettier
+        const seed2 = [
+            seed1[0], seed1[1], seed1[2], seed1[5],
+            seed1[4], seed1[3], seed1[6], seed1[7]
+        ];
 
-        const rootHash = builder.getRootHash();
+        // Act:
+        const rootHash1 = calculateMerkleHash(seed1);
+        const rootHash2 = calculateMerkleHash(seed2);
 
-        expect(Convert.uint8ToHex(rootHash).toLocaleLowerCase()).equal('5dc17b2409d50bcc7c1faa720d0ec8b79a1705d0c517bcc0bdbd316540974d5e');
+        // Assert:
+        expect(Convert.uint8ToHex(rootHash1)).not.to.equal(Convert.uint8ToHex(rootHash2));
+    });
+
+    it('changing sub hash changes merkle tree', () => {
+        // Arrange:
+        const seed1: Uint8Array[] = [];
+        for (let i = 0; i < 8; ++i) {
+            seed1.push(new Uint8Array(Crypto.randomBytes(32)));
+        }
+
+        // eslint-disable-next-line prettier/prettier
+        const seed2 = [
+            seed1[0], seed1[1], seed1[2], seed1[3],
+            new Uint8Array(Crypto.randomBytes(32)), seed1[5], seed1[6], seed1[7]
+        ];
+
+        // Act:
+        const rootHash1 = calculateMerkleHash(seed1);
+        const rootHash2 = calculateMerkleHash(seed2);
+
+        // Assert:
+        expect(Convert.uint8ToHex(rootHash1)).not.to.equal(Convert.uint8ToHex(rootHash2));
     });
 });
