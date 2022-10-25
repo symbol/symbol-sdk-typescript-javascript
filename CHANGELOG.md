@@ -6,7 +6,6 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## 2.0.3 - 25-Oct-2022
 
-**Milestone**: Symbol Mainnet
 Package  | Version  | Link
 ---|---|---
 SDK Core| v2.0.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
