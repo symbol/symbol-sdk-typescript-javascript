@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.0.3 - 25-Oct-2022
+
+**Milestone**: Symbol Mainnet
+Package  | Version  | Link
+---|---|---
+SDK Core| v2.0.3 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v1.0.2 | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v1.0.3  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- Bumped AggregateTransaction version to V2. Note that the ability to create or broadcast V1 aggregate transactions has been removed.
+- [Bug] Fixed incorrect Merkle hash calculation for aggregate transactions.
+- [Bug] Fixed the calculation of embedded transaction (also known as inner aggregate transaction) hashes without padding.
+
 ## 2.0.2 - 7-Oct-2022
 
 **Milestone**: Symbol Mainnet
