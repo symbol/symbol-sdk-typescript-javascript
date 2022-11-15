@@ -56,8 +56,8 @@ Copyright (c) 2018-present NEM
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/nemtech/symbol-sdk-typescript-javascript
-[docs]: http://nemtech.github.io/getting-started/setup-workstation.html
+[docs]: http://docs.symbol.dev/getting-started/setup-workstation.html
 [issues]: https://github.com/nemtech/symbol-sdk-typescript-javascript/issues
-[sdk-ref]: https://nemtech.github.io/references/typescript-sdk.html
+[sdk-ref]: https://docs.symbol.dev/references/typescript-sdk.html
 [guidelines]: https://nemtech.github.io/contribute/contributing.html#sdk
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
