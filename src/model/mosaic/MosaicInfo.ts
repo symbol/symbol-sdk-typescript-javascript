@@ -114,6 +114,14 @@ export class MosaicInfo {
     }
 
     /**
+     * Is revokable
+     * @returns {boolean}
+     */
+    public isRevokable(): boolean {
+        return this.flags.revokable;
+    }
+
+    /**
      * Generate buffer
      * @return {Uint8Array}
      */
