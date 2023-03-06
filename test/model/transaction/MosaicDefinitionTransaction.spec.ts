@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { CreateTransactionFromPayload } from '../../../src';
 import { Convert } from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
@@ -198,5 +199,25 @@ describe('MosaicDefinitionTransaction', () => {
 
         Object.assign(tx, { signer: account.publicAccount });
         expect(tx.shouldNotifyAccount(account.address)).to.be.true;
+    });
+
+    it('should set correctly revokable flag when generating transaction from payload', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(epochAdjustment),
+            MosaicNonce.createFromUint8Array(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])),
+            new MosaicId(UInt64.fromUint(1).toDTO()),
+            MosaicFlags.create(false, false, false, true),
+            3,
+            UInt64.fromUint(0),
+            TestNetworkType,
+        );
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
+        const recreatedTransaction = CreateTransactionFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+
+        expect(recreatedTransaction.flags.supplyMutable).to.be.equal(false);
+        expect(recreatedTransaction.flags.transferable).to.be.equal(false);
+        expect(recreatedTransaction.flags.restrictable).to.be.equal(false);
+        expect(recreatedTransaction.flags.revokable).to.be.equal(true);
     });
 });

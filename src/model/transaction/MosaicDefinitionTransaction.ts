@@ -156,6 +156,7 @@ export class MosaicDefinitionTransaction extends Transaction {
                 builder.getFlags().indexOf(MosaicFlagsDto.SUPPLY_MUTABLE) > -1,
                 builder.getFlags().indexOf(MosaicFlagsDto.TRANSFERABLE) > -1,
                 builder.getFlags().indexOf(MosaicFlagsDto.RESTRICTABLE) > -1,
+                builder.getFlags().indexOf(MosaicFlagsDto.REVOKABLE) > -1,
             ),
             builder.getDivisibility(),
             new UInt64(builder.getDuration().blockDuration),
