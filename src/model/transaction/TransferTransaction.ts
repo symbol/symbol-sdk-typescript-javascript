@@ -202,13 +202,15 @@ export class TransferTransaction extends Transaction {
         if (!this.message || !this.message.payload) {
             return Uint8Array.of();
         }
-        const messgeHex =
-            this.message.type === MessageType.PersistentHarvestingDelegationMessage
-                ? this.message.payload
-                : Convert.utf8ToHex(this.message.payload);
-        const payloadBuffer = Convert.hexToUint8(messgeHex);
+        const isPersistentHarvestingDelegationMessage = this.message.type === MessageType.PersistentHarvestingDelegationMessage;
+        const isRawMessage = this.message.type === MessageType.RawMessage;
+
+        const messageHex =
+            isPersistentHarvestingDelegationMessage || isRawMessage ? this.message.payload : Convert.utf8ToHex(this.message.payload);
+        const payloadBuffer = Convert.hexToUint8(messageHex);
         const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
-        return this.message.type === MessageType.PersistentHarvestingDelegationMessage || !this.message.payload
+
+        return isPersistentHarvestingDelegationMessage || isRawMessage || !this.message.payload
             ? payloadBuffer
             : GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
     }
