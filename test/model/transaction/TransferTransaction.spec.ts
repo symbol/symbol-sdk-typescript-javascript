@@ -21,7 +21,7 @@ import { TransactionMapping } from '../../../src/core/utils';
 import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction';
 import { PersistentHarvestingDelegationMessage, UInt64 } from '../../../src/model';
 import { Account, Address } from '../../../src/model/account';
-import { EmptyMessage, MessageMarker, MessageType, PlainMessage } from '../../../src/model/message';
+import { EmptyMessage, MessageMarker, MessageType, PlainMessage, RawMessage } from '../../../src/model/message';
 import { Mosaic, MosaicId } from '../../../src/model/mosaic';
 import { NamespaceId } from '../../../src/model/namespace';
 import { NetworkType } from '../../../src/model/network';
@@ -131,6 +131,29 @@ describe('TransferTransaction', () => {
         expect(signedTransaction.payload.substring(256, signedTransaction.payload.length)).to.be.equal(
             '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD267760000000000000000',
         );
+    });
+
+    it('should createComplete an TransferTransaction object with raw message', () => {
+        // Arrange:
+        const messageBytes = new Uint8Array([3, 2, 1, 123, 0, 255]);
+        const messageHex = '0302017B00FF';
+
+        // Act:
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(epochAdjustment),
+            testAddress,
+            [],
+            RawMessage.create(messageBytes),
+            TestNetworkType,
+        );
+        const transactionPayload = transferTransaction.signWith(account, generationHash).payload;
+        const recreatedTransferTransaction = TransferTransaction.createFromPayload(transactionPayload) as TransferTransaction;
+
+        // Assert:
+        expect(transferTransaction.message.type).to.be.equal(MessageType.RawMessage);
+        expect(transferTransaction.message.payload).to.be.equal(messageHex);
+        expect(recreatedTransferTransaction.message.type).to.be.equal(MessageType.RawMessage);
+        expect(recreatedTransferTransaction.message.payload).to.be.equal(messageHex);
     });
 
     it('should createComplete an TransferTransaction object and sign it with mosaics', () => {
