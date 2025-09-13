@@ -333,7 +333,7 @@ describe('SerializeTransactionToJSON', () => {
         );
 
         const json = validateToFromJson(aggregateTransaction);
-        expect(json.transaction.version).to.be.equal(2);
+        expect(json.transaction.version).to.be.equal(3);
         expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(json.transaction.transactions.length).to.be.equal(1);
     });
@@ -356,7 +356,7 @@ describe('SerializeTransactionToJSON', () => {
         );
 
         const json = validateToFromJson(aggregateTransaction);
-        expect(json.transaction.version).to.be.equal(2);
+        expect(json.transaction.version).to.be.equal(3);
         expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(json.transaction.transactions.length).to.be.equal(1);
     });

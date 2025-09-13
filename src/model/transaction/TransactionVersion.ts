@@ -65,12 +65,12 @@ export class TransactionVersion {
      * Aggregate complete transaction version.
      * @type {number}
      */
-    public static readonly AGGREGATE_COMPLETE = 2;
+    public static readonly AGGREGATE_COMPLETE = 3;
 
     /**
      * Aggregate bonded transaction version
      */
-    public static readonly AGGREGATE_BONDED = 2;
+    public static readonly AGGREGATE_BONDED = 3;
 
     /**
      * Lock transaction version

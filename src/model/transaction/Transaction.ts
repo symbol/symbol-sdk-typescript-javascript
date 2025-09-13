@@ -156,9 +156,9 @@ export abstract class Transaction {
         const transactionBodyIdx: number = generationHashIdx + generationHash.length;
         let transactionBody: Uint8Array = transactionBytes.slice(Transaction.Header_Size);
 
-        // in case of aggregate transactions, we hash only the merkle transaction hash.
+        // in case of aggregate transactions, we hash only the merkle transaction hash plus the payload size.
         if (isAggregateTransaction) {
-            transactionBody = transactionBytes.slice(Transaction.Header_Size, Transaction.Body_Index + 32);
+            transactionBody = transactionBytes.slice(Transaction.Header_Size, Transaction.Body_Index + 32 + 4);
         }
 
         // 5) concatenate binary hash parts
@@ -268,7 +268,7 @@ export abstract class Transaction {
     public getSigningBytes(payloadBytes: number[], generationHashBytes: number[]): number[] {
         const byteBufferWithoutHeader = payloadBytes.slice(4 + 64 + 32 + 8);
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
-            return generationHashBytes.concat(byteBufferWithoutHeader.slice(0, 52));
+            return generationHashBytes.concat(byteBufferWithoutHeader.slice(0, 52 + 4)); // include the payload size of 4
         } else {
             return generationHashBytes.concat(byteBufferWithoutHeader);
         }

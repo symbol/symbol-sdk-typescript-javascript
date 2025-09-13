@@ -11,9 +11,9 @@ The Symbol SDK for TypeScript / JavaScript allows you to develop web, mobile, an
 
 ## Important Notes
 
-### _Catapult-Server_ Network Compatibility (catapult-server@1.0.3.5)
+### _Catapult-Server_ Network Compatibility (catapult-server@1.0.3.9)
 
-Symbol network launched [catapult-client](https://github.com/symbol/symbol/releases), **it is recommended to use this package's 2.0.3 version and upwards for the Symbol public network**.
+Symbol network launched [catapult-client](https://github.com/symbol/symbol/releases), **it is recommended to use this package's 2.0.6 version and upwards for the Symbol public network**.
 
 Find the complete release notes [here](CHANGELOG.md).
 
