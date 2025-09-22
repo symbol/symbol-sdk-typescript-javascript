@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.0.6 - 23-Sept-2025
+
+Package  | Version | Link
+---|---------|---
+SDK Core| v2.0.6  | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+Catbuffer | v1.0.2  | [catbuffer-typescript](https://www.npmjs.com/package/catbuffer-typescript)
+Client Library | v1.0.3  | [symbol-openapi-typescript-fetch-client](https://www.npmjs.com/package/symbol-openapi-typescript-fetch-client)
+
+- [Bug] Add support for Aggregate transaction V3.
+
 ## 2.0.5 - 15-Mar-2024
 
 Package  | Version  | Link
