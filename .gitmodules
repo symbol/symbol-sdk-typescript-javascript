@@ -1,3 +1,4 @@
 [submodule "catbuffer-generators"]
 	path = catbuffer-generators
 	url = git@github.com:symbol/sdk-java-catbuffer-generators.git
+	branch = generator-fixes-ts

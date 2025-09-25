@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { EmbeddedTransactionBuilder, TransactionBuilder } from 'catbuffer-typescript';
+import {
+    AggregateBondedTransactionBuilder,
+    AggregateCompleteTransactionBuilder,
+    EmbeddedTransactionBuilder,
+    TransactionBuilder,
+    TransactionHelper,
+} from 'catbuffer-typescript';
 import { expect } from 'chai';
 import { Convert } from '../../../src/core/format/Convert';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
@@ -31,7 +37,8 @@ import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo'
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
-import { TestingAccount } from '../../conf/conf.spec';
+import { TestingAccount, TestNetworkType } from '../../conf/conf.spec';
+import { NetworkCurrencyLocal } from '../mosaic/Currency.spec';
 
 describe('Transaction', () => {
     let account: Account;
@@ -238,6 +245,58 @@ describe('Transaction', () => {
             expect(serialized.substring(256, serialized.length)).to.be.equal(
                 '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD267760D0000000000000000746573742D6D657373616765',
             );
+        });
+    });
+
+    describe('Transaction loadFromBinary', () => {
+        it('for aggregate bonded', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(epochAdjustment),
+                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                [NetworkCurrencyLocal.createRelative(100)],
+                PlainMessage.create('testing serialization'),
+                TestNetworkType,
+            );
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(epochAdjustment),
+                [transaction.toAggregate(account.publicAccount)],
+                TestNetworkType,
+                [],
+            );
+
+            const builder = TransactionHelper.loadFromBinary(
+                Convert.hexToUint8(aggregateTransaction.serialize()),
+            ) as AggregateBondedTransactionBuilder;
+
+            expect(builder.version).to.be.equal(3);
+            expect(builder.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+            expect(builder.getTransactions).not.to.be.undefined;
+            expect(builder.getTransactions()[0].type).to.be.equal(TransactionType.TRANSFER);
+        });
+
+        it('for aggregate complete', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(epochAdjustment),
+                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                [NetworkCurrencyLocal.createRelative(100)],
+                PlainMessage.create('testing complete serialization'),
+                TestNetworkType,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(epochAdjustment),
+                [transaction.toAggregate(account.publicAccount)],
+                TestNetworkType,
+                [],
+            );
+
+            const builder = TransactionHelper.loadFromBinary(
+                Convert.hexToUint8(aggregateTransaction.serialize()),
+            ) as AggregateCompleteTransactionBuilder;
+
+            expect(builder.version).to.be.equal(3);
+            expect(builder.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+            expect(builder.getTransactions).not.to.be.undefined;
+            expect(builder.getTransactions()[0].type).to.be.equal(TransactionType.TRANSFER);
         });
     });
 

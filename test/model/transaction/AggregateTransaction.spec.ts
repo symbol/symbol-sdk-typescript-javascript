@@ -727,4 +727,43 @@ describe('AggregateTransaction', () => {
         Object.assign(tx, { signer: account.publicAccount });
         expect(tx.shouldNotifyAccount(account.address)).to.be.true;
     });
+    describe('loadFromBinary', () => {
+        it('for aggregate bonded', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(epochAdjustment),
+                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                [NetworkCurrencyLocal.createRelative(100)],
+                PlainMessage.create('testing serialization'),
+                TestNetworkType,
+            );
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(epochAdjustment),
+                [transaction.toAggregate(account.publicAccount)],
+                TestNetworkType,
+                [],
+            );
+            const aggregateTransaction2 = AggregateTransaction.createFromPayload(aggregateTransaction.serialize());
+            expect(aggregateTransaction2.version).to.be.equal(3);
+            expect(aggregateTransaction2.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+        });
+
+        it('for aggregate complete', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(epochAdjustment),
+                Address.createFromRawAddress('TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q'),
+                [NetworkCurrencyLocal.createRelative(100)],
+                PlainMessage.create('testing complete serialization'),
+                TestNetworkType,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(epochAdjustment),
+                [transaction.toAggregate(account.publicAccount)],
+                TestNetworkType,
+                [],
+            );
+            const aggregateTransaction2 = AggregateTransaction.createFromPayload(aggregateTransaction.serialize());
+            expect(aggregateTransaction2.version).to.be.equal(3);
+            expect(aggregateTransaction2.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        });
+    });
 });
